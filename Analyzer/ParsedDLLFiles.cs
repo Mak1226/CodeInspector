@@ -24,5 +24,4 @@ namespace Analyzer
 }
 
 
-
 // it will call the constructor of the ParsedNamespace for each dll file
