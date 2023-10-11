@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Analyzer
 {
-    public interface IAnalyzer
+    internal class ParsedDLLFiles
     {
-        public void Configure();
-        public void LoadDLLFile();
-        public void GetAnalysis();
     }
 }

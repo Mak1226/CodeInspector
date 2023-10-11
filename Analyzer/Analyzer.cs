@@ -8,9 +8,20 @@ namespace Analyzer
 {
     public class Analyzer : IAnalyzer
     {
-        public void Configure()
+        public void Configure() 
         {
 
         }
+
+        public void LoadDLLFile()
+        {
+
+        }
+
+        public void GetAnalysis() 
+        { 
+
+        }
+
     }
 }
