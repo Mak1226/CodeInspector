@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace Analyzer
 {
+
+    public enum WhoseFile
+    {
+        Student, Teacher
+    }
+
     public interface IAnalyzer
     {
-        public void Configure();
-        public void LoadDLLFile();
-        public void GetAnalysis();
+        // TODO
+
+        public void Configure(IDictionary<int,bool> TeacherOptions, bool TeacherFlag);
+        public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher);
+        public IDictionary<string,string> GetAnalysis();  
     }
 }
