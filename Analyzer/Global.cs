@@ -12,5 +12,7 @@ namespace Analyzer
     public static class Global
     {
         // You can add static methods and properties with their corresponding XML comments here.
+        public static List<ParsedClass>
+
     }
 }
