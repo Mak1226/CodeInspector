@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Networking.Serialization
 {
-    internal interface ISerializer
+    public interface ISerializer
     {
         public string Serialize<T>(T genericObject);
 
