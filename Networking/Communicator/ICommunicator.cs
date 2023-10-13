@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Networking.Communicator
 {
-    internal interface ICommunicator
+    public interface ICommunicator
     {
         public bool Connect(string host, int port);
         public bool Disconnect();
