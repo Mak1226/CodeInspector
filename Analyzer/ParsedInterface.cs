@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Analyzer
 {
-    internal class ParsedInterface : ParsedClass
+    public class ParsedInterface
     {
-        ParsedInterface() 
+        public ParsedInterface(Type type) 
         { 
-        
+            // TODO: Check whether interfaces also require same things as ParsedClass and modify accordingly
+            // TODO: Check ParsedClass can be inherited from ParsedInterface 
         }
     }
 }

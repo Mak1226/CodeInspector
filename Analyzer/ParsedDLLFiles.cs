@@ -11,6 +11,10 @@ namespace Analyzer
     {
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="paths"></param>
         public ParsedDLLFiles(List<string> paths) // path of dll files
         {
             // take the input of all the dll files
@@ -42,11 +46,16 @@ namespace Analyzer
                                 ParsedInterface interfaceObj = new ParsedInterface(type);
                                 interfaceObjList.Add(interfaceObj);
                             }
+                            else
+                            {
+                                // there can be enums , structs , delegates , events etc.. other than classes and interfaces when used getTypes()
+                                // TODO : Handle these other types
+                            }
                         }
                         else
                         {
                             // code written outside all namespaces may have namespace as null
-                            // will handle later
+                            // TODO : Handle outside namespace types later
                         }
                     }
                 }
