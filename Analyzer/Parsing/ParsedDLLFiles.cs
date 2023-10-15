@@ -10,7 +10,7 @@ namespace Analyzer.Parsing
     public class ParsedDLLFiles
     {
         public List<ParsedClass> classObjList = new();
-        public List<ParsedInterface> interfaceObjList = new();
+        //public List<ParsedInterface> interfaceObjList = new();
         /// <summary>
         /// 
         /// </summary>
@@ -43,8 +43,8 @@ namespace Analyzer.Parsing
                             }
                             else if (type.IsInterface)
                             {
-                                ParsedInterface interfaceObj = new ParsedInterface(type);
-                                interfaceObjList.Add(interfaceObj);
+                                //ParsedInterface interfaceObj = new ParsedInterface(type);
+                                //interfaceObjList.Add(interfaceObj);
                             }
                             else
                             {

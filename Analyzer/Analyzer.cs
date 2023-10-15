@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Analyzer.Pipeline;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,8 @@ namespace Analyzer
 
         public void GetRelationshipGraph()
         {
+
+            MainPipeline mp = new MainPipeline();
 
         }
 
