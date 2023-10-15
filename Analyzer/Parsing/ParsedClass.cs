@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections;
 
-namespace Analyzer
+namespace Analyzer.Parsing
 {
     public class ParsedClass
     {
@@ -24,8 +24,8 @@ namespace Analyzer
 
         // If needed for local variables
         private readonly List<MethodBase> _methodsBaseList;
-        
-        public ParsedClass(Type type) 
+
+        public ParsedClass(Type type)
         {
             _typeObj = type;
             _name = type.FullName;
@@ -62,7 +62,7 @@ namespace Analyzer
 
             // Getting local variables from MethodBase
             // _methods store MethodInfo objects but not its super class MethodBase
-            
+
             // similar syntax for local variable
             //List<LocalVariableInfo> lvInfo = methodBase.GetMethodBody().LocalVariables.ToList();
 
@@ -75,7 +75,7 @@ namespace Analyzer
             _usingList = new List<Type>();
 
             Dictionary<MethodInfo, ParameterInfo[]> dict = GetFunctionParameters();
-            foreach (KeyValuePair< MethodInfo, ParameterInfo[]> pair in dict)
+            foreach (KeyValuePair<MethodInfo, ParameterInfo[]> pair in dict)
             {
                 foreach (ParameterInfo argument in pair.Value)
                 {
@@ -92,7 +92,7 @@ namespace Analyzer
             // Aggregation List
             // check local variables
 
-           
+
         }
 
         public Type TypeObj
@@ -133,7 +133,7 @@ namespace Analyzer
 
         public Type ParentClass
         {
-            get { return _parentClass; } 
+            get { return _parentClass; }
         }
 
         public Dictionary<MethodInfo, ParameterInfo[]> GetFunctionParameters()
@@ -144,7 +144,7 @@ namespace Analyzer
             {
                 foreach (MethodInfo method in _methods)
                 {
-                   dict.Add(method, method.GetParameters());
+                    dict.Add(method, method.GetParameters());
                 }
             }
 

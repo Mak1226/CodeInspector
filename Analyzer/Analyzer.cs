@@ -8,6 +8,12 @@ namespace Analyzer
 {
     public class Analyzer : IAnalyzer
     {
+
+        Analyzer()
+        {
+
+        }
+
         public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
         {
 

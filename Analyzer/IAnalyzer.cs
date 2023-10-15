@@ -12,7 +12,8 @@ namespace Analyzer
     /// </summary>
     public enum WhoseFile
     {
-        Student, Teacher
+        Student, 
+        Teacher
     }
 
     /// <summary>

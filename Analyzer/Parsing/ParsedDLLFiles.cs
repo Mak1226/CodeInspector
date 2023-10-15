@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Analyzer
+namespace Analyzer.Parsing
 {
     public class ParsedDLLFiles
     {
@@ -19,7 +19,7 @@ namespace Analyzer
         {
             // take the input of all the dll files
             // it merge the all the ParsedNamespace
-            foreach(var path in paths) 
+            foreach (var path in paths)
             {
                 Assembly assembly = Assembly.LoadFrom(path);
 
