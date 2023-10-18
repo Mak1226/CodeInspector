@@ -16,15 +16,23 @@ namespace Content
     internal interface IFileEncoder
     {
         /// <summary>
-        /// Encodes data and returns it as a string.
+        /// Encodes all files given as input into a single XML encoding
         /// </summary>
-        /// <returns>A byte array containing the encoded data.</returns>
-        string GetEncoded();
+        /// <param name="filePaths">Path to each file to be encoded together</param>
+        /// <returns>A string containing the encoded XML data.</returns>
+        string GetEncoded(List<string> filePaths);
 
         /// <summary>
-        /// Decodes data from a string and sets the internal state of an object with the decoded data.
+        /// Decodes data from an XML string and sets the internal state of an object with the decoded data.
         /// </summary>
-        /// <param name="packet">The byte array containing the data to be decoded.</param>
-        void DecodeFrom(string xmlData);
+        /// <param name="packet">The XML string containing the data to be decoded.</param>
+        void DecodeFrom(string packet);
+
+        /// <summary>
+        /// Save all data in internal state into the required filepaths.
+        /// Note: filepaths are encoded in the XML
+        /// </summary>
+        /// <param name="path">Directory root to where each file is to be saved</param>
+        void SaveFiles(string path);
     }
 }

@@ -16,26 +16,27 @@ namespace Content
     /// </summary>
     internal class DLLEncoder : IFileEncoder
     {
-        private string filePath;
+        private List<string> data;
 
         /// <summary>
-        /// Initializes a new instance of the DLLEncoder class with the specified file path.
-        /// Files are to be loaded from this file path
+        /// Initialize a DLLEncoder
         /// </summary>
-        /// <param name="_filepath">The file path of the DLL to be encoded.</param>
-        public DLLEncoder(string _filepath)
+        public DLLEncoder()
         {
-            filePath = _filepath;
+            data = new List<string>();
         }
 
         /// <summary>
         /// Encodes the DLL data into an XML format.
         /// </summary>
+        /// <param name="filePaths">Path to each file to be encoded together. Need to be DLLs</param>
         /// <returns>An XML representation of the DLL data as a string.</returns>
-        public string GetEncoded()
+        public string GetEncoded(List<string> filePaths)
         {
+            throw new NotImplementedException();
+
             // Load the DLL data
-            byte[] dllBytes = File.ReadAllBytes(filePath);
+            byte[] dllBytes = File.ReadAllBytes(filePaths);
 
             // Create an XML document
             XmlDocument xmlDoc = new XmlDocument();
@@ -46,7 +47,7 @@ namespace Content
 
             // Create an element for the file name
             XmlElement fileNameElement = xmlDoc.CreateElement("FileName");
-            fileNameElement.InnerText = Path.GetFileName(filePath);
+            fileNameElement.InnerText = Path.GetFileName(filePaths);
             root.AppendChild(fileNameElement);
 
             // Create an element for the DLL content (encoded as Base64)
@@ -64,6 +65,8 @@ namespace Content
         /// <param name="xmlData">The XML data representing the DLL content as a string.</param>
         public void DecodeFrom(string xmlData)
         {
+            throw new NotImplementedException();
+
             // Implement XML decoding logic here based on the XML string
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlData);
@@ -76,6 +79,11 @@ namespace Content
             byte[] dllBytes = Convert.FromBase64String(base64Content);
 
             // You can do further processing with 'fileName' and 'dllBytes'
+        }
+
+        public void SaveFiles(string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }
