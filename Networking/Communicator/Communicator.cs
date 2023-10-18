@@ -5,19 +5,23 @@ namespace Networking.Communicator
 {
     public class Communicator : ICommunicator
     {
-        void ICommunicator.Send(object obj, string? destID)
+        void ICommunicator.Send(string serializedObj, string eventType, string? destID)
         {
-            throw new NotImplementedException();
+            Trace.WriteLine("Send" + serializedObj + " " + eventType + " " + destID);
+            //throw new NotImplementedException();
         }
 
         string ICommunicator.Start(string? destIP, string? destPort)
         {
-            throw new NotImplementedException();
+            Trace.WriteLine("Start" + destIP + " " + destPort);
+            return "";
+            //throw new NotImplementedException();
         }
 
         void ICommunicator.Stop()
         {
-            throw new NotImplementedException();
+            Trace.WriteLine("Stop");
+            //throw new NotImplementedException();
         }
     }
 }
