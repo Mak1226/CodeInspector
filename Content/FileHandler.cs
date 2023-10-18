@@ -37,11 +37,11 @@ namespace Content
         /// <param name="sessionID"></param>
         public void Upload(string filepath, string sessionID)
         {
-            string savedFilePath = Path.Combine(dataDir, filepath);
-            File.Copy(filepath, savedFilePath, true);
-            files[sessionID] = savedFilePath;
+            // extract dll , and pass it to xml encoder use network functions to send
+            // extracting paths of all dll files from the given directory
+            string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
+            IFileEncoder fileEncoder = new DLLEncoder(dllFiles);
 
-            query.HandleUpload(savedFilePath, "");
         }
 
         /// <summary>
