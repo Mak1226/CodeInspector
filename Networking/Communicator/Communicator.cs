@@ -3,29 +3,20 @@ using System.Diagnostics;
 
 namespace Networking.Communicator
 {
-	public class Communicator : ICommunicator
-	{
-        public string Authenticate(string username, string password)
+    public class Communicator : ICommunicator
+    {
+        void ICommunicator.Send(object obj, string? destID)
         {
-            Trace.WriteLine("Not yet implemented");
             throw new NotImplementedException();
         }
 
-        public bool Connect(string host, int port)
+        string ICommunicator.Start(string? destIP, string? destPort)
         {
-            Trace.WriteLine("Not yet implemented");
             throw new NotImplementedException();
         }
 
-        public bool Disconnect()
+        void ICommunicator.Stop()
         {
-            Trace.WriteLine("Not yet implemented");
-            throw new NotImplementedException();
-        }
-
-        public void Send(string serializedData, string? destination)
-        {
-            Trace.WriteLine("Not yet implemented");
             throw new NotImplementedException();
         }
     }

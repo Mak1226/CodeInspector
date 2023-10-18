@@ -8,9 +8,10 @@ namespace Networking.Communicator
 {
     public interface ICommunicator
     {
-        public bool Connect(string host, int port);
-        public bool Disconnect();
-        public string Authenticate(string username, string password);
-        public void Send(string serializedData,string? destination);
+        public string Start(string? destIP =null, string? destPort=null);
+        public void Stop();
+        public void Send(object obj,string? destID=null);
+        
+        //TODO: subscribe function
     }
 }
