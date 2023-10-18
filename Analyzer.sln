@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Content", "Content\Content.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentPage", "ContentPage\ContentPage.csproj", "{0F0B8B13-7955-469E-923A-1D185064FCAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentUnitTesting", "ContentUnitTesting\ContentUnitTesting.csproj", "{ABC3C840-855F-4115-B7C8-7C725CA340FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0F0B8B13-7955-469E-923A-1D185064FCAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F0B8B13-7955-469E-923A-1D185064FCAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F0B8B13-7955-469E-923A-1D185064FCAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC3C840-855F-4115-B7C8-7C725CA340FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC3C840-855F-4115-B7C8-7C725CA340FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC3C840-855F-4115-B7C8-7C725CA340FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC3C840-855F-4115-B7C8-7C725CA340FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
