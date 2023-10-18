@@ -36,27 +36,27 @@ namespace Content
             throw new NotImplementedException();
 
             // Load the DLL data
-            byte[] dllBytes = File.ReadAllBytes(filePaths);
+            //byte[] dllBytes = File.ReadAllBytes(filePaths);
 
-            // Create an XML document
-            XmlDocument xmlDoc = new XmlDocument();
+            //// Create an XML document
+            //XmlDocument xmlDoc = new XmlDocument();
 
-            // Create the root element
-            XmlElement root = xmlDoc.CreateElement("DllData");
-            xmlDoc.AppendChild(root);
+            //// Create the root element
+            //XmlElement root = xmlDoc.CreateElement("DllData");
+            //xmlDoc.AppendChild(root);
 
-            // Create an element for the file name
-            XmlElement fileNameElement = xmlDoc.CreateElement("FileName");
-            fileNameElement.InnerText = Path.GetFileName(filePaths);
-            root.AppendChild(fileNameElement);
+            //// Create an element for the file name
+            //XmlElement fileNameElement = xmlDoc.CreateElement("FileName");
+            //fileNameElement.InnerText = Path.GetFileName(filePaths);
+            //root.AppendChild(fileNameElement);
 
-            // Create an element for the DLL content (encoded as Base64)
-            XmlElement contentElement = xmlDoc.CreateElement("Content");
-            contentElement.InnerText = Convert.ToBase64String(dllBytes);
-            root.AppendChild(contentElement);
+            //// Create an element for the DLL content (encoded as Base64)
+            //XmlElement contentElement = xmlDoc.CreateElement("Content");
+            //contentElement.InnerText = Convert.ToBase64String(dllBytes);
+            //root.AppendChild(contentElement);
 
-            // Convert the XML document to a string
-            return xmlDoc.OuterXml;
+            //// Convert the XML document to a string
+            //return xmlDoc.OuterXml;
         }
 
         /// <summary>
@@ -67,18 +67,18 @@ namespace Content
         {
             throw new NotImplementedException();
 
-            // Implement XML decoding logic here based on the XML string
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlData);
+            //// Implement XML decoding logic here based on the XML string
+            //XmlDocument xmlDoc = new XmlDocument();
+            //xmlDoc.LoadXml(xmlData);
 
-            // Extract the file name and content
-            string fileName = xmlDoc.SelectSingleNode("//FileName").InnerText;
-            string base64Content = xmlDoc.SelectSingleNode("//Content").InnerText;
+            //// Extract the file name and content
+            //string fileName = xmlDoc.SelectSingleNode("//FileName").InnerText;
+            //string base64Content = xmlDoc.SelectSingleNode("//Content").InnerText;
 
-            // Decode the Base64 content
-            byte[] dllBytes = Convert.FromBase64String(base64Content);
+            //// Decode the Base64 content
+            //byte[] dllBytes = Convert.FromBase64String(base64Content);
 
-            // You can do further processing with 'fileName' and 'dllBytes'
+            //// You can do further processing with 'fileName' and 'dllBytes'
         }
 
         public void SaveFiles(string path)
