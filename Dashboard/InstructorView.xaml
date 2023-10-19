@@ -26,14 +26,32 @@
                 </Grid.Background>
                 <TextBlock Text="Navigation and Controls" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Height="112" VerticalAlignment="Top">
                 <Grid.Background>
                     <SolidColorBrush Color="LightGreen" />
                 </Grid.Background>
-                <!--<TextBlock Text="User Setting" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                <Button Content="Login" Width="50" Height="20" Click="LoginButton_Click" /> 
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0,34,0,0">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Run Text="IP : " />
+                        <Run Text="{Binding IpAddress, Mode=OneWay}" FontWeight="Bold"/>
+                    </TextBlock> 
+                    
+                </Grid>
+                <Grid Grid.Row="1"  Margin="0,0,0,34">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Run Text="Port : " />
+                        <Run Text="{Binding ReceivePort, Mode=OneWay}" FontWeight="Bold"/>    
+                    </TextBlock> 
+                </Grid>
+                <!--<Button Content="Login" Width="50" Height="20" Click="LoginButton_Click" />--> 
             </Grid>
         </Grid>
+        
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*"/>
