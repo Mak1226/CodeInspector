@@ -12,7 +12,7 @@ namespace Analyzer.Parsing
         public List<ParsedClass> classObjList = new();
         //public List<ParsedInterface> interfaceObjList = new();
         /// <summary>
-        /// 
+        /// function to parse the dll files
         /// </summary>
         /// <param name="paths"></param>
         public ParsedDLLFiles(List<string> paths) // path of dll files

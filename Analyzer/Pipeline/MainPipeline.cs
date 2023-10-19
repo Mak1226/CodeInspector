@@ -8,7 +8,10 @@ namespace Analyzer.Pipeline
 {
     internal class MainPipeline
     {
-        public MainPipeline() { }
+        public MainPipeline() 
+        { 
+        
+        }
 
     }
 }

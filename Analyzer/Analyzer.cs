@@ -1,14 +1,15 @@
-﻿using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
 
 namespace Analyzer
 {
     public class Analyzer : IAnalyzer
     {
+
+        IDictionary <int, bool> _teacherOptions;
+        bool _teacherFlag;
+        ParsedDLLFiles _parsedDLLFiles;
 
         Analyzer()
         {
@@ -17,26 +18,32 @@ namespace Analyzer
 
         public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
         {
-
+            _teacherOptions = TeacherOptions;
+            _teacherFlag = TeacherFlag;
         }
 
         public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher)
         {
+            _parsedDLLFiles = new ParsedDLLFiles(PathOfDLLFilesOfStudent);
 
+            if(_teacherFlag)
+            {
+
+            }
 
         }
+
         public Tuple<IDictionary<string, string>, int> GetAnalysis()
         {
-
             return null;
         }
 
         public void GetRelationshipGraph()
         {
 
-            MainPipeline mp = new MainPipeline();
+            //MainPipeline mp = new MainPipeline();
 
         }
-
     }
 }
+*/

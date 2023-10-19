@@ -10,7 +10,7 @@ namespace Analyzer.Parsing
 {
     public class ParsedClass
     {
-        private readonly Type _typeObj;
+        private readonly Type _typeObj; 
         private readonly string? _name;
         private readonly ConstructorInfo[]? _constructors;
         private readonly Type[]? _interfaces;
@@ -18,8 +18,8 @@ namespace Analyzer.Parsing
         private readonly FieldInfo[]? _fields;
         private readonly PropertyInfo[]? _properties;
         private readonly Type? _parentClass;
-        private readonly List<Type> _compositionList;
-        private readonly List<Type> _aggregationList;
+        private readonly List<Type> _compositionList; 
+        private readonly List<Type> _aggregationList; 
         private readonly List<Type> _usingList;
 
         // If needed for local variables
