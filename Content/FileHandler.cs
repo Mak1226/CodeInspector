@@ -8,6 +8,8 @@
 * Description = Class that implements IFileHandler
 *****************************************************************************/
 
+using System.Diagnostics;
+
 namespace Content
 {
     /// <summary>
@@ -16,18 +18,14 @@ namespace Content
     /// </summary>
     public class FileHandler : IFileHandler
     {
-        private string dataDir;
-        private Dictionary<string, string> files;
-        private AnalyserQuery query;
+        private readonly Dictionary<string, string> _files;
 
         /// <summary>
         /// saves files in //data/
         /// </summary>
         public FileHandler() 
         {
-            dataDir = @"data/";
-            files = new Dictionary<string, string>();
-            query = new AnalyserQuery();
+            _files = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -40,7 +38,11 @@ namespace Content
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            IFileEncoder fileEncoder = new DLLEncoder(dllFiles);
+            IFileEncoder fileEncoder = new DLLEncoder();
+            string encoding = fileEncoder.GetEncoded( dllFiles.ToList() );
+
+            Trace.Write( encoding );
+            Trace.Assert( fileEncoder != null );
 
         }
 
@@ -51,7 +53,7 @@ namespace Content
         /// <returns></returns>
         public string Download(string sessionID)
         {
-            return files[sessionID];
+            throw new NotImplementedException();
         }
     }
 }

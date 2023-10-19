@@ -7,6 +7,7 @@
 *
 * Description = Class the send and recieve data to and from analyzer
 *****************************************************************************/
+using System.Diagnostics;
 
 namespace Content
 {
@@ -31,7 +32,11 @@ namespace Content
             //analyzer.LoadDLLFile(studentFilePath, teacherFilePath);
             //Tuple<IDictionary<string, string>, int> analysisResult = analyzer.GetAnalysis();
             //SendAnalysisResults(analysisResult);
-            Console.WriteLine("Sending files to analyzer team");
+            Trace.WriteLine("Sending files to analyzer team");
+            Trace.WriteLine($"Student File Path : {studentFilePath}");
+            Trace.WriteLine($"Teacher File Path : {teacherFilePath}");
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -42,9 +47,7 @@ namespace Content
         /// <param name="analysisResults">A Tuple containing analysis results, including a dictionary of string results and an integer.</param>
         static void SendAnalysisResults(Tuple<IDictionary<string, string>, int> analysisResults)
         {
-            // Replace this with your code to send the analysis results to the content team
-            Console.WriteLine("Sending analysis results to the content team...");
-            // Your implementation here
+            throw new NotImplementedException();
         }
 
        

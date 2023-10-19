@@ -35,20 +35,18 @@ namespace ContentPage
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
-            using (System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog())
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new();
+            System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
-                System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+                string folderPath = folderDialog.SelectedPath;
+                Trace.WriteLine(folderPath);
 
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    string folderPath = folderDialog.SelectedPath;
-                    Trace.WriteLine(folderPath);
-
-                    // Now, you have the folderPath, and you can use it as needed.
-                    // For example, you can pass it to your file handler.
-                    IFileHandler upload_file = new FileHandler();
-                    upload_file.Upload(folderPath, "5");
-                }
+                // Now, you have the folderPath, and you can use it as needed.
+                // For example, you can pass it to your file handler.
+                IFileHandler upload_file = new FileHandler();
+                upload_file.Upload(folderPath, "5");
             }
         }
 
