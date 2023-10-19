@@ -101,8 +101,18 @@ namespace Content
                     }
                 }
             }
-            throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Function returns the private variable data. This is only needed for debugging purposes till the SaveFiles function is implemented.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Dictionary<string ,string> GetData()
+        {
+            return _data;
+        }
+
         /// <summary>
         /// Saves the files from the dictionary data into the path given as input
         /// </summary>
@@ -111,5 +121,6 @@ namespace Content
         {
             throw new NotImplementedException();
         }
+
     }
 }
