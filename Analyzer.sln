@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard", "Dashboard\Dash
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "ViewModel\ViewModel.csproj", "{3001CA4F-A1DB-41CF-924A-682ED124EFA6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionState", "SessionState\SessionState.csproj", "{917A7C83-2814-4FD6-8268-6D2D059864AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3001CA4F-A1DB-41CF-924A-682ED124EFA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3001CA4F-A1DB-41CF-924A-682ED124EFA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3001CA4F-A1DB-41CF-924A-682ED124EFA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{917A7C83-2814-4FD6-8268-6D2D059864AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917A7C83-2814-4FD6-8268-6D2D059864AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917A7C83-2814-4FD6-8268-6D2D059864AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917A7C83-2814-4FD6-8268-6D2D059864AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
