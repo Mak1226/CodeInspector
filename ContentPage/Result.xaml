@@ -1,0 +1,18 @@
+﻿<Window x:Class="ContentPage.Result"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Analysis Table" Height="350" Width="500">
+    <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
+        <TabItem Header="Result" Name="ResultTable">
+            <Grid>
+                <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="100" Header="Key" Binding="{Binding}" />
+                        <DataGridTextColumn Width="100" Header="Value" Binding="{Binding}" />
+                        <DataGridTextColumn Width="100" Header="Integer" Binding="{Binding}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
