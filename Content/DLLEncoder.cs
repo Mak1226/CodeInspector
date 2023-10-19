@@ -7,6 +7,7 @@
 *
 * Description = Class to encode DLL files
 *****************************************************************************/
+using System.Text;
 using System.Xml;
 
 namespace Content
@@ -16,14 +17,14 @@ namespace Content
     /// </summary>
     internal class DLLEncoder : IFileEncoder
     {
-        private List<string> data;
+        private Dictionary<string, string> data; // The content of the file as strings
 
         /// <summary>
         /// Initialize a DLLEncoder
         /// </summary>
         public DLLEncoder()
         {
-            data = new List<string>();
+            data = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -33,30 +34,41 @@ namespace Content
         /// <returns>An XML representation of the DLL data as a string.</returns>
         public string GetEncoded(List<string> filePaths)
         {
-            throw new NotImplementedException();
+            if (filePaths == null || filePaths.Count == 0)
+            {
+                throw new Exception("No file found");
+            }
 
-            // Load the DLL data
-            byte[] dllBytes = File.ReadAllBytes(filePaths);
+            // initialize the xml Document
+            var xmlDocument = new XmlDocument();
+            var root = xmlDocument.CreateElement("Root");
+            xmlDocument.AppendChild(root);
 
-            // Create an XML document
-            XmlDocument xmlDoc = new XmlDocument();
+            foreach (string filePath in filePaths)
+            {
+                if (File.Exists(filePath))
+                {
+                    // Read the content of the file as a string
+                    string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
 
-            // Create the root element
-            XmlElement root = xmlDoc.CreateElement("DllData");
-            xmlDoc.AppendChild(root);
+                    // Create a child element for the file
+                    var fileElement = xmlDocument.CreateElement("File");
 
-            // Create an element for the file name
-            XmlElement fileNameElement = xmlDoc.CreateElement("FileName");
-            fileNameElement.InnerText = Path.GetFileName(filePaths);
-            root.AppendChild(fileNameElement);
+                    // Add an attribute for the file name/path
+                    var nameAttribute = xmlDocument.CreateAttribute("Name");
+                    nameAttribute.Value = filePath;
+                    fileElement.Attributes.Append(nameAttribute);
 
-            // Create an element for the DLL content (encoded as Base64)
-            XmlElement contentElement = xmlDoc.CreateElement("Content");
-            contentElement.InnerText = Convert.ToBase64String(dllBytes);
-            root.AppendChild(contentElement);
+                    // Set the content of the file element
+                    fileElement.InnerText = fileContent;
 
-            // Convert the XML document to a string
-            return xmlDoc.OuterXml;
+                    // Add the file element to the root
+                    root.AppendChild(fileElement);
+                }
+
+                return xmlDocument.OuterXml;
+            }
+            return "";
         }
 
         /// <summary>
@@ -65,22 +77,36 @@ namespace Content
         /// <param name="xmlData">The XML data representing the DLL content as a string.</param>
         public void DecodeFrom(string xmlData)
         {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xmlData);
+
+            XmlNode root = xmlDocument.SelectSingleNode("Root");
+
+            if(root != null)
+            {
+                foreach (XmlNode fileElement in root.ChildNodes)
+                {
+                    if (fileElement is XmlElement)
+                    {
+                        var nameAttribute = fileElement.Attributes["Name"];
+                        if (nameAttribute != null)
+                        {
+                            string filePath = nameAttribute.Value;
+                            string fileContent = fileElement.InnerText;
+
+                            // Add the file content to the dictionary with the file path as the key
+                            data[filePath] = fileContent;
+                        }
+
+                    }
+                }
+            }
             throw new NotImplementedException();
-
-            // Implement XML decoding logic here based on the XML string
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlData);
-
-            // Extract the file name and content
-            string fileName = xmlDoc.SelectSingleNode("//FileName").InnerText;
-            string base64Content = xmlDoc.SelectSingleNode("//Content").InnerText;
-
-            // Decode the Base64 content
-            byte[] dllBytes = Convert.FromBase64String(base64Content);
-
-            // You can do further processing with 'fileName' and 'dllBytes'
         }
-
+        /// <summary>
+        /// Saves the files from the dictionary data into the path given as input
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveFiles(string path)
         {
             throw new NotImplementedException();
