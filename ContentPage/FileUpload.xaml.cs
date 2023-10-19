@@ -47,7 +47,7 @@ namespace ContentPage
                     // Now, you have the folderPath, and you can use it as needed.
                     // For example, you can pass it to your file handler.
                     IFileHandler upload_file = new FileHandler();
-                    upload_file.Upload(folderPath, "5");
+                    //upload_file.Upload(folderPath, "5");
                 }
             }
         }
