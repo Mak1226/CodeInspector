@@ -119,7 +119,27 @@ namespace Content
         /// <param name="path"></param>
         public void SaveFiles(string path)
         {
-            throw new NotImplementedException();
+            if (_data == null)
+            {
+                throw new ArgumentNullException( nameof( _data ) , "Data dictionary is not initialized." );
+            }
+
+            if (string.IsNullOrEmpty( path ))
+            {
+                throw new ArgumentNullException( nameof( path ) , "Path is not specified." );
+            }
+
+            if (!Directory.Exists( path ))
+            {
+                Directory.CreateDirectory( path );
+            }
+
+            foreach (KeyValuePair<string, string> kvp in _data)
+            {
+                string filePath = Path.Combine( path , kvp.Key );
+                File.WriteAllText( filePath , kvp.Value );
+            }
+
         }
 
     }
