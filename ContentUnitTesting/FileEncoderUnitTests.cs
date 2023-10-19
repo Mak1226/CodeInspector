@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Filename     = FileEncoderUnitTests.cs
  * 
  * Author       = Susan
@@ -17,8 +17,21 @@ namespace ContentUnitTesting
     public class FileEncoderUnitTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void GetEncoded_ReturnsValidXMLString()
         {
+            // Arrange
+            var encoder = new DLLEncoder();
+            var filePaths = new List<string>
+            {
+                "TestDlls/HelloWorld.dll"
+            };
+
+            // Act
+            string encodedXML = encoder.GetEncoded( filePaths );
+
+            // Assert
+            Assert.IsFalse( string.IsNullOrEmpty( encodedXML ) );
         }
+
     }
 }
