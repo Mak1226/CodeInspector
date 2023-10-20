@@ -8,56 +8,48 @@ using System.Threading.Tasks;
 namespace Analyzer
 {
     /// <summary>
-    /// Represents the configuration options for the analyzer.
+    /// Represents file owner (Student or Teacher).
     /// </summary>
-    public struct ConfigureOptions
+    public enum WhoseFile
     {
-        public int AnalysisID;
-        public List<string> PathOfDLLFilesOfStudent;
+        Student,
+        Teacher
     }
 
     /// <summary>
-    /// Represents the configuration options for a teacher.
-    /// </summary>
-    public struct ConfigureOptionsForTeacher
-    {
-        public string PathOfTeacherDLLFile;
-        public List<string> PathOfDLLFilesOfStudent;
-    }
-
-    /// <summary>
-    /// Represents the result of an analysis.
-    /// </summary>
-    public struct AnalysisResult
-    {
-        public bool Flag;
-    }
-
-    /// <summary>
-    /// Defines the contract for an analyzer.
+    /// Interface for analyzing and comparing files.
     /// </summary>
     public interface IAnalyzer
     {
         /// <summary>
-        /// Performs the analysis based on the provided configurations.
+        /// Configures the analyzer with options for the teacher and a flag indicating if it's a teacher.
         /// </summary>
-        /// <param name="Configurations">The configuration options for analysis.</param>
-        /// <returns>The result of the analysis.</returns>
-        public AnalysisResult GetAnalysis(ConfigureOptions Configurations);
+        /// <param name="TeacherOptions">A dictionary of teacher-specific options.</param>
+        /// <param name="TeacherFlag">A flag indicating whether the analyzer is being extended by a teacher.</param>
+        public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag);
 
         /// <summary>
-        /// Performs custom analysis for a teacher based on the provided configurations.
+        /// Loads DLL files from the student and teacher for analysis.
         /// </summary>
-        /// <param name="ConfigureOptionsForTeacher">The configuration options for a teacher's custom analysis.</param>
-        /// <returns>The result of the custom analysis.</returns>
-        public AnalysisResult CustomAnalysis(ConfigureOptionsForTeacher Configurations);
+        /// <param name="PathOfDLLFilesOfStudent">A list of file paths for the student's DLL files.</param>
+        /// <param name="PathOfDLLFileOfTeacher">The file path for the teacher's DLL file.</param>
+        public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher);
+
+        /// <summary>
+        /// Performs analysis and returns the results as a tuple.
+        /// </summary>
+        /// <returns>
+        /// A tuple containing an analysis dictionary and an integer score.
+        /// The dictionary maps analysis ID to analysis results, and the integer represents a score.
+        /// </returns>
+        public Tuple<Dictionary<string, string>, int> GetAnalysis();
+
 
         // TODO : Decide on return type
 
         /// <summary>
         /// Generates a relationship graph based on the loaded files.
         /// </summary>
-        /// <param name="PathOfDLLFilesOfStudent">The list of paths to DLL files of students.</param>
-        public void GetRelationshipGraph(List<string> PathOfDLLFilesOfStudent);
+        public void GetRelationshipGraph();
     }
 }
