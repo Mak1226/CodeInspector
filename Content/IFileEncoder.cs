@@ -29,6 +29,12 @@ namespace Content
         void DecodeFrom(string packet);
 
         /// <summary>
+        /// This function can be used to access the private variable data.
+        /// </summary>
+        /// <returns>The class variable data that contains file data</returns>
+        Dictionary<string , string> GetData();
+
+        /// <summary>
         /// Save all data in internal state into the required filepaths.
         /// Note: filepaths are encoded in the XML
         /// </summary>

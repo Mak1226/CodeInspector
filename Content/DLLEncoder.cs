@@ -101,15 +101,46 @@ namespace Content
                     }
                 }
             }
-            throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Function returns the private variable data. This is only needed for debugging purposes till the SaveFiles function is implemented.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Dictionary<string ,string> GetData()
+        {
+            return _data;
+        }
+
         /// <summary>
         /// Saves the files from the dictionary data into the path given as input
         /// </summary>
         /// <param name="path"></param>
         public void SaveFiles(string path)
         {
-            throw new NotImplementedException();
+            if (_data == null)
+            {
+                throw new ArgumentNullException( nameof( _data ) , "Data dictionary is not initialized." );
+            }
+
+            if (string.IsNullOrEmpty( path ))
+            {
+                throw new ArgumentNullException( nameof( path ) , "Path is not specified." );
+            }
+
+            if (!Directory.Exists( path ))
+            {
+                Directory.CreateDirectory( path );
+            }
+
+            foreach (KeyValuePair<string, string> kvp in _data)
+            {
+                string filePath = Path.Combine( path , kvp.Key );
+                File.WriteAllText( filePath , kvp.Value );
+            }
+
         }
+
     }
 }
