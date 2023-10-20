@@ -20,16 +20,37 @@ namespace Dashboard
     /// </summary>
     public partial class StudentView : Page
     {
+        /// <summary>
+        /// Constructor for the StudentView page.
+        /// </summary>
         public StudentView()
         {
             InitializeComponent();
         }
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.NavigationService != null)
             {
+                // If a valid NavigationService exists, navigate to the "Login.xaml" page.
                 this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
             }
+        }
+
+        /// <summary>
+        /// Event handler for the "IstructorIpTextBox" text changed event.
+        /// </summary>
+        private void IstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Event handler for the "Connect" button click.
+        /// </summary>
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Show a message box indicating an attempt to connect to the specified IP address and port.
+            MessageBox.Show("Trying to connect to "+IstructorIpTextBox.Text+" : "+ IstructorPortTextBox.Text);
         }
     }
 }

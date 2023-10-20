@@ -34,21 +34,23 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="0,34,0,0">
+                <Grid Grid.Row="0" >
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Run Text="IP : " />
                         <Run Text="{Binding IpAddress, Mode=OneWay}" FontWeight="Bold"/>
                     </TextBlock> 
-                    
                 </Grid>
-                <Grid Grid.Row="1"  Margin="0,0,0,34">
+                <Grid Grid.Row="1" >
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Run Text="Port : " />
                         <Run Text="{Binding ReceivePort, Mode=OneWay}" FontWeight="Bold"/>    
                     </TextBlock> 
                 </Grid>
-                <!--<Button Content="Login" Width="50" Height="20" Click="LoginButton_Click" />--> 
+                <Grid Grid.Row="2" >
+                    <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" /> 
+                </Grid>
             </Grid>
         </Grid>
         

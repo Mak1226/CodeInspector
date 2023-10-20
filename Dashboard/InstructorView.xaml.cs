@@ -23,6 +23,9 @@ namespace Dashboard
     /// </summary>
     public partial class Entry : Page
     {
+        /// <summary>
+        /// Constructor for the Entry page.
+        /// </summary>
         public Entry()
         {
             InitializeComponent();
@@ -35,15 +38,20 @@ namespace Dashboard
             }
             catch (Exception exception)
             {
+                // If an exception occurs during ViewModel creation, show an error message and shutdown the application.
                 _ = MessageBox.Show(exception.Message);
                 Application.Current.Shutdown();
             }
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Event handler for the "Logout" button click.
+        /// </summary>
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.NavigationService != null)
             {
+                // If a valid NavigationService exists, navigate to the "Login.xaml" page.
                 this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
             }
         }
