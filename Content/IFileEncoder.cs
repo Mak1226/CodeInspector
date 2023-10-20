@@ -1,12 +1,14 @@
 ﻿/******************************************************************************
-* Author      = Susan
-*
-* Product     = Analyzer
-* 
-* Project     = Content
-*
-* Description = Interface for encoding and decoding files to send over network
-*****************************************************************************/
+ * Filename    = IFileEncoder.cs
+ * 
+ * Author      = Susan
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Interface for encoding and decoding files to send over network
+ *****************************************************************************/
 
 namespace Content
 {

@@ -1,12 +1,14 @@
 ﻿/******************************************************************************
-* Author      = Susan
-*
-* Product     = Analyzer
-* 
-* Project     = Content
-*
-* Description = Interface for handling file upload and download
-*****************************************************************************/
+ * Filename    = IFileHandler.cs
+ * 
+ * Author      = Lekshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Interface for handling file upload and download
+ *****************************************************************************/
 
 namespace Content
 {
