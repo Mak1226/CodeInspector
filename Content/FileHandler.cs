@@ -1,12 +1,14 @@
 ﻿/******************************************************************************
-* Author      = Susan
-*
-* Product     = Analyzer
-* 
-* Project     = Content
-*
-* Description = Class that implements IFileHandler
-*****************************************************************************/
+ * Filename    = FileHandler.cs
+ * 
+ * Author      = Lekshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Class that implements IFileHandler
+ *****************************************************************************/
 
 using System.Diagnostics;
 
@@ -19,6 +21,7 @@ namespace Content
     public class FileHandler : IFileHandler
     {
         private readonly Dictionary<string, string> _files;
+        private readonly IFileEncoder _fileEncoder;
 
         /// <summary>
         /// saves files in //data/
@@ -26,6 +29,7 @@ namespace Content
         public FileHandler() 
         {
             _files = new Dictionary<string, string>();
+            _fileEncoder = new DLLEncoder();
         }
 
         /// <summary>
@@ -38,12 +42,9 @@ namespace Content
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            IFileEncoder fileEncoder = new DLLEncoder();
-            string encoding = fileEncoder.GetEncoded( dllFiles.ToList() );
-            Trace.Write( dllFiles );
-            Trace.Write( encoding );
-            Trace.Assert( fileEncoder != null );
+            string encoding = _fileEncoder.GetEncoded( dllFiles.ToList() );
 
+            Trace.Write( encoding );
         }
 
         /// <summary>

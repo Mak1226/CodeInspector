@@ -1,12 +1,14 @@
 ﻿/******************************************************************************
-* Author      = Susan
-*
-* Product     = Analyzer
-* 
-* Project     = Content
-*
-* Description = Class to encode DLL files
-*****************************************************************************/
+ * Filename    = DLLEncoder.cs
+ * 
+ * Author      = Susan
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Class to encode DLL files
+ *****************************************************************************/
 using System.Text;
 using System.Xml;
 

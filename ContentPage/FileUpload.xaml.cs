@@ -1,8 +1,19 @@
-﻿using Content;
+﻿/******************************************************************************
+ * Filename    = FileUpload.xaml.cs
+ * 
+ * Author      = Lekshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = ContentPage
+ *
+ * Description = Page that lets user upload files for analysis
+ *****************************************************************************/
+
+using Content;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 
 namespace ContentPage
 {
@@ -11,6 +22,8 @@ namespace ContentPage
     /// </summary>
     public partial class FileUpload : Page
     {
+        private readonly IFileHandler _upload_file = new FileHandler();
+
         public FileUpload()
         {
             InitializeComponent();
@@ -32,7 +45,11 @@ namespace ContentPage
 
 
 
-
+        /// <summary>
+        /// Handles a directory being provided to be uploaded
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog folderDialog = new();
@@ -43,10 +60,8 @@ namespace ContentPage
                 string folderPath = folderDialog.SelectedPath;
                 Trace.WriteLine(folderPath);
 
-                // Now, you have the folderPath, and you can use it as needed.
-                // For example, you can pass it to your file handler.
-                IFileHandler upload_file = new FileHandler();
-                upload_file.Upload(folderPath, "5");
+                // Pass folder path to fileHandler
+                _upload_file.Upload(folderPath, "5");
             }
         }
 

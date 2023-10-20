@@ -1,12 +1,14 @@
 ﻿/******************************************************************************
-* Author      = Sreelakshmi
-*
-* Product     = Analyzer
-* 
-* Project     = Content
-*
-* Description = Class the send and recieve data to and from analyzer
-*****************************************************************************/
+ * Filename    = AnalyserQuery.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Class the send and recieve data to and from analyzer
+ *****************************************************************************/
 using System.Diagnostics;
 
 namespace Content
