@@ -15,5 +15,10 @@ namespace ContentUnitTesting
 {
     internal class FileHandlerUnitTests
     {
+        void FileFindingTest()
+        {
+            IFileHandler fileHandler = new FileHandler();
+
+        }
     }
 }

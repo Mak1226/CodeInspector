@@ -39,8 +39,10 @@ namespace Content
         {
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
-            string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            IFileEncoder fileEncoder = new DLLEncoder(dllFiles);
+            string[] files = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
+            List<string> dllFiles = files.ToList();
+            IFileEncoder fileEncoder = new DLLEncoder();
+            List<string> xmlFiles = fileEncoder.GetEncoded(dllFiles);
 
         }
 
