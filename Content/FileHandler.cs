@@ -40,7 +40,7 @@ namespace Content
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
             IFileEncoder fileEncoder = new DLLEncoder();
             string encoding = fileEncoder.GetEncoded( dllFiles.ToList() );
-
+            Trace.Write( dllFiles );
             Trace.Write( encoding );
             Trace.Assert( fileEncoder != null );
 
