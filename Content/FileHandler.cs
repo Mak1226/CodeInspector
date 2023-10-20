@@ -20,9 +20,10 @@ namespace Content
     /// </summary>
     public class FileHandler : IFileHandler
     {
+        public List<string> _filesList { get; set; }
+
         private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
-
         /// <summary>
         /// saves files in //data/
         /// </summary>
@@ -30,6 +31,7 @@ namespace Content
         {
             _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
+            _filesList = new List<string>();
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace Content
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
             string encoding = _fileEncoder.GetEncoded( dllFiles.ToList() );
-
+            _filesList = dllFiles.ToList();
             Trace.Write( encoding );
         }
 

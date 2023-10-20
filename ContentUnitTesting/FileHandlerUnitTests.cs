@@ -14,26 +14,27 @@ using Content;
 namespace ContentUnitTesting
 {
     [TestClass]
-    internal class FileHandlerUnitTests
+    public class FileHandlerUnitTests
     {
         [TestMethod]
-        void FileFindingTest()
+        public void FileFindingTest()
         {
             string tempDirectory = Path.Combine( Path.GetTempPath() , Path.GetRandomFileName() );
             Directory.CreateDirectory( tempDirectory );
-            try
-            {
-                // Create some temporary DLL files in the test directory
-                File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
-                File.WriteAllText( Path.Combine( tempDirectory , "TestDll2.dll" ) , "DLL Content 2" );
-                IFileHandler fileHandler = new FileHandler();
-                fileHandler.Upload( tempDirectory , "TestSessionId" );
-            }
-            finally
-            {
-                // Clean up the temporary directory and files
-                Directory.Delete( tempDirectory , true );
-            }
+            File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
+            File.WriteAllText( Path.Combine( tempDirectory , "TestDll2.dll" ) , "DLL Content 2" );
+            Directory.CreateDirectory( tempDirectory + "\\subdir1" );
+            File.WriteAllText( Path.Combine( tempDirectory+"\\subdir1" , "TestDll3.dll" ) , "DLL Content 3" );
+
+            IFileHandler fileHandler = new FileHandler();
+            fileHandler.Upload( tempDirectory , "TestSessionId" );
+            Assert.AreEqual( fileHandler._filesList[0] , tempDirectory + "\\TestDll1.dll" );
+            Assert.AreEqual( fileHandler._filesList[2] , tempDirectory + "\\subdir1" + "\\TestDll3.dll" );
+
+            Console.WriteLine(fileHandler._filesList[1] );
+            // Clean up the temporary directory and files
+            Directory.Delete( tempDirectory , true );
+            
         }
     }
 }

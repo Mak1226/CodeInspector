@@ -17,6 +17,7 @@ namespace Content
     /// </summary>
     public interface IFileHandler
     {
+        List<string> _filesList { get; set; }
         /// <summary>
         /// Upload a file from server
         /// </summary>
