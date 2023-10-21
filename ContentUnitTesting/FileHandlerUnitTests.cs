@@ -13,9 +13,15 @@ using Content;
 
 namespace ContentUnitTesting
 {
+    /// <summary>
+    /// Class to test interface IFileHandler
+    /// </summary>
     [TestClass]
     public class FileHandlerUnitTests
     {
+        /// <summary>
+        /// Test if all files in the directory are found properly
+        /// </summary>
         [TestMethod]
         public void FileFindingTest()
         {

@@ -15,6 +15,9 @@ using Content;
 
 namespace ContentUnitTesting
 {
+    /// <summary>
+    /// Class to test the IFileEncoder interface
+    /// </summary>
     [TestClass]
     public class FileEncoderUnitTests
     {
@@ -26,6 +29,9 @@ namespace ContentUnitTesting
             _testDirectory = Directory.GetParent( Environment.CurrentDirectory ).Parent.Parent.FullName;
         }
 
+        /// <summary>
+        /// Test if a file is being encoded
+        /// </summary>
         [TestMethod]
         public void GetEncoded_ReturnsValidXMLString()
         {
@@ -48,6 +54,9 @@ namespace ContentUnitTesting
             Assert.IsFalse( string.IsNullOrEmpty( encodedXML ) );
         }
 
+        /// <summary>
+        /// Test if a file is being encoded and then decoded properly
+        /// </summary>
         [TestMethod]
         public void EncodeAndDecodeFiles_CheckEquality()
         {
@@ -57,7 +66,8 @@ namespace ContentUnitTesting
             // Test DLL files
             var testFileNames = new List<string>
             {
-                "Testdlls/HelloWorld.dll"
+                "Testdlls/HelloWorld.dll",
+                "Testdlls/Content.dll"
             };
 
             var filePaths = testFileNames.Select( fileName => Path.Combine( _testDirectory , fileName ) ).ToList();

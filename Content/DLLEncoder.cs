@@ -68,9 +68,8 @@ namespace Content
                     root.AppendChild(fileElement);
                 }
 
-                return xmlDocument.OuterXml;
             }
-            return "";
+            return xmlDocument.OuterXml;
         }
 
         /// <summary>
