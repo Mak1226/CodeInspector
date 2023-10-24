@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mono.Cecil;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,16 @@ namespace Analyzer.Parsing
     public class ParsedDLLFiles
     {
         public List<ParsedClass> classObjList = new();
-        //public List<ParsedInterface> interfaceObjList = new();
+        public List<ParsedInterface> interfaceObjList = new();
+
+
+
+
+        // MONO.CECIL objects lists (considering single module assembly)
+        public List<ParsedClassMonoCecil> classObjListMC = new();
+
+
+
         /// <summary>
         /// function to parse the dll files
         /// </summary>
@@ -21,6 +31,7 @@ namespace Analyzer.Parsing
             // it merge the all the ParsedNamespace
             foreach (var path in paths)
             {
+                // REFLECTION PARSING
                 Assembly assembly = Assembly.LoadFrom(path);
 
                 if (assembly != null)
@@ -36,15 +47,15 @@ namespace Analyzer.Parsing
                                 continue;
                             }
 
-                            if (type.IsClass)
+                            if (type.IsClass && type.IsValueType)
                             {
                                 ParsedClass classObj = new ParsedClass(type);
                                 classObjList.Add(classObj);
                             }
                             else if (type.IsInterface)
                             {
-                                //ParsedInterface interfaceObj = new ParsedInterface(type);
-                                //interfaceObjList.Add(interfaceObj);
+                                ParsedInterface interfaceObj = new ParsedInterface(type);
+                                interfaceObjList.Add(interfaceObj);
                             }
                             else
                             {
@@ -59,6 +70,45 @@ namespace Analyzer.Parsing
                         }
                     }
                 }
+
+
+                // MONO.CECIL PARSING
+                AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(path);
+
+                if (assemblyDef != null)
+                {
+                    // considering only single module programs
+                    ModuleDefinition mainModule = assemblyDef.MainModule;
+
+                    if (mainModule != null)
+                    {
+                         foreach(TypeDefinition type in mainModule.Types)
+                        {
+                            if (type.Namespace != "")
+                            {
+                                if(type.Namespace.StartsWith("System") || type.Namespace.StartsWith("Microsoft"))
+                                {
+                                    continue;
+                                }
+
+                                if(type.IsClass && type.IsValueType)
+                                {
+                                    ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
+                                    classObjListMC.Add(classObj);
+                                }
+                                else if (type.IsInterface)
+                                {
+                                    
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
 
         }
