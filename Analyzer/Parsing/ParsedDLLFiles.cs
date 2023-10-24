@@ -10,7 +10,10 @@ namespace Analyzer.Parsing
     public class ParsedDLLFiles
     {
         public List<ParsedClass> classObjList = new();
-        //public List<ParsedInterface> interfaceObjList = new();
+        public List<ParsedInterface> interfaceObjList = new();
+        public List<ParsedStructure> structureObjList = new();
+        //public List<ParsedEnum> enumObjList = new();
+
         /// <summary>
         /// function to parse the dll files
         /// </summary>
@@ -30,26 +33,41 @@ namespace Analyzer.Parsing
                     foreach (Type type in types)
                     {
                         if (type.Namespace != null)
-                        {
+                        { 
+
                             if (type.Namespace.StartsWith("System.") || type.Namespace.StartsWith("Microsoft."))
                             {
                                 continue;
                             }
 
+                            if (type.IsValueType && !type.IsPrimitive && !type.IsEnum)
+                            {
+                                ParsedStructure structObj = new ParsedStructure(type);
+                                structureObjList.Add(structObj);
+                            }
+
                             if (type.IsClass)
                             {
+                                if (type.IsValueType)
+                                {
+                                    ParsedStructure structObj = new ParsedStructure(type);
+                                    structureObjList.Add(structObj);
+                                }
                                 ParsedClass classObj = new ParsedClass(type);
                                 classObjList.Add(classObj);
                             }
                             else if (type.IsInterface)
                             {
-                                //ParsedInterface interfaceObj = new ParsedInterface(type);
-                                //interfaceObjList.Add(interfaceObj);
+                                ParsedInterface interfaceObj = new ParsedInterface(type);
+                                interfaceObjList.Add(interfaceObj);
+                            }
+                            else if (type.IsEnum)
+                            {
+                                // IGNORE
                             }
                             else
                             {
-                                // there can be enums , structs , delegates , events etc.. other than classes and interfaces when used getTypes()
-                                // TODO : Handle these other types
+
                             }
                         }
                         else
