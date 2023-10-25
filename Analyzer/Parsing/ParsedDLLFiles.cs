@@ -10,6 +10,8 @@ namespace Analyzer.Parsing
     public class ParsedDLLFiles
     {
         public List<ParsedClass> classObjList = new();
+        public Dictionary<Type, ParsedClass> mapTypeToParsedClass= new();      
+
         //public List<ParsedInterface> interfaceObjList = new();
         /// <summary>
         /// function to parse the dll files
@@ -40,6 +42,7 @@ namespace Analyzer.Parsing
                             {
                                 ParsedClass classObj = new ParsedClass(type);
                                 classObjList.Add(classObj);
+                                mapTypeToParsedClass[type] = classObj;
                             }
                             else if (type.IsInterface)
                             {

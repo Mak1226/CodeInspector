@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections;
+using Mono.Cecil;
 
 namespace Analyzer.Parsing
 {
