@@ -27,6 +27,12 @@ namespace Networking.Communicator
             Trace.WriteLine("[Server] Stop");
             //throw new NotImplementedException();
         }
+
+        public void Subscribe(IEventHandler eventHandler, string moduleName)
+        {
+            Trace.WriteLine("[Server] Subscribe");
+            //throw new NotImplementedException();
+        }
     }
 }
 

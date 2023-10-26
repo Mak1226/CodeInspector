@@ -44,10 +44,16 @@ namespace Networking.Communicator
          *              {
          *                  "prop1":,
          *                  "prop2"
-         *           }
+         *              }
          *        "
          * }
          */
+
+        /// <summary>
+        /// The module `moduleName` gets subscribed to events implemented in `eventHandler`
+        /// </summary>
+        /// <param name="eventHandler"></param>
+        /// <param name="moduleName"></param>
         public void Subscribe(IEventHandler eventHandler, string moduleName);
     }
 }
