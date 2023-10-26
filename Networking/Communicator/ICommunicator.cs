@@ -35,9 +35,19 @@ namespace Networking.Communicator
         /// <param name="serializedObj"></param>
         /// <param name="eventType"></param>
         /// <param name="destID"></param>
-        //public void Send(object obj,string? destID=null);
-        public void Send(string serializedObj, string eventType/* will be updated with a class obj (?) */, string? destID=null);
-        
-        //TODO: subscribe function
+        public void Send(string serializedObj, string eventType, string? destID=null);
+        /*
+         * {
+         * "destid":
+         * "eventType":
+         * "data":"
+         *              {
+         *                  "prop1":,
+         *                  "prop2"
+         *           }
+         *        "
+         * }
+         */
+        public void Subscribe(IEventHandler eventHandler, string moduleName);
     }
 }

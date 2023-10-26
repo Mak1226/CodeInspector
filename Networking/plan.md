@@ -3,8 +3,8 @@
 > chat message received
 > analyzer result received on the client
 > client joined
-> disconnect also
-> login? 
+> client disconnected
+> register event
 > connect event
 
 # to implement: 
@@ -72,6 +72,51 @@ fle_rec
 > when client initiates tcp connection with the server
 > will be used in start() method
 
-# clientJoined event:
-> client joins a server-> server receives clientName and creates a clientID and broadcasts
-clientName , clientID to all the machines.
+#register event:
+> after tcp connection establised
+> create clientID
+> will be used in start() method
+
+# client connected event:
+> after client has been registered
+> server broadcasts newly joined client to all the clients
+> sends clientID
+
+# client disconnected event:
+> when clients wants to exit the session
+> will be used in stop function
+> server broadcasts clientID disconnected to all clients
+
+
+# event class:
+
+class Event{
+
+public static string event1(){
+return "event1"
+}
+}
+Event.event1()
+
+
+# below is event handler implementatoin for dashboard
+
+class EventHandlerImpl: IEventHandler{
+
+Dashboard object = new D.....
+public void ChatEvent(object)
+{
+// do something in chat event
+
+}
+
+}
+
+
+receiving queue:
+packet 1 -> does it contains info for the destination module?
+
+
+subscribe(EventHandlerImpl, moduleName)
+
+send(object, event, dest)
