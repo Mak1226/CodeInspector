@@ -10,6 +10,8 @@
  * Description = Class that implements IFileHandler
  *****************************************************************************/
 
+using Networking;
+using Networking.Communicator;
 using System.Diagnostics;
 
 namespace Content
@@ -21,17 +23,18 @@ namespace Content
     public class FileHandler : IFileHandler
     {
         public List<string> _filesList { get; set; }
-
+        private ICommunicator _fileSender;
         private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
         /// <summary>
         /// saves files in //data/
         /// </summary>
-        public FileHandler() 
+        public FileHandler(ICommunicator fileSender) 
         {
             _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
+            _fileSender = fileSender;
         }
 
         /// <summary>
@@ -47,6 +50,7 @@ namespace Content
             string encoding = _fileEncoder.GetEncoded( dllFiles.ToList() );
             _filesList = dllFiles.ToList();
             Trace.Write( encoding );
+            _fileSender.Send(encoding, "", "0.0.0.0");
         }
 
         /// <summary>

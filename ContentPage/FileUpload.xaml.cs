@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = FileUpload.xaml.cs
  * 
- * Author      = Lekshmi
+ * Author      = Sreelakshmi
  *
  * Product     = Analyzer
  * 
@@ -11,6 +11,7 @@
  *****************************************************************************/
 
 using Content;
+using Networking;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,10 +23,11 @@ namespace ContentPage
     /// </summary>
     public partial class FileUpload : Page
     {
-        private readonly IFileHandler _upload_file = new FileHandler();
+        private readonly IFileHandler _uploadFile;
 
         public FileUpload()
         {
+            _uploadFile = new FileHandler(CommunicationFactory.GetCommunicator(false));
             InitializeComponent();
         }
 
@@ -61,7 +63,7 @@ namespace ContentPage
                 Trace.WriteLine(folderPath);
 
                 // Pass folder path to fileHandler
-                _upload_file.Upload(folderPath, "5");
+                _uploadFile.Upload(folderPath, "5");
             }
         }
 
