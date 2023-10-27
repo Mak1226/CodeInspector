@@ -4,13 +4,13 @@
 > analyzer result received on the client
 > client joined
 > client disconnected
-> register event
 > connect event
 
 # to implement: 
 > threading : one for listen, one for send? , one for processing?
 > ser./des.
-> priority q
+> Ieventhandler impl
+> network streams
 
 # doubt:
 > how to implement pub/sub   
@@ -71,8 +71,6 @@ fle_rec
 #connect event:
 > when client initiates tcp connection with the server
 > will be used in start() method
-
-#register event:
 > after tcp connection establised
 > create clientID
 > will be used in start() method
@@ -120,3 +118,12 @@ packet 1 -> does it contains info for the destination module?
 subscribe(EventHandlerImpl, moduleName)
 
 send(object, event, dest)
+
+map<moduleName, IEventHandler>  m
+
+receiving queue:
+packet1:
+packet1.eventtype -> message received
+iterate through m
+//call the respective function for ith module
+m[i].messageReceived(data)
