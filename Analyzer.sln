@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud", "Cloud\Cloud.csproj", "{687E4F33-795E-49E2-83D6-C99A3D15FB06}", "Networking", "Networking\Networking.csproj", "{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
