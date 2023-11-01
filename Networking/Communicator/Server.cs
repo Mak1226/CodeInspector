@@ -1,5 +1,5 @@
 ﻿/////
-/// Author: 
+/// Author:
 /////
 
 using System;
@@ -35,4 +35,3 @@ namespace Networking.Communicator
         }
     }
 }
-

@@ -47,14 +47,16 @@ namespace Networking.Queues
 
         public string Dequeue()
         {
+            //assuming q has an element
+            //TODO: check if q is empty or not
             try
             {
+                int val;
                 lock (_lock) // Acquire lock
                 {
-                    while (_queue.Count == 0)
-                        ;
-                    return _queue.Dequeue();
+                    val = _queue.Dequeue();
                 } // Release lock
+                return val;
             }
             catch (Exception ex)
             {
