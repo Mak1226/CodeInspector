@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Text.Json; 
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace Networking.Communicator
 {
@@ -13,30 +14,45 @@ namespace Networking.Communicator
     {
         public string _serializedObj { get; }
         public string _eventType { get; }
+        public string? _destID { get; }
         public Message(string serializedObj, string eventType)
         {
             _serializedObj = serializedObj;
-            _serializedObj = eventType;
+            _eventType = eventType;
+            _destID = null;
+        }
+        public Message(string serializedObj, string eventType, string destID)
+        {
+            _serializedObj = serializedObj;
+            _eventType = eventType;
+            _destID = destID;
         }
     }
     public class Server : ICommunicator
     {
-        Dictionary<string, NetworkStream>? _clientIDToStream;
-        private byte[] returnBytes(string serializedObj, string eventType)
+        Dictionary<string, NetworkStream> _clientIDToStream = new();
+        private static byte[] ReturnBytes(string serializedObj, string eventType)
         {
             var data = new Message(serializedObj, eventType);
             string serStr = JsonSerializer.Serialize(data);
             return System.Text.Encoding.ASCII.GetBytes(serStr);
         }
-        void ICommunicator.Send(string serializedObj, string eventType, string? destID)
+        void ICommunicator.Send(string serializedObj, string eventType, string destID)
         {
             Trace.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
-            if(destID!=null)
+            if(destID!="brodcast")
             {
-                byte[] message = returnBytes(serializedObj, eventType);
+                byte[] message = ReturnBytes(serializedObj, eventType);
                 _clientIDToStream[destID].Write(message);
             }
-            //throw new NotImplementedException();
+            else
+            {   // send to all clients
+                foreach (KeyValuePair<string, NetworkStream> pair in _clientIDToStream)
+                {
+                    byte[] message = ReturnBytes(serializedObj, eventType);
+                    pair.Value.Write(message);
+                }
+            }
         }
 
         string ICommunicator.Start(string? destIP, string? destPort)
