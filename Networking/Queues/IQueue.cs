@@ -12,7 +12,7 @@ namespace Networking.Queues
         enq
         deq
         */
-        public void Enqueue(string data);
+        public void Enqueue(string data, int priority);
         public string Dequeue();
     }
 }

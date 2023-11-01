@@ -51,7 +51,7 @@ namespace Networking.Queues
             //TODO: check if q is empty or not
             try
             {
-                int val;
+                string val;
                 lock (_lock) // Acquire lock
                 {
                     val = _queue.Dequeue();
