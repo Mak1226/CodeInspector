@@ -22,6 +22,7 @@ namespace Analyzer.Parsing
 
 
         public Dictionary<Type, ParsedClass> mapTypeToParsedClass= new();      
+        public Dictionary<Type, ParsedClassMonoCecil> mapTypeDefinitionToParsedClass= new();
 
         //public List<ParsedInterface> interfaceObjList = new();
         /// <summary>
@@ -114,10 +115,11 @@ namespace Analyzer.Parsing
                                     continue;
                                 }
 
-                                if(type.IsClass && type.IsValueType)
+                                if(type.IsClass && !type.IsValueType)
                                 {
                                     ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
                                     classObjListMC.Add(classObj);
+                                    mapTypeDefinitionToParsedClass[type.Resolve().GetType()] = classObj;
                                 }
                                 else if (type.IsInterface)
                                 {

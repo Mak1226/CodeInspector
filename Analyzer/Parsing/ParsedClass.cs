@@ -19,6 +19,7 @@ namespace Analyzer.Parsing
         private readonly FieldInfo[]? _fields;
         private readonly PropertyInfo[]? _properties;
         private readonly Type? _parentClass;
+
         //private readonly List<Type> _compositionList; 
         //private readonly List<Type> _aggregationList; 
         //private readonly List<Type> _usingList;
@@ -35,6 +36,7 @@ namespace Analyzer.Parsing
             _fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _parentClass = type.BaseType;
+            _methodsBaseList = new List<MethodBase>();
 
             if (_parentClass != null && _parentClass.GetInterfaces() != null)
             {

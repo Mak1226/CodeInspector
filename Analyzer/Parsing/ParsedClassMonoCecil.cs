@@ -18,10 +18,11 @@ namespace Analyzer.Parsing
         private readonly TypeDefinition? _parentClass;
         private readonly List<InterfaceImplementation> _interfaces;
         private readonly List<FieldDefinition> _fields;
-        private readonly List<Type> _compositionList;
-        private readonly List<Type> _aggregationList;
-        private readonly List<Type> _usingList;
-        private readonly List<Type> _inheritanceList;
+        private readonly List<string> _compositionList;
+        private readonly List<string> _aggregationList;
+        private readonly List<string> _usingList;
+        private readonly List<string> _inheritanceList;
+
 
 
         public ParsedClassMonoCecil(TypeDefinition type)
@@ -91,16 +92,15 @@ namespace Analyzer.Parsing
             // Using Class Relationship 
             // Cases considering: 1. if some method contains other class as parameter
             // TODO : Check for other cases of Using if exists
-            _usingList = new List<Type>();
-            _compositionList = new List<Type>();
-            _aggregationList = new List<Type>();
+            _usingList = new List<string>();
+            _compositionList = new List<string>();
+            _aggregationList = new List<string>();
 
             Dictionary<MethodDefinition, List<ParameterDefinition>> dict = GetFunctionParameters();
             foreach (KeyValuePair<MethodDefinition, List<ParameterDefinition>> pair in dict)
             {           
                 foreach (ParameterDefinition argument in pair.Value)
                 {
-
                     Type relatedClass = argument.GetType();
 
                     if (relatedClass.IsClass && relatedClass != _typeObj.GetType() && !relatedClass.IsGenericType)
@@ -112,21 +112,29 @@ namespace Analyzer.Parsing
                         }
                         else
                         {
-                            _usingList.Add(relatedClass);
+                            if(!argument.ParameterType.FullName.StartsWith("System")) {
+                                _usingList.Add(argument.ParameterType.FullName);
+                            }
                         }
                     }
                 }
             }
 
             //Inheritance List
-            _inheritanceList = new List<Type>();
+            _inheritanceList = new List<string>();
             if(_parentClass != null) {
-                _inheritanceList.Add(_parentClass.GetType());
+                if(!_parentClass.FullName.StartsWith("System"))
+                {
+                    _inheritanceList.Add(_parentClass.FullName);
+                }
             }
             else
             {
                 foreach(var iface in _interfaces) {
-                    _inheritanceList.Add(iface.GetType());
+                    if(!iface.InterfaceType.FullName.StartsWith("System"))
+                    {
+                        _inheritanceList.Add(iface.InterfaceType.FullName);
+                    }
                 }
             }
 
@@ -143,8 +151,9 @@ namespace Analyzer.Parsing
                         {
                             var constructorReference = (MethodReference)inst.Operand;
                             var objectType = constructorReference.DeclaringType;
-                            if(!objectType.IsGenericInstance) 
-                                _aggregationList.Add(objectType.Resolve().GetType());
+                            if(!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System")){
+                                _aggregationList.Add(objectType.FullName);
+                            } 
                         }
                     }
                 }
@@ -165,9 +174,9 @@ namespace Analyzer.Parsing
                             var fieldType = fieldReference.FieldType;
                             var classType = fieldType.Resolve();
                             // Check if the field type is a reference type (not a value type)
-                            if (!fieldType.IsValueType && classType.IsClass && !classType.IsGenericInstance)
+                            if (!fieldType.IsValueType && classType.IsClass && !classType.IsGenericInstance && !classType.FullName.StartsWith("System"))
                             {
-                                _compositionList.Add(classType.Resolve().GetType());
+                                _compositionList.Add(classType.FullName);
                             }
                         } 
                     }
@@ -176,10 +185,15 @@ namespace Analyzer.Parsing
                 // if between 2 classes between same method composition and using is used-> considering comp relation only?
                 foreach(ParameterDefinition parameter in parameterList)
                 {
-                    var parameterType = parameter.Resolve().GetType();
-                    if (parameterType.IsClass && !parameterType.IsGenericType && !_compositionList.Contains(parameterType))
+                    //Console.WriteLine(parameter.ParameterType.FullName);
+                    Type parameterType = parameter.Resolve().GetType();
+                    if (parameterType.IsClass && !parameterType.IsGenericType && !_compositionList.Contains(parameterType.Name))
                     {
-                        _usingList.Add(parameterType);
+                        string parameterTypeName = parameter.ParameterType.FullName;
+                        if (!parameterTypeName.StartsWith("System"))
+                        {
+                            _usingList.Add(parameter.ParameterType.FullName);
+                        }
                     }
                 }
 
@@ -229,6 +243,24 @@ namespace Analyzer.Parsing
             get { return _constructors; }
         }
 
+        public List<string> CompositionList
+        { 
+            get { return _compositionList; }
+        }
 
+        public List<string> AggregationList
+        {
+            get { return _aggregationList;  }
+        }
+
+        public List<string> InheritanceList 
+        {
+            get { return _inheritanceList; } 
+        }
+
+        public List<string> UsingList
+        {
+            get { return _usingList; }
+        }
     }
 }

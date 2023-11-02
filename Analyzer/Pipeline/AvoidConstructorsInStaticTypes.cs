@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-    internal class AvoidConstructorsInStaticTypes : BaseAnalyzer
+    public class AvoidConstructorsInStaticTypes : BaseAnalyzer
     {
         private Dictionary<ParsedClass, bool> checkedTypes = new();
         public List<ParsedClass> violatingClasses = new();
@@ -36,6 +36,7 @@ namespace Analyzer.Pipeline
                         if(!constructor.IsStatic && !constructor.IsPrivate)
                         {
                             violatingClasses.Add(cls);
+                            Console.WriteLine("CTOR NOT STATIC, NOT PRIVATE");
                         }
                     }
                 }
