@@ -45,7 +45,15 @@ namespace Analyzer.Pipeline.Analyzers
                 }
             }
 
-            return errorCount;
+            if(errorCount == 0)
+            {
+            	return 1;
+            }
+            
+            else
+            {
+            	return 0;
+            }
         }
 
         /// <summary>
