@@ -64,7 +64,7 @@ namespace Analyzer.Parsing
                                 {
                                     ParsedClass classObj = new ParsedClass(type);
                                     classObjList.Add(classObj);
-                                }                               
+                                }
                             }
                             else if (type.IsInterface)
                             {
