@@ -10,10 +10,10 @@ namespace Analyzer.Pipeline
 {
     /// <summary>
     /// Given the list of all classes find abstract classes with at least one public constructor.
-    /// Classes are the only type that can be abstract and allow constrctors.
+    /// Classes are the only type that can be abstract and allow constructor.
     /// Enums
     /// </summary>
-    internal class AbstractTypeNoPublicConstructor : BaseAnalyzer
+    public class AbstractTypeNoPublicConstructor : BaseAnalyzer
     {
         /// <summary>
         /// Initializes a new instance of the AbstractTypeNoPublicConstructor analyzer with parsed DLL files.
@@ -51,6 +51,12 @@ namespace Analyzer.Pipeline
             }
 
             return abstractTypesWithPublicConstructors;
+        }
+
+        override
+        public int GetScore()
+        {
+            return FindAbstractTypeWithPublicConstructor().Count > 0 ? 0 : 1;
         }
     }
 }
