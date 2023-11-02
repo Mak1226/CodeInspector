@@ -66,11 +66,11 @@
                 </Grid.Background>
                 <TextBlock Text="Content and Status" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Margin="10,10,10,10">
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
-                <TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035"/>
+                <TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035" />
             </Grid>
         </Grid>
     </Grid>

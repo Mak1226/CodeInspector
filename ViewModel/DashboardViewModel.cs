@@ -61,7 +61,7 @@ namespace ViewModel
             string hostName = Dns.GetHostName();
             IPAddress[] addresses = Dns.GetHostAddresses(hostName);
 
-            return addresses[2].ToString();
+            return addresses[1].ToString();
             //foreach (IPAddress address in addresses)
             //{
             //    if (address.AddressFamily == AddressFamily.InterNetwork)
