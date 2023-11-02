@@ -108,7 +108,7 @@ namespace Analyzer.Parsing
                                     continue;
                                 }
 
-                                if(type.IsClass && type.IsValueType)
+                                if(type.IsClass && !type.IsValueType)
                                 {
                                     ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
                                     classObjListMC.Add(classObj);

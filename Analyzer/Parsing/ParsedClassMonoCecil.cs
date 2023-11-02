@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Mono.Cecil;
@@ -80,5 +81,41 @@ namespace Analyzer.Parsing
             _fields = _typeObj.Fields.ToList();
 
         }
+        public TypeDefinition TypeObj
+        {
+            get { return _typeObj; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public List<MethodDefinition> Constructors
+        {
+            get { return _constructors; }
+        }
+
+        public List<InterfaceImplementation> Interfaces
+        {
+            get { return _interfaces; }
+        }
+
+        public List<MethodDefinition> Methods
+        {
+            get { return _methods; }
+
+        }
+
+        public List<FieldDefinition> Fields
+        {
+            get { return _fields; }
+        }
+
+        public TypeDefinition ParentClass
+        {
+            get { return _parentClass; }
+        }
+
     }
 }
