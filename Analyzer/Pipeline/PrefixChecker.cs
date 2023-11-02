@@ -8,10 +8,19 @@ namespace Analyzer.Pipeline.Analyzers
     /// </summary>
     public class PrefixCheckerAnalyzer : BaseAnalyzer
     {
+        /// <summary>
+        /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
+        /// </summary>
+        /// <param name="dllFiles">The parsed DLL files for analysis.</param>
         public PrefixCheckerAnalyzer(ParsedDLLFiles dllFiles) : base(dllFiles)
         {
+            // The constructor can be used for any necessary setup or initialization.
         }
 
+        /// <summary>
+        /// Analyzes the DLL files to check type name prefixes for correctness.
+        /// </summary>
+        /// <returns>The number of errors found during the analysis.</returns>
         public override int GetScore()
         {
             int errorCount = 0;
@@ -39,11 +48,21 @@ namespace Analyzer.Pipeline.Analyzers
             return errorCount;
         }
 
+        /// <summary>
+        /// Checks if a type name follows the correct interface prefix.
+        /// </summary>
+        /// <param name="name">The type name to check.</param>
+        /// <returns>True if the type name has the correct interface prefix, otherwise false.</returns>
         private bool IsCorrectInterfaceName(string name)
         {
             return name.Length >= 2 && name[0] == 'I' && char.IsUpper(name[1]);
         }
 
+	/// <summary>
+        /// Checks if a type name follows the correct type prefix.
+        /// </summary>
+        /// <param name="name">The type name to check.</param>
+        /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectTypeName(string name)
         {
             return name.Length < 3 || char.IsLower(name[1]) || (char.IsUpper(name[0]) && char.IsUpper(name[2]));
