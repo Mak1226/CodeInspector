@@ -21,7 +21,7 @@ namespace Networking.Communicator
         /// <param name="destIP">Server IP when called by client</param>
         /// <param name="destPort">Server Port when called by client</param>
         /// <returns>server: Server IP, port</returns>
-        public string Start(string? destIP =null, string? destPort=null);
+        public string Start(string? destIP, int? destPort);
 
         /// <summary>
         /// Server: Stops the server and stops all threads
@@ -31,11 +31,11 @@ namespace Networking.Communicator
 
         /// <summary>
         /// Sends `serializedObj` to `destID`. We call `Send` upon happening of event `eventType`.
-        /// </summary>
+        /// </summary>x
         /// <param name="serializedObj"></param>
         /// <param name="eventType"></param>
         /// <param name="destID"></param>
-        public void Send(string serializedObj, string eventType, string? destID=null);
+        public void Send(string serializedObj, string eventType, string destID);
         /*
          * {
          * "destid":

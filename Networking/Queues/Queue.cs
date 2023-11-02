@@ -6,7 +6,7 @@ namespace Networking.Queues
     public class Queue : IQueue
     {
         private PriorityQueue<string, int> _queue;
-        private object _lock; // Create a lock object
+        private readonly object _lock; // Create a lock object
 
         public Queue()
         {
@@ -51,7 +51,7 @@ namespace Networking.Queues
             //TODO: check if q is empty or not
             try
             {
-                int val;
+                string val;
                 lock (_lock) // Acquire lock
                 {
                     val = _queue.Dequeue();
@@ -64,6 +64,11 @@ namespace Networking.Queues
                 Trace.WriteLine($"{ex.StackTrace}");
             }
             return "";
+        }
+
+        public bool canDequeue()
+        {
+            return _queue.TryPeek(out string? _, out int _);
         }
     }
 }
