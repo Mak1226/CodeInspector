@@ -15,7 +15,7 @@ namespace Analyzer.Pipeline
         /// <summary>
         /// The parsed DLL files to be used for analysis.
         /// </summary>
-        protected ParsedDLLFiles parsedDLLFiles;
+        public ParsedDLLFiles parsedDLLFiles;
 
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.

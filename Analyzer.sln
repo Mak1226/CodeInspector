@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer", "Analyzer\Analyzer.csproj", "{20A4A694-E898-4206-8694-05DB3ED8E02B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyzer.csproj", "{20A4A694-E898-4206-8694-05DB3ED8E02B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTests", "AnalyzerTests\AnalyzerTests.csproj", "{0E81FD33-F200-49F5-8B47-DF24F371448F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
