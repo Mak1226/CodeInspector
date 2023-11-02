@@ -14,5 +14,6 @@ namespace Networking.Queues
         */
         public void Enqueue(string data, int priority);
         public string Dequeue();
+        public bool canDequeue();
     }
 }
