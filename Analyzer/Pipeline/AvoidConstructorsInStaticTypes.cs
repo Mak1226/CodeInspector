@@ -94,7 +94,6 @@ namespace Analyzer.Pipeline
         public override int GetScore()
         {
             //CHECK
-            int score = 1;
             int violations = violatingClasses.Count;
             //score?
             //Add to analyzerResultsDictionary
@@ -103,7 +102,7 @@ namespace Analyzer.Pipeline
             {
                 return 0;
             }
-            return score;
+            return 1;
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Analyzer.Parsing
         private readonly FieldInfo[]? _fields;
         private readonly PropertyInfo[]? _properties;
         private readonly Type? _parentClass;
-        private readonly List<Type> _compositionList; 
-        private readonly List<Type> _aggregationList; 
-        private readonly List<Type> _usingList;
+        //private readonly List<Type> _compositionList; 
+        //private readonly List<Type> _aggregationList; 
+        //private readonly List<Type> _usingList;
 
         // If needed for local variables
         private readonly List<MethodBase> _methodsBaseList;
@@ -56,43 +56,6 @@ namespace Analyzer.Parsing
             //    m.name != "equals" &&
             //    m.name != "tostring" &&
             //    m.name != "gethashcode").toarray();
-
-
-            // Composition Class Relationship
-            // Cases considering: 1. 
-
-            // Getting local variables from MethodBase
-            // _methods store MethodInfo objects but not its super class MethodBase
-
-            // similar syntax for local variable
-            //List<LocalVariableInfo> lvInfo = methodBase.GetMethodBody().LocalVariables.ToList();
-
-
-
-
-            // Using Class Relationship 
-            // Cases considering: 1. if some method contains other class as parameter
-            // TODO : Check for other cases of Using if exists
-            _usingList = new List<Type>();
-
-            Dictionary<MethodInfo, ParameterInfo[]> dict = GetFunctionParameters();
-            foreach (KeyValuePair<MethodInfo, ParameterInfo[]> pair in dict)
-            {
-                foreach (ParameterInfo argument in pair.Value)
-                {
-                    Type relatedClass = argument.ParameterType;
-
-                    if (relatedClass.IsClass && relatedClass != _typeObj)
-                    {
-                        //adding to using list
-                        _usingList.Add(relatedClass);
-                    }
-                }
-            }
-
-            // Aggregation List
-            // check local variables
-
 
         }
 
@@ -135,21 +98,6 @@ namespace Analyzer.Parsing
         public Type ParentClass
         {
             get { return _parentClass; }
-        }
-
-        public Dictionary<MethodInfo, ParameterInfo[]> GetFunctionParameters()
-        {
-            Dictionary<MethodInfo, ParameterInfo[]> dict = new();
-
-            if (_methods != null)
-            {
-                foreach (MethodInfo method in _methods)
-                {
-                    dict.Add(method, method.GetParameters());
-                }
-            }
-
-            return dict;
         }
 
     }

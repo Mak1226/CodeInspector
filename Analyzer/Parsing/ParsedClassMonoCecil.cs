@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Analyzer.Parsing
 {
@@ -16,6 +18,11 @@ namespace Analyzer.Parsing
         private readonly TypeDefinition? _parentClass;
         private readonly List<InterfaceImplementation> _interfaces;
         private readonly List<FieldDefinition> _fields;
+        private readonly List<Type> _compositionList;
+        private readonly List<Type> _aggregationList;
+        private readonly List<Type> _usingList;
+        private readonly List<Type> _inheritanceList;
+
 
         public ParsedClassMonoCecil(TypeDefinition type)
         {
@@ -79,6 +86,149 @@ namespace Analyzer.Parsing
             }
             _fields = _typeObj.Fields.ToList();
 
+
+            // Type Relationships
+            // Using Class Relationship 
+            // Cases considering: 1. if some method contains other class as parameter
+            // TODO : Check for other cases of Using if exists
+            _usingList = new List<Type>();
+            _compositionList = new List<Type>();
+            _aggregationList = new List<Type>();
+
+            Dictionary<MethodDefinition, List<ParameterDefinition>> dict = GetFunctionParameters();
+            foreach (KeyValuePair<MethodDefinition, List<ParameterDefinition>> pair in dict)
+            {           
+                foreach (ParameterDefinition argument in pair.Value)
+                {
+
+                    Type relatedClass = argument.GetType();
+
+                    if (relatedClass.IsClass && relatedClass != _typeObj.GetType() && !relatedClass.IsGenericType)
+                    {
+                        //adding to using list
+                        if (pair.Key.IsConstructor)
+                        {
+                            continue;                            
+                        }
+                        else
+                        {
+                            _usingList.Add(relatedClass);
+                        }
+                    }
+                }
+            }
+
+            //Inheritance List
+            _inheritanceList = new List<Type>();
+            if(_parentClass != null) {
+                _inheritanceList.Add(_parentClass.GetType());
+            }
+            else
+            {
+                foreach(var iface in _interfaces) {
+                    _inheritanceList.Add(iface.GetType());
+                }
+            }
+
+
+            // Aggregation List
+            // check if new opcode is present in method body and get its type
+            foreach (MethodDefinition method in _methods)
+            {
+                if (method.HasBody)
+                {
+                    foreach (var inst in method.Body.Instructions)
+                    {
+                        if(inst != null && inst.OpCode == OpCodes.Newobj)
+                        {
+                            var constructorReference = (MethodReference)inst.Operand;
+                            var objectType = constructorReference.DeclaringType;
+                            if(!objectType.IsGenericInstance) 
+                                _aggregationList.Add(objectType.Resolve().GetType());
+                        }
+                    }
+                }
+            }
+           
+
+            //Composition
+            foreach(MethodDefinition ctor in _constructors)
+            {
+                List<ParameterDefinition> parameterList = ctor.Parameters.ToList();
+                if (ctor.HasBody)
+                {
+                    for(int i = 0; i < ctor.Body.Instructions.Count; i++)
+                    {
+                        var inst = ctor.Body.Instructions[i];
+                        if(inst != null && inst.OpCode == OpCodes.Stfld) {
+                            var fieldReference = (FieldReference)inst.Operand ;
+                            var fieldType = fieldReference.FieldType;
+                            var classType = fieldType.Resolve();
+                            // Check if the field type is a reference type (not a value type)
+                            if (!fieldType.IsValueType && classType.IsClass && !classType.IsGenericInstance)
+                            {
+                                _compositionList.Add(classType.Resolve().GetType());
+                            }
+                        } 
+                    }
+                }
+                // TODO: When obj is taken as argument and assigned to a local variable-> using case
+                // if between 2 classes between same method composition and using is used-> considering comp relation only?
+                foreach(ParameterDefinition parameter in parameterList)
+                {
+                    var parameterType = parameter.Resolve().GetType();
+                    if (parameterType.IsClass && !parameterType.IsGenericType && !_compositionList.Contains(parameterType))
+                    {
+                        _usingList.Add(parameterType);
+                    }
+                }
+
+
+                //Get local variables of the constructor
+                //And check
+                //   TODO: case when new Obj is instantiated in constructor and assigned to local variable
+                //var classType = localFieldType.Resolve();
+                // Check if the field type is a reference type (not a value type)
+                // if (!localFieldType.IsValueType && classType.IsClass && !classType.IsGenericInstance && classType != _typeObj)
+                //{
+                //   _aggregationList.Add(classType.GetType())
+                //}
+                //}
+
+            }
+
         }
+
+        public Dictionary<MethodDefinition, List<ParameterDefinition>> GetFunctionParameters()
+        {
+            Dictionary<MethodDefinition, List<ParameterDefinition>> dict = new();
+
+            if (_methods != null)
+            {
+                foreach(MethodDefinition method in _methods)
+                {
+                    dict.Add(method, method.Parameters.ToList());
+                }
+            }
+
+            return dict;
+        }
+
+        public TypeDefinition TypeObj
+        {
+            get { return _typeObj; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public List<MethodDefinition> Constructors
+        {
+            get { return _constructors; }
+        }
+
+
     }
 }
