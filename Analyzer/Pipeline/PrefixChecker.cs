@@ -35,11 +35,19 @@ namespace Analyzer.Pipeline.Analyzers
                         errorCount++;
                     }
                 }
-                else
+                else if(type.IsValueType)
                 {
                     if (!IsCorrectTypeName(type.Name))
                     {
                         Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
+                        errorCount++;
+                    }
+                }
+                else
+                {
+                    if (!IsCorrectGenericParameterName(type.Name))
+                    {
+                        Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
                         errorCount++;
                     }
                 }
@@ -63,7 +71,7 @@ namespace Analyzer.Pipeline.Analyzers
         /// <returns>True if the type name has the correct interface prefix, otherwise false.</returns>
         private bool IsCorrectInterfaceName(string name)
         {
-            return name.Length >= 2 && name[0] == 'I' && char.IsUpper(name[1]);
+            return name.Length > 2 && name[0] == 'I' && char.IsUpper(name[1]);
         }
 
 	/// <summary>
@@ -73,7 +81,27 @@ namespace Analyzer.Pipeline.Analyzers
         /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectTypeName(string name)
         {
-            return name.Length < 3 || char.IsLower(name[1]) || (char.IsUpper(name[0]) && char.IsUpper(name[2]));
+	    if (name.Length < 3)
+	    {
+	        return true;
+	    }
+
+		switch (name [0]) {	
+		case 'I':	
+			return Char.IsLower (name [1]) ? true : Char.IsUpper (name [2]);
+		default:
+			return true;
+		}
         }
+        
+        /// <summary>
+        /// Checks if a type name follows the correct generic parameter prefix.
+        /// </summary>
+        /// <param name="name">The type name to check.</param>
+        /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
+        private bool IsCorrectGenericParameterName (string name)
+	{
+		return (((name.Length > 1) && (name [0] != 'T')) || Char.IsLower (name [0]));
+	}
     }
 }
