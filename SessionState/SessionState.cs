@@ -11,14 +11,18 @@
 
         public void AddStudent(int id, string name, string ip, int port)
         {
-            var student = new Student
+            var check = students.Find(s => s.Id == id);
+            if (check == null)
             {
-                Id = id,
-                Name = name,
-                IP = ip,
-                Port = port
-            };
-            students.Add(student);
+                var student = new Student
+                {
+                    Id = id,
+                    Name = name,
+                    IP = ip,
+                    Port = port
+                };
+                students.Add(student);
+            }
         }
 
         public void RemoveStudent(int id)
