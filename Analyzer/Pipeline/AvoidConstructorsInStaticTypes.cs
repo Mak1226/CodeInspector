@@ -85,6 +85,10 @@ namespace Analyzer.Pipeline
 
             Type parent = cls.ParentClass;
             //verify if this works 
+            if(parent  == null)
+            {
+                return true;
+            }
             if(parent.FullName == "System.Object")
             {
                 return checkedTypes[cls] = true;

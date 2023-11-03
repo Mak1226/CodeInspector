@@ -21,48 +21,48 @@ namespace Analyzer.Pipeline.Analyzers
         /// Analyzes the DLL files to check type name prefixes for correctness.
         /// </summary>
         /// <returns>The number of errors found during the analysis.</returns>
-        public override int GetScore()
-        {
-            int errorCount = 0;
+        //public override int GetScore()
+        //{
+        //    int errorCount = 0;
 
-            foreach (var type in parsedDLLFiles.Types)
-            {
-                if (type.IsInterface)
-                {
-                    if (!IsCorrectInterfaceName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect interface prefix: {type.Name}");
-                        errorCount++;
-                    }
-                }
-                else if(type.IsValueType)
-                {
-                    if (!IsCorrectTypeName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
-                        errorCount++;
-                    }
-                }
-                else
-                {
-                    if (!IsCorrectGenericParameterName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
-                        errorCount++;
-                    }
-                }
-            }
+        //    foreach (var type in parsedDLLFiles.Types)
+        //    {
+        //        if (type.IsInterface)
+        //        {
+        //            if (!IsCorrectInterfaceName(type.Name))
+        //            {
+        //                Console.WriteLine($"[Error] Incorrect interface prefix: {type.Name}");
+        //                errorCount++;
+        //            }
+        //        }
+        //        else if(type.IsValueType)
+        //        {
+        //            if (!IsCorrectTypeName(type.Name))
+        //            {
+        //                Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
+        //                errorCount++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (!IsCorrectGenericParameterName(type.Name))
+        //            {
+        //                Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
+        //                errorCount++;
+        //            }
+        //        }
+        //    }
 
-            if(errorCount == 0)
-            {
-            	return 1;
-            }
+        //    if(errorCount == 0)
+        //    {
+        //    	return 1;
+        //    }
             
-            else
-            {
-            	return 0;
-            }
-        }
+        //    else
+        //    {
+        //    	return 0;
+        //    }
+        //}
 
         /// <summary>
         /// Checks if a type name follows the correct interface prefix.
