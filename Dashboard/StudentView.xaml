@@ -58,7 +58,31 @@
                         <TextBox Name="IstructorPortTextBox" Margin="10,5,10,5" Width="100" Height="25" Background="Azure" VerticalAlignment="Top" HorizontalAlignment="Left" TextChanged="IstructorIpTextBox_TextChanged"/>
                     </StackPanel>
                     <StackPanel x:Name="InstructorConnectionStackPanel" Orientation="Horizontal">
-                        <Button Content="Connect" Width="84" Height="27" Click="ConnectButton_Click" HorizontalAlignment="Center" Margin="10,5,10,5"/>
+                        <Button x:Name="connectButton" Content="Connect" Width="84" Height="27" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <!--<TextBlock x:Name="connectedText1" Text="Connected" Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />-->
+                        <TextBlock x:Name="connectedText" Text="Connected"  Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>

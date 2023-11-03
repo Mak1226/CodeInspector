@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ViewModel;
 
 namespace Dashboard
 {
@@ -26,14 +27,24 @@ namespace Dashboard
         public StudentView()
         {
             InitializeComponent();
+
+            try
+            {
+                // Create the ViewModel and set as data context.
+                DashboardViewModel viewModel = new(false);
+                DataContext = viewModel;
+            }
+            catch (Exception exception)
+            {
+                // If an exception occurs during ViewModel creation, show an error message and shutdown the application.
+                _ = MessageBox.Show(exception.Message);
+                Application.Current.Shutdown();
+            }
         }
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-                this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
-            }
+            // If a valid NavigationService exists, navigate to the "Login.xaml" page.
+            this.NavigationService?.Navigate(new Uri("Login.xaml", UriKind.Relative));
         }
 
         /// <summary>
@@ -41,7 +52,7 @@ namespace Dashboard
         /// </summary>
         private void IstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            
         }
 
         /// <summary>
