@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ViewModel;
 
 namespace Dashboard
 {
@@ -39,9 +40,13 @@ namespace Dashboard
         /// <summary>
         /// Event handler for the "IstructorIpTextBox" text changed event.
         /// </summary>
-        private void IstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        //private void IstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
 
+        private void InstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var viewModel = new DashboardViewModel(); // Create an instance of DashboardViewModel
+            viewModel.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
+            viewModel.SetStudentInfo(StudentNameTextBox.Text, StudentNameTextBox.Text);
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Dashboard
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
-            MessageBox.Show("Trying to connect to "+IstructorIpTextBox.Text+" : "+ IstructorPortTextBox.Text);
+            MessageBox.Show("Trying to connect to "+InstructorIpTextBox.Text+" : "+ InstructorPortTextBox.Text);
         }
     }
 }

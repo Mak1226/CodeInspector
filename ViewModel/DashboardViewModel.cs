@@ -11,11 +11,11 @@
  *****************************************************************************/
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-
-
+using System.Runtime.InteropServices;
 
 namespace ViewModel
 {
@@ -56,6 +56,16 @@ namespace ViewModel
         /// <summary>
         /// Gets the private IP address of the host machine.
         /// </summary>
+        public string? StudentName { get; private set; }
+
+        /// <summary>
+        /// Gets the instructor's port.
+        /// </summary>
+        public string? StudentRoll { get; private set; }
+
+        /// <summary>
+        /// Gets the private IP address of the host machine.
+        /// </summary>
         private string? GetPrivateIp()
         {
             string hostName = Dns.GetHostName();
@@ -77,10 +87,21 @@ namespace ViewModel
         /// </summary>
         /// <param name="ip">The instructor's IP address.</param>
         /// <param name="port">The instructor's port.</param>
-        private void SetInstructorAddress (string ip, string port)
+        public void SetInstructorAddress (string ip, string port)
         {
             InstructorIp = ip;
             InstructorPort = port;
+
+            Debug.WriteLine(InstructorIp);
+            Debug.WriteLine(InstructorPort);
+        }
+        public void SetStudentInfo(string name, string roll)
+        {
+            StudentName = name;
+            StudentRoll = roll;
+
+            Debug.WriteLine(StudentName);
+            Debug.WriteLine(StudentRoll);
         }
     }
 }
