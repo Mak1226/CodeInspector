@@ -20,6 +20,11 @@ namespace Analyzer.Parsing
         public List<ParsedClassMonoCecil> classObjListMC = new();
 
 
+
+        public Dictionary<Type, ParsedClass> mapTypeToParsedClass= new();      
+        public Dictionary<Type, ParsedClassMonoCecil> mapTypeDefinitionToParsedClass= new();
+
+        //public List<ParsedInterface> interfaceObjList = new();
         /// <summary>
         /// function to parse the dll files
         /// </summary>
@@ -64,7 +69,9 @@ namespace Analyzer.Parsing
                                 {
                                     ParsedClass classObj = new ParsedClass(type);
                                     classObjList.Add(classObj);
-                                }                               
+                                    mapTypeToParsedClass[type] = classObj;
+
+                                }
                             }
                             else if (type.IsInterface)
                             {
@@ -108,10 +115,11 @@ namespace Analyzer.Parsing
                                     continue;
                                 }
 
-                                if(type.IsClass && type.IsValueType)
+                                if(type.IsClass && !type.IsValueType)
                                 {
                                     ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
                                     classObjListMC.Add(classObj);
+                                    mapTypeDefinitionToParsedClass[type.Resolve().GetType()] = classObj;
                                 }
                                 else if (type.IsInterface)
                                 {
