@@ -65,27 +65,30 @@ namespace Analyzer.Parsing
                 _interfaces = type.GetInterfaces().Except(_parentClass.GetInterfaces()).ToArray();
             }
 
-            HashSet<string> removableInterfaceNames = new();
-
-            foreach (var i in _interfaces)
+            if(_interfaces?.Length > 0)
             {
-                foreach (var x in i.GetInterfaces())
-                {
-                    removableInterfaceNames.Add(x.FullName);
-                }
-            }
+                HashSet<string> removableInterfaceNames = new();
 
-            List<Type> ifaceList = new();
-            
-            foreach (var iface in _interfaces)
-            {
-                if (!removableInterfaceNames.Contains(iface.FullName))
+                foreach (var i in _interfaces)
                 {
-                    ifaceList.Add(iface);
+                    foreach (var x in i.GetInterfaces())
+                    {
+                        removableInterfaceNames.Add(x.FullName);
+                    }
                 }
-            }
 
-            _interfaces = ifaceList.ToArray();
+                List<Type> ifaceList = new();
+
+                foreach (var iface in _interfaces)
+                {
+                    if (!removableInterfaceNames.Contains(iface.FullName))
+                    {
+                        ifaceList.Add(iface);
+                    }
+                }
+
+                _interfaces = ifaceList.ToArray();
+            }
 
 
             // Finding method bases for methods of the class found earlier

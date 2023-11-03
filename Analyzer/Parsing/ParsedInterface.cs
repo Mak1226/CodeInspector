@@ -33,27 +33,30 @@ namespace Analyzer.Parsing
             // Finding interfaces which are only implemented by the class and declares specifically in the class
             _parentInterfaces = type.GetInterfaces();
 
-            HashSet<string> removableInterfaceNames = new();
-
-            foreach (var i in _parentInterfaces)
+            if(_parentInterfaces?.Length > 0)
             {
-                foreach (var x in i.GetInterfaces())
+                HashSet<string> removableInterfaceNames = new();
+
+                foreach (var i in _parentInterfaces)
                 {
-                    removableInterfaceNames.Add(x.FullName);
+                    foreach (var x in i.GetInterfaces())
+                    {
+                        removableInterfaceNames.Add(x.FullName);
+                    }
                 }
-            }
 
-            List<Type> ifaceList = new();
+                List<Type> ifaceList = new();
 
-            foreach (var iface in _parentInterfaces)
-            {
-                if (!removableInterfaceNames.Contains(iface.FullName)) 
+                foreach (var iface in _parentInterfaces)
                 {
-                    ifaceList.Add(iface);
+                    if (!removableInterfaceNames.Contains(iface.FullName))
+                    {
+                        ifaceList.Add(iface);
+                    }
                 }
-            }
 
-            _parentInterfaces = ifaceList.ToArray();
+                _parentInterfaces = ifaceList.ToArray();
+            }
         }
 
         public Type TypeObj
