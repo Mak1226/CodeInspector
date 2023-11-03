@@ -5,44 +5,93 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections;
-using Mono.Cecil;
 
 namespace Analyzer.Parsing
 {
+    /// <summary>
+    /// Parses the most used information from the class object using System.Reflection
+    /// </summary>
     public class ParsedClass
     {
-        private readonly Type _typeObj; 
-        private readonly string? _name;
-        private readonly ConstructorInfo[]? _constructors;
-        private readonly Type[]? _interfaces;
-        private readonly MethodInfo[]? _methods;
-        private readonly FieldInfo[]? _fields;
-        private readonly PropertyInfo[]? _properties;
-        private readonly Type? _parentClass;
+        private readonly Type _typeObj;     // type object to access class related information
+        private readonly string _name;     // Name of Class. (Doesn't include namespace name in it)
+        private readonly ConstructorInfo[]? _constructors;      // Includes Default Constructors also if created
 
-        //private readonly List<Type> _compositionList; 
-        //private readonly List<Type> _aggregationList; 
-        //private readonly List<Type> _usingList;
+        /// <summary>
+        /// Contains interfaces implemented by the class only the ones specifically mentioned 
+        /// Does not include interfaces implemented by the parent class/ implemented interface
+        /// This is useful for creation of class relational diagram
+        /// </summary>
+        private readonly Type[]? _interfaces;       
 
-        // If needed for local variables
+        private readonly MethodInfo[]? _methods;     // Methods declared only by the class
+        private readonly FieldInfo[]? _fields;      // Fields declared only by the class
+        private readonly PropertyInfo[]? _properties;   // Properties declared only by the class
+        private readonly Type? _parentClass;        // ParentClass - does not contain classes starting with System/Microsoft
+
+        // Storing information related to methods and can be used to get local variables rather methodinfo
         private readonly List<MethodBase> _methodsBaseList;
 
+        /// <summary>
+        /// Parses the most used information from the class object
+        /// </summary>
+        /// <param name="type">class object when parsed using System.reflection</param>
         public ParsedClass(Type type)
         {
             _typeObj = type;
-            _name = type.FullName;
-            _constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            _name = type.Name;
+            _constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-            _parentClass = type.BaseType;
             _methodsBaseList = new List<MethodBase>();
 
+            // Finding parent class declared in the project - does not contain classes starting with System/Microsoft
+            if (type.BaseType.Namespace != null) 
+            {
+                if (!(type.BaseType.Namespace.StartsWith("System") || type.BaseType.Namespace.StartsWith("Microsoft")))
+                {
+                    _parentClass = _typeObj.BaseType;
+                }
+            }
+            else
+            {
+                _parentClass = _typeObj.BaseType;
+            }
+
+            // Finding interfaces which are only implemented by the class and declares specifically in the class
             if (_parentClass != null && _parentClass.GetInterfaces() != null)
             {
                 _interfaces = type.GetInterfaces().Except(_parentClass.GetInterfaces()).ToArray();
             }
 
+            if(_interfaces?.Length > 0)
+            {
+                HashSet<string> removableInterfaceNames = new();
+
+                foreach (var i in _interfaces)
+                {
+                    foreach (var x in i.GetInterfaces())
+                    {
+                        removableInterfaceNames.Add(x.FullName);
+                    }
+                }
+
+                List<Type> ifaceList = new();
+
+                foreach (var iface in _interfaces)
+                {
+                    if (!removableInterfaceNames.Contains(iface.FullName))
+                    {
+                        ifaceList.Add(iface);
+                    }
+                }
+
+                _interfaces = ifaceList.ToArray();
+            }
+
+
+            // Finding method bases for methods of the class found earlier
             foreach (MethodInfo methodinfo in _methods)
             {
                 MethodBase methodBase = _typeObj.GetMethod(methodinfo.Name);
@@ -52,15 +101,13 @@ namespace Analyzer.Parsing
                     _methodsBaseList.Add(methodBase);
                 }
             }
-
-            //_methods = type.getmethods().where(m => m.declaringtype != typeof(object) &&
-            //    m.name != "gettype" &&
-            //    m.name != "equals" &&
-            //    m.name != "tostring" &&
-            //    m.name != "gethashcode").toarray();
-
         }
 
+
+        /// <summary>
+        /// Getters of private fields of this class
+        /// Some of them can return null.(Refer: Nullable private fields of this class)
+        /// </summary>
         public Type TypeObj
         {
             get { return _typeObj; }
@@ -102,5 +149,24 @@ namespace Analyzer.Parsing
             get { return _parentClass; }
         }
 
+
+        /// <summary>
+        /// Provides information related to all methods of class
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<MethodInfo, ParameterInfo[]> GetFunctionParameters()
+        {
+            Dictionary<MethodInfo, ParameterInfo[]> dict = new();
+
+            if (_methods != null)
+            {
+                foreach (MethodInfo method in _methods)
+                {
+                    dict.Add(method, method.GetParameters());
+                }
+            }
+
+            return dict;
+        }
     }
 }
