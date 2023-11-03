@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-    internal class MainPipeline
+    public class MainPipeline
     {
         public MainPipeline() 
         { 
