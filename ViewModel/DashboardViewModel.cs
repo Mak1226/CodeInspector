@@ -52,6 +52,7 @@ namespace ViewModel
                 {
                     AddStudnet(message);
                 };
+                Debug.WriteLine("Instructor communicator created");
             }
             else
             {
@@ -59,6 +60,7 @@ namespace ViewModel
                 {
                     HandleStudentMessage(message);
                 };
+                Debug.WriteLine("Student communicator created");
             } 
         }
 
@@ -129,7 +131,7 @@ namespace ViewModel
             return null;
         }
 
-        private static string SerializeStudnetInfo(string name, string rollNo, string ip, string port)
+        private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port)
         {  
             return $"{rollNo}|{name}|{ip}|{port}";
         }
@@ -156,6 +158,7 @@ namespace ViewModel
         }
         private bool AddStudnet (string serializedStudnet)
         {
+            Debug.WriteLine("One message received");
             if (serializedStudnet != null)
             { 
                 var result = DeserializeStudnetInfo(serializedStudnet);
@@ -178,18 +181,24 @@ namespace ViewModel
             if(message == "1")
             {
                 IsConnected = true;
+                Debug.WriteLine("Connected>>>");
             }
             else if (message == "0") 
             { 
                 IsConnected= false;
             }
+            OnPropertyChanged(nameof(IsConnected));
         }
 
-        //private void ConnectInstructor ()
-        //{
-        //    var message = SerializeStudnetInfo()
-        //    _newConnection.SendMessage(InstructorIp,InstructorIp,)
-        //}
+        public void ConnectInstructor()
+        {
+            var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort);
+            Debug.WriteLine($"This was the studentRoll{StudentRoll}");
+            if(InstructorIp != null && InstructorPort != null)
+            { 
+                _newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);
+            }
+        }
 
         /// <summary>
         /// Sets the instructor's IP address and port.

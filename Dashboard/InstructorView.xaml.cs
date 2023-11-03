@@ -33,7 +33,7 @@ namespace Dashboard
             try
             {
                 // Create the ViewModel and set as data context.
-                DashboardViewModel viewModel = new();
+                DashboardViewModel viewModel = new(true);
                 DataContext = viewModel;
             }
             catch (Exception exception)

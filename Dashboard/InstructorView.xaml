@@ -20,13 +20,13 @@
                 <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0"  Margin="5,5,5,5">
                 <Grid.Background>
                     <SolidColorBrush Color="Pink" />
                 </Grid.Background>
                 <TextBlock Text="Navigation and Controls" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <Grid Grid.Column="1" Height="112" VerticalAlignment="Top">
+            <Grid Grid.Column="1" Height="112" VerticalAlignment="Top"  Margin="5,5,5,5">
                 <Grid.Background>
                     <SolidColorBrush Color="LightGreen" />
                 </Grid.Background>
@@ -60,13 +60,13 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0"  Margin="5,5,5,5">
                 <Grid.Background>
                     <SolidColorBrush Color="LightCyan" />
                 </Grid.Background>
                 <TextBlock Text="Content and Status" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <Grid Grid.Column="1" Margin="10,10,10,10">
+            <Grid Grid.Column="1" Margin="5,5,5,5">
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>

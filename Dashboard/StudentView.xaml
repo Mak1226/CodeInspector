@@ -63,7 +63,7 @@
                                 <Style TargetType="Button">
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="true">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -76,7 +76,7 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="true">
                                             <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>

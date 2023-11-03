@@ -54,9 +54,9 @@ namespace Dashboard
 
         private void InstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var viewModel = new DashboardViewModel(); // Create an instance of DashboardViewModel
-            viewModel.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
-            viewModel.SetStudentInfo(StudentNameTextBox.Text, StudentNameTextBox.Text);
+            DashboardViewModel? viewModel = DataContext as DashboardViewModel;
+            viewModel?.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
+            viewModel?.SetStudentInfo(StudentNameTextBox.Text, StudentRollTextBox.Text);
         }
 
         /// <summary>
@@ -65,7 +65,10 @@ namespace Dashboard
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
-            MessageBox.Show("Trying to connect to "+InstructorIpTextBox.Text+" : "+ InstructorPortTextBox.Text);
+            //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
+            DashboardViewModel? viewModel = DataContext as DashboardViewModel;
+            viewModel?.ConnectInstructor();
+
         }
     }
 }
