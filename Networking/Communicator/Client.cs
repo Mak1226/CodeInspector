@@ -22,21 +22,22 @@ namespace Networking.Communicator
         private Queue _recvQueue = new();
 
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
-        void ICommunicator.Send(string serializedObj, string eventType, string destID)
+        public void Send(string serializedObj, string eventType, string destID)
         {
             Trace.WriteLine("[Client] Send" + serializedObj + " " + eventType + " " + destID);
             _sendQueue.Enqueue(JsonSerializer.Serialize(new Message(serializedObj, eventType, destID)), 1 /* fix it */);
         }
 
 
-        string ICommunicator.Start(string? destIP, int? destPort)
+        public string Start(string? destIP, int? destPort)
         {
-            Trace.WriteLine("[Client] Start" + destIP + " " + destPort);
+            Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
             if (destIP != null && destPort != null)
                 tcpClient.Connect(destIP, destPort.Value);
             _networkStream = tcpClient.GetStream();
 
+            Console.WriteLine("[Client] Starting threads");
             // Start the send thread
             _sendThread = new Thread(SendLoop);
             _sendThread.Start();
@@ -44,10 +45,11 @@ namespace Networking.Communicator
             _recvQueueThread = new Thread(RecvLoop);
             _recvThread.Start();
             _recvQueueThread.Start();
+            Console.WriteLine("[Client] Started");
             return "";
         }
 
-        void ICommunicator.Stop()
+        public void Stop()
         {
             Trace.WriteLine("[Client] Stop");
 

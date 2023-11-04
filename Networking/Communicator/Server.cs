@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using Networking.Queues;
 using System.Reflection;
+using System.Net;
 
 namespace Networking.Communicator
 {
@@ -17,6 +18,7 @@ namespace Networking.Communicator
         private Queue _recvQueue = new();
         private Thread _recvThread;
         private Thread _recvQueueThread;
+        private Thread _listenThread;
         Dictionary<string, NetworkStream> _clientIDToStream = new();
         private Thread _sendThread;
         private Queue _sendQueue = new();
@@ -29,28 +31,33 @@ namespace Networking.Communicator
             return System.Text.Encoding.ASCII.GetBytes(serStr);
         }
 
-        void ICommunicator.Send(string serializedObj, string eventType, string destID)
+        public void Send(string serializedObj, string eventType, string destID)
         {
             Trace.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
             _sendQueue.Enqueue(JsonSerializer.Serialize(new Message(serializedObj, eventType, destID)), 1 /* fix it */);
         }
 
-        string ICommunicator.Start(string? destIP, int? destPort)
+         public string Start(string? destIP, int? destPort)
         {
-            Trace.WriteLine("[Server] Start");
+
+
+
+            _listenThread = new Thread(AcceptConnection);
             // Start the send thread
             _sendThread = new Thread(SendLoop);
-            _sendThread.Start();
             _recvThread = new Thread(Receive);
             _recvQueueThread = new Thread(RecvLoop);
+            _listenThread.Start();
+            _sendThread.Start();
             _recvThread.Start();
             _recvQueueThread.Start();
+            Console.Write("exiting");
             // TODO: Add accept connections by client, create nwstream, and add to dict
             return "";
             //throw new NotImplementedException();
         }
 
-        void ICommunicator.Stop()
+        public void Stop()
         {
             Trace.WriteLine("[Server] Stop");
 
@@ -85,6 +92,32 @@ namespace Networking.Communicator
                 }
                 if (ifAval == false)
                     Thread.Sleep(200);
+            }
+        }
+        void AcceptConnection()
+        {
+
+            TcpListener serverListener = new TcpListener(IPAddress.Any, 12345);
+            serverListener.Start();
+            IPEndPoint localEndPoint = (IPEndPoint)serverListener.LocalEndpoint;
+            Trace.WriteLine("[Server] Start");
+            Console.WriteLine("Server is listening on:");
+            Console.WriteLine("IP Address: " + localEndPoint.Address);
+            Console.WriteLine("Port: " + localEndPoint.Port);
+            string clientID = "A";
+
+            while (true)
+            {
+                Console.WriteLine("waiting for connection");
+                TcpClient client = serverListener.AcceptTcpClient();
+                
+                // Create a NetworkStream for the client
+                NetworkStream stream = client.GetStream();
+                _clientIDToStream.Add(clientID, stream);
+                clientID += 'A';
+                Trace.WriteLine("client connected");
+                // Handle communication with the client using 'stream'
+                // (e.g., read and process incoming data, send responses)
             }
         }
         private void handleMessage(Message message)
