@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Mail;
 
 namespace ViewModel
 {
@@ -89,10 +90,10 @@ namespace ViewModel
             return $"{rollNo}|{name}|{ip}|{port}";
         }
 
-        private static (int, string?, string?, int) DeserializeStudnetInfo(string data)
+        private static (int, string?, string?, int, int) DeserializeStudnetInfo(string data)
         {
             string[] parts = data.Split('|');
-            if (parts.Length == 4)
+            if (parts.Length == 5)
             {
                 try
                 {
@@ -101,13 +102,14 @@ namespace ViewModel
                         int.Parse(parts[0]),
                         parts[1],
                         parts[2],
-                        int.Parse(parts[3])
+                        int.Parse(parts[3]),
+                        int.Parse(parts[4])
                     );
                 }
                 catch { }
 
             }
-            return (0, null, null, 0);
+            return (0, null, null, 0, 0);
         }
 
         private bool AddStudnet(string serializedStudnet)
@@ -120,10 +122,18 @@ namespace ViewModel
                 var name = result.Item2;
                 var ip = result.Item3;
                 var port = result.Item4;
+                var isConnect = result.Item5;
                 if (name != null && ip != null)
                 {
-                    _studentSessionState.AddStudent(rollNo, name, ip, port);
-                    _newConnection.SendMessage(ip, port, "1");
+                    if (isConnect == 1)
+                    {
+                        _studentSessionState.AddStudent(rollNo, name, ip, port);
+                        _newConnection.SendMessage(ip, port, "1");
+                    }
+                    else if (isConnect == 0) 
+                    {
+                        _studentSessionState.RemoveStudent(rollNo)
+                    }     
                     return true;
                 }
             }
