@@ -132,7 +132,8 @@ namespace ViewModel
                     }
                     else if (isConnect == 0) 
                     {
-                        _studentSessionState.RemoveStudent(rollNo)
+                        _studentSessionState.RemoveStudent(rollNo);
+                        _newConnection.SendMessage(ip, port, "1");
                     }     
                     return true;
                 }
