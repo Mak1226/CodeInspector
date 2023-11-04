@@ -58,7 +58,7 @@
                         <TextBox Name="InstructorPortTextBox" Margin="10,5,10,5" Width="100" Height="25" Background="Azure" VerticalAlignment="Top" HorizontalAlignment="Left" TextChanged="InstructorIpTextBox_TextChanged"/>
                     </StackPanel>
                     <StackPanel x:Name="InstructorConnectionStackPanel" Orientation="Horizontal">
-                        <Button x:Name="connectButton" Content="Connect" Width="84" Height="27" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
+                        <Button x:Name="connectButton" Content="Connect" Width="84" Height="27" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5" >
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Visibility" Value="Visible" />

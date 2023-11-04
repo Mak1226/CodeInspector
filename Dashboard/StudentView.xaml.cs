@@ -31,7 +31,7 @@ namespace Dashboard
             try
             {
                 // Create the ViewModel and set as data context.
-                DashboardViewModel viewModel = new(false);
+                StudentViewModel viewModel = new();
                 DataContext = viewModel;
             }
             catch (Exception exception)
@@ -54,7 +54,7 @@ namespace Dashboard
 
         private void InstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DashboardViewModel? viewModel = DataContext as DashboardViewModel;
+            StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
             viewModel?.SetStudentInfo(StudentNameTextBox.Text, StudentRollTextBox.Text);
         }
@@ -66,7 +66,7 @@ namespace Dashboard
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
             //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
-            DashboardViewModel? viewModel = DataContext as DashboardViewModel;
+            StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.ConnectInstructor();
 
         }

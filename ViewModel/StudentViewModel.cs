@@ -1,42 +1,25 @@
-﻿/******************************************************************************
- * Filename    = DashboardViewModel.cs
- *
- * Author      = Saarang S
- *
- * Product     = Analyzer
- * 
- * Project     = ViewModel
- *
- * Description = Defines the Dashboard viewmodel.
- *****************************************************************************/
+﻿using ChatMessaging;
+using Networking;
+using SessionState;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net;
-using System.Net.NetworkInformation;
+using System.Linq;
 using System.Net.Sockets;
-using Networking;
-using ChatMessaging;
-using SessionState;
-
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    /// <summary>
-    /// ViewModel for the Dashboard.
-    /// </summary>
-    public class DashboardViewModel : INotifyPropertyChanged
+    public class StudentViewModel : INotifyPropertyChanged
     {
         private readonly ICommunicator _communicator; // Communicator used to send and receive messages.
-        private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
-        private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
-        
-        /// <summary>
-        /// Constructor for the DashboardViewModel.
-        /// </summary>
-        public DashboardViewModel(bool isInstructor, ICommunicator? communicator = null)
+        private readonly ChatMessenger _newConnection; // To communicate between instructor and student.
+
+        public StudentViewModel( ICommunicator? communicator = null)
         {
-            _studentSessionState = new();
             _communicator = communicator ?? CommunicatorFactory.CreateCommunicator();
 
             IpAddress = GetPrivateIp();
@@ -47,22 +30,12 @@ namespace ViewModel
 
             // Create an instance of the chat messenger and signup for callback.
             _newConnection = new(_communicator);
-            if (isInstructor)
+
+            _newConnection.OnChatMessageReceived += delegate (string message)
             {
-                _newConnection.OnChatMessageReceived += delegate (string message)
-                {
-                    AddStudnet(message);
-                };
-                Debug.WriteLine("Instructor communicator created");
-            }
-            else
-            {
-                _newConnection.OnChatMessageReceived += delegate (string message)
-                {
-                    HandleStudentMessage(message);
-                };
-                Debug.WriteLine("Student communicator created");
-            }
+                HandleMessage(message);
+            };
+
         }
 
         /// <summary>
@@ -90,7 +63,7 @@ namespace ViewModel
         /// </summary>
         /// 
         private string _isConnected = "false";
-        
+
         public string IsConnected
         {
             get
@@ -151,11 +124,11 @@ namespace ViewModel
         }
 
         private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port)
-        {  
+        {
             return $"{rollNo}|{name}|{ip}|{port}";
         }
 
-        private static (int, string?, string?, int) DeserializeStudnetInfo (string data)
+        private static (int, string?, string?, int) DeserializeStudnetInfo(string data)
         {
             string[] parts = data.Split('|');
             if (parts.Length == 4)
@@ -171,49 +144,30 @@ namespace ViewModel
                     );
                 }
                 catch { }
-                
+
             }
             return (0, null, null, 0);
         }
-        private bool AddStudnet (string serializedStudnet)
-        {
-            Debug.WriteLine("One message received");
-            if (serializedStudnet != null)
-            { 
-                var result = DeserializeStudnetInfo(serializedStudnet);
-                var rollNo = result.Item1;
-                var name = result.Item2;
-                var ip = result.Item3;
-                var port = result.Item4;
-                if (name != null && ip != null)
-                {
-                    _studentSessionState.AddStudent(rollNo, name, ip, port);
-                    _newConnection.SendMessage(ip,port,"1");
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        private void HandleStudentMessage(string message)
+        private void HandleMessage(string message)
         {
-            if(message == "1")
+            if (message == "1")
             {
                 IsConnected = "true";
-                Debug.WriteLine("Connected>>>");
+                Debug.WriteLine("Connected to Instructor");
             }
-            else if (message == "0") 
-            { 
-                IsConnected= "false";
+            else if (message == "0")
+            {
+                IsConnected = "false";
             }
         }
 
         public void ConnectInstructor()
         {
             var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort);
-            Debug.WriteLine($"This was the studentRoll{StudentRoll}");
-            if(InstructorIp != null && InstructorPort != null)
-            { 
+            
+            if (InstructorIp != null && InstructorPort != null)
+            {
                 _newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);
             }
         }
@@ -223,7 +177,7 @@ namespace ViewModel
         /// </summary>
         /// <param name="ip">The instructor's IP address.</param>
         /// <param name="port">The instructor's port.</param>
-        public void SetInstructorAddress (string ip, string port)
+        public void SetInstructorAddress(string ip, string port)
         {
             InstructorIp = ip;
             InstructorPort = port;
@@ -239,5 +193,6 @@ namespace ViewModel
             Debug.WriteLine(StudentName);
             Debug.WriteLine(StudentRoll);
         }
+
     }
 }
