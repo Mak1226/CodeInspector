@@ -70,6 +70,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
+                        
                         <!--<TextBlock x:Name="connectedText1" Text="Connected" Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />-->
                         <TextBlock x:Name="connectedText" Text="Connected"  Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" >
                             <TextBlock.Style>
@@ -83,6 +84,18 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
+                        <Button x:Name="disconnectButton" Content="Disconnect" Width="84" Height="27" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
                 </StackPanel>
             </Grid>

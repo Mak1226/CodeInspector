@@ -1,4 +1,15 @@
-﻿using ChatMessaging;
+﻿/******************************************************************************
+ * Filename    = StudentViewModel.cs
+ *
+ * Author      = Prayag Krishna
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = ViewModel
+ *
+ * Description = Defines the Student viewmodel.
+ *****************************************************************************/
+using ChatMessaging;
 using Networking;
 using SessionState;
 using System;
@@ -54,14 +65,15 @@ namespace ViewModel
         public string? InstructorIp { get; private set; }
 
         /// <summary>
-        /// Gets the instructor's port.
+        /// Gets the instructor's ip
         /// </summary>
         public string? InstructorPort { get; private set; }
 
         /// <summary>
-        /// Gets the instructor connection status
+        /// Gets the instructor port
         /// </summary>
         /// 
+
         private string _isConnected = "false";
 
         public string IsConnected
@@ -123,9 +135,9 @@ namespace ViewModel
             return null;
         }
 
-        private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port)
+        private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port, int connect)
         {
-            return $"{rollNo}|{name}|{ip}|{port}";
+            return $"{rollNo}|{name}|{ip}|{port}|{connect}";
         }
 
         private static (int, string?, string?, int) DeserializeStudnetInfo(string data)
@@ -159,13 +171,24 @@ namespace ViewModel
             else if (message == "0")
             {
                 IsConnected = "false";
+                Debug.WriteLine("Disconnected from Instructor");
+            }
+        }
+
+        public void DisconnectInstructor()
+        {
+            var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
+            
+            if (InstructorIp != null && InstructorPort != null)
+            {
+                _newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);
             }
         }
 
         public void ConnectInstructor()
         {
-            var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort);
-            
+            var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
+
             if (InstructorIp != null && InstructorPort != null)
             {
                 _newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);

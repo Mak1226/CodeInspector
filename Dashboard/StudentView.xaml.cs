@@ -70,5 +70,12 @@ namespace Dashboard
             viewModel?.ConnectInstructor();
 
         }
+
+        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Attempting to disconnect from the instructor
+            StudentViewModel? viewModel = DataContext as StudentViewModel;
+            viewModel?.DisconnectInstructor();
+        }
     }
 }
