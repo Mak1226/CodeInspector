@@ -72,7 +72,7 @@
                         </Button>
                         
                         <!--<TextBlock x:Name="connectedText1" Text="Connected" Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />-->
-                        <TextBlock x:Name="connectedText" Text="Connected"  Background="LawnGreen"  Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" >
+                        <TextBlock x:Name="connectedText" Text="Connected"  Background="LawnGreen" Width="84" Height="27" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,5,10,5">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -84,7 +84,7 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Button x:Name="disconnectButton" Content="Disconnect" Width="84" Height="27" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
+                        <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="27" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Visibility" Value="Collapsed" />
