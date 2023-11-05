@@ -1,16 +1,17 @@
 ﻿/////
-/// Author: 
 /////
 
+using Networking.Utils;
+/// Author: 
 namespace Networking
 {
     public interface IEventHandler
     {
-        public string HandleFile(string data);
-        public string HandleChatMessage(string data);
-        public string HandleAnalyserResult(string data);
-        public string HandleConnectionRequest(string data);
-        public string HandleClientJoined(string data);
-        public string HandleClientLeft(string data);
+        public string HandleFile(Message data);
+        public string HandleChatMessage(Message data);
+        public string HandleAnalyserResult(Message data);
+        public string HandleConnectionRequest(Message data);
+        public string HandleClientJoined(Message data);
+        public string HandleClientLeft(Message data);
     }
 }

@@ -67,7 +67,7 @@ namespace Networking.Utils
                 MethodInfo method = typeof(IEventHandler).GetMethod(message.EventType);
                 if (method != null)
                 {
-                    object[] parameters = new object[] { message.SerializedObj };
+                    object[] parameters = new object[] { message};
                     method.Invoke(pair.Value, parameters);
                 }
                 else

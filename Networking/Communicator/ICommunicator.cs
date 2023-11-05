@@ -34,7 +34,7 @@ namespace Networking.Communicator
         /// <param name="destIP">Server IP when called by client</param>
         /// <param name="destPort">Server Port when called by client</param>
         /// <returns>server: Server IP, port</returns>
-        public string Start(string? destIP, int? destPort);
+        public string Start(string? destIP, int? destPort,string senderID);
 
         /// <summary>
         /// Server: Stops the server and stops all threads

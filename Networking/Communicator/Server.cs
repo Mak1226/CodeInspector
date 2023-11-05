@@ -40,13 +40,13 @@ namespace Networking.Communicator
         public void Send(string serializedObj, string eventType, string destID)
         {
             Console.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
-            _sender.Send(serializedObj, eventType, destID);
+            _sender.Send(serializedObj, eventType, destID,"server");
         }   
 
-        public string Start(string? destIP, int? destPort)
+        public string Start(string? destIP, int? destPort,string senderID)
         {
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
-            _sender = new(_clientIDToStream);
+            _sender = new(_clientIDToStream,false);
             _receiver = new(_clientIDToStream, _moduleEventMap);
 
             _serverListener = new TcpListener(IPAddress.Any, 12345);
@@ -58,6 +58,7 @@ namespace Networking.Communicator
 
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
+            this.Subscribe(new NetworkingEventHandler(), "networking");
             return localEndPoint.Address + ":" + localEndPoint.Port;
         }
 

@@ -11,6 +11,7 @@ namespace Networking.Utils
         public string EventType { get; set; }
         public bool StopThread { get; set; }
         public string? DestID { get; set; }
+        public string? SenderID { get;set; }
         public Message() {
             this.SerializedObj = "";
             this.EventType = "";
@@ -25,12 +26,13 @@ namespace Networking.Utils
         //    DestID = null;
         //}
 
-        public Message(string serializedObj, string eventType, string destID)
+        public Message(string serializedObj, string eventType, string destID, string? senderID)
         {
             SerializedObj = serializedObj;
             EventType = eventType;
             DestID = destID;
             StopThread = false;
+            SenderID = senderID;
         }
 
         public Message(bool stop)

@@ -8,8 +8,8 @@ namespace ServerApp
     {
         static void Main(string[] args)
         {
-            Server server = new Server();
-            server.Start(null, null);
+            ICommunicator server = CommunicationFactory.GetCommunicator(true);
+            server.Start(null, null,"server");
             Console.ReadKey();
             server.Send("omg", EventType.ChatMessage(), "A");
         }

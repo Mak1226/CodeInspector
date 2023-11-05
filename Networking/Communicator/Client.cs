@@ -17,6 +17,7 @@ namespace Networking.Communicator
         private Sender _sender;
         private Receiver _receiver;
         private Dictionary<string, NetworkStream> _IDToStream = new();
+        private string _senderID;
         private NetworkStream _networkStream;
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
 
@@ -24,11 +25,13 @@ namespace Networking.Communicator
         {
             // NOTE: destID SHOULD be "server" to send to the server.
             Console.WriteLine("[Client] Send" + serializedObj + " " + eventType + " " + destID);
-            _sender.Send(serializedObj, eventType, destID);
+            _sender.Send(serializedObj, eventType, destID,_senderID);
         }
 
-        public string Start(string? destIP, int? destPort)
+        public string Start(string? destIP, int? destPort, string senderID)
         {
+            _senderID = senderID;
+            
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
 
@@ -39,7 +42,7 @@ namespace Networking.Communicator
             _IDToStream["server"] = _networkStream;
 
             Console.WriteLine("[Client] Starting sender");
-            _sender = new(_IDToStream);
+            _sender = new(_IDToStream,true);
             Console.WriteLine("[Client] Starting receiver");
             _receiver = new(_IDToStream, _moduleEventMap);
 
