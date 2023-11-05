@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerApp", "ServerApp\Serv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{6AF253B3-5352-4389-88B5-53A1F074114E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyzer.csproj", "{20A4A694-E898-4206-8694-05DB3ED8E02B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTests", "AnalyzerTests\AnalyzerTests.csproj", "{0E81FD33-F200-49F5-8B47-DF24F371448F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E17D307-3C65-4C85-B72A-A9C7B5696765}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud", "Cloud\Cloud.csproj", "{687E4F33-795E-49E2-83D6-C99A3D15FB06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +37,14 @@ Global
 		{AE9A6FDB-6240-456A-AFA3-CAEEE1B1E421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE9A6FDB-6240-456A-AFA3-CAEEE1B1E421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE9A6FDB-6240-456A-AFA3-CAEEE1B1E421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A4A694-E898-4206-8694-05DB3ED8E02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E81FD33-F200-49F5-8B47-DF24F371448F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
