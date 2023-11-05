@@ -33,3 +33,9 @@ namespace Analyzer.Pipeline
         }
     }
 }
+
+/*
+abstract class 
+pascal case
+'Base' should be suffix
+*/

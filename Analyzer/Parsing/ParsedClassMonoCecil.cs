@@ -24,9 +24,9 @@ namespace Analyzer.Parsing
         /// </summary>
         private readonly List<InterfaceImplementation> _interfaces;
 
-        private readonly List<MethodDefinition> _methods;   // Methods declared only by the class
+        public readonly List<MethodDefinition> _methods;   // Methods declared only by the class
         private readonly TypeDefinition? _parentClass;      // ParentClass - does not contain classes starting with System/Microsoft
-        private readonly List<FieldDefinition> _fields;    
+        public readonly List<FieldDefinition> _fields;    
         private readonly List<PropertyDefinition> _properties;
 
 
@@ -282,6 +282,11 @@ namespace Analyzer.Parsing
         public List<FieldDefinition> FieldsList
         {
             get { return _fields; }
+        }
+
+        public List<MethodDefinition> MethodsList
+        {
+            get { return _methods; }
         }
 
         public List<PropertyDefinition> PropertiesList
