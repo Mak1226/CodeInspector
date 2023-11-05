@@ -1,4 +1,5 @@
-﻿using Networking.Communicator; // Assuming this is the namespace of your class library
+﻿using Networking;
+using Networking.Communicator; // Assuming this is the namespace of your class library
 using System;
 
 namespace ServerApp
@@ -10,7 +11,7 @@ namespace ServerApp
             Server server = new Server();
             server.Start(null, null);
             Console.ReadKey();
-            server.Send("omg", "1123", "A");
+            server.Send("omg", EventType.ChatMessage(), "A");
         }
     }
 }

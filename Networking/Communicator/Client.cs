@@ -66,7 +66,7 @@ namespace Networking.Communicator
         {
             Trace.WriteLine("[Client] Subscribe");
             _moduleEventMap.Add(moduleName, eventHandler);
-            throw new NotImplementedException();
+            
         }
         void Receive()
         {
