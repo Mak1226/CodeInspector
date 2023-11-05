@@ -49,8 +49,29 @@ namespace Networking.Communicator
             _sender = new(_clientIDToStream,false);
             _receiver = new(_clientIDToStream, _moduleEventMap);
 
-            _serverListener = new TcpListener(IPAddress.Any, 12345);
-            _serverListener.Start();
+            int port = 12345;
+            while (true)
+            {
+                try
+                {
+                    _serverListener = new TcpListener(IPAddress.Any, port);
+                    _serverListener.Start();
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    {
+                        Random random = new();
+                        port = random.Next();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Socket error: " + ex.SocketErrorCode);
+                        throw ex;
+                    }
+                }
+            }
             IPEndPoint localEndPoint = (IPEndPoint)_serverListener.LocalEndpoint;
             Console.WriteLine("[Server] Server is listening on:");
             Console.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
@@ -58,7 +79,7 @@ namespace Networking.Communicator
 
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
-            this.Subscribe(new NetworkingEventHandler(), "networking");
+            Subscribe(new NetworkingEventHandler(), "networking");
             return localEndPoint.Address + ":" + localEndPoint.Port;
         }
 
