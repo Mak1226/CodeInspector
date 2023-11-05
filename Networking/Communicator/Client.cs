@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text.Json;
@@ -38,6 +39,10 @@ namespace Networking.Communicator
             if (destIP != null && destPort != null)
                 tcpClient.Connect(destIP, destPort.Value);
 
+            IPEndPoint localEndPoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
+            Console.WriteLine("[Client] IP Address: " + localEndPoint.Address.MapToIPv4());
+            Console.WriteLine("[Client] Port: " + localEndPoint.Port);
+
             _networkStream = tcpClient.GetStream();
             _IDToStream["server"] = _networkStream;
 
@@ -47,7 +52,7 @@ namespace Networking.Communicator
             _receiver = new(_IDToStream, _moduleEventMap);
 
             Console.WriteLine("[Client] Started");
-            return "";
+            return localEndPoint.Address.MapToIPv4()+":"+localEndPoint.Port;
         }
 
         public void Stop()

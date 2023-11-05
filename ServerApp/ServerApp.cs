@@ -10,8 +10,10 @@ namespace ServerApp
         {
             ICommunicator server = CommunicationFactory.GetCommunicator(true);
             server.Start(null, null,"server");
+            //Console.ReadKey();
+            //server.Send("omg", EventType.ChatMessage(), "A");
             Console.ReadKey();
-            server.Send("omg", EventType.ChatMessage(), "A");
+            server.Stop();
         }
     }
 }
