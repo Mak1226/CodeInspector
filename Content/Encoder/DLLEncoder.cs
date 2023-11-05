@@ -12,7 +12,7 @@
 using System.Text;
 using System.Xml;
 
-namespace Content
+namespace Content.Encoder
 {
     /// <summary>
     /// Class to encode and decode DLL files to send over network

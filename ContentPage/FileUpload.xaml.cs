@@ -10,7 +10,7 @@
  * Description = Page that lets user upload files for analysis
  *****************************************************************************/
 
-using Content;
+using Content.FileHandling;
 using Networking;
 using System.Diagnostics;
 using System.Windows;

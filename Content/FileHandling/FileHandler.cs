@@ -10,11 +10,12 @@
  * Description = Class that implements IFileHandler
  *****************************************************************************/
 
+using Content.Encoder;
 using Networking;
 using Networking.Communicator;
 using System.Diagnostics;
 
-namespace Content
+namespace Content.FileHandling
 {
     /// <summary>
     /// Currently implemented as simply copying a file to the 
@@ -29,7 +30,7 @@ namespace Content
         /// <summary>
         /// saves files in //data/
         /// </summary>
-        public FileHandler(ICommunicator fileSender) 
+        public FileHandler(ICommunicator fileSender)
         {
             _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
@@ -47,20 +48,21 @@ namespace Content
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            string encoding = _fileEncoder.GetEncoded( dllFiles.ToList() );
+            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList());
             _filesList = dllFiles.ToList();
-            Trace.Write( encoding );
+            Trace.Write(encoding);
             _fileSender.Send(encoding, "", "0.0.0.0");
         }
 
         /// <summary>
-        /// Simply returns filepath in data location
+        /// To be called with 
         /// </summary>
         /// <param name="sessionID"></param>
         /// <returns></returns>
-        public string Download(string sessionID)
+        public void HandleRecieve(string sessionID, string encoding)
         {
-            throw new NotImplementedException();
+            _fileEncoder.DecodeFrom(encoding);
+            _fileEncoder.SaveFiles(sessionID);
         }
     }
 }

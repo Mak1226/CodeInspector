@@ -10,7 +10,7 @@
  * Description = Interface for encoding and decoding files to send over network
  *****************************************************************************/
 
-namespace Content
+namespace Content.Encoder
 {
     /// <summary>
     /// Represents an interface for encoding and decoding data.
