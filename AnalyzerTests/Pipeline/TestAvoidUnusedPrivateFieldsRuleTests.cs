@@ -26,9 +26,9 @@ namespace Analyzer.Pipeline.Tests
 
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
 
-            var result = avoidUnusedPrivateFieldsRule.GetScore();
+            var result = avoidUnusedPrivateFieldsRule.Run();
             
-            Assert.AreEqual(1, result);
+            Assert.AreEqual(1, result.Verdict);
 
         }
     }

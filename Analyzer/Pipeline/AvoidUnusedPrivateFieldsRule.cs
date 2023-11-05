@@ -10,14 +10,33 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Analyzer.Pipeline
 {
-    public class AvoidUnusedPrivateFieldsRule : BaseAnalyzer
+    /// <summary>
+    /// This class represents an analyzer rule for detecting unused private fields in a DLL.
+    /// </summary>
+    public class AvoidUnusedPrivateFieldsRule : AnalyzerBase
     {
+
+        private string errorMessage;
+        private int verdict;
+        private readonly string analyzerID;
+
+
+        /// <summary>
+        /// Initializes a new instance of the AvoidUnusedPrivateFieldsRule class.
+        /// </summary>
+        /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
         public AvoidUnusedPrivateFieldsRule(ParsedDLLFiles dllFiles) : base(dllFiles)
         {
-
+            errorMessage = "";
+            verdict = 1;
+            analyzerID = "Custom1";
         }
 
-        private bool Check()
+        /// <summary>
+        /// Checks for unused private fields in the parsed DLL.
+        /// </summary>
+        /// <returns>True if no unused private fields are found; otherwise, false.</returns>
+        private void Check()
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
             {
@@ -83,22 +102,18 @@ namespace Analyzer.Pipeline
 
                 if (UnusedFields.Count > 0)
                 {
-                    return false;
+                    verdict = 0;
                 }
 
             }
 
-            return true;
+            verdict = 1;
         }
 
-        override
-        public int GetScore()
+        public override AnalyzerResult Run()
         {
-            if (Check())
-            {
-                return 1;
-            }
-            return 0;
+            Check();
+            return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
     }
 }

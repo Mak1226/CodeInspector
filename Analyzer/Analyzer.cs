@@ -33,17 +33,15 @@ namespace Analyzer
             _teacherDLLFile = PathOfDLLFileOfTeacher ?? string.Empty;
         }
 
-        public Tuple<Dictionary<string, string>, int> GetAnalysis()
+        public List<AnalyzerResult> Run()
         {
-            var analysisResults = new Dictionary<string, string>
+            var analysisResults = new List<AnalyzerResult>
             {
-                { "A1", "Passed" },
-                { "A2", "Failed" }
+                new AnalyzerResult("A1", 1, "Everything looks good"),
+                new AnalyzerResult("A2", 0, "Class1, Class2 not following the rule")
             };
 
-            int score = 85;
-
-            return Tuple.Create(analysisResults, score);
+            return analysisResults;
         }
 
         public void GetRelationshipGraph()
