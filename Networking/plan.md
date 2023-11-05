@@ -3,14 +3,14 @@
 > chat message received
 > analyzer result received on the client
 > client joined
-> disconnect also
-> login? 
+> client disconnected
 > connect event
 
 # to implement: 
 > threading : one for listen, one for send? , one for processing?
 > ser./des.
-> priority q
+> Ieventhandler impl
+> network streams
 
 # doubt:
 > how to implement pub/sub   
@@ -71,7 +71,59 @@ fle_rec
 #connect event:
 > when client initiates tcp connection with the server
 > will be used in start() method
+> after tcp connection establised
+> create clientID
+> will be used in start() method
 
-# clientJoined event:
-> client joins a server-> server receives clientName and creates a clientID and broadcasts
-clientName , clientID to all the machines.
+# client connected event:
+> after client has been registered
+> server broadcasts newly joined client to all the clients
+> sends clientID
+
+# client disconnected event:
+> when clients wants to exit the session
+> will be used in stop function
+> server broadcasts clientID disconnected to all clients
+
+
+# event class:
+
+class Event{
+
+public static string event1(){
+return "event1"
+}
+}
+Event.event1()
+
+
+# below is event handler implementatoin for dashboard
+
+class EventHandlerImpl: IEventHandler{
+
+Dashboard object = new D.....
+public void ChatEvent(object)
+{
+// do something in chat event
+
+}
+
+}
+
+
+receiving queue:
+packet 1 -> does it contains info for the destination module?
+
+
+subscribe(EventHandlerImpl, moduleName)
+
+send(object, event, dest)
+
+map<moduleName, IEventHandler>  m
+
+receiving queue:
+packet1:
+packet1.eventtype -> message received
+iterate through m
+//call the respective function for ith module
+m[i].messageReceived(data)

@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
+
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyzer.csproj", "{20A4A694-E898-4206-8694-05DB3ED8E02B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTests", "AnalyzerTests\AnalyzerTests.csproj", "{0E81FD33-F200-49F5-8B47-DF24F371448F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTests", "AnalyzerTests\AnalyzerTests.csproj", "{0E81FD33-F200-49F5-8B47-DF24F371448F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E17D307-3C65-4C85-B72A-A9C7B5696765}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud", "Cloud\Cloud.csproj", "{687E4F33-795E-49E2-83D6-C99A3D15FB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer", "Analyzer\Analyzer.csproj", "{20A4A694-E898-4206-8694-05DB3ED8E02B}"
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

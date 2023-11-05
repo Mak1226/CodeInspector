@@ -12,6 +12,5 @@ namespace Analyzer.Pipeline
         { 
         
         }
-
     }
 }
