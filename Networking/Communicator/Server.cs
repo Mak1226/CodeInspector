@@ -50,6 +50,7 @@ namespace Networking.Communicator
             _receiver = new(_clientIDToStream, _moduleEventMap);
 
             int port = 12345;
+            Random random = new();
             while (true)
             {
                 try
@@ -62,8 +63,7 @@ namespace Networking.Communicator
                 {
                     if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
                     {
-                        Random random = new();
-                        port = random.Next();
+                        port = random.Next(1, 65534);
                     }
                     else
                     {
