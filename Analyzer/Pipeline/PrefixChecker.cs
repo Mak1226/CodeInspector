@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline.Analyzers
@@ -105,3 +105,4 @@ namespace Analyzer.Pipeline.Analyzers
 	}
     }
 }
+*/

@@ -1,4 +1,4 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,3 +111,4 @@ namespace Analyzer.Pipeline
         }
     }
 }
+*/

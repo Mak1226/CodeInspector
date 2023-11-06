@@ -36,14 +36,12 @@ namespace Analyzer
         public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher);
 
         /// <summary>
-        /// Performs analysis and returns the results as a tuple.
+        /// Runs the analysis and returns a list of <see cref="AnalyzerResult"/> objects.
         /// </summary>
         /// <returns>
-        /// A tuple containing an analysis dictionary and an integer score.
-        /// The dictionary maps analysis ID to analysis results, and the integer represents a score.
+        /// A list of <see cref="AnalyzerResult"/> objects representing the results of the analysis.
         /// </returns>
-        public Tuple<Dictionary<string, string>, int> GetAnalysis();
-
+        public List<AnalyzerResult> Run();
 
         // TODO : Decide on return type
 

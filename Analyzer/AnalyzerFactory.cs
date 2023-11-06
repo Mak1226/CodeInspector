@@ -24,7 +24,7 @@ namespace Analyzer
             return analyzers;
         }
 
-        public static IAnalyzer GetAnalyser()
+        public static IAnalyzer GetAnalyzer()
         {
 
             IAnalyzer Analyzer = new Analyzer();
