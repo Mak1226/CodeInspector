@@ -17,7 +17,7 @@ namespace Content.FileHandling
     /// </summary>
     public interface IFileHandler
     {
-        List<string> _filesList { get; set; }
+
         /// <summary>
         /// Upload a file to encoded as an XML
         /// </summary>
@@ -31,5 +31,6 @@ namespace Content.FileHandling
         /// <param name="sessionID">ID of this session</param>
         /// <returns></returns>
         void HandleRecieve(string sessionID, string encoding);
+        List<string> GetFiles();
     }
 }

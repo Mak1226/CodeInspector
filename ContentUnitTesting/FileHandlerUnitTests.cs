@@ -41,13 +41,19 @@ namespace ContentUnitTesting
 
             IFileHandler fileHandler = new FileHandler(_fileSender);
             fileHandler.Upload( tempDirectory , "TestSessionId" );
-            Assert.AreEqual( fileHandler._filesList[0] , tempDirectory + "\\TestDll1.dll" );
-            Assert.AreEqual( fileHandler._filesList[2] , tempDirectory + "\\subdir1" + "\\TestDll3.dll" );
+            List<string> filesList = fileHandler.GetFiles();
+            Assert.AreEqual( filesList[0] , tempDirectory + "\\TestDll1.dll" );
+            Assert.AreEqual( filesList[2] , tempDirectory + "\\subdir1" + "\\TestDll3.dll" );
 
-            Console.WriteLine(fileHandler._filesList[1] );
+            Console.WriteLine(filesList[1] );
             // Clean up the temporary directory and files
             Directory.Delete( tempDirectory , true );
         }
+
+        /// <summary>
+        /// Test the file sending functionality by uploading files from a temporary directory
+        /// and ensuring that the correct number of messages are sent using a file sender component.
+        /// </summary>
         [TestMethod]
         public void FileSendTest()
         {

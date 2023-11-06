@@ -23,7 +23,7 @@ namespace Content.FileHandling
     /// </summary>
     public class FileHandler : IFileHandler
     {
-        public List<string> _filesList { get; set; }
+        private List<string> _filesList;
         private ICommunicator _fileSender;
         private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
@@ -36,6 +36,14 @@ namespace Content.FileHandling
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
             _fileSender = fileSender;
+        }
+        /// <summary>
+        /// Retrieves a list of file paths representing the files stored or managed by the file handler.
+        /// </summary>
+        /// <returns>A list of file paths as strings.</returns>
+        public List<string> GetFiles()
+        {
+            return _filesList;
         }
 
         /// <summary>
@@ -63,6 +71,12 @@ namespace Content.FileHandling
         {
             _fileEncoder.DecodeFrom(encoding);
             _fileEncoder.SaveFiles(sessionID);
+            Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
+            _filesList = new List<String>();
+           foreach (var file in decodedFiles)
+            {
+                _filesList.Add(file.Key);
+            }
         }
     }
 }

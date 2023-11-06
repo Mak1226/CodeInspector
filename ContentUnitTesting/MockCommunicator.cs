@@ -1,5 +1,6 @@
-﻿using Networking.Communicator;
-using System;
+﻿using System;
+using Networking.Communicator;
+using Networking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,15 @@ namespace ContentUnitTesting
         {
             return _sentMessageCounter;
         }
-        public string Start(string? destIP = null, string? destPort = null)
+        public string Start(string? destIP = null, int? destPort = null)
         {
             throw new NotImplementedException();
         }
 
+        public void Subscribe(IEventHandler eventHandler, string moduleName)
+        {
+            throw new NotImplementedException();
+        }
         public void Stop()
         {
             throw new NotImplementedException();
