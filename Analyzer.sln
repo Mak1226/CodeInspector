@@ -26,14 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloud", "Cloud\Cloud.csproj", "{687E4F33-795E-49E2-83D6-C99A3D15FB06}"
 EndProject
-<<<<<<< HEAD
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Networking", "Networking\Networking.csproj", "{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentUnitTesting", "ContentUnitTesting\ContentUnitTesting.csproj", "{ABC3C840-855F-4115-B7C8-7C725CA340FD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{F3CEFDD4-CFE2-4A6A-A97E-5EA0DA43C7B9}"
-EndProject
-=======
->>>>>>> Mak1226-master
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Analyzer\Analyzer.csproj" />
     <ProjectReference Include="..\Networking\Networking.csproj" />
   </ItemGroup>
 
