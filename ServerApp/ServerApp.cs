@@ -13,15 +13,15 @@ namespace ServerApp
             string addr = server.Start(null, null, ID.GetServerID());
             Console.ReadKey();
             //server.Send("omg", EventType.ChatMessage(), "A");
-            ICommunicator client = CommunicationFactory.GetClient();
+            /*ICommunicator client = CommunicationFactory.GetClient();
             string[] address = addr.Split(':');
             client.Start(address[0], int.Parse(address[1]), "clientA");
             client.Subscribe(new Events(), "asdfasf");
-            client.Send("hello", EventType.ChatMessage(), "clientA");
+            client.Send("hello", EventType.ChatMessage(), "clientA");*/
             Console.ReadKey();
             /* server.Send("omg", EventType.ChatMessage(), "A");*/
 
-            client.Stop(); server.Stop();
+            /*client.Stop();*/ server.Stop();
 
         }
     }

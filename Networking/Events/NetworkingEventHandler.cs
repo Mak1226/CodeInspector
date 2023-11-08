@@ -19,6 +19,10 @@ namespace Networking.Events
             {
                 ((Server)server).Send(message.Data, message.EventType, message.DestID, message.SenderID);
             }
+            else
+            {
+                Console.WriteLine("message received in server:"+message.Data);
+            }
             return "";
         }
 
