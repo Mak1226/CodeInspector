@@ -8,14 +8,14 @@ namespace Networking.Models
 {
     public class Message
     {
-        public string SerializedObj { get; set; }
+        public string Data { get; set; }
         public string EventType { get; set; }
         public bool StopThread { get; set; }
         public string? DestID { get; set; }
         public string? SenderID { get; set; }
         public Message()
         {
-            SerializedObj = "";
+            Data = "";
             EventType = "";
             DestID = null;
             StopThread = false;
@@ -23,14 +23,14 @@ namespace Networking.Models
 
         //public Message(string serializedObj, string eventType)
         //{
-        //    SerializedObj = serializedObj;
+        //    Data = serializedObj;
         //    EventType = eventType;
         //    DestID = null;
         //}
 
         public Message(string serializedObj, string eventType, string destID, string? senderID)
         {
-            SerializedObj = serializedObj;
+            Data = serializedObj;
             EventType = eventType;
             DestID = destID;
             StopThread = false;
@@ -39,7 +39,7 @@ namespace Networking.Models
 
         public Message(bool stop)
         {
-            SerializedObj = "";
+            Data = "";
             EventType = "";
             DestID = null;
             StopThread = stop;

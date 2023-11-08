@@ -1,16 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net.Sockets;
-using System.Text.Json;
+﻿using System.Net.Sockets;
 using Networking.Models;
 using Networking.Queues;
+using Networking.Serialization;
 
 namespace Networking.Utils
 {
     public class Sender
     {
         private Queue _sendQueue = new();
-        private string BROADCAST = "broadcast";
         private Thread _sendThread;
         private bool _isClient;
         private Dictionary<string, NetworkStream> clientIDToStream;
@@ -55,15 +52,15 @@ namespace Networking.Utils
                 if (message.StopThread)
                     break;
 
-                string serStr = JsonSerializer.Serialize(message);
+                string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
                 if (_isClient == true)
                 {
-                    clientIDToStream["server"].Write(messagebytes);
+                    clientIDToStream[ID.GetServerID()].Write(messagebytes);
                 }
                 else
                 {
-                    if (message.DestID == "BROADCAST")
+                    if (message.DestID == ID.GetBroadcastID())
                     {
                         foreach (KeyValuePair<string, NetworkStream> pair in clientIDToStream)
                         {

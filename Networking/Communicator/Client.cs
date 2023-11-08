@@ -2,13 +2,9 @@
 /// Author: 
 /////
 
-using System;
-using System.Diagnostics;
+
 using System.Net.Sockets;
-using System.Reflection;
-using System.Text.Json;
 using Networking.Models;
-using Networking.Queues;
 using Networking.Utils;
 
 namespace Networking.Communicator
@@ -22,12 +18,12 @@ namespace Networking.Communicator
         private NetworkStream _networkStream;
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
 
-        public void Send(string serializedObj, string eventType, string destID)
+        public void Send(string Data, string eventType, string destID)
         {
-            // NOTE: destID SHOULD be "server" to send to the server.
-            Console.WriteLine("[Client] Send" + serializedObj + " " + eventType + " " + destID);
+            // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
+            Console.WriteLine("[Client] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
-                serializedObj, eventType, destID, _senderID
+                Data, eventType, destID, _senderID
             );
             _sender.Send(message);
         }
@@ -41,10 +37,10 @@ namespace Networking.Communicator
 
             if (destIP != null && destPort != null)
                 tcpClient.Connect(destIP, destPort.Value);
-            Message message = new Message("", EventType.ClientRegister(), "server", senderID);
+            Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), senderID);
             _sender.Send(message);
             _networkStream = tcpClient.GetStream();
-            lock (_IDToStream) { _IDToStream["server"] = _networkStream; }
+            lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
 
             Console.WriteLine("[Client] Starting sender");
             _sender = new(_IDToStream, true);

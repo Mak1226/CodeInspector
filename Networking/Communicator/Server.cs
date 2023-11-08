@@ -2,13 +2,7 @@
 /// Author:
 /////
 
-using System;
-using System.Diagnostics;
-using System.Text.Json;
 using System.Net.Sockets;
-using System.Collections.Generic;
-using Networking.Queues;
-using System.Reflection;
 using System.Net;
 using Networking.Utils;
 using Networking.Models;
@@ -40,19 +34,19 @@ namespace Networking.Communicator
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        public void Send(string serializedObj, string eventType, string destID)
+        public void Send(string Data, string eventType, string destID)
         {
-            Console.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
-    serializedObj, eventType, destID, _senderID
+    Data, eventType, destID, _senderID
 );
             _sender.Send(message);
         }
-        public void Send(string serializedObj, string eventType, string destID, string senderID)
+        public void Send(string Data, string eventType, string destID, string senderID)
         {
-            Console.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
-    serializedObj, eventType, destID, senderID
+    Data, eventType, destID, senderID
 );
             _sender.Send(message);
         }

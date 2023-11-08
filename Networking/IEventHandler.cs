@@ -8,12 +8,12 @@ namespace Networking
 {
     public interface IEventHandler
     {
-        public string HandleFile(Message data);
-        public string HandleChatMessage(Message data);
-        public string HandleAnalyserResult(Message data);
-        public string HandleConnectionRequest(Message data);
-        public string HandleClientJoined(Message data);
-        public string HandleClientLeft(Message data);
-        public string HandleClientRegister(Message data, Dictionary<string, NetworkStream> clientIDToStream);
+        public string HandleFile(Message message);
+        public string HandleChatMessage(Message message);
+        public string HandleAnalyserResult(Message message);
+        public string HandleConnectionRequest(Message message);
+        public string HandleClientJoined(Message message);
+        public string HandleClientLeft(Message message);
+        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream);
     }
 }

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using Networking.Models;
 using Networking.Queues;
+using Networking.Serialization;
 
 namespace Networking.Utils
 {
@@ -51,12 +52,12 @@ namespace Networking.Utils
                         int bytesRead = item.Value.Read(receiveData, 0, receiveData.Length);
 
                         string receivedMessage = System.Text.Encoding.ASCII.GetString(receiveData, 0, bytesRead);
-                        Message serMsg = JsonSerializer.Deserialize<Message>(receivedMessage);
-                        if (serMsg.EventType == EventType.ClientRegister())
+                        Message message = Serializer.Deserialize<Message>(receivedMessage);
+                        if (message.EventType == EventType.ClientRegister())
                         {
-                            serMsg.SerializedObj = item.Key;
+                            message.Data = item.Key;
                         }
-                        _recvQueue.Enqueue(serMsg, Priority.GetPriority(serMsg.EventType) /* fix it */);
+                        _recvQueue.Enqueue(message, Priority.GetPriority(message.EventType) /* fix it */);
                     }
                 }
                 if (ifAval == false)

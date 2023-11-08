@@ -2,11 +2,6 @@
 /// Author: 
 /////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Networking.Communicator
 {
@@ -48,7 +43,7 @@ namespace Networking.Communicator
         /// <param name="serializedObj"></param>
         /// <param name="eventType"></param>
         /// <param name="destID"></param>
-        public void Send(string serializedObj, string eventType, string destID);
+        public void Send(string Data, string eventType, string destID);
         /*
          * {
          * "destid":
