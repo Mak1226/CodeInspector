@@ -23,11 +23,11 @@ namespace ContentPage
     /// </summary>
     public partial class FileUpload : Page
     {
-        private readonly IFileHandler _uploadFile;
+        private readonly ContentClient _uploadClient;
 
         public FileUpload()
         {
-            _uploadFile = new FileHandler(CommunicationFactory.GetCommunicator(false));
+            _uploadClient = new ContentClient();
             InitializeComponent();
         }
 
@@ -62,8 +62,8 @@ namespace ContentPage
                 string folderPath = folderDialog.SelectedPath;
                 Trace.WriteLine(folderPath);
 
-                // Pass folder path to fileHandler
-                _uploadFile.Upload(folderPath, "5");
+                // Pass folder path to Content Client
+                _uploadClient.HandleUpload(folderPath, "5");
             }
         }
 

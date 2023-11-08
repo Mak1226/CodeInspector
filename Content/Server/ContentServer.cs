@@ -35,7 +35,7 @@ namespace Content.Server
             fileHandler.HandleRecieve("Dummy", encodedFiles);
 
             // Analyse DLL files
-            analyzer.LoadDLLFile(fileHandler._filesList, null);
+            analyzer.LoadDLLFile(fileHandler.GetFiles(), null);
 
             // Save analysis results 
             analyzerResult = analyzer.GetAnalysis();
