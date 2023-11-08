@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text.Json;
+using Networking.Events;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;

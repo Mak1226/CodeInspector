@@ -3,7 +3,7 @@ using Networking.Models;
 using System.Net.Sockets;
 using Networking.Utils;
 
-namespace Networking
+namespace Networking.Events
 {
     public class NetworkingEventHandler : IEventHandler
     {
@@ -50,7 +50,7 @@ namespace Networking
                 clientIDToStream[message.SenderID] = clientIDToStream[message.Data];
                 clientIDToStream.Remove(message.Data);
             }
-            this.HandleClientJoined(message);
+            HandleClientJoined(message);
             return "";
         }
     }
