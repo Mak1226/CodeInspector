@@ -64,6 +64,10 @@ namespace Analyzer.Parsing
             {
                 _interfaces = type.GetInterfaces().Except(_parentClass.GetInterfaces()).ToArray();
             }
+            else
+            {
+                _interfaces = type.GetInterfaces();
+            }
 
             if(_interfaces?.Length > 0)
             {
