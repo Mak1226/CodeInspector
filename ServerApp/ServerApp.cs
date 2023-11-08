@@ -9,23 +9,20 @@ namespace ServerApp
         static void Main(string[] args)
         {
 
-            ICommunicator server = CommunicationFactory.GetCommunicator(true);
-
-            //Console.ReadKey();
-            //server.Send("omg", EventType.ChatMessage(), "A");
-
-            server.Start(null, null,ID.GetServerID());
-
-            Console.ReadKey();
-            
             ICommunicator server = CommunicationFactory.GetServer();
-            string serverAddr=server.Start(null, null,ID.GetServerID());
+            string addr = server.Start(null, null, ID.GetServerID());
             Console.ReadKey();
-            ICommunicator client=CommunicationFactory.GetClient();
+            //server.Send("omg", EventType.ChatMessage(), "A");
+            ICommunicator client = CommunicationFactory.GetClient();
+            string[] address = addr.Split(':');
+            client.Start(address[0], int.Parse(address[1]), "clientA");
+            client.Subscribe(new Events(), "asdfasf");
+            client.Send("hello", EventType.ChatMessage(), "clientA");
+            Console.ReadKey();
+            /* server.Send("omg", EventType.ChatMessage(), "A");*/
 
-            client.Start()
-            server.Send("omg", EventType.ChatMessage(), "A");
-            server.Stop();
+            client.Stop(); server.Stop();
+
         }
     }
 }

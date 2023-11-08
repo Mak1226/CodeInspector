@@ -7,7 +7,7 @@ namespace Networking.Events
 {
     public class NetworkingEventHandler : IEventHandler
     {
-        ICommunicator server = CommunicationFactory.GetCommunicator(true);
+        ICommunicator server = CommunicationFactory.GetServer();
         public string HandleAnalyserResult(Message message)
         {
             throw new NotImplementedException();

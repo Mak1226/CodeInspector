@@ -74,7 +74,12 @@ namespace Networking.Utils
                 MethodInfo method = typeof(IEventHandler).GetMethod(message.EventType);
                 if (method != null)
                 {
+
                     object[] parameters = new object[] { message };
+                    if (message.EventType==EventType.ClientRegister())
+                    {
+                        parameters = new object[] { message ,_clientIDToStream};
+                    }
                     method.Invoke(pair.Value, parameters);
                 }
                 else

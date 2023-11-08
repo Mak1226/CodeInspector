@@ -49,7 +49,6 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] Port: " + localEndPoint.Port);
 
             Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), senderID);
-            _sender.Send(message);
 
             _networkStream = tcpClient.GetStream();
             lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
@@ -58,6 +57,7 @@ namespace Networking.Communicator
             _sender = new(_IDToStream, true);
             Console.WriteLine("[Client] Starting receiver");
             _receiver = new(_IDToStream, _moduleEventMap);
+            _sender.Send(message);
 
             Console.WriteLine("[Client] Started");
             return localEndPoint.Address.MapToIPv4()+":"+localEndPoint.Port;

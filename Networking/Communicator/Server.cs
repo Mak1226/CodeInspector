@@ -89,7 +89,7 @@ namespace Networking.Communicator
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
             Subscribe(new NetworkingEventHandler(), "networking");
-            return localEndPoint.Address + ":" + localEndPoint.Port;
+            return GetLocalIPAddress() + ":" + localEndPoint.Port;
         }
 
         public void Stop()
