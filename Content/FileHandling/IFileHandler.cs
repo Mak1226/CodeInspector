@@ -30,7 +30,7 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="sessionID">ID of this session</param>
         /// <returns></returns>
-        void HandleRecieve(string sessionID, string encoding);
+        void HandleRecieve(string encoding);
         List<string> GetFiles();
     }
 }

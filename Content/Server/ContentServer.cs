@@ -32,16 +32,17 @@ namespace Content.Server
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
             // Save files to user session directory
-            fileHandler.HandleRecieve("Dummy", encodedFiles);
+            fileHandler.HandleRecieve(encodedFiles);
 
             // Analyse DLL files
-            analyzer.LoadDLLFile(fileHandler._filesList, null);
+            analyzer.LoadDLLFile(fileHandler.GetFiles(), null);
 
             // Save analysis results 
             analyzerResult = analyzer.GetAnalysis();
 
             // Send Analysis results to client
-            server.Send(serializer.Serialize(analyzerResult), EventType.AnalyserResult(), clientID);
+            //server.Send(serializer.Serialize(analyzerResult), EventType.AnalyserResult(), clientID);
+            // ClientID is currently not implemented
         }
     }
 }

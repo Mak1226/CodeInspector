@@ -21,12 +21,15 @@ namespace Content.Encoder
     {
         private readonly Dictionary<string, string> _data; // The content of the file as strings
 
+        public string sessionID { get; private set; }
+
         /// <summary>
-        /// Initialize a DLLEncoder
+        /// Initialize a DLLEncoder for a user session
         /// </summary>
         public DLLEncoder()
         {
             _data = new Dictionary<string, string>();
+            sessionID = string.Empty;
         }
 
         /// <summary>
@@ -34,8 +37,10 @@ namespace Content.Encoder
         /// </summary>
         /// <param name="filePaths">Path to each file to be encoded together. Need to be DLLs</param>
         /// <returns>An XML representation of the DLL data as a string.</returns>
-        public string GetEncoded(List<string> filePaths)
+        public string GetEncoded(List<string> filePaths, string sessionID)
         {
+            this.sessionID = sessionID;
+
             if (filePaths == null || filePaths.Count == 0)
             {
                 throw new Exception("No file found");
@@ -45,6 +50,11 @@ namespace Content.Encoder
             XmlDocument xmlDocument = new ();
             XmlElement root = xmlDocument.CreateElement("Root");
             xmlDocument.AppendChild(root);
+
+            // Encode the user session ID
+            XmlAttribute sessionAttribute = xmlDocument.CreateAttribute("SessionID");
+            sessionAttribute.Value = sessionID;
+            root.Attributes.Append(sessionAttribute);
 
             foreach (string filePath in filePaths)
             {
@@ -82,6 +92,13 @@ namespace Content.Encoder
             xmlDocument.LoadXml(xmlData);
 
             XmlNode? root = xmlDocument.SelectSingleNode("Root");
+
+            // Decode session ID
+            XmlAttribute sessionAttribute = root.Attributes["SessionID"];
+            if (sessionAttribute != null)
+            {
+                sessionID = sessionAttribute.Value;
+            }
 
             if(root != null)
             {

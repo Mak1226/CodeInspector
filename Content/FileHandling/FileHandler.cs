@@ -56,10 +56,10 @@ namespace Content.FileHandling
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList());
+            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), sessionID);
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
-            _fileSender.Send(encoding, "", "0.0.0.0");
+            _fileSender.Send(encoding, EventType.AnalyseFile(), "0.0.0.0");
         }
 
         /// <summary>
@@ -67,9 +67,10 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="sessionID"></param>
         /// <returns></returns>
-        public void HandleRecieve(string sessionID, string encoding)
+        public void HandleRecieve(string encoding)
         {
             _fileEncoder.DecodeFrom(encoding);
+            string sessionID = _fileEncoder.sessionID;
             _fileEncoder.SaveFiles(sessionID);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
             _filesList = new List<String>();

@@ -11,7 +11,7 @@
 *****************************************************************************/
 using System.Diagnostics;
 using System.Text;
-using Content;
+using Content.Encoder;
 
 namespace ContentUnitTesting
 {
@@ -48,7 +48,7 @@ namespace ContentUnitTesting
             var filePaths = testFileNames.Select( fileName => Path.Combine( _testDirectory , fileName ) ).ToList();
 
             // Act
-            string encodedXML = encoder.GetEncoded( filePaths );
+            string encodedXML = encoder.GetEncoded( filePaths, "Test1");
 
             // Assert
             Assert.IsFalse( string.IsNullOrEmpty( encodedXML ) );
@@ -83,7 +83,7 @@ namespace ContentUnitTesting
             }
 
             // Act
-            string encodedXML = encoder.GetEncoded( filePaths );
+            string encodedXML = encoder.GetEncoded( filePaths, "Test2");
 
             Assert.IsFalse( string.IsNullOrEmpty( encodedXML ),
                 "Encoded XML is empty");
@@ -94,6 +94,7 @@ namespace ContentUnitTesting
 
             // Assert
             CollectionAssert.AreEqual( dataBeforeEncoding.Keys , decodedData.Keys );
+            Assert.AreEqual(encoder.sessionID, "Test2");
             foreach (string filePath in filePaths)
             {
                 Assert.IsTrue( decodedData.ContainsKey( filePath ) );
