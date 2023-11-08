@@ -7,6 +7,10 @@ using Analyzer;
 namespace Content.Server
 {
     using AnalyzerResult = Tuple<Dictionary<string, string>, int>;
+
+    /// <summary>
+    /// Server that handles upload of analysis files, and analysis of said files
+    /// </summary>
     public class ContentServer
     {
         ICommunicator server;
@@ -14,8 +18,13 @@ namespace Content.Server
         IAnalyzer analyzer;
         AnalyzerResultSerializer serializer;
 
-        public AnalyzerResult? analyzerResult {  get; private set; }
+        public Action<AnalyzerResult> AnalyzerResultChanged;
 
+        public AnalyzerResult analyzerResult {  get; private set; }
+
+        /// <summary>
+        /// Initializes networking, filehandling and analyser
+        /// </summary>
         public ContentServer() 
         {
             server = CommunicationFactory.GetCommunicator(true);
@@ -29,6 +38,11 @@ namespace Content.Server
             serializer = new AnalyzerResultSerializer();
         }
 
+        /// <summary>
+        /// Handles a recieved file by decoding and saving it, and then passing it to the analyser
+        /// </summary>
+        /// <param name="encodedFiles">The encoded file</param>
+        /// <param name="clientID">Unique ID of client</param>
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
             // Save files to user session directory
@@ -43,6 +57,12 @@ namespace Content.Server
             // Send Analysis results to client
             //server.Send(serializer.Serialize(analyzerResult), EventType.AnalyserResult(), clientID);
             // ClientID is currently not implemented
+
+            // Notification for viewModel
+            AnalyzerResultChanged?.Invoke(analyzerResult);
         }
+
+
+
     }
 }

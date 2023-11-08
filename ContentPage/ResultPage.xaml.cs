@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using Content.Server;
 
 namespace ContentPage
 {
@@ -22,31 +23,38 @@ namespace ContentPage
     /// </summary>
     public partial class ResultPage : Page
     {
+        private ContentServerViewModel viewModel;
+
+        /// <summary>
+        /// Initialises content server viewmodel
+        /// </summary>
         public ResultPage()
         {
             InitializeComponent();
+            viewModel = new ContentServerViewModel();
+            DataContext = viewModel;
 
-            var analysisResult = new Tuple<IDictionary<string , string> , int>(
-                new Dictionary<string , string>
-                {
-                { "Key1", "Value1" },
-                { "Key2", "Value2" },
-                { "Key3", "Value3" }
-                } ,
-                42
-            );
+            //var analysisResult = new Tuple<IDictionary<string , string> , int>(
+            //    new Dictionary<string , string>
+            //    {
+            //    { "Key1", "Value1" },
+            //    { "Key2", "Value2" },
+            //    { "Key3", "Value3" }
+            //    } ,
+            //    42
+            //);
 
-            var dataList = analysisResult.Item1.Select( kv => new
-            {
-                 kv.Key ,
-                kv.Value ,
-                analysisResult.Item2
-            } ).ToList();
+            //var dataList = analysisResult.Item1.Select( kv => new
+            //{
+            //     kv.Key ,
+            //    kv.Value ,
+            //    analysisResult.Item2
+            //} ).ToList();
 
-            var newdataList = analysisResult.Item1.Select( kv => new KeyValuePair<string , string>( kv.Key , kv.Value ) ).ToList();
+            //var newdataList = analysisResult.Item1.Select( kv => new KeyValuePair<string , string>( kv.Key , kv.Value ) ).ToList();
 
-            // Bind the list to the DataGrid
-            dataGrid.ItemsSource = dataList;
+            //// Bind the list to the DataGrid
+            //dataGrid.ItemsSource = dataList;
         }
     }
 

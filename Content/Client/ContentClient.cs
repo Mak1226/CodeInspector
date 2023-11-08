@@ -19,14 +19,14 @@ namespace Content.Client
     /// <summary>
     /// Class that handles communication between ContentPage and Content
     /// </summary>
-    internal class ContentClient
+    public class ContentClient
     {
         ICommunicator _client;
         IFileHandler _fileUploader;
         /// <summary>
         /// Initializes a new instance of the ContentClient class.
         /// </summary>
-        ContentClient()
+        public ContentClient()
         {
             _client = CommunicationFactory.GetCommunicator(false);
             _fileUploader = new FileHandler(_client);

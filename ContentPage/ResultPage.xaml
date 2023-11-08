@@ -11,7 +11,7 @@
     <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
         <TabItem Header="Result" Name="ResultTable">
             <Grid>
-                <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492">
+                <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492" ItemsSource="{Binding DataList}">
                     <!--<DataGrid.Columns>
                         <DataGridTextColumn Width="100" Header="Key" Binding="{Binding}" />
                         <DataGridTextColumn Width="100" Header="Value" Binding="{Binding}" />

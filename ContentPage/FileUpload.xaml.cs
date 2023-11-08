@@ -10,8 +10,7 @@
  * Description = Page that lets user upload files for analysis
  *****************************************************************************/
 
-using Content.FileHandling;
-using Networking;
+using Content.Client;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +24,9 @@ namespace ContentPage
     {
         private readonly ContentClient _uploadClient;
 
+        /// <summary>
+        /// Initialise page and Content Client
+        /// </summary>
         public FileUpload()
         {
             _uploadClient = new ContentClient();
