@@ -3,6 +3,10 @@
 /////
 
 
+using System;
+using System.Diagnostics;
+using System.Net;
+
 using System.Net.Sockets;
 using Networking.Events;
 using Networking.Models;
@@ -38,8 +42,15 @@ namespace Networking.Communicator
 
             if (destIP != null && destPort != null)
                 tcpClient.Connect(destIP, destPort.Value);
+
+
+            IPEndPoint localEndPoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
+            Console.WriteLine("[Client] IP Address: " + localEndPoint.Address.MapToIPv4());
+            Console.WriteLine("[Client] Port: " + localEndPoint.Port);
+
             Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), senderID);
             _sender.Send(message);
+
             _networkStream = tcpClient.GetStream();
             lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
 
@@ -49,7 +60,7 @@ namespace Networking.Communicator
             _receiver = new(_IDToStream, _moduleEventMap);
 
             Console.WriteLine("[Client] Started");
-            return "";
+            return localEndPoint.Address.MapToIPv4()+":"+localEndPoint.Port;
         }
 
         public void Stop()

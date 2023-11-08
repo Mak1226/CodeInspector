@@ -5,33 +5,33 @@ namespace ClientApp
 {
     public class Events : IEventHandler
     {
-        public string HandleAnalyserResult(string data)
+        public string HandleAnalyserResult(Networking.Utils.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleChatMessage(string data)
+        public string HandleChatMessage(Networking.Utils.Message data)
         {
-            Console.WriteLine("Recieved " + data + " in call back function");
+            Console.WriteLine("Recieved " + data.SerializedObj + " in call back function");
             return "";
         }
 
-        public string HandleClientJoined(string data)
+        public string HandleClientJoined(Networking.Utils.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleClientLeft(string data)
+        public string HandleClientLeft(Networking.Utils.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleConnectionRequest(string data)
+        public string HandleConnectionRequest(Networking.Utils.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleFile(string data)
+        public string HandleFile(Networking.Utils.Message data)
         {
             throw new NotImplementedException();
         }

@@ -59,26 +59,54 @@ namespace Networking.Communicator
             _sender = new(_clientIDToStream, false);
             _receiver = new(_clientIDToStream, _moduleEventMap);
 
-            _serverListener = new TcpListener(IPAddress.Any, 12345);
-            _serverListener.Start();
+            int port = 12345;
+            Random random = new();
+            while (true)
+            {
+                try
+                {
+                    _serverListener = new TcpListener(IPAddress.Any, port);
+                    _serverListener.Start();
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    {
+                        port = random.Next(1, 65534);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Socket error: " + ex.SocketErrorCode);
+                        throw ex;
+                    }
+                }
+            }
             IPEndPoint localEndPoint = (IPEndPoint)_serverListener.LocalEndpoint;
             Console.WriteLine("[Server] Server is listening on:");
             Console.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
             Console.WriteLine("[Server] Port: " + localEndPoint.Port);
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
-            this.Subscribe(new NetworkingEventHandler(), "networking");
+            Subscribe(new NetworkingEventHandler(), "networking");
             return localEndPoint.Address + ":" + localEndPoint.Port;
         }
 
         public void Stop()
         {
             Console.WriteLine("[Server] Stop");
+            _stopThread = true;
             _sender.Stop();
             _receiver.Stop();
+            foreach (var stream in _clientIDToStream.Values)
+            {
+                stream.Close(); // Close the network stream
+            }
+
             Console.WriteLine("[Server] Stopped _sender and _receiver");
+            _listenThread.Interrupt();
             _serverListener.Stop();
-            _listenThread.Join();
+            //_listenThread.Join();
             Console.WriteLine("[Server] Stopped");
         }
 
@@ -95,7 +123,19 @@ namespace Networking.Communicator
             while (!_stopThread)
             {
                 Console.WriteLine("waiting for connection");
-                TcpClient client = _serverListener.AcceptTcpClient();
+                TcpClient client=new();
+                try
+                {
+                    client = _serverListener.AcceptTcpClient();
+                }
+                catch (SocketException e)
+                {
+                    if (e.SocketErrorCode == SocketError.Interrupted)
+                    {
+                        Console.WriteLine("[Server] Listener stopped");
+                        break;
+                    }
+                }
                 NetworkStream stream = client.GetStream();
                 lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
                 clientID += 'A';

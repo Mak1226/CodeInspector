@@ -8,6 +8,16 @@ namespace ServerApp
     {
         static void Main(string[] args)
         {
+
+            ICommunicator server = CommunicationFactory.GetCommunicator(true);
+
+            //Console.ReadKey();
+            //server.Send("omg", EventType.ChatMessage(), "A");
+
+            server.Start(null, null,ID.GetServerID());
+
+            Console.ReadKey();
+            
             ICommunicator server = CommunicationFactory.GetServer();
             string serverAddr=server.Start(null, null,ID.GetServerID());
             Console.ReadKey();
@@ -15,6 +25,7 @@ namespace ServerApp
 
             client.Start()
             server.Send("omg", EventType.ChatMessage(), "A");
+            server.Stop();
         }
     }
 }
