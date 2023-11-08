@@ -2,24 +2,26 @@
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text.Json;
+using Networking.Models;
 using Networking.Queues;
+using Networking.Serialization;
 
 namespace Networking.Utils
 {
-	public class Receiver
-	{
-		private Queue _recvQueue = new();
+    public class Receiver
+    {
+        private Queue _recvQueue = new();
         private Thread _recvThread;
         private Thread _recvQueueThread;
         private Dictionary<string, NetworkStream> _clientIDToStream;
-		private Dictionary<string, IEventHandler> _moduleEventMap;
+        private Dictionary<string, IEventHandler> _moduleEventMap;
         private bool _stopThread = false;
 
         public Receiver(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, IEventHandler> moduleEventMap)
-		{
+        {
             Console.WriteLine("[Receiver] Init");
             _clientIDToStream = clientIDToStream;
-			_moduleEventMap = moduleEventMap;
+            _moduleEventMap = moduleEventMap;
             _recvThread = new Thread(Receive);
             _recvQueueThread = new Thread(RecvLoop);
             _recvThread.Start();
@@ -50,8 +52,12 @@ namespace Networking.Utils
                         int bytesRead = item.Value.Read(receiveData, 0, receiveData.Length);
 
                         string receivedMessage = System.Text.Encoding.ASCII.GetString(receiveData, 0, bytesRead);
-                        Message serMsg = JsonSerializer.Deserialize<Message>(receivedMessage);
-                        _recvQueue.Enqueue(serMsg, 1 /* fix it */);
+                        Message message = Serializer.Deserialize<Message>(receivedMessage);
+                        if (message.EventType == EventType.ClientRegister())
+                        {
+                            message.Data = item.Key;
+                        }
+                        _recvQueue.Enqueue(message, Priority.GetPriority(message.EventType) /* fix it */);
                     }
                 }
                 if (ifAval == false)
@@ -67,7 +73,7 @@ namespace Networking.Utils
                 MethodInfo method = typeof(IEventHandler).GetMethod(message.EventType);
                 if (method != null)
                 {
-                    object[] parameters = new object[] { message};
+                    object[] parameters = new object[] { message };
                     method.Invoke(pair.Value, parameters);
                 }
                 else

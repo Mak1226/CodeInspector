@@ -1,8 +1,9 @@
 ﻿using System;
-using Networking;
+using Networking.Events;
+
 namespace ClientApp
 {
-	public class Events : IEventHandler
+    public class Events : IEventHandler
     {
         public string HandleAnalyserResult(Networking.Utils.Message data)
         {
