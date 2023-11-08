@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text.Json;
+using Networking.Models;
 using Networking.Queues;
 using Networking.Utils;
 
@@ -25,24 +26,28 @@ namespace Networking.Communicator
         {
             // NOTE: destID SHOULD be "server" to send to the server.
             Console.WriteLine("[Client] Send" + serializedObj + " " + eventType + " " + destID);
-            _sender.Send(serializedObj, eventType, destID,_senderID);
+            Message message = new Message(
+                serializedObj, eventType, destID, _senderID
+            );
+            _sender.Send(message);
         }
 
         public string Start(string? destIP, int? destPort, string senderID)
         {
             _senderID = senderID;
-            
+
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
 
             if (destIP != null && destPort != null)
                 tcpClient.Connect(destIP, destPort.Value);
-
+            Message message = new Message("", EventType.ClientRegister(), "server", senderID);
+            _sender.Send(message);
             _networkStream = tcpClient.GetStream();
-            _IDToStream["server"] = _networkStream;
+            lock (_IDToStream) { _IDToStream["server"] = _networkStream; }
 
             Console.WriteLine("[Client] Starting sender");
-            _sender = new(_IDToStream,true);
+            _sender = new(_IDToStream, true);
             Console.WriteLine("[Client] Starting receiver");
             _receiver = new(_IDToStream, _moduleEventMap);
 

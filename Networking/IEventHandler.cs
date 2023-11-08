@@ -1,7 +1,8 @@
 ﻿/////
 /////
 
-using Networking.Utils;
+using System.Net.Sockets;
+using Networking.Models;
 /// Author: 
 namespace Networking
 {
@@ -13,5 +14,6 @@ namespace Networking
         public string HandleConnectionRequest(Message data);
         public string HandleClientJoined(Message data);
         public string HandleClientLeft(Message data);
+        public string HandleClientRegister(Message data, Dictionary<string, NetworkStream> clientIDToStream);
     }
 }

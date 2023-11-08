@@ -3,19 +3,21 @@
 /////
 
 using System;
-namespace Networking.Utils
+
+namespace Networking.Models
 {
-	public class Message
+    public class Message
     {
         public string SerializedObj { get; set; }
         public string EventType { get; set; }
         public bool StopThread { get; set; }
         public string? DestID { get; set; }
-        public string? SenderID { get;set; }
-        public Message() {
-            this.SerializedObj = "";
-            this.EventType = "";
-            this.DestID = null;
+        public string? SenderID { get; set; }
+        public Message()
+        {
+            SerializedObj = "";
+            EventType = "";
+            DestID = null;
             StopThread = false;
         }
 
