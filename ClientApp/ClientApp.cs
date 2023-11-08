@@ -1,10 +1,10 @@
 ﻿using System;
-using Networking;
 using Networking.Communicator;
+using Networking.Events;
 
 namespace ClientApp
 {
-	public class ClientApp
+    public class ClientApp
 	{
         public static void Main()
         {
