@@ -37,7 +37,7 @@ namespace Content.Encoder
         /// </summary>
         /// <param name="filePaths">Path to each file to be encoded together. Need to be DLLs</param>
         /// <returns>An XML representation of the DLL data as a string.</returns>
-        public string GetEncoded(List<string> filePaths, string sessionID)
+        public string GetEncoded(List<string> filePaths, string rootPath, string sessionID)
         {
             this.sessionID = sessionID;
 
@@ -68,7 +68,7 @@ namespace Content.Encoder
 
                     // Add an attribute for the file name/path
                     XmlAttribute nameAttribute = xmlDocument.CreateAttribute("Name");
-                    nameAttribute.Value = filePath;
+                    nameAttribute.Value = Path.GetRelativePath(rootPath, filePath);
                     fileElement.Attributes.Append(nameAttribute);
 
                     // Set the content of the file element
@@ -155,6 +155,8 @@ namespace Content.Encoder
             foreach (KeyValuePair<string, string> kvp in _data)
             {
                 string filePath = Path.Combine( path , kvp.Key );
+                FileInfo fileInfo = (new FileInfo(filePath));
+                fileInfo.Directory.Create(); // Ensure that directory exists
                 File.WriteAllText( filePath , kvp.Value );
             }
 

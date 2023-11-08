@@ -22,7 +22,7 @@ namespace Content.Encoder
         /// </summary>
         /// <param name="filePaths">Path to each file to be encoded together</param>
         /// <returns>A string containing the encoded XML data.</returns>
-        string GetEncoded(List<string> filePaths, string sessionID);
+        string GetEncoded(List<string> filePaths, string rootPath, string sessionID);
 
         /// <summary>
         /// Decodes data from an XML string and sets the internal state of an object with the decoded data.

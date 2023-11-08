@@ -56,7 +56,7 @@ namespace Content.FileHandling
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), sessionID);
+            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
             _fileSender.Send(encoding, EventType.AnalyseFile(), "0.0.0.0");
