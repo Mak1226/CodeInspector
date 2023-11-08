@@ -1,8 +1,9 @@
 ﻿/////
-/// Author: 
 /////
 
 
+using Networking.Events;
+/// Author: 
 namespace Networking.Communicator
 {
     /*

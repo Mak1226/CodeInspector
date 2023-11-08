@@ -4,7 +4,7 @@
 using System.Net.Sockets;
 using Networking.Models;
 /// Author: 
-namespace Networking
+namespace Networking.Events
 {
     public interface IEventHandler
     {
