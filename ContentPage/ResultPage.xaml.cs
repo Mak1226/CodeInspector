@@ -10,11 +10,9 @@
  * Description = Page that visualises result of an analysis
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Controls;
 using Content.Server;
+using Networking.Communicator;
 
 namespace ContentPage
 {
@@ -26,12 +24,13 @@ namespace ContentPage
         private ContentServerViewModel viewModel;
 
         /// <summary>
-        /// Initialises content server viewmodel
+        /// Initializes content Server ViewModel
         /// </summary>
-        public ResultPage()
+        /// <param name="server">Running server</param>
+        public ResultPage(ICommunicator server)
         {
             InitializeComponent();
-            viewModel = new ContentServerViewModel();
+            viewModel = new ContentServerViewModel(server);
             DataContext = viewModel;
 
             //var analysisResult = new Tuple<IDictionary<string , string> , int>(

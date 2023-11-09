@@ -11,6 +11,7 @@
  *****************************************************************************/
 
 using Content.Client;
+using Networking.Communicator;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,17 +20,20 @@ namespace ContentPage
 {
     /// <summary>
     /// Interaction logic for FileUpload.xaml
+    /// Represents the page for clients to see
     /// </summary>
     public partial class FileUpload : Page
     {
         private readonly ContentClient _uploadClient;
 
         /// <summary>
-        /// Initialise page and Content Client
+        /// Initialses the page
         /// </summary>
-        public FileUpload()
+        /// <param name="client">The input ICommuncator that can send messages to server</param>
+        /// <param name="sessionID">Some unique identifier for this user</param>
+        public FileUpload(ICommunicator client, string sessionID)
         {
-            _uploadClient = new ContentClient();
+            _uploadClient = new ContentClient(client, sessionID);
             InitializeComponent();
         }
 
@@ -65,7 +69,7 @@ namespace ContentPage
                 Trace.WriteLine(folderPath);
 
                 // Pass folder path to Content Client
-                _uploadClient.HandleUpload(folderPath, "5");
+                _uploadClient.HandleUpload(folderPath);
             }
         }
 

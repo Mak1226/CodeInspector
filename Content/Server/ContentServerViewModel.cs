@@ -1,10 +1,14 @@
-﻿
+﻿using Analyzer;
+using Networking.Communicator;
 using System.ComponentModel;
 
 namespace Content.Server
 {
     using AnalyzerResult = Tuple<Dictionary<string, string>, int>;
 
+    /// <summary>
+    /// Viewmodel for the Content Server model
+    /// </summary>
     public class ContentServerViewModel : INotifyPropertyChanged
     {
         private AnalyzerResult analyzerResult;
@@ -13,9 +17,14 @@ namespace Content.Server
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ContentServerViewModel()
+        /// <summary>
+        /// Initializes Content Server and provides it server and analyzer
+        /// </summary>
+        public ContentServerViewModel(ICommunicator server)
         {
-            contentServer = new ContentServer();
+            IAnalyzer analyzer = AnalyzerFactory.GetAnalyser();
+
+            contentServer = new ContentServer(server, analyzer);
             contentServer.AnalyzerResultChanged += (result) =>
             {
                 analyzerResult = result;
@@ -24,6 +33,10 @@ namespace Content.Server
 
         }
 
+        /// <summary>
+        /// Analysis result
+        /// Currenly only shows the latest one
+        /// </summary>
         public List<Tuple<string, string, int>> DataList
         {
             get 
@@ -33,6 +46,10 @@ namespace Content.Server
             set { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Update data list whenever analyzer result in content server is updated
+        /// </summary>
+        /// <param name="analyzerResult">Analyzer Result from content server</param>
         public void UpdateDataList(AnalyzerResult analyzerResult)
         {
             dataList = new();

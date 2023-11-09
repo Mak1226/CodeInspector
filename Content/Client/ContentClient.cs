@@ -11,7 +11,6 @@
  *****************************************************************************/
 
 using Content.FileHandling;
-using Networking;
 using Networking.Communicator;
 
 namespace Content.Client
@@ -23,22 +22,23 @@ namespace Content.Client
     {
         ICommunicator _client;
         IFileHandler _fileUploader;
+        string _sessionID;
         /// <summary>
         /// Initializes a new instance of the ContentClient class.
         /// </summary>
-        public ContentClient()
+        public ContentClient(ICommunicator client, string sessionID)
         {
-            _client = CommunicationFactory.GetCommunicator(false);
+            _client = client;
             _fileUploader = new FileHandler(_client);
+            _sessionID = sessionID;
         }
         /// <summary>
-        /// Handles the upload of files from a folder to a specified session.
+        /// Handles the upload of files from a folder to the folder specified for that session.
         /// </summary>
         /// <param name="folderPath">The path to the folder containing files to upload.</param>
-        /// <param name="sessionID">The session ID for the upload.</param>
-        public void HandleUpload(string folderPath, string sessionID)
+        public void HandleUpload(string folderPath)
         {
-            _fileUploader.Upload(folderPath, sessionID);
+            _fileUploader.Upload(folderPath, _sessionID);
         }
     }
 }

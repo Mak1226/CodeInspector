@@ -1,5 +1,4 @@
 ﻿using Networking.Communicator;
-using Networking;
 using Content.FileHandling;
 using Content.Encoder;
 using Analyzer;
@@ -23,17 +22,19 @@ namespace Content.Server
         public AnalyzerResult analyzerResult {  get; private set; }
 
         /// <summary>
-        /// Initializes networking, filehandling and analyser
+        /// Initialise the content server, subscribe to networking server
         /// </summary>
-        public ContentServer() 
+        /// <param name="_server">Networking server</param>
+        /// <param name="_analyzer">Analyzer</param>
+        public ContentServer(ICommunicator _server, IAnalyzer _analyzer) 
         {
-            server = CommunicationFactory.GetCommunicator(true);
+            server = _server;
             ServerRecieveHandler recieveHandler = new ServerRecieveHandler(this);
             server.Subscribe(recieveHandler, "Content");
 
             fileHandler = new FileHandler(server);
 
-            analyzer = AnalyzerFactory.GetAnalyser();
+            analyzer = _analyzer;
 
             serializer = new AnalyzerResultSerializer();
         }

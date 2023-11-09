@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Content\Content.csproj" />
+    <ProjectReference Include="..\Networking\Networking.csproj" />
   </ItemGroup>
 
 </Project>

@@ -59,7 +59,7 @@ namespace Content.FileHandling
             string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
-            _fileSender.Send(encoding, EventType.AnalyseFile(), "0.0.0.0");
+            _fileSender.Send(encoding, EventType.AnalyseFile(), "server");
         }
 
         /// <summary>
