@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using Networking.Events;
 using Networking.Models;
 
-namespace ServerApp
+namespace ClientApp
 {
     public class Events : IEventHandler
     {
@@ -14,13 +14,13 @@ namespace ServerApp
 
         public string HandleChatMessage(Networking.Models.Message data)
         {
-            Console.WriteLine("[HandleChatMessage] Recieved ChatMessage" + data.Data + " in call back function");
+            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + data.Data + " in call back function");
             return "";
         }
 
         public string HandleClientJoined(Networking.Models.Message data)
         {
-            Console.WriteLine("[HandleClientJoined] new client joinded: " + data.Data);
+            Console.WriteLine("[HandleClientJoined, cl] new client joinded: " + data.Data);
             return "";
         }
 

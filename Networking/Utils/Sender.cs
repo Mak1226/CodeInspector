@@ -57,9 +57,12 @@ namespace Networking.Utils
 
                 string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
+                int messageSize = messagebytes.Length;
                 if (_isClient == true)
                 {
+                    clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                     clientIDToStream[ID.GetServerID()].Write(messagebytes);
+                    clientIDToStream[ID.GetServerID()].Flush();
                 }
                 else
                 {
@@ -67,12 +70,16 @@ namespace Networking.Utils
                     {
                         foreach (KeyValuePair<string, NetworkStream> pair in clientIDToStream)
                         {
+                            pair.Value.Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                             pair.Value.Write(messagebytes);
+                            pair.Value.Flush();
                         }
                     }
                     else
                     {
+                        clientIDToStream[senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                         clientIDToStream[senderIDToClientID[message.DestID]].Write(messagebytes);
+                        clientIDToStream[senderIDToClientID[message.DestID]].Flush();
                     }
                 }
 
