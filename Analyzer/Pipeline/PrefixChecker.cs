@@ -1,4 +1,4 @@
-/*using System;
+using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// An analyzer that checks the correctness of type name prefixes in parsed DLL files.
     /// </summary>
-    public class PrefixCheckerAnalyzer : BaseAnalyzer
+    public class PrefixCheckerAnalyzer : AnalyzerBase
     {
         
         private string errorMessage;
@@ -34,49 +34,49 @@ namespace Analyzer.Pipeline
         /// Analyzes the DLL files to check type name prefixes for correctness.
         /// </summary>
         /// <returns>The number of errors found during the analysis.</returns>
-        //public override AnalyzerResult Run()
-        //{
-        //    int errorCount = 0;
+        public override AnalyzerResult Run()
+        {
+            int errorCount = 0;
 
-        //    foreach (var type in parsedDLLFiles.Types)
-        //    {
-        //        if (type.IsInterface)
-        //        {
-        //            if (!IsCorrectInterfaceName(type.Name))
-        //            {
-        //                Console.WriteLine($"[Error] Incorrect interface prefix: {type.Name}");
-        //                errorCount++;
-        //            }
-        //        }
-        //        else if(type.IsValueType)
-        //        {
-        //            if (!IsCorrectTypeName(type.Name))
-        //            {
-        //                Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
-        //                errorCount++;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (!IsCorrectGenericParameterName(type.Name))
-        //            {
-        //                Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
-        //                errorCount++;
-        //            }
-        //        }
-        //    }
+            foreach (var type in parsedDLLFiles.Types)
+            {
+                if (type.IsInterface)
+                {
+                    if (!IsCorrectInterfaceName(type.Name))
+                    {
+                        Console.WriteLine($"[Error] Incorrect interface prefix: {type.Name}");
+                        errorCount++;
+                    }
+                }
+                else if(type.IsValueType)
+                {
+                    if (!IsCorrectTypeName(type.Name))
+                    {
+                        Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
+                        errorCount++;
+                    }
+                }
+                else
+                {
+                    if (!IsCorrectGenericParameterName(type.Name))
+                    {
+                        Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
+                        errorCount++;
+                    }
+                }
+            }
 
-        //    if(errorCount == 0)
-        //    {
-        //    	verdict = 1;
-        //    }
+            if(errorCount == 0)
+            {
+            	verdict = 1;
+            }
             
-        //    else
-        //    {
-        //    	verdict = 0;
-        //    }
-        //    return new AnalyzerResult(analyzerID, verdict, errorMessage);
-        //}
+            else
+            {
+            	verdict = 0;
+            }
+            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+        }
 
         /// <summary>
         /// Checks if a type name follows the correct interface prefix.
@@ -88,7 +88,7 @@ namespace Analyzer.Pipeline
             return name.Length > 2 && name[0] == 'I' && char.IsUpper(name[1]);
         }
 
-	/// <summary>
+	    /// <summary>
         /// Checks if a type name follows the correct type prefix.
         /// </summary>
         /// <param name="name">The type name to check.</param>
@@ -119,4 +119,4 @@ namespace Analyzer.Pipeline
 	}
     }
 }
-*/
+
