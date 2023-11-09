@@ -13,7 +13,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for checking that fields of disposable types are properly disposed.
     /// </summary>
-    public class DisposableFieldsShouldBeDisposedRule : BaseAnalyzer
+    public class DisposableFieldsShouldBeDisposedRule : AnalyzerBase
     {
         /// <summary>
         /// Initializes a new instance of the DisposableFieldsShouldBeDisposedRule analyzer with parsed DLL files.
@@ -24,10 +24,10 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Gets the score indicating the number of violations found in the analyzed DLL files.
+        /// Gets the result of the analysis, which includes the number of violations found.
         /// </summary>
-        /// <returns>The total number of violations found in the DLL files.</returns>
-        public override int GetScore()
+        /// <returns>An AnalyzerResult containing the analysis results.</returns>
+        public override AnalyzerResult Run()
         {
             int violationCount = 0;
 
@@ -43,7 +43,7 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            return violationCount;
+            return new AnalyzerResult("DisposableFieldsShouldBeDisposedRule", violationCount, null);
         }
 
         /// <summary>
