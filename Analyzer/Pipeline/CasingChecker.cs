@@ -5,13 +5,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Mono.Cecil.Cil;
+using Mono.Cecil;
 
 namespace Analyzer.Pipeline
 {
     /// <summary>
     /// An analyzer that checks the correctness of casing in parsed DLL files.
     /// </summary>
-    public class CasingChecker : BaseAnalyzer
+    public class CasingChecker : AnalyzerBase
     {
         
         private string errorMessage;
@@ -37,14 +39,14 @@ namespace Analyzer.Pipeline
         public override AnalyzerResult Run()
         {
             // Flag to track if any casing mistake is found
-            int hasMistake = 0;
+            bool hasMistake = false;
 
             // Check namespace names for PascalCasing
             foreach (string ns in parsedDLLFiles.GetNamespaces())
             {
                 if (!IsPascalCase(ns))
                 {
-                    hasMistake = 1;
+                    hasMistake = true;
                     break; // If a mistake is found, exit the loop
                 }
             }
@@ -56,7 +58,7 @@ namespace Analyzer.Pipeline
                 {
                     if (!IsPascalCase(type))
                     {
-                        hasMistake = 1;
+                        hasMistake = true;
                         break;
                     }
                 }
@@ -69,52 +71,60 @@ namespace Analyzer.Pipeline
                 {
                     if (!IsPascalCase(method.Name))
                     {
-                        hasMistake = 1;
+                        hasMistake = true;
                         break;
                     }
 
                     if (!AreParametersCamelCased(method.Parameters))
                     {
-                        hasMistake = 1;
+                        hasMistake = true;
                         break;
                     }
                 }
             }
 	
 	    // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
-            Verdict = hasMistake ? 0 : 1
+            if(!hasMistake)
+            {
+                verdict = 0;
+            }
+
+            else
+            {
+                verdict = 1;
+            }
 
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
 
         // check if name is PascalCased
-	private static int IsPascalCase (string name)
+	private static bool IsPascalCase (string name)
 	{
 		if (String.IsNullOrEmpty (name))
-			return 1;
+			return true;
 
 		return Char.IsUpper (name [0]);
 	}
 	
 	// check if name is camelCased
-	private static int IsCamelCase (string name)
+	private static bool IsCamelCase (string name)
 	{
 		if (String.IsNullOrEmpty (name))
-			return 1;
+			return true;
 
 		return Char.IsLower (name [0]);
 	}
 	
-	private int AreParametersCamelCased(Analyzer.Parsing.ParameterInfo[] parameters)
+	private bool AreParametersCamelCased(Analyzer.Parsing.ParameterInfo[] parameters)
         {
             foreach (var param in parameters)
             {
                 if (!IsCamelCase(param.Name))
                 {
-                    return 0;
+                    return false;
                 }
             }
-            return 1;
+            return true;
         }
 
     }
