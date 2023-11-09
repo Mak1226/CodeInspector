@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for removing unused local variables in methods using Mono.Cecil.
     /// </summary>
-    public class RemoveUnusedLocalVariablesRule : BaseAnalyzer
+    public class RemoveUnusedLocalVariablesRule : AnalyzerBase
     {
         /// <summary>
         /// Initializes a new instance of the RemoveUnusedLocalVariablesRule with parsed DLL files.
@@ -26,10 +26,10 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Calculates the score based on the number of unused local variables removed.
+        /// Gets the result of the analysis, which includes the number of unused local variables removed.
         /// </summary>
-        /// <returns>The total count of unused local variables removed.</returns>
-        public override int GetScore()
+        /// <returns>An AnalyzerResult containing the analysis results.</returns>
+        public override AnalyzerResult Run()
         {
             int totalUnusedLocals = 0;
 
@@ -42,7 +42,7 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            return totalUnusedLocals;
+            return new AnalyzerResult("RemoveUnusedLocalVariablesRule", totalUnusedLocals, "");
         }
 
         /// <summary>
@@ -122,4 +122,4 @@ namespace Analyzer.Pipeline
             }
         }
     }
-}*/
+}
