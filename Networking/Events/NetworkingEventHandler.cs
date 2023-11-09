@@ -47,12 +47,11 @@ namespace Networking.Events
         {
             throw new NotImplementedException();
         }
-        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream)
+        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
         {
-            lock (clientIDToStream)
+            lock (senderIDToClientID)
             {
-                clientIDToStream[message.SenderID] = clientIDToStream[message.Data];
-                clientIDToStream.Remove(message.Data);
+                senderIDToClientID[message.SenderID] = message.Data;
             }
             HandleClientJoined(message);
             return "";

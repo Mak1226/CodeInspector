@@ -15,18 +15,21 @@ namespace Networking.Utils
         private Thread _recvThread;
         private Thread _recvQueueThread;
         private Dictionary<string, NetworkStream> _clientIDToStream;
+        Dictionary<string, string> senderIDToClientID;
         private Dictionary<string, IEventHandler> _moduleEventMap;
         private bool _stopThread = false;
 
-        public Receiver(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, IEventHandler> moduleEventMap)
+        public Receiver(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, IEventHandler> moduleEventMap, Dictionary<string, string> senderIDToClientID)
         {
             Console.WriteLine("[Receiver] Init");
+            this.senderIDToClientID = senderIDToClientID;
             _clientIDToStream = clientIDToStream;
             _moduleEventMap = moduleEventMap;
             _recvThread = new Thread(Receive);
             _recvQueueThread = new Thread(RecvLoop);
             _recvThread.Start();
             _recvQueueThread.Start();
+            this.senderIDToClientID = senderIDToClientID;
         }
 
         public void Stop()
@@ -78,7 +81,7 @@ namespace Networking.Utils
                     object[] parameters = new object[] { message };
                     if (message.EventType==EventType.ClientRegister())
                     {
-                        parameters = new object[] { message ,_clientIDToStream};
+                        parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
                     }
                     method.Invoke(pair.Value, parameters);
                 }

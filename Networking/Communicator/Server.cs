@@ -18,6 +18,7 @@ namespace Networking.Communicator
         private Receiver _receiver;
         private TcpListener _serverListener;
         Dictionary<string, NetworkStream> _clientIDToStream = new();
+        Dictionary<string, string> _senderIDToClientID = new();
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
         private string _senderID;
 
@@ -56,8 +57,8 @@ namespace Networking.Communicator
         {
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _senderID = senderID;
-            _sender = new(_clientIDToStream, false);
-            _receiver = new(_clientIDToStream, _moduleEventMap);
+            _sender = new(_clientIDToStream, _senderIDToClientID, false);
+            _receiver = new(_clientIDToStream, _moduleEventMap, _senderIDToClientID);
 
             int port = 12345;
             Random random = new();

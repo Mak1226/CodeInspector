@@ -14,6 +14,6 @@ namespace Networking.Events
         public string HandleConnectionRequest(Message message);
         public string HandleClientJoined(Message message);
         public string HandleClientLeft(Message message);
-        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream);
+        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID);
     }
 }

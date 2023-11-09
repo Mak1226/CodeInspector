@@ -11,9 +11,12 @@ namespace Networking.Utils
         private Thread _sendThread;
         private bool _isClient;
         private Dictionary<string, NetworkStream> clientIDToStream;
+        Dictionary<string, string> senderIDToClientID;
 
-        public Sender(Dictionary<string, NetworkStream> clientIDToStream, bool isClient)
+
+        public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
         {
+            this.senderIDToClientID=senderIDToClientID;
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
             this.clientIDToStream = clientIDToStream;
@@ -69,7 +72,7 @@ namespace Networking.Utils
                     }
                     else
                     {
-                        clientIDToStream[message.DestID].Write(messagebytes);
+                        clientIDToStream[senderIDToClientID[message.DestID]].Write(messagebytes);
                     }
                 }
 

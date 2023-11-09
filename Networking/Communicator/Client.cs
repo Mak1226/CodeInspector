@@ -19,6 +19,8 @@ namespace Networking.Communicator
         private Sender _sender;
         private Receiver _receiver;
         private Dictionary<string, NetworkStream> _IDToStream = new();
+        Dictionary<string, string> _senderIDToClientID = new();
+
         private string _senderID;
         private NetworkStream _networkStream;
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
@@ -54,9 +56,9 @@ namespace Networking.Communicator
             lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
 
             Console.WriteLine("[Client] Starting sender");
-            _sender = new(_IDToStream, true);
+            _sender = new(_IDToStream,_senderIDToClientID, true);
             Console.WriteLine("[Client] Starting receiver");
-            _receiver = new(_IDToStream, _moduleEventMap);
+            _receiver = new(_IDToStream, _moduleEventMap, _senderIDToClientID);
             _sender.Send(message);
 
             Console.WriteLine("[Client] Started");
