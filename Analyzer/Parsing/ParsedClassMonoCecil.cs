@@ -112,12 +112,13 @@ namespace Analyzer.Parsing
             _properties = _typeObj.Properties.ToList();
 
 
-            // Using Class Relationship 
-            // Cases considering: 1. if any method (other than constructors) contain other class as parameter
-            // 2.If its a parameter for a constructor, and is not assigned to any field inside the constructor, then it is considered as using relationship. 
             _usingList = new List<string>();
             _compositionList = new List<string>();
             _aggregationList = new List<string>();
+
+            // Using Class Relationship 
+            // Cases considering: 1. if any method (other than constructors) contain other class as parameter
+            // 2.If its a parameter for a constructor, and is not assigned to any field inside the constructor, then it is considered as using relationship. 
 
             //Get all the methods and its parameters into a dictionary, which can be iterated over to check its types.
             Dictionary<MethodDefinition, List<ParameterDefinition>> dict = GetFunctionParameters();
@@ -125,10 +126,10 @@ namespace Analyzer.Parsing
             {
                 foreach (ParameterDefinition argument in pair.Value)
                 {
-                    Type relatedClass = argument.GetType();
+                    var objType = argument.ParameterType.Resolve();
 
                     //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
-                    if (relatedClass.IsClass && relatedClass != _typeObj.GetType() && !relatedClass.IsGenericType)
+                    if (objType != _typeObj && !objType.GetType().IsGenericType)
                     {
                         if (pair.Key.IsConstructor)
                         {
@@ -139,7 +140,15 @@ namespace Analyzer.Parsing
                             //ignoring the classes those start with "System"
                             if (!argument.ParameterType.FullName.StartsWith("System"))
                             {
-                                _usingList.Add(argument.ParameterType.FullName);
+                                if(objType.IsClass)
+                                {
+                                    _usingList.Add("C"+argument.ParameterType.FullName);
+                                }
+                                else if(objType.IsInterface)
+                                {
+                                    _usingList.Add("I"+argument.ParameterType.FullName);
+
+                                }
                             }
                         }
                     }
@@ -153,7 +162,7 @@ namespace Analyzer.Parsing
             {
                 if (!_parentClass.FullName.StartsWith("System"))
                 {
-                    _inheritanceList.Add(_parentClass.FullName);
+                    _inheritanceList.Add("C"+_parentClass.FullName);
                 }
             }
             
@@ -162,11 +171,11 @@ namespace Analyzer.Parsing
             {
                 if (!iface.InterfaceType.FullName.StartsWith("System"))
                 {
-                    _inheritanceList.Add(iface.InterfaceType.FullName);
+                    _inheritanceList.Add("I"+iface.InterfaceType.FullName);
                 }
             }
             
-
+            
             // Aggregation List
             // Cases: 1. If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
             // 2. If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
@@ -181,10 +190,11 @@ namespace Analyzer.Parsing
                         {
                             var constructorReference = (MethodReference)inst.Operand;
                             var objectType = constructorReference.DeclaringType;
+
                             // adding to aggrgation list, if object is not of generic type
                             if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System"))
                             {
-                                _aggregationList.Add(objectType.FullName);
+                                _aggregationList.Add("C" + objectType.FullName);
                             }
                         }
                     }
@@ -207,12 +217,20 @@ namespace Analyzer.Parsing
                         {
                             var fieldReference = (FieldReference)inst.Operand;
                             var fieldType = fieldReference.FieldType;
-                            var classType = fieldType.Resolve();
+                            var objType = fieldType.Resolve();
 
                             // Check if the field type is of reference type (not a value type), not a Generic type, and does not start with "System"
-                            if (!fieldType.IsValueType && classType.IsClass && !classType.IsGenericInstance && !classType.FullName.StartsWith("System"))
+                            if (!fieldType.IsValueType && !objType.IsGenericInstance && !objType.FullName.StartsWith("System"))
                             {
-                                _compositionList.Add(classType.FullName);
+                                if (objType.IsClass)
+                                {
+                                    _compositionList.Add("C" + objType.FullName);
+                                }
+                                else if(objType.IsInterface)
+                                {
+                                    _compositionList.Add("I" + objType.FullName);
+
+                                }
                             }
                         }
                     }
@@ -223,13 +241,18 @@ namespace Analyzer.Parsing
                 // If between 2 classes composition and using relation exist, giving priority to composition relation.
                 foreach (ParameterDefinition parameter in parameterList)
                 {
-                    Type parameterType = parameter.Resolve().GetType();
-                    if (parameterType.IsClass && !parameterType.IsGenericType && !_compositionList.Contains(parameterType.Name))
+                    Type parameterType = parameter.ParameterType.Resolve().GetType();
+                    string parameterTypeName = parameter.ParameterType.FullName;
+
+                    if (!parameterTypeName.StartsWith("System") && !parameterType.IsGenericType)
                     {
-                        string parameterTypeName = parameter.ParameterType.FullName;
-                        if (!parameterTypeName.StartsWith("System"))
+                        if (parameterType.IsClass && !_compositionList.Contains("C"+parameterType.Name))
                         {
-                            _usingList.Add(parameter.ParameterType.FullName);
+                            _usingList.Add("C"+parameter.ParameterType.FullName);
+                        }
+                        else if (parameterType.IsInterface && !_compositionList.Contains("I"+parameterType.Name))
+                        {
+                            _usingList.Add("I" + parameter.ParameterType.FullName);
                         }
                     }
                 }
@@ -245,12 +268,20 @@ namespace Analyzer.Parsing
                             if (inst != null && inst.OpCode == OpCodes.Newobj)
                             {
                                 var constructorReference = (MethodReference)inst.Operand;
-                                var objectType = constructorReference.DeclaringType;
+                                var objectType = constructorReference.DeclaringType.Resolve();
+
                                 // adding to aggregation list, if object is not of generic type and is not in composition list (i.e either the object is assigned to a local variable
                                 // or if not, since we have decided on the priority of composition over aggreagation, we can check if the composition list has that particular class object or not).
-                                if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System") && !_compositionList.Contains(objectType.FullName))
+                                if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System"))
                                 {
-                                    _aggregationList.Add(objectType.FullName);
+                                    if (objectType.IsClass && !_compositionList.Contains("C" + objectType.FullName))
+                                    {
+                                        _aggregationList.Add("C" + objectType.FullName);
+                                    }
+                                    else if(objectType.IsInterface && !_compositionList.Contains("I" + objectType.FullName))
+                                    {
+                                        _aggregationList.Add("I" + objectType.FullName);
+                                    }
                                 }
                             }
                         }
