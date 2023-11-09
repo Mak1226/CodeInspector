@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -29,4 +29,4 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(1, result);
         }
     }
-}
+}*/

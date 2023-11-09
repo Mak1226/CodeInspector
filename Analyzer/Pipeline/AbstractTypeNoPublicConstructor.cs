@@ -1,4 +1,4 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,4 +59,4 @@ namespace Analyzer.Pipeline
             return FindAbstractTypeWithPublicConstructor().Count > 0 ? 0 : 1;
         }
     }
-}
+}*/
