@@ -54,6 +54,7 @@ namespace Analyzer.Pipeline
 
                 foreach (MethodDefinition method in cls.MethodsList)
                 {
+
                     if (!method.HasBody)
                     {
                         continue;
