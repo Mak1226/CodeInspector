@@ -10,7 +10,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// A base class providing a common structure for various analyzers.
     /// </summary>
-    public abstract class BaseAnalyzer
+    abstract public class AnalyzerBase
     {
         /// <summary>
         /// The parsed DLL files to be used for analysis.
@@ -21,15 +21,18 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public BaseAnalyzer(ParsedDLLFiles dllFiles)
+        public AnalyzerBase(ParsedDLLFiles dllFiles)
         {
             // Set the parsedDLLFiles field with the provided DLL files
             parsedDLLFiles = dllFiles;
         }
 
-        public virtual int GetScore()
-        {
-            return 0;
-        }
+        public abstract AnalyzerResult Run();
     }
 }
+
+/*
+abstract class 
+pascal case
+'Base' should be suffix
+*/

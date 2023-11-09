@@ -26,7 +26,7 @@ namespace Analyzer.Parsing
         /// function to parse the dll files
         /// </summary>
         /// <param name="paths"></param>
-        public ParsedDLLFiles(List<string> paths) // path of dll files
+        public ParsedDLLFiles(List<string>? paths) // path of dll files
         {
             // take the input of all the dll files
             // it merge the all the ParsedNamespace

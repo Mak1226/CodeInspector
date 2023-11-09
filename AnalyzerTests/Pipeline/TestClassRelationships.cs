@@ -32,6 +32,7 @@ namespace AnalyzerTests.Pipeline
 
 
             foreach (var cls in parsedClasses) {
+                Console.WriteLine("\n\n\n\n");
                 Console.WriteLine("Class: " + cls.Name);
                 Console.WriteLine("Inheritance: ");
                 foreach (var inhCls in cls.InheritanceList)
@@ -100,8 +101,6 @@ namespace AnalyzerTests.Pipeline
             //CollectionAssert.AreEquivalent(CompositionExp,CompositionRel);
             //CollectionAssert.AreEquivalent(AggregationExp,AggregationRel);
             //CollectionAssert.AreEquivalent(UsingExp,UsingRel);
-
-
         }
     }
 }
