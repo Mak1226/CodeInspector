@@ -5,7 +5,6 @@ using Analyzer;
 
 namespace Content.Server
 {
-    using AnalyzerResult = Tuple<Dictionary<string, string>, int>;
 
     /// <summary>
     /// Server that handles upload of analysis files, and analysis of said files
@@ -17,9 +16,9 @@ namespace Content.Server
         IAnalyzer analyzer;
         AnalyzerResultSerializer serializer;
 
-        public Action<AnalyzerResult> AnalyzerResultChanged;
+        public Action<List<AnalyzerResult>> AnalyzerResultChanged;
 
-        public AnalyzerResult analyzerResult {  get; private set; }
+        public List<AnalyzerResult >analyzerResult {  get; private set; }
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -53,7 +52,7 @@ namespace Content.Server
             analyzer.LoadDLLFile(fileHandler.GetFiles(), null);
 
             // Save analysis results 
-            analyzerResult = analyzer.GetAnalysis();
+            analyzerResult = analyzer.Run();
 
             // Send Analysis results to client
             //server.Send(serializer.Serialize(analyzerResult), EventType.AnalyserResult(), clientID);

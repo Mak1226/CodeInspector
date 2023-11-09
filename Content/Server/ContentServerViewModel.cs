@@ -4,16 +4,15 @@ using System.ComponentModel;
 
 namespace Content.Server
 {
-    using AnalyzerResult = Tuple<Dictionary<string, string>, int>;
 
     /// <summary>
     /// Viewmodel for the Content Server model
     /// </summary>
     public class ContentServerViewModel : INotifyPropertyChanged
     {
-        private AnalyzerResult analyzerResult;
+        private List<AnalyzerResult> analyzerResults;
         private ContentServer contentServer;
-        private List<Tuple<string, string, int>> dataList;
+        private List<Tuple<string, int, string>> dataList;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,13 +21,13 @@ namespace Content.Server
         /// </summary>
         public ContentServerViewModel(ICommunicator server)
         {
-            IAnalyzer analyzer = AnalyzerFactory.GetAnalyser();
+            IAnalyzer analyzer = AnalyzerFactory.GetAnalyzer();
 
             contentServer = new ContentServer(server, analyzer);
             contentServer.AnalyzerResultChanged += (result) =>
             {
-                analyzerResult = result;
-                UpdateDataList(analyzerResult);
+                analyzerResults = result;
+                UpdateDataList(analyzerResults);
             };
 
         }
@@ -37,7 +36,7 @@ namespace Content.Server
         /// Analysis result
         /// Currenly only shows the latest one
         /// </summary>
-        public List<Tuple<string, string, int>> DataList
+        public List<Tuple<string, int, string>> DataList
         {
             get 
             {
@@ -49,13 +48,13 @@ namespace Content.Server
         /// <summary>
         /// Update data list whenever analyzer result in content server is updated
         /// </summary>
-        /// <param name="analyzerResult">Analyzer Result from content server</param>
-        public void UpdateDataList(AnalyzerResult analyzerResult)
+        /// <param name="analyzerResults">Analyzer Result from content server</param>
+        public void UpdateDataList(List<AnalyzerResult> analyzerResults)
         {
             dataList = new();
-            foreach (var kvp in analyzerResult.Item1)
+            foreach (AnalyzerResult result in analyzerResults)
             {
-                dataList.Add(new Tuple<string, string, int>(kvp.Key, kvp.Value, analyzerResult.Item2));
+                dataList.Add(new Tuple<string, int, string>(result.AnalyserID, result.Verdict, result.ErrorMessage));
             }
 
             OnPropertyChanged(nameof(dataList));
