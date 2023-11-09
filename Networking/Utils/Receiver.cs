@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using Networking.Events;
 using Networking.Models;
@@ -52,10 +53,31 @@ namespace Networking.Utils
                     if (item.Value.DataAvailable == true)
                     {
                         ifAval = true;
-                        byte[] receiveData = new byte[1024];
-                        int bytesRead = item.Value.Read(receiveData, 0, receiveData.Length);
+                        // Read the size of the incoming message
+                        byte[] sizeBytes = new byte[sizeof(int)];
+                        int sizeBytesRead = item.Value.Read(sizeBytes, 0, sizeof(int));
+                        System.Diagnostics.Trace.Assert((sizeBytesRead == sizeof(int)));
 
-                        string receivedMessage = System.Text.Encoding.ASCII.GetString(receiveData, 0, bytesRead);
+                        int messageSize = BitConverter.ToInt32(sizeBytes, 0);
+
+                        // Now read the actual message
+                        byte[] receiveData = new byte[messageSize];
+                        int totalBytesRead = 0;
+
+                        while (totalBytesRead < messageSize)
+                        {
+                            sizeBytesRead = item.Value.Read(receiveData, totalBytesRead, messageSize - totalBytesRead);
+                            if (sizeBytesRead == 0)
+                            { 
+                                // Handle the case where the stream is closed or no more data is available
+                                break;
+                            }
+                            totalBytesRead += sizeBytesRead;
+                        }
+
+                        System.Diagnostics.Trace.Assert((totalBytesRead == messageSize));
+
+                        string receivedMessage = Encoding.ASCII.GetString(receiveData);
                         Message message = Serializer.Deserialize<Message>(receivedMessage);
                         if (message.EventType == EventType.ClientRegister())
                         {
@@ -83,7 +105,11 @@ namespace Networking.Utils
                     {
                         parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
                     }
-                    method.Invoke(pair.Value, parameters);
+                    try
+                    {
+                        method.Invoke(pair.Value, parameters);
+                    }
+                    catch (Exception) { }
                 }
                 else
                     Console.WriteLine("Method not found");
@@ -105,17 +131,11 @@ namespace Networking.Utils
                 Message message = _recvQueue.Dequeue();
 
                 // If the message is a stop message, break out of the loop
-                try
-                {
-                    if (message.StopThread)
-                        break;
-                    handleMessage(message);
-                }
-                catch
-                {
-                    // Send the serialized message
-                    throw new Exception();
-                }
+                if (message.StopThread)
+                    break;
+
+                handleMessage(message);
+                
             }
         }
     }

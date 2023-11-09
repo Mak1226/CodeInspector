@@ -60,7 +60,7 @@ namespace Networking.Communicator
             _sender = new(_clientIDToStream, _senderIDToClientID, false);
             _receiver = new(_clientIDToStream, _moduleEventMap, _senderIDToClientID);
 
-            int port = 12345;
+            int port = 12399;
             Random random = new();
             while (true)
             {
