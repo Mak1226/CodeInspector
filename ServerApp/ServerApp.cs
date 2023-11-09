@@ -11,8 +11,8 @@ namespace ServerApp
 
             ICommunicator server = CommunicationFactory.GetServer();
             string addr = server.Start(null, null, ID.GetServerID());
+            server.Subscribe(new Events(), "asdfasf");
             Console.ReadKey();
-            //server.Subscribe(new Events(), "asdfasf");
             //Console.ReadKey();
             //server.Send("omg", EventType.ChatMessage(), "A");
             /*ICommunicator client = CommunicationFactory.GetClient();

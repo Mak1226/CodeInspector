@@ -105,7 +105,11 @@ namespace Networking.Utils
                     {
                         parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
                     }
-                    method.Invoke(pair.Value, parameters);
+                    try
+                    {
+                        method.Invoke(pair.Value, parameters);
+                    }
+                    catch (Exception) { }
                 }
                 else
                     Console.WriteLine("Method not found");
@@ -127,17 +131,11 @@ namespace Networking.Utils
                 Message message = _recvQueue.Dequeue();
 
                 // If the message is a stop message, break out of the loop
-                try
-                {
-                    if (message.StopThread)
-                        break;
-                    handleMessage(message);
-                }
-                catch
-                {
-                    // Send the serialized message
-                    throw new Exception();
-                }
+                if (message.StopThread)
+                    break;
+
+                handleMessage(message);
+                
             }
         }
     }
