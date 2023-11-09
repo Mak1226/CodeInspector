@@ -1,5 +1,5 @@
 ﻿using ChatMessaging;
-using Networking;
+using Networking.Communicator;
 using SessionState;
 using System;
 using System.Collections.Generic;

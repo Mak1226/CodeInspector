@@ -117,7 +117,8 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightCyan" />
                 </Grid.Background>
-                <TextBlock Text="Content and Questions" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Frame x:Name="ContentFrame" />
+                <!--<TextBlock Text="Content and Questions" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
             </Grid>
             <Grid Grid.Column="1" Margin="5,5,5,5">
                 <Grid.Background>

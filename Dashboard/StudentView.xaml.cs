@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
+using ContentPage;
 
 namespace Dashboard
 {
@@ -33,6 +34,9 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 StudentViewModel viewModel = new();
                 DataContext = viewModel;
+
+                FileUpload fileUpload = new(viewModel.Communicator, "something");
+                ContentFrame.Content = fileUpload;
             }
             catch (Exception exception)
             {
@@ -76,6 +80,11 @@ namespace Dashboard
             //Attempting to disconnect from the instructor
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.DisconnectInstructor();
+        }
+
+        private void Frame_Navigated(object sender, NavigationEventArgs e)
+        {
+
         }
     }
 }

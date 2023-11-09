@@ -10,7 +10,7 @@
  * Description = Defines the Student viewmodel.
  *****************************************************************************/
 using ChatMessaging;
-using Networking;
+using Networking.Communicator;
 using SessionState;
 using System;
 using System.Collections.Generic;
@@ -90,6 +90,19 @@ namespace ViewModel
                     _isConnected = value;
                     OnPropertyChanged(nameof(IsConnected));
                 }
+            }
+        }
+
+        public ICommunicator Communicator
+        {
+            get 
+            {
+                return _communicator;
+            }
+            
+            private set
+            {
+
             }
         }
 
@@ -216,6 +229,5 @@ namespace ViewModel
             Debug.WriteLine(StudentName);
             Debug.WriteLine(StudentRoll);
         }
-
     }
 }
