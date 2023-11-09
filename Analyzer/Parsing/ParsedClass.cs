@@ -96,6 +96,8 @@ namespace Analyzer.Parsing
             {
                 MethodBase methodBase = _typeObj.GetMethod(methodinfo.Name);
 
+                
+
                 if (methodBase != null)
                 {
                     _methodsBaseList.Add(methodBase);
