@@ -8,15 +8,6 @@ using System.Threading.Tasks;
 namespace Analyzer
 {
     /// <summary>
-    /// Represents file owner (Student or Teacher).
-    /// </summary>
-    public enum WhoseFile
-    {
-        Student,
-        Teacher
-    }
-
-    /// <summary>
     /// Interface for analyzing and comparing files.
     /// </summary>
     public interface IAnalyzer

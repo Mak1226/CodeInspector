@@ -31,7 +31,7 @@ namespace AnalyzerTests.Pipeline
             List<string> retrievedClassFullNames = new();
             List<string> retrievedClassNames = new();
             
-            foreach( ParsedClass parsedClass in parsedClasses )
+            foreach(ParsedClass parsedClass in parsedClasses)
             {
                 retrievedClassFullNames.Add(parsedClass.TypeObj.FullName);
                 retrievedClassNames.Add(parsedClass.Name);
