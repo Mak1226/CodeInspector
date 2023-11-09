@@ -1,13 +1,23 @@
 /*using System;
 using Analyzer.Parsing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Analyzer.Pipeline.Analyzers
+namespace Analyzer.Pipeline
 {
     /// <summary>
     /// An analyzer that checks the correctness of type name prefixes in parsed DLL files.
     /// </summary>
     public class PrefixCheckerAnalyzer : BaseAnalyzer
     {
+        
+        private string errorMessage;
+        private int verdict;
+        private readonly string analyzerID;
+        
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
@@ -15,13 +25,16 @@ namespace Analyzer.Pipeline.Analyzers
         public PrefixCheckerAnalyzer(ParsedDLLFiles dllFiles) : base(dllFiles)
         {
             // The constructor can be used for any necessary setup or initialization.
+            errorMessage = "";
+            verdict = 1;
+            analyzerID = "Custom4";
         }
 
         /// <summary>
         /// Analyzes the DLL files to check type name prefixes for correctness.
         /// </summary>
         /// <returns>The number of errors found during the analysis.</returns>
-        //public override int GetScore()
+        //public override AnalyzerResult Run()
         //{
         //    int errorCount = 0;
 
@@ -55,13 +68,14 @@ namespace Analyzer.Pipeline.Analyzers
 
         //    if(errorCount == 0)
         //    {
-        //    	return 1;
+        //    	verdict = 1;
         //    }
             
         //    else
         //    {
-        //    	return 0;
+        //    	verdict = 0;
         //    }
+        //    return new AnalyzerResult(analyzerID, verdict, errorMessage);
         //}
 
         /// <summary>
