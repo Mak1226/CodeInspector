@@ -18,6 +18,11 @@ namespace Analyzer.Pipeline
         public ReviewUselessControlFlowRule(ParsedDLLFiles dllFiles) : base(dllFiles)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>An AnalyzerResult containing the analysis results.</returns>
         public override AnalyzerResult Run()
         {
             int uselessControlFlowCount = 0;
