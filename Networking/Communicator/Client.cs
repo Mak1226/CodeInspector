@@ -50,7 +50,7 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] IP Address: " + localEndPoint.Address.MapToIPv4());
             Console.WriteLine("[Client] Port: " + localEndPoint.Port);
 
-            Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), senderID);
+            Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), _senderID);
 
             _networkStream = tcpClient.GetStream();
             lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
@@ -68,6 +68,7 @@ namespace Networking.Communicator
         public void Stop()
         {
             Console.WriteLine("[Client] Stop");
+            _sender.Send(new Message("", EventType.ClientLeft(), ID.GetServerID(), _senderID));
             _sender.Stop();
             _receiver.Stop();
 
