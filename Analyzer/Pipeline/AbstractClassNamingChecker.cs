@@ -11,7 +11,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
     /// </summary>
-    public class AbstractClassNamingChacker : BaseAnalyzer
+    public class AbstractClassNamingChecker : AnalyzerBase
     {
         
         private string errorMessage;
