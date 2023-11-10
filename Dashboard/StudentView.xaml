@@ -51,7 +51,7 @@
                 <StackPanel x:Name="InstructorIpAndPortStackPanel" Orientation="Vertical">
                     <StackPanel x:Name="InstructorIpStackPanel" Orientation="Horizontal">
                         <Label Content="Instructor IP" Margin="10,5,10,5" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                        <TextBox Name="InstructorIpTextBox" Margin="10,5,10,5" Width="100" Height="25" Background="Azure" VerticalAlignment="Top" HorizontalAlignment="Left" TextChanged="InstructorIpTextBox_TextChanged"/>
+                        <TextBox Name="InstructorIpTextBox" Text="{Binding IpAddress, Mode=OneWay}" Margin="10,5,10,5" Width="100" Height="25" Background="Azure" VerticalAlignment="Top" HorizontalAlignment="Left" TextChanged="InstructorIpTextBox_TextChanged"/>
                     </StackPanel>
                     <StackPanel x:Name="InstructorPortStackPanel" Orientation="Horizontal">
                         <Label Content="Instructor Port" Margin="10,5,10,5" Width="90" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
