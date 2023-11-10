@@ -1,5 +1,6 @@
-﻿using Networking;
-using Networking.Utils;
+﻿using Networking.Events;
+using Networking.Models;
+using System.Net.Sockets;
 
 namespace Content.Server
 {
@@ -38,6 +39,11 @@ namespace Content.Server
             throw new NotImplementedException();
         }
 
+        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
+        {
+            throw new NotImplementedException();
+        }
+
         public string HandleConnectionRequest(Message data)
         {
             throw new NotImplementedException();
@@ -50,7 +56,7 @@ namespace Content.Server
         /// <returns></returns>
         public string HandleFile(Message data)
         {
-            _server.HandleRecieve(data.SerializedObj, data.SenderID);
+            _server.HandleRecieve(data.Data, data.SenderID);
             return "";
         }
     }

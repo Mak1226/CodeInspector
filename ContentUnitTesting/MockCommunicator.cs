@@ -1,6 +1,6 @@
 ﻿using System;
 using Networking.Communicator;
-using Networking;
+using Networking.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

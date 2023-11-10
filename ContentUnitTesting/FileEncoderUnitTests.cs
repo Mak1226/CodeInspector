@@ -9,6 +9,7 @@
  *
  * Description  = Unit tests for IFileEncoder
 *****************************************************************************/
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Text;
 using Content.Encoder;
@@ -39,7 +40,7 @@ namespace ContentUnitTesting
             // Define the list of test file names (assuming they are already in the TestDlls directory)
             var testFileNames = new List<string>
             {
-                "HelloWorld.dll"
+                "PersistentStorage.dll"
             };
 
             var encoder = new DLLEncoder();
@@ -66,7 +67,7 @@ namespace ContentUnitTesting
             // Test DLL files
             var testFileNames = new List<string>
             {
-                "Testdlls\\HelloWorld.dll",
+                "Testdlls\\PersistentStorage.dll",
                 "Testdlls\\Content.dll"
             };
 
@@ -78,7 +79,8 @@ namespace ContentUnitTesting
             {
                 Trace.WriteLine( filePath );
                 //Assert.IsTrue( false , filePath );
-                string content = File.ReadAllText( filePath, Encoding.UTF8 );
+                //string content = File.ReadAllText( filePath, Encoding.UTF8 );
+                string content = Convert.ToBase64String(File.ReadAllBytes(filePath));
                 string relativeFilePath = Path.GetRelativePath(_testDirectory , filePath );
                 dataBeforeEncoding[relativeFilePath] = content;
             }
@@ -104,6 +106,9 @@ namespace ContentUnitTesting
 
         }
 
+        /// <summary>
+        /// Test if the saved directory structure after decoding is correct
+        /// </summary>
         [TestMethod]
         public void SaveFiles_DirectoryCorrectness()
         {
@@ -113,7 +118,7 @@ namespace ContentUnitTesting
             // Test DLL files
             var testFileNames = new List<string>
             {
-                "Testdlls\\HelloWorld.dll",
+                "Testdlls\\PersistentStorage.dll",
                 "Testdlls\\Content.dll"
             };
 

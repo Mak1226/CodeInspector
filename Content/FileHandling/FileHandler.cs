@@ -11,7 +11,7 @@
  *****************************************************************************/
 
 using Content.Encoder;
-using Networking;
+using Networking.Utils;
 using Networking.Communicator;
 using System.Diagnostics;
 
@@ -43,7 +43,7 @@ namespace Content.FileHandling
         /// <returns>A list of file paths as strings.</returns>
         public List<string> GetFiles()
         {
-            return _filesList;
+            return _filesList; 
         }
 
         /// <summary>
@@ -71,12 +71,14 @@ namespace Content.FileHandling
         {
             _fileEncoder.DecodeFrom(encoding);
             string sessionID = _fileEncoder.sessionID;
-            _fileEncoder.SaveFiles(sessionID);
+            string sessionPath = sessionID;
+
+            _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
             _filesList = new List<String>();
            foreach (var file in decodedFiles)
             {
-                _filesList.Add(file.Key);
+                _filesList.Add(Path.Combine(sessionPath, file.Key));
             }
         }
     }
