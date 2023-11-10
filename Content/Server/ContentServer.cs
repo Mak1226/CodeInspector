@@ -37,7 +37,10 @@ namespace Content.Server
 
             // Currently hardcoded, uses all analyzers
             Dictionary<int, bool> configuration = new Dictionary<int, bool>();
-            configuration[103] = true; // TODO TODO
+            foreach (Tuple<int, string> config in AnalyzerFactory.GetAllConfigurationOptions())
+            {
+                configuration[config.Item1] = true;
+            }
             analyzer.Configure(configuration, true);
 
             serializer = new AnalyzerResultSerializer();
@@ -67,7 +70,10 @@ namespace Content.Server
             AnalyzerResultChanged?.Invoke(analyzerResult);
         }
 
-
+        public void Configure(Dictionary<int, bool> configuration)
+        {
+            analyzer.Configure(configuration, true);
+        }
 
     }
 }
