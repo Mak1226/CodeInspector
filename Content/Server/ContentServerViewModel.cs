@@ -4,6 +4,12 @@ using System.ComponentModel;
 
 namespace Content.Server
 {
+    public class AnalyzerConfigOption
+    {
+        public string AnalyzerId { get; set; }
+        public string Description { get; set; }
+        public bool IsSelected { get; set; }
+    }
 
     /// <summary>
     /// Viewmodel for the Content Server model
@@ -13,6 +19,8 @@ namespace Content.Server
         private List<AnalyzerResult> analyzerResults;
         private ContentServer contentServer;
         private List<Tuple<string, int, string>> dataList;
+        private List<AnalyzerConfigOption> configOptionsList; // New property for configuration options
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,6 +38,18 @@ namespace Content.Server
                 UpdateDataList(analyzerResults);
             };
 
+            // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
+            configOptionsList = new List<AnalyzerConfigOption>();
+            foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
+            {
+                configOptionsList.Add(new AnalyzerConfigOption
+                {
+                    AnalyzerId = option.Item1,
+                    Description = option.Item2,
+                    IsSelected = false // Set the default value for IsSelected as needed
+                });
+            }
+
         }
 
         /// <summary>
@@ -38,11 +58,18 @@ namespace Content.Server
         /// </summary>
         public List<Tuple<string, int, string>> DataList
         {
-            get 
+            get
             {
-                return dataList; 
+                return dataList;
             }
             set { throw new NotImplementedException(); }
+
+        }
+
+        public List<AnalyzerConfigOption> ConfigOptionsList
+        {
+            get { return configOptionsList; }
+            set { configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
         }
 
         /// <summary>

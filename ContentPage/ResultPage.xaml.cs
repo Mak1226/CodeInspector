@@ -58,7 +58,14 @@ namespace ContentPage
             //// Bind the list to the DataGrid
             //dataGrid.ItemsSource = dataList;
         }
-        
+        private void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            // Handle the CheckBox checked event if needed
+            // For example, you might call a method on viewModel
+        }
+
+
+
     }
 
 }
