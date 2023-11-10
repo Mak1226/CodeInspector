@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Analyzer.Parsing;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     [TestClass()]
-    public class TestAbstractTypeNoPublicConstructor
+    public class TestNoEmptyInterface
     {
         [TestMethod()]
         public void MainPipelineTest()
@@ -20,11 +20,11 @@ namespace Analyzer.Pipeline.Tests
 
             DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\DemoDLL.dll");
 
-            ParsedDLLFiles dllFiles = new (DllFilePaths);
+            ParsedDLLFiles dllFiles = new(DllFilePaths);
 
-            AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new(dllFiles);
+            NoEmptyInterface iFace = new(dllFiles);
 
-            var result = abstractTypeNoPublicConstructor.Run();
+            var result = iFace.Run();
 
             Assert.AreEqual(1, result.Verdict);
         }

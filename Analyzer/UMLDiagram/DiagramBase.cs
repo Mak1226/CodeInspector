@@ -5,12 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Analyzer.Pipeline
+namespace Analyzer.UMLDiagram
 {
-    /// <summary>
-    /// A base class providing a common structure for various analyzers.
-    /// </summary>
-    abstract public class AnalyzerBase
+    abstract public class DiagramBase
     {
         /// <summary>
         /// The parsed DLL files to be used for analysis.
@@ -21,12 +18,10 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public AnalyzerBase(ParsedDLLFiles dllFiles)
+        public DiagramBase(ParsedDLLFiles dllFiles)
         {
             // Set the parsedDLLFiles field with the provided DLL files
             parsedDLLFiles = dllFiles;
         }
-
-        public abstract AnalyzerResult Run();
     }
 }
