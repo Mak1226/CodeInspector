@@ -9,15 +9,23 @@
       Title="ResultPage">
 
     <Grid>
-<<<<<<< HEAD
         <StackPanel Orientation="Vertical">
-            <!-- Add your controls in the stack panel -->
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Analyzer ID" Width="100" VerticalAlignment="Center" Background="White"/>
-                <TextBlock Text="Description" Width="200" VerticalAlignment="Center" Background="White"/>
-                <CheckBox x:Name="SelectCheckBox" Content="Select" Width="100" VerticalAlignment="Center" Background="White" IsChecked="{Binding IsSelected}" Checked="SelectCheckBox_Checked" />
 
-            </StackPanel>
+            <!-- Configuration Options Table -->
+            <DataGrid Height="Auto" HorizontalAlignment="Left" Name="configOptionsGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding ConfigOptionsList}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}" />
+                    <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}" />
+                    <DataGridTemplateColumn Header="Select">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            
             <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
                 <TabItem Header="Result" Name="ResultTable">
                     <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
@@ -29,7 +37,7 @@
                     </DataGrid>
                 </TabItem>
             </TabControl>
-            </StackPanel>
+        </StackPanel>
     </Grid>
 
 </Page>
