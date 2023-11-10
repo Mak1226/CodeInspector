@@ -1,21 +1,22 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net.Sockets;
-using System.Text.Json;
+﻿using System.Net.Sockets;
+using Networking.Models;
 using Networking.Queues;
+using Networking.Serialization;
 
 namespace Networking.Utils
 {
-	public class Sender
-	{
+    public class Sender
+    {
         private Queue _sendQueue = new();
-        private string BROADCAST = "broadcast";
         private Thread _sendThread;
         private bool _isClient;
         private Dictionary<string, NetworkStream> clientIDToStream;
+        Dictionary<string, string> senderIDToClientID;
 
-        public Sender(Dictionary<string, NetworkStream> clientIDToStream,bool isClient)
-		{
+
+        public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
+        {
+            this.senderIDToClientID=senderIDToClientID;
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
             this.clientIDToStream = clientIDToStream;
@@ -26,16 +27,14 @@ namespace Networking.Utils
         public void Stop()
         {
             Console.WriteLine("[Sender] Stop");
-            _sendQueue.Enqueue(new Message(stop:true), 10 /* TODO */);
+            _sendQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
             _sendThread.Join();
         }
 
-        public void Send(string serializedObj, string eventType, string destID,string senderID)
+        public void Send(Message message)
         {
             // NOTE: destID should be in line with the dict passed 
-
-            Console.WriteLine("[Sender] Send" + serializedObj + " " + eventType + " " + destID);
-            _sendQueue.Enqueue(new Message(serializedObj, eventType, destID,senderID), 1 /* TODO */);
+            _sendQueue.Enqueue(message, Priority.GetPriority(message.EventType)/* TODO */);
         }
 
         public void SendLoop()
@@ -56,27 +55,34 @@ namespace Networking.Utils
                 if (message.StopThread)
                     break;
 
-                string serStr = JsonSerializer.Serialize(message);
+                string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
+                int messageSize = messagebytes.Length;
                 if (_isClient == true)
                 {
-                    clientIDToStream["server"].Write(messagebytes);
+                    clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
+                    clientIDToStream[ID.GetServerID()].Write(messagebytes);
+                    clientIDToStream[ID.GetServerID()].Flush();
                 }
                 else
                 {
-                    if (message.DestID == "BROADCAST")
+                    if (message.DestID == ID.GetBroadcastID())
                     {
                         foreach (KeyValuePair<string, NetworkStream> pair in clientIDToStream)
                         {
+                            pair.Value.Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                             pair.Value.Write(messagebytes);
+                            pair.Value.Flush();
                         }
                     }
                     else
                     {
-                        clientIDToStream[message.DestID].Write(messagebytes);
+                        clientIDToStream[senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
+                        clientIDToStream[senderIDToClientID[message.DestID]].Write(messagebytes);
+                        clientIDToStream[senderIDToClientID[message.DestID]].Flush();
                     }
                 }
-                
+
             }
         }
     }

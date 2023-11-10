@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Queues\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>
