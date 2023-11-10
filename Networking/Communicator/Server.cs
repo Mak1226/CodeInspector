@@ -2,27 +2,26 @@
 /// Author:
 /////
 
-using System;
-using System.Diagnostics;
-using System.Text.Json;
 using System.Net.Sockets;
-using System.Collections.Generic;
-using Networking.Queues;
-using System.Reflection;
 using System.Net;
 using Networking.Utils;
+using Networking.Models;
+using Networking.Events;
 
 namespace Networking.Communicator
 {
     public class Server : ICommunicator
     {
-        private bool _stopThread=false;
+        private bool _stopThread = false;
         private Sender _sender;
         private Thread _listenThread;
         private Receiver _receiver;
         private TcpListener _serverListener;
         Dictionary<string, NetworkStream> _clientIDToStream = new();
+        Dictionary<string, string> _senderIDToClientID = new();
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
+        private string _senderID;
+
 
         private string GetLocalIPAddress()
         {
@@ -37,39 +36,78 @@ namespace Networking.Communicator
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        public void Send(string serializedObj, string eventType, string destID)
+        public void Send(string Data, string eventType, string destID)
         {
-            Console.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
-            _sender.Send(serializedObj, eventType, destID,"server");
-        }   
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
+            Message message = new Message(
+    Data, eventType, destID, _senderID
+);
+            _sender.Send(message);
+        }
+        public void Send(string Data, string eventType, string destID, string senderID)
+        {
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
+            Message message = new Message(
+    Data, eventType, destID, senderID
+);
+            _sender.Send(message);
+        }
 
-        public string Start(string? destIP, int? destPort,string senderID)
+        public string Start(string? destIP, int? destPort, string senderID)
         {
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
-            _sender = new(_clientIDToStream,false);
-            _receiver = new(_clientIDToStream, _moduleEventMap);
+            _senderID = senderID;
+            _sender = new(_clientIDToStream, _senderIDToClientID, false);
+            _receiver = new(_clientIDToStream, _moduleEventMap, _senderIDToClientID);
 
-            _serverListener = new TcpListener(IPAddress.Any, 12345);
-            _serverListener.Start();
+            int port = 12399;
+            Random random = new();
+            while (true)
+            {
+                try
+                {
+                    _serverListener = new TcpListener(IPAddress.Any, port);
+                    _serverListener.Start();
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    {
+                        port = random.Next(1, 65534);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Socket error: " + ex.SocketErrorCode);
+                        throw ex;
+                    }
+                }
+            }
             IPEndPoint localEndPoint = (IPEndPoint)_serverListener.LocalEndpoint;
             Console.WriteLine("[Server] Server is listening on:");
             Console.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
             Console.WriteLine("[Server] Port: " + localEndPoint.Port);
-
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
-            this.Subscribe(new NetworkingEventHandler(), "networking");
-            return localEndPoint.Address + ":" + localEndPoint.Port;
+            Subscribe(new NetworkingEventHandler(), "networking");
+            return GetLocalIPAddress() + ":" + localEndPoint.Port;
         }
 
         public void Stop()
         {
             Console.WriteLine("[Server] Stop");
+            _stopThread = true;
             _sender.Stop();
             _receiver.Stop();
+            foreach (var stream in _clientIDToStream.Values)
+            {
+                stream.Close(); // Close the network stream
+            }
+
             Console.WriteLine("[Server] Stopped _sender and _receiver");
+            _listenThread.Interrupt();
             _serverListener.Stop();
-            _listenThread.Join();
+            //_listenThread.Join();
             Console.WriteLine("[Server] Stopped");
         }
 
@@ -86,9 +124,21 @@ namespace Networking.Communicator
             while (!_stopThread)
             {
                 Console.WriteLine("waiting for connection");
-                TcpClient client = _serverListener.AcceptTcpClient();
+                TcpClient client=new();
+                try
+                {
+                    client = _serverListener.AcceptTcpClient();
+                }
+                catch (SocketException e)
+                {
+                    if (e.SocketErrorCode == SocketError.Interrupted)
+                    {
+                        Console.WriteLine("[Server] Listener stopped");
+                        break;
+                    }
+                }
                 NetworkStream stream = client.GetStream();
-                _clientIDToStream.Add(clientID, stream);
+                lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
                 clientID += 'A';
                 Console.WriteLine("client connected");
             }
