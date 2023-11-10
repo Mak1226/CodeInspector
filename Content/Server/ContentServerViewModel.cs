@@ -23,13 +23,14 @@ namespace Content.Server
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private IAnalyzer analyzer;
 
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
         public ContentServerViewModel(ICommunicator server)
         {
-            IAnalyzer analyzer = AnalyzerFactory.GetAnalyzer();
+            analyzer = AnalyzerFactory.GetAnalyzer();
 
             contentServer = new ContentServer(server, analyzer);
             contentServer.AnalyzerResultChanged += (result) =>
@@ -50,6 +51,14 @@ namespace Content.Server
                 });
             }
 
+        }
+
+        public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions, bool teacherFlag)
+        {
+            // Call IAnalyzer.Configure
+            analyzer.Configure(teacherOptions, teacherFlag);
+
+            // You can add additional logic here if needed
         }
 
         /// <summary>
