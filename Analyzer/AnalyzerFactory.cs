@@ -8,14 +8,14 @@ namespace Analyzer
 {
     public static class AnalyzerFactory
     {
-        public static List<Tuple<string, string>> GetAllConfigurationOptions()
+        public static List<Tuple<int, string>> GetAllConfigurationOptions()
         {
-            List<Tuple<string, string>> analyzers = new()
+            List<Tuple<int, string>> analyzers = new()
             {
-                Tuple.Create("101", "Abstract type no public constructor"),
-                Tuple.Create("102", "Avoid constructor in static types"),
-                Tuple.Create("103", "Avoid unused private fields"),
-                Tuple.Create("104", "Avoid empty interface")
+                Tuple.Create(101, "Abstract type no public constructor"),
+                Tuple.Create(102, "Avoid constructor in static types"),
+                Tuple.Create(103, "Avoid unused private fields"),
+                Tuple.Create(104, "Avoid empty interface")
             };
 
             return analyzers;
