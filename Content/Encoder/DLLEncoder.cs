@@ -9,6 +9,7 @@
  *
  * Description = Class to encode DLL files
  *****************************************************************************/
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
@@ -61,7 +62,9 @@ namespace Content.Encoder
                 if (File.Exists(filePath))
                 {
                     // Read the content of the file as a string
-                    string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
+                    //string fileContent = File.ReadAllText(filePath, Encoding.UTF8);
+                    byte[] fileBytes = File.ReadAllBytes(filePath);
+                    string fileContent = Convert.ToBase64String(fileBytes);
 
                     // Create a child element for the file
                     XmlElement fileElement = xmlDocument.CreateElement("File");
@@ -157,7 +160,10 @@ namespace Content.Encoder
                 string filePath = Path.Combine( path , kvp.Key );
                 FileInfo fileInfo = (new FileInfo(filePath));
                 fileInfo.Directory.Create(); // Ensure that directory exists
-                File.WriteAllText( filePath , kvp.Value );
+                //File.WriteAllText( filePath , kvp.Value, new UTF8Encoding(false) );
+
+                byte[] fileBytes = Convert.FromBase64String(kvp.Value);
+                File.WriteAllBytes( filePath, fileBytes );
             }
 
         }

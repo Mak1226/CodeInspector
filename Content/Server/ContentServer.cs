@@ -35,6 +35,11 @@ namespace Content.Server
 
             analyzer = _analyzer;
 
+            // Currently hardcoded, uses all analyzers
+            Dictionary<int, bool> configuration = new Dictionary<int, bool>();
+            configuration[103] = true; // TODO TODO
+            analyzer.Configure(configuration, true);
+
             serializer = new AnalyzerResultSerializer();
         }
 
