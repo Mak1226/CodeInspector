@@ -1,4 +1,4 @@
-﻿/*using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +9,26 @@ using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-    public class AvoidConstructorsInStaticTypes : BaseAnalyzer
+    /// <summary>
+    /// This class represents an analyzer which check if a class containing all static fields and methods has a public not static constructor
+    /// </summary>
+    public class AvoidConstructorsInStaticTypes : AnalyzerBase
     {
+        // Unique identifier for the analyzer
+        private string AnalyzerId = "102";
+
+        // Dictionary to store whether types have been checked for violations
         private Dictionary<ParsedClass, bool> checkedTypes = new();
+        
+        // List to store classes violating the rule
         public List<ParsedClass> violatingClasses = new();
 
+        /// <summary>
+        /// Initializes a new instance of the AvoidConstructorsWithStaticTypes analyzer with parsed DLL files.
+        /// </summary>
+        /// <param name="dllFiles"></param>
         public AvoidConstructorsInStaticTypes(ParsedDLLFiles dllFiles) : base(dllFiles)
         {
-            //analysis in constructor or getScore?
 
             foreach (ParsedClass cls in parsedDLLFiles.classObjList)
             {
@@ -25,14 +37,16 @@ namespace Analyzer.Pipeline
                 if (cls.TypeObj.IsDefined(typeof(CompilerGeneratedAttribute), false)){
                     continue;
                 }
-                
+
+                // Check if all methods and fields in the class are static
                 bool isAllStatic = CheckAllStatic(cls);
+
+                // If all methods and fields are static, check constructors
                 if (isAllStatic)
                 {
                     foreach(ConstructorInfo constructor in cls.Constructors)
                     {
-                        //default constructor should be declared static or should not be visible
-                        //parameterised constructor with non static flag will not reach here, since this is accepted
+                        //default constructor should be declared static or private to avoid violations
                         if(!constructor.IsStatic && !constructor.IsPrivate)
                         {
                             violatingClasses.Add(cls);
@@ -44,24 +58,29 @@ namespace Analyzer.Pipeline
             }
         }
 
+        /// <summary>
+        /// Checks if all methods and fields of a class are static or not
+        /// </summary>
+        /// <param name="cls"></param>
+        /// <returns>True if all methods and fields in the class are static, else returns False</returns>
         public bool CheckAllStatic (ParsedClass cls) { 
-            //list of types which are violating
-
             if(cls == null)
             {
                 return false;
             }
 
-            if(checkedTypes.ContainsKey(cls))
+            // Check if the class has already been checked
+            if (checkedTypes.ContainsKey(cls))
                 return checkedTypes[cls];
 
-            if(cls.Methods.Length != 0)
+            // Check Methods in the class
+            if (cls.Methods.Length != 0)
             {
                 foreach(MethodInfo method in cls.Methods)
                 {
                     if(method.IsConstructor)
                     {
-                        //parameterized constructor not declared as static does not violate the rule
+                        //parameterized constructor not declared as static do not violate the rule
                         if(!method.IsStatic && method.GetParameters().Length >0) { 
                             return checkedTypes[cls] = false;}
                     }
@@ -74,7 +93,9 @@ namespace Analyzer.Pipeline
                     }
                 }
             }
-            if(cls.Fields.Length != 0)
+
+            // Check fields in the class
+            if (cls.Fields.Length != 0)
             {
                 foreach(FieldInfo field in cls.Fields)
                 {
@@ -83,12 +104,15 @@ namespace Analyzer.Pipeline
                 }
             }
 
+            // Check the parent class, if it exists
             Type parent = cls.ParentClass;
-            //verify if this works 
+
             if(parent  == null)
             {
                 return true;
             }
+
+            //Recursively check the parent class. If paprent class is "System.Object" return True.
             if(parent.FullName == "System.Object")
             {
                 return checkedTypes[cls] = true;
@@ -96,19 +120,44 @@ namespace Analyzer.Pipeline
             return checkedTypes[cls] = CheckAllStatic(parsedDLLFiles.mapTypeToParsedClass[parent]);
         }
 
-        public override int GetScore()
+        /// <summary>
+        /// Constructs the AnalyzerResult object based on the analysis.
+        /// </summary>
+        /// <param name="dllFiles"></param>
+        public override AnalyzerResult Run()
         {
-            //CHECK
+            //If any class violates the rule, return verdict as 0 (Failed), else 1 (Passed)
             int violations = violatingClasses.Count;
-            //score?
-            //Add to analyzerResultsDictionary
-
+            int verdict = 1;
             if(violations > 0)
             {
-                return 0;
+                verdict = 0;
             }
-            return 1;
+
+            if(verdict == 1)
+            {
+                return new AnalyzerResult(AnalyzerId, verdict, "");
+            }
+
+            //adding error message
+            string errorMsg = "Classes ";
+
+            int sz = errorMsg.Length;
+            for(var i=0; i<sz; i++)
+            {
+                var cls = errorMsg[i];
+                errorMsg += cls.GetType().FullName;
+                if(i != sz - 1)
+                {
+                    errorMsg += ", ";
+                }
+            }
+
+            errorMsg += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
+
+            //Return the AnalyzerResult object, with appropriate error mesaage.
+            AnalyzerResult resultObj = new AnalyzerResult(AnalyzerId,verdict, errorMsg);
+            return resultObj;
         }
     }
 }
-*/
