@@ -244,22 +244,6 @@ namespace Analyzer.Parsing
             return dict;
         }
 
-
-        public TypeDefinition TypeObj
-        {
-            get { return _typeObj; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public List<MethodDefinition> Constructors
-        {
-            get { return _constructors; }
-        }
-
         public List<string> CompositionList
         {
             get { return _compositionList; }
