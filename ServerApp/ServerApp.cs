@@ -14,7 +14,7 @@ namespace ServerApp
             /*server.Subscribe(new Events(), "asdfasf");*/
             Console.ReadKey();
             //Console.ReadKey();
-            //server.Send("omg", EventType.ChatMessage(), "A");
+            server.Send("omg", EventType.ChatMessage(), "hee");
             /*ICommunicator client = CommunicationFactory.GetClient();
             string[] address = addr.Split(':');
             client.Start(address[0], int.Parse(address[1]), "clientA");
