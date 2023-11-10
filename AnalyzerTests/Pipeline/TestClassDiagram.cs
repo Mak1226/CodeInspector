@@ -32,13 +32,13 @@ namespace AnalyzerTests.Pipeline
             ParsedDLLFiles dllFiles = new(DllFilePaths);
 
             ClassDiagram classDig = new(dllFiles);
-            int x = await classDig.Run();
+            byte[] imageBytes = await classDig.Run();
             Console.WriteLine("I came");
 
-            Console.WriteLine(x);
+            Console.WriteLine(imageBytes);
             //File.WriteAllBytes("C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out.png", classDig._plantUMLImage);
-            Console.WriteLine(classDig._plantUMLImage.Length);
-            Assert.AreNotEqual(classDig._plantUMLImage.Length, 0);
+            Console.WriteLine(imageBytes.Length);
+            Assert.AreNotEqual(imageBytes.Length, 0);
 
         }
     }
