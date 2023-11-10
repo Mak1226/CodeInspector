@@ -15,10 +15,7 @@ namespace Analyzer
                 Tuple.Create("101", "Abstract type no public constructor"),
                 Tuple.Create("102", "Avoid constructor in static types"),
                 Tuple.Create("103", "Avoid unused private fields"),
-                Tuple.Create("104", "Depth of inheritance should be less than 3"),
-                Tuple.Create("105", "Prefix checker I should be capital"),
-                Tuple.Create("106", "Avoid unused local variables"),
-                Tuple.Create("107", "Check if not implemented method is there"),
+                Tuple.Create("104", "Avoid empty interface")
             };
 
             return analyzers;

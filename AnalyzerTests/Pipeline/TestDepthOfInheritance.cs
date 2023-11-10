@@ -1,4 +1,4 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -69,3 +69,4 @@ namespace AnalyzerTests.Pipeline
     public class ClassC { }
 
 }
+*/

@@ -81,7 +81,7 @@ namespace Analyzer.Pipeline
             // Calculate the depth of inheritance for classes in the parsed DLL files
             Dictionary<Type, int> depthOfInheritance = CalculateDepthOfInheritance();
 
-            return new AnalyzerResult("DepthOfInheritanceRule", depthOfInheritance.Count, "");
+            return new AnalyzerResult("104", depthOfInheritance.Count <= 3 ? 1 : 0, "");
         }
     }
 }

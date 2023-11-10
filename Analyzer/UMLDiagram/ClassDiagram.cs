@@ -48,7 +48,7 @@ namespace Analyzer.UMLDiagram
                 System.Diagnostics.Debug.WriteLine(_plantUMLImage);
                 System.Diagnostics.Debug.Assert(_plantUMLImage != null);
                 // Save the rendered diagram to a file
-                File.WriteAllBytes("C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out.png", _plantUMLImage.ToArray());
+                File.WriteAllBytes("out.png", _plantUMLImage.ToArray());
                 // File.WriteAllBytes("C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out.png", _plantUMLImage);
                 // return bytes;
                 Console.WriteLine("PlantUML diagram saved to out.png");

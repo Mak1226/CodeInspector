@@ -18,8 +18,6 @@ namespace Analyzer.Pipeline.Tests
 
             List<string> DllFilePaths = new List<string>();
 
-            //DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
-
             DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
 
             ParsedDLLFiles dllFiles = new(DllFilePaths);
@@ -28,8 +26,31 @@ namespace Analyzer.Pipeline.Tests
 
             var result = avoidUnusedPrivateFieldsRule.Run();
             
+            Console.WriteLine(result.ErrorMessage);
+
             Assert.AreEqual(1, result.Verdict);
 
         }
+
+        [TestMethod()]
+        public void Test2()
+        {
+
+            List<string> DllFilePaths = new List<string>();
+
+            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\UnusedPrivateFields.dll");
+
+            ParsedDLLFiles dllFiles = new(DllFilePaths);
+
+            AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
+
+            var result = avoidUnusedPrivateFieldsRule.Run();
+
+            Console.WriteLine(result.ErrorMessage);
+
+            Assert.AreEqual(0, result.Verdict);
+
+        }
+
     }
 }

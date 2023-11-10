@@ -16,7 +16,7 @@ namespace Analyzer.Pipeline
 
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _studentDLLFiles;
-        private readonly Dictionary<string, AnalyzerBase> _allAnalyzers;
+        private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
 
         public MainPipeline()
         {
@@ -51,7 +51,10 @@ namespace Analyzer.Pipeline
         {
             ParsedDLLFiles parsedDLLFiles = new(_studentDLLFiles);
 
-            _allAnalyzers["103"] = new AvoidUnusedPrivateFieldsRule(parsedDLLFiles);
+            _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(parsedDLLFiles);
+            _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
+            _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(parsedDLLFiles);
+            _allAnalyzers[104] = new NoEmptyInterface(parsedDLLFiles);
         }
 
         /// <summary>
@@ -70,7 +73,7 @@ namespace Analyzer.Pipeline
 
                     try
                     {
-                        currentResult = _allAnalyzers[option.Key.ToString()].Run();
+                        currentResult = _allAnalyzers[option.Key].Run();
                     }
                     catch(Exception _)
                     {

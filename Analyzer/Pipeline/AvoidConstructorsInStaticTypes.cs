@@ -15,7 +15,7 @@ namespace Analyzer.Pipeline
     public class AvoidConstructorsInStaticTypes : AnalyzerBase
     {
         // Unique identifier for the analyzer
-        private string AnalyzerId = "";
+        private string AnalyzerId = "102";
 
         // Dictionary to store whether types have been checked for violations
         private Dictionary<ParsedClass, bool> checkedTypes = new();
