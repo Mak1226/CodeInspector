@@ -1,5 +1,6 @@
 ﻿using ChatMessaging;
 using Networking.Communicator;
+using Networking;
 using SessionState;
 using System;
 using System.Collections.Generic;
@@ -11,36 +12,62 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
+using Networking.Utils;
 
 namespace ViewModel
 {
     public class InstructorViewModel : INotifyPropertyChanged
     {
-        private readonly ICommunicator _communicator; // Communicator used to send and receive messages.
-        private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
-        private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
+        private readonly ICommunicator server; // Communicator used to send and receive messages.
+        //private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
+        private readonly StudentSessionkState _studekntSessionState; // To manage the connected studnets
 
         /// <summary>
         /// Constructor for the DashboardViewModel.
         /// </summary>
         public InstructorViewModel(ICommunicator? communicator = null)
         {
-            _studentSessionState = new();
-            _communicator = communicator ?? CommunicatorFactory.CreateCommunicator();
+            //_studentSessionState = new();
+            server = communicator ?? CommunicationFactory.GetCommunicator(true);
 
-            IpAddress = GetPrivateIp();
+            //IpAddress = GetPrivateIp();
+
+            var ipPort = server.Start(null, null, "server");
+
+            string[] parts = ipPort.Split(':');
+            try
+            {
+                IpAddress = parts[0];
+                ReceivePort = parts[1];
+                OnPropertyChanged(nameof(IpAddress));
+                OnPropertyChanged(nameof(ReceivePort));
+            }
+            catch { }
 
             // Update the port that the communicator is listening on.
-            ReceivePort = _communicator.ListenPort.ToString();
-            OnPropertyChanged(nameof(ReceivePort));
+            //ReceivePort = _communicator.ListenPort.ToString();
+            
 
             // Create an instance of the chat messenger and signup for callback.
-            _newConnection = new(_communicator);
+            //_newConnection = new(_communicator);
 
-            _newConnection.OnChatMessageReceived += delegate (string message)
+            //_newConnection.OnChatMessageReceived += delegate (string message)
+            //{
+            //    AddStudnet(message);
+            //};
+        }
+
+        public ICommunicator Communicator
+        {
+            get
             {
-                AddStudnet(message);
-            };
+                return server;
+            }
+
+            private set
+            {
+
+            }
         }
 
         /// <summary>
@@ -128,17 +155,48 @@ namespace ViewModel
                     if (isConnect == 1)
                     {
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
-                        _newConnection.SendMessage(ip, port, "1");
+                        server.Send("1",EventType.ChatMessage(),$"{rollNo}");
                     }
                     else if (isConnect == 0) 
                     {
                         _studentSessionState.RemoveStudent(rollNo);
-                        _newConnection.SendMessage(ip, port, "0");
+                        server.Send("0", EventType.ChatMessage(), $"{rollNo}");
                     }     
                     return true;
                 }
             }
             return false;
+        }
+
+        public string HandleAnalyserResult(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string HandleChatMessage(string data)
+        {
+            AddStudnet(data);
+            return "";
+        }
+
+        public string HandleClientJoined(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string HandleClientLeft(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string HandleConnectionRequest(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string HandleFile(string data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
