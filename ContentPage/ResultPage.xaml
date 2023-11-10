@@ -9,6 +9,7 @@
       Title="ResultPage">
 
     <Grid>
+<<<<<<< HEAD
         <StackPanel Orientation="Vertical">
             <!-- Add your controls in the stack panel -->
             <StackPanel Orientation="Horizontal" Margin="5">
@@ -18,7 +19,6 @@
 
             </StackPanel>
             <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
-
                 <TabItem Header="Result" Name="ResultTable">
                     <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
                         <DataGrid.Columns>
@@ -29,8 +29,7 @@
                     </DataGrid>
                 </TabItem>
             </TabControl>
-        </StackPanel>
-
+            </StackPanel>
     </Grid>
 
 </Page>
