@@ -10,7 +10,10 @@
  * Description = Page that visualises result of an analysis
  *****************************************************************************/
 
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
+using Analyzer;
 using Content.Server;
 using Networking.Communicator;
 
@@ -54,6 +57,16 @@ namespace ContentPage
 
             //// Bind the list to the DataGrid
             //dataGrid.ItemsSource = dataList;
+        }
+        private void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var analyzerItem = checkBox?.DataContext as AnalyzerModel;
+
+            if (analyzerItem != null && checkBox?.IsChecked == true)
+            {
+                YourFunction(analyzerItem.AnalyzerID, analyzerItem.IsSelected);
+            }
         }
     }
 
