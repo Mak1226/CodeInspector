@@ -8,9 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ResultPage">
 
-    <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
-        <TabItem Header="Result" Name="ResultTable">
-            <Grid>
+    <Grid>
+        <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
+            <TabItem Header="Result" Name="ResultTable">
                 <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding Item1}" />
@@ -18,8 +18,8 @@
                         <DataGridTextColumn Width="100" Header="Error Message" Binding="{Binding Item3}" />
                     </DataGrid.Columns>
                 </DataGrid>
-            </Grid>
-        </TabItem>
-    </TabControl>
+            </TabItem>
+        </TabControl
+    </Grid>
 
 </Page>
