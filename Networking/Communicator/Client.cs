@@ -68,7 +68,7 @@ namespace Networking.Communicator
         public void Stop()
         {
             Console.WriteLine("[Client] Stop");
-            _sender.Send(new Message("", EventType.ClientLeft(), ID.GetServerID(), _senderID));
+            _sender.Send(new Message("", EventType.ClientDeregister(), ID.GetServerID(), _senderID));
             _sender.Stop();
             _receiver.Stop();
 

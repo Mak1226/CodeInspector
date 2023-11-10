@@ -34,7 +34,7 @@ namespace Networking.Events
 
         public string HandleClientLeft(Message message)
         {
-            server.Send(message.Data, EventType.ClientLeft(), ID.GetBroadcastID());
+            server.Send(message.SenderID, EventType.ClientLeft(), ID.GetBroadcastID());
             return "";
         }
 
@@ -54,6 +54,19 @@ namespace Networking.Events
                 senderIDToClientID[message.SenderID] = message.Data;
             }
             HandleClientJoined(message);
+            return "";
+        }
+
+        string IEventHandler.HandleClientDeregister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
+        {
+            Console.WriteLine("herererer");
+            string clientID = senderIDToClientID[message.SenderID];
+            lock(clientIDToStream)
+            {
+                clientIDToStream.Remove(clientID);
+            }
+            Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
+            HandleClientLeft(message);
             return "";
         }
     }

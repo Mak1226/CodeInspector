@@ -46,5 +46,10 @@ namespace Networking.Events
         {
             throw new NotImplementedException();
         }
+
+        string IEventHandler.HandleClientDeregister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

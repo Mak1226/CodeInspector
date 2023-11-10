@@ -101,7 +101,7 @@ namespace Networking.Utils
                 {
 
                     object[] parameters = new object[] { message };
-                    if (message.EventType==EventType.ClientRegister())
+                    if (message.EventType==EventType.ClientRegister()|| message.EventType == EventType.ClientDeregister())
                     {
                         parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
                     }

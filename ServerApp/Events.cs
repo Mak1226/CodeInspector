@@ -39,6 +39,11 @@ namespace ServerApp
             throw new NotImplementedException();
         }
 
+        string IEventHandler.HandleClientDeregister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
+        {
+            throw new NotImplementedException();
+        }
+
         string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
         {
             throw new NotImplementedException();
