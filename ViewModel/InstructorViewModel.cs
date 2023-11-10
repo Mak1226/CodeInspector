@@ -1,6 +1,5 @@
-﻿using ChatMessaging;
-using Networking.Communicator;
-using Networking;
+﻿using Networking.Communicator;
+using Networking.Events;
 using SessionState;
 using System;
 using System.Collections.Generic;
@@ -13,14 +12,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using Networking.Utils;
+using Networking.Models;
 
 namespace ViewModel
 {
-    public class InstructorViewModel : INotifyPropertyChanged
+    public class InstructorViewModel : INotifyPropertyChanged , IEventHandler
     {
         private readonly ICommunicator server; // Communicator used to send and receive messages.
         //private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
-        private readonly StudentSessionkState _studekntSessionState; // To manage the connected studnets
+        private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
 
         /// <summary>
         /// Constructor for the DashboardViewModel.
@@ -28,7 +28,7 @@ namespace ViewModel
         public InstructorViewModel(ICommunicator? communicator = null)
         {
             //_studentSessionState = new();
-            server = communicator ?? CommunicationFactory.GetCommunicator(true);
+            server = communicator ?? CommunicationFactory.GetServer();
 
             //IpAddress = GetPrivateIp();
 
@@ -168,33 +168,39 @@ namespace ViewModel
             return false;
         }
 
-        public string HandleAnalyserResult(string data)
+        public string HandleAnalyserResult(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleChatMessage(string data)
+        public string HandleChatMessage(Networking.Models.Message data)
         {
-            AddStudnet(data);
+            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + data.Data + " in call back function");
             return "";
         }
 
-        public string HandleClientJoined(string data)
+        public string HandleClientJoined(Networking.Models.Message data)
+        { 
+            AddStudnet(data.Data);
+            return "";
+        }
+
+        public string HandleClientLeft(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleClientLeft(string data)
+        public string HandleConnectionRequest(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleConnectionRequest(string data)
+        public string HandleFile(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleFile(string data)
+        string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
         {
             throw new NotImplementedException();
         }

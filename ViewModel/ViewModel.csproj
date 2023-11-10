@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChatMessaging\ChatMessaging.csproj" />
     <ProjectReference Include="..\Networking\Networking.csproj" />
     <ProjectReference Include="..\SessionState\SessionState.csproj" />
   </ItemGroup>

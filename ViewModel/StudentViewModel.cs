@@ -9,8 +9,8 @@
  *
  * Description = Defines the Student viewmodel.
  *****************************************************************************/
-using ChatMessaging;
 using Networking.Communicator;
+using Networking.Events;
 using SessionState;
 using System;
 using System.Collections.Generic;
@@ -21,8 +21,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Networking;
 using Networking.Utils;
+using Networking.Models;
 
 namespace ViewModel
 {
@@ -33,7 +33,7 @@ namespace ViewModel
 
         public StudentViewModel( ICommunicator? communicator = null)
         {
-            client = communicator ?? CommunicationFactory.GetCommunicator(false);
+            client = communicator ?? CommunicationFactory.GetClient();
 
             IpAddress = GetPrivateIp();
 
@@ -250,6 +250,7 @@ namespace ViewModel
             Debug.WriteLine(InstructorIp);
             Debug.WriteLine(InstructorPort);
         }
+
         public void SetStudentInfo(string name, string roll)
         {
             StudentName = name;
@@ -259,35 +260,39 @@ namespace ViewModel
             Debug.WriteLine(StudentRoll);
         }
 
-        public string HandleAnalyserResult(string data)
+        public string HandleAnalyserResult(Networking.Models.Message data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string HandleChatMessage(Networking.Models.Message data)
+        { 
+            HandleMessage(data.Data);
+            return "";
+        }
+
+        public string HandleClientJoined(Networking.Models.Message data)
         {
             return "";
         }
 
-        public string HandleChatMessage(string message)
+        public string HandleClientLeft(Networking.Models.Message data)
         {
-            HandleMessage(message);
-            return "";
+            throw new NotImplementedException();
         }
 
-        public string HandleClientJoined(string data)
+        public string HandleConnectionRequest(Networking.Models.Message data)
         {
-            return "";
+            throw new NotImplementedException();
         }
 
-        public string HandleClientLeft(string data)
+        public string HandleFile(Networking.Models.Message data)
         {
-            return "";
+            throw new NotImplementedException();
         }
-
-        public string HandleConnectionRequest(string data)
+        string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
         {
-            return "";
-        }
-
-        public string HandleFile(string data)
-        
-            return "";
+            throw new NotImplementedException();
         }
     }
 }
