@@ -7,13 +7,10 @@
 > connect event
 
 # to implement: 
-> threading : one for listen, one for send? , one for processing?
-> ser./des.
-> Ieventhandler impl
-> network streams
+> add sender's username in header
+> refactor the code
+> send message object to modules
 
-# doubt:
-> how to implement pub/sub   
 
 # client: 
 send(data)-> data will contain the event type to trigger 
