@@ -9,7 +9,7 @@
       Title="ResultPage">
 
     <Grid>
-<<<<<<< HEAD
+
         <StackPanel Orientation="Vertical">
             <!-- Add your controls in the stack panel -->
             <StackPanel Orientation="Horizontal" Margin="5">
