@@ -64,7 +64,8 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightCyan" />
                 </Grid.Background>
-                <TextBlock Text="Content and Status" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <!--<TextBlock Text="Content and Status" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                <Frame x:Name="ResultFrame"/>
             </Grid>
             <Grid Grid.Column="1" Margin="5,5,5,5">
                 <Grid.Background>

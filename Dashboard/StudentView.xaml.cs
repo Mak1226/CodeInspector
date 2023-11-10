@@ -35,8 +35,7 @@ namespace Dashboard
                 StudentViewModel viewModel = new();
                 DataContext = viewModel;
 
-                FileUpload fileUpload = new(viewModel.Communicator, "something");
-                ContentFrame.Content = fileUpload;
+                
             }
             catch (Exception exception)
             {
@@ -72,6 +71,11 @@ namespace Dashboard
             //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.ConnectInstructor();
+            if(viewModel != null)
+            {
+                FileUpload fileUpload = new(viewModel.Communicator, StudentRollTextBox.Text);
+                ContentFrame.Content = fileUpload;
+            }
 
         }
 
@@ -82,9 +86,5 @@ namespace Dashboard
             viewModel?.DisconnectInstructor();
         }
 
-        private void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-
-        }
     }
 }

@@ -221,7 +221,7 @@ namespace ViewModel
             {
                 var ipPort = client.Start(InstructorIp, int.Parse(InstructorPort), StudentRoll);
                 client.Subscribe(this, "StudentViewModel");
-
+                Debug.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
                 {
@@ -246,18 +246,12 @@ namespace ViewModel
         {
             InstructorIp = ip;
             InstructorPort = port;
-
-            Debug.WriteLine(InstructorIp);
-            Debug.WriteLine(InstructorPort);
         }
 
         public void SetStudentInfo(string name, string roll)
         {
             StudentName = name;
             StudentRoll = roll;
-
-            Debug.WriteLine(StudentName);
-            Debug.WriteLine(StudentRoll);
         }
 
         public string HandleAnalyserResult(Networking.Models.Message data)

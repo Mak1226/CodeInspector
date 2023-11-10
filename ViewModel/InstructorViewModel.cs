@@ -27,13 +27,13 @@ namespace ViewModel
         /// </summary>
         public InstructorViewModel(ICommunicator? communicator = null)
         {
-            //_studentSessionState = new();
+            _studentSessionState = new();
             server = communicator ?? CommunicationFactory.GetServer();
 
             //IpAddress = GetPrivateIp();
 
             var ipPort = server.Start(null, null, "server");
-
+            server.Subscribe(this, "InstructorViewModel");
             string[] parts = ipPort.Split(':');
             try
             {
@@ -140,8 +140,8 @@ namespace ViewModel
         }
 
         private bool AddStudnet(string serializedStudnet)
-        {
-            Debug.WriteLine("One message received");
+            {
+            Debug.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
                 var result = DeserializeStudnetInfo(serializedStudnet);
@@ -175,13 +175,12 @@ namespace ViewModel
 
         public string HandleChatMessage(Networking.Models.Message data)
         {
-            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + data.Data + " in call back function");
+            AddStudnet(data.Data);
             return "";
         }
 
         public string HandleClientJoined(Networking.Models.Message data)
         { 
-            AddStudnet(data.Data);
             return "";
         }
 

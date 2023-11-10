@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
+using ContentPage;
 
 namespace Dashboard
 {
@@ -35,6 +36,9 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
+
+                ResultPage resultPage = new(viewModel.Communicator);
+                ResultFrame.Content = resultPage;
             }
             catch (Exception exception)
             {
