@@ -10,6 +10,7 @@
  * Description = Page that visualises result of an analysis
  *****************************************************************************/
 
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -62,6 +63,17 @@ namespace ContentPage
         {
             // Handle the CheckBox checked event if needed
             // For example, you might call a method on viewModel
+            var checkBox = sender as CheckBox;
+            var analyzerItem = checkBox?.DataContext as AnalyzerConfigOption;
+
+            if (analyzerItem != null && checkBox?.IsChecked == true)
+            {
+                // Assuming Configure is a method on viewModel
+                viewModel.ConfigureAnalyzer(new Dictionary<int, bool>
+        {
+            { Convert.ToInt32(analyzerItem.AnalyzerId), true }
+        }, true);
+            }
         }
 
 
