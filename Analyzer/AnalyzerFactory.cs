@@ -6,25 +6,22 @@ using System.Threading.Tasks;
 
 namespace Analyzer
 {
-    public class AnalyzerFactory
+    public static class AnalyzerFactory
     {
-        public static List<Tuple<string, string>> GetAllConfigurationOptions()
+        public static List<Tuple<int, string>> GetAllConfigurationOptions()
         {
-            List<Tuple<string, string>> analyzers = new()
+            List<Tuple<int, string>> analyzers = new()
             {
-                Tuple.Create("A1", "Description of Analyzer 1"),
-                Tuple.Create("A2", "Description of Analyzer 2"),
-                Tuple.Create("A3", "Description of Analyzer 3"),
-                Tuple.Create("A4", "Description of Analyzer 4"),
-                Tuple.Create("A5", "Description of Analyzer 5"),
-                Tuple.Create("A6", "Description of Analyzer 6"),
-                Tuple.Create("A7", "Description of Analyzer 7"),
+                Tuple.Create(101, "Abstract type no public constructor"),
+                Tuple.Create(102, "Avoid constructor in static types"),
+                Tuple.Create(103, "Avoid unused private fields"),
+                Tuple.Create(104, "Avoid empty interface")
             };
 
             return analyzers;
         }
 
-        public static IAnalyzer GetAnalyser()
+        public static IAnalyzer GetAnalyzer()
         {
 
             IAnalyzer Analyzer = new Analyzer();
@@ -33,4 +30,4 @@ namespace Analyzer
         }
 
     }
-}
+}   

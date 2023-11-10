@@ -10,7 +10,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for calculating the depth of inheritance for classes in DLL files.
     /// </summary>
-    internal class DepthOfInheritance : BaseAnalyzer
+    internal class DepthOfInheritance : AnalyzerBase
     {
         /// <summary>
         /// Initializes a new instance of the DepthOfInheritance analyzer with parsed DLL files.
@@ -70,6 +70,18 @@ namespace Analyzer.Pipeline
                 depth--;
             }
             return depth;
+        }
+
+        /// <summary>
+        /// Gets the result of the analysis, which includes the depth of inheritance for classes.
+        /// </summary>
+        /// <returns>An AnalyzerResult containing the analysis results.</returns>
+        public override AnalyzerResult Run()
+        {
+            // Calculate the depth of inheritance for classes in the parsed DLL files
+            Dictionary<Type, int> depthOfInheritance = CalculateDepthOfInheritance();
+
+            return new AnalyzerResult("104", depthOfInheritance.Count <= 3 ? 1 : 0, "");
         }
     }
 }
