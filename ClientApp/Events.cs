@@ -1,36 +1,45 @@
 ﻿using System;
-using Networking;
+using System.Net.Sockets;
+using Networking.Events;
+using Networking.Models;
+
 namespace ClientApp
 {
-	public class Events : IEventHandler
+    public class Events : IEventHandler
     {
-        public string HandleAnalyserResult(string data)
+        public string HandleAnalyserResult(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleChatMessage(string data)
+        public string HandleChatMessage(Networking.Models.Message data)
         {
-            Console.WriteLine("Recieved " + data + " in call back function");
+            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + data.Data + " in call back function");
             return "";
         }
 
-        public string HandleClientJoined(string data)
+        public string HandleClientJoined(Networking.Models.Message data)
+        {
+            Console.WriteLine("[HandleClientJoined, cl] new client joinded: " + data.Data);
+            return "";
+        }
+
+        public string HandleClientLeft(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleClientLeft(string data)
+        public string HandleConnectionRequest(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleConnectionRequest(string data)
+        public string HandleFile(Networking.Models.Message data)
         {
             throw new NotImplementedException();
         }
 
-        public string HandleFile(string data)
+        string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
         {
             throw new NotImplementedException();
         }

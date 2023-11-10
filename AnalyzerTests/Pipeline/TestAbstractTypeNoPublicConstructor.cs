@@ -1,4 +1,4 @@
-﻿/*using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -24,9 +24,9 @@ namespace Analyzer.Pipeline.Tests
 
             AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new(dllFiles);
 
-            var result = abstractTypeNoPublicConstructor.GetScore();
+            var result = abstractTypeNoPublicConstructor.Run();
 
-            Assert.AreEqual(1, result);
+            Assert.AreEqual(1, result.Verdict);
         }
     }
-}*/
+}

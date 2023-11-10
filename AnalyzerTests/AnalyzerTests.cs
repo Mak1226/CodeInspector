@@ -18,7 +18,10 @@ namespace Analyzer.Tests
             Analyzer analyzer = new();
 
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>();
+            teacherOptions[101] = true;
+            teacherOptions[102] = true;
             teacherOptions[103] = true;
+            teacherOptions[104] = true;
 
             analyzer.Configure(teacherOptions, false);
 

@@ -7,9 +7,11 @@
 > connect event
 
 # to implement: 
-> add sender's username in header
 > refactor the code
-> send message object to modules
+> handle parsing multiple packets
+> interface problem
+> remove warnings
+
 
 
 # client: 
