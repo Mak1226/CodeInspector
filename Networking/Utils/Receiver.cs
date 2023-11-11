@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Networking.Communicator;
 using Networking.Events;
 using Networking.Models;
 using Networking.Queues;
@@ -16,21 +17,19 @@ namespace Networking.Utils
         private Thread _recvThread;
         private Thread _recvQueueThread;
         private Dictionary<string, NetworkStream> _clientIDToStream;
-        Dictionary<string, string> senderIDToClientID;
-        private Dictionary<string, IEventHandler> _moduleEventMap;
-        private bool _stopThread = false;
 
-        public Receiver(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, IEventHandler> moduleEventMap, Dictionary<string, string> senderIDToClientID)
+        private bool _stopThread = false;
+        ICommunicator _comm;
+
+        public Receiver(Dictionary<string, NetworkStream> clientIDToStream, ICommunicator comm)
         {
             Console.WriteLine("[Receiver] Init");
-            this.senderIDToClientID = senderIDToClientID;
             _clientIDToStream = clientIDToStream;
-            _moduleEventMap = moduleEventMap;
             _recvThread = new Thread(Receive);
             _recvQueueThread = new Thread(RecvLoop);
             _recvThread.Start();
             _recvQueueThread.Start();
-            this.senderIDToClientID = senderIDToClientID;
+            _comm = comm;
         }
 
         public void Stop()
@@ -92,7 +91,7 @@ namespace Networking.Utils
             Console.WriteLine("[Receiver] Receive stops");
         }
 
-        private void handleMessage(Message message)
+        /*private void handleMessage(Message message)
         {
             foreach (KeyValuePair<string, IEventHandler> pair in _moduleEventMap)
             {
@@ -101,7 +100,7 @@ namespace Networking.Utils
                 {
 
                     object[] parameters = new object[] { message };
-                    if (message.EventType==EventType.ClientRegister())
+                    if (message.EventType==EventType.ClientRegister()|| message.EventType == EventType.ClientDeregister())
                     {
                         parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
                     }
@@ -114,7 +113,7 @@ namespace Networking.Utils
                 else
                     Console.WriteLine("Method not found");
             }
-        }
+        }*/
 
         private void RecvLoop()
         {
@@ -134,8 +133,15 @@ namespace Networking.Utils
                 if (message.StopThread)
                     break;
 
-                handleMessage(message);
-                
+                //handleMessage(message);
+                if(_comm is Client client)
+                {
+                    client.HandleMessage(message);
+                }
+                else if(_comm is Server server)
+                {
+                    server.HandleMessage(message);
+                }
             }
         }
     }

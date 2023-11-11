@@ -15,6 +15,10 @@ namespace Networking.Utils
             /*
             lets have 3 priority levels
             */
+            if (eventName == EventType.ClientDeregister())
+            {
+                return 0;
+            }
             if (eventName == EventType.NewClientJoined())
             {
                 return 1;

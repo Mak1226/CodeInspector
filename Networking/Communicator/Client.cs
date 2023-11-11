@@ -23,7 +23,7 @@ namespace Networking.Communicator
 
         private string _senderID;
         private NetworkStream _networkStream;
-        private Dictionary<string, IEventHandler> _moduleEventMap = new();
+        private Dictionary<string, List<IEventHandler>> _moduleEventMap = new();
 
         public void Send(string Data, string eventType, string destID)
         {
@@ -58,7 +58,7 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] Starting sender");
             _sender = new(_IDToStream,_senderIDToClientID, true);
             Console.WriteLine("[Client] Starting receiver");
-            _receiver = new(_IDToStream, _moduleEventMap, _senderIDToClientID);
+            _receiver = new(_IDToStream, this);
             _sender.Send(message);
 
             Console.WriteLine("[Client] Started");
@@ -68,7 +68,7 @@ namespace Networking.Communicator
         public void Stop()
         {
             Console.WriteLine("[Client] Stop");
-            _sender.Send(new Message("", EventType.ClientLeft(), ID.GetServerID(), _senderID));
+            _sender.Send(new Message("", EventType.ClientDeregister(), ID.GetServerID(), _senderID));
             _sender.Stop();
             _receiver.Stop();
 
@@ -78,8 +78,20 @@ namespace Networking.Communicator
 
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
-            Console.WriteLine("[Client] Subscribe");
-            _moduleEventMap.Add(moduleName, eventHandler);
+            Console.WriteLine("[Client] Subscribe "+moduleName);
+            List<IEventHandler> eventHandlers = new();
+            if (_moduleEventMap.ContainsKey(moduleName))
+                eventHandlers = _moduleEventMap[moduleName];
+            eventHandlers.Add(eventHandler);
+            _moduleEventMap[moduleName] = eventHandlers;
+        }
+
+        public void HandleMessage(Message message)
+        {
+            foreach (IEventHandler eventHandler in _moduleEventMap[message.EventType])
+            {
+                eventHandler.HandleMessageRecv(message);
+            }
         }
 
     }

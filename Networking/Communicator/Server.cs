@@ -17,9 +17,9 @@ namespace Networking.Communicator
         private Thread _listenThread;
         private Receiver _receiver;
         private TcpListener _serverListener;
-        Dictionary<string, NetworkStream> _clientIDToStream = new();
-        Dictionary<string, string> _senderIDToClientID = new();
-        private Dictionary<string, IEventHandler> _moduleEventMap = new();
+        public Dictionary<string, NetworkStream> _clientIDToStream { get; set; } = new();
+        public Dictionary<string, string> _senderIDToClientID { get; set; } = new();
+        private Dictionary<string, List<IEventHandler>> _moduleEventMap = new();
         private string _senderID;
 
 
@@ -58,7 +58,7 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _senderID = senderID;
             _sender = new(_clientIDToStream, _senderIDToClientID, false);
-            _receiver = new(_clientIDToStream, _moduleEventMap, _senderIDToClientID);
+            _receiver = new(_clientIDToStream, this);
 
             int port = 12399;
             Random random = new();
@@ -89,7 +89,11 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Port: " + localEndPoint.Port);
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
-            Subscribe(new NetworkingEventHandler(), "networking");
+            Subscribe(new NetworkingEventHandler(), EventType.ChatMessage());
+            Subscribe(new NetworkingEventHandler(), EventType.NewClientJoined());
+            Subscribe(new NetworkingEventHandler(), EventType.ClientLeft());
+            Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
+            Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
             return GetLocalIPAddress() + ":" + localEndPoint.Port;
         }
 
@@ -113,8 +117,12 @@ namespace Networking.Communicator
 
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
-            Console.WriteLine("[Server] Subscribe");
-            _moduleEventMap.Add(moduleName, eventHandler);
+            Console.WriteLine("[Server] Subscribe "+ moduleName);
+            List<IEventHandler> eventHandlers = new();
+            if (_moduleEventMap.ContainsKey(moduleName))
+                eventHandlers = _moduleEventMap[moduleName];
+            eventHandlers.Add(eventHandler);
+            _moduleEventMap[moduleName] = eventHandlers;
         }
 
         void AcceptConnection()
@@ -141,6 +149,14 @@ namespace Networking.Communicator
                 lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
                 clientID += 'A';
                 Console.WriteLine("client connected");
+            }
+        }
+
+        public void HandleMessage(Message message)
+        {
+            foreach (IEventHandler eventHandler in _moduleEventMap[message.EventType])
+            {
+                eventHandler.HandleMessageRecv(message);
             }
         }
     }

@@ -38,5 +38,9 @@ namespace Networking.Utils
         {
             return "HandleClientRegister";
         }
+        public static string ClientDeregister()
+        {
+            return "HandleClientDeregister";
+        }
     }
 }

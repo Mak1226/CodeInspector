@@ -11,7 +11,8 @@ namespace ClientApp
 
             ICommunicator client = CommunicationFactory.GetClient();
             string addr = client.Start("127.0.0.1", 12399, "hee");
-            client.Subscribe(new Events(), "asdfasf");
+            client.Subscribe(new EventChatMessage(), EventType.ChatMessage());
+            client.Subscribe(new EventClientJoined(), EventType.NewClientJoined());
             Console.ReadKey();
             client.Send("omg1", EventType.ChatMessage(), "hee");
             client.Send("omg2", EventType.ChatMessage(), "hee");

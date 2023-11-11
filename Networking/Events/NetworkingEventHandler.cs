@@ -1,19 +1,39 @@
 ﻿using Networking.Communicator;
 using Networking.Models;
-using System.Net.Sockets;
 using Networking.Utils;
 
 namespace Networking.Events
 {
     public class NetworkingEventHandler : IEventHandler
     {
+
         ICommunicator server = CommunicationFactory.GetServer();
-        public string HandleAnalyserResult(Message message)
+        public string HandleMessageRecv(Message message)
         {
-            throw new NotImplementedException();
+            if (message.EventType == EventType.ChatMessage())
+            {
+                return HandleChatMessage(message);
+            }
+            else if (message.EventType == EventType.NewClientJoined())
+            {
+                return HandleClientJoined(message);
+            }
+            else if (message.EventType == EventType.ClientLeft())
+            {
+                return HandleClientLeft(message);
+            }
+            else if (message.EventType == EventType.ClientRegister())
+            {
+                return HandleClientRegister(message);
+            }
+            else if (message.EventType == EventType.ClientDeregister())
+            {
+                return HandleClientDeregister(message);
+            }
+            return "";
         }
 
-        public string HandleChatMessage(Message message)
+        private string HandleChatMessage(Message message)
         {
             if (message.DestID != ID.GetServerID())
             {
@@ -21,40 +41,45 @@ namespace Networking.Events
             }
             else
             {
-                Console.WriteLine("message received in server:"+message.Data);
+                Console.WriteLine("message received in server:" + message.Data);
             }
             return "";
         }
 
-        public string HandleClientJoined(Message message)
+        private string HandleClientJoined(Message message)
         {
             server.Send(message.SenderID, EventType.NewClientJoined(), ID.GetBroadcastID());
             return "";
         }
 
-        public string HandleClientLeft(Message message)
+        private string HandleClientLeft(Message message)
         {
-            server.Send(message.Data, EventType.ClientLeft(), ID.GetBroadcastID());
+            server.Send(message.SenderID, EventType.ClientLeft(), ID.GetBroadcastID());
             return "";
         }
 
-        public string HandleConnectionRequest(Message message)
+        private string HandleClientRegister(Message message)
         {
-            throw new NotImplementedException();
-        }
-
-        public string HandleFile(Message message)
-        {
-            throw new NotImplementedException();
-        }
-        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
-        {
-            lock (senderIDToClientID)
+            lock(((Server)server)._senderIDToClientID)
             {
-                senderIDToClientID[message.SenderID] = message.Data;
+                ((Server)server)._senderIDToClientID[message.SenderID] = message.Data;
             }
             HandleClientJoined(message);
             return "";
         }
+
+        private string HandleClientDeregister(Message message)
+        {
+            Console.WriteLine("herererer");
+            string clientID = ((Server)server)._senderIDToClientID[message.SenderID];
+            lock (((Server)server)._clientIDToStream)
+            {
+                ((Server)server)._clientIDToStream.Remove(clientID);
+            }
+            Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
+            HandleClientLeft(message);
+            return "";
+        }
     }
 }
+
