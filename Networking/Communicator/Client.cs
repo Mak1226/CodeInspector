@@ -25,8 +25,14 @@ namespace Networking.Communicator
         private NetworkStream _networkStream;
         private Dictionary<string, List<IEventHandler>> _moduleEventMap = new();
 
+        private bool _isStarted = false;
+
+
         public void Send(string Data, string eventType, string destID)
         {
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
             // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
             Console.WriteLine("[Client] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
@@ -37,6 +43,10 @@ namespace Networking.Communicator
 
         public string Start(string? destIP, int? destPort, string senderID)
         {
+            if (_isStarted)
+                return "already started";
+            _isStarted = true;
+
             _senderID = senderID;
 
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
@@ -67,6 +77,9 @@ namespace Networking.Communicator
 
         public void Stop()
         {
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
             Console.WriteLine("[Client] Stop");
             _sender.Send(new Message("", EventType.ClientDeregister(), ID.GetServerID(), _senderID));
             _sender.Stop();
@@ -78,6 +91,9 @@ namespace Networking.Communicator
 
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
             Console.WriteLine("[Client] Subscribe "+moduleName);
             List<IEventHandler> eventHandlers = new();
             if (_moduleEventMap.ContainsKey(moduleName))

@@ -7,6 +7,7 @@ using System.Net;
 using Networking.Utils;
 using Networking.Models;
 using Networking.Events;
+using System.Diagnostics;
 
 namespace Networking.Communicator
 {
@@ -21,6 +22,7 @@ namespace Networking.Communicator
         public Dictionary<string, string> _senderIDToClientID { get; set; } = new();
         private Dictionary<string, List<IEventHandler>> _moduleEventMap = new();
         private string _senderID;
+        private bool _isStarted = false;
 
 
         private string GetLocalIPAddress()
@@ -38,6 +40,9 @@ namespace Networking.Communicator
 
         public void Send(string Data, string eventType, string destID)
         {
+            if (!_isStarted)
+                throw new Exception("Start server first");
+
             Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
     Data, eventType, destID, _senderID
@@ -46,6 +51,9 @@ namespace Networking.Communicator
         }
         public void Send(string Data, string eventType, string destID, string senderID)
         {
+            if (!_isStarted)
+                throw new Exception("Start server first");
+
             Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
             Message message = new Message(
     Data, eventType, destID, senderID
@@ -55,6 +63,10 @@ namespace Networking.Communicator
 
         public string Start(string? destIP, int? destPort, string senderID)
         {
+            if (_isStarted)
+                return "already started";
+
+            _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _senderID = senderID;
             _sender = new(_clientIDToStream, _senderIDToClientID, false);
@@ -99,6 +111,9 @@ namespace Networking.Communicator
 
         public void Stop()
         {
+            if (!_isStarted)
+                throw new Exception("Start server first");
+
             Console.WriteLine("[Server] Stop");
             _stopThread = true;
             _sender.Stop();
@@ -117,6 +132,9 @@ namespace Networking.Communicator
 
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
+            if (!_isStarted)
+                throw new Exception("Start server first");
+
             Console.WriteLine("[Server] Subscribe "+ moduleName);
             List<IEventHandler> eventHandlers = new();
             if (_moduleEventMap.ContainsKey(moduleName))
