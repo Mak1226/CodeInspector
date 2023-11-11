@@ -21,23 +21,33 @@ namespace Networking.Communicator
         private Dictionary<string, NetworkStream> _IDToStream = new();
         Dictionary<string, string> _senderIDToClientID = new();
 
-        private string _senderID;
+        private string _senderId;
         private NetworkStream _networkStream;
-        private Dictionary<string, List<IEventHandler>> _moduleEventMap = new();
+        private Dictionary<string, List<IEventHandler>> _eventHandlersMap = new();
 
-        public void Send(string Data, string eventType, string destID)
+        private bool _isStarted = false;
+
+
+        public void Send(string serializedData, string eventType, string destId)
         {
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
             // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
-            Console.WriteLine("[Client] Send" + Data + " " + eventType + " " + destID);
+            Console.WriteLine("[Client] Send" + serializedData + " " + eventType + " " + destId);
             Message message = new Message(
-                Data, eventType, destID, _senderID
+                serializedData, eventType, destId, _senderId
             );
             _sender.Send(message);
         }
 
-        public string Start(string? destIP, int? destPort, string senderID)
+        public string Start(string? destIP, int? destPort, string senderId)
         {
-            _senderID = senderID;
+            if (_isStarted)
+                return "already started";
+            _isStarted = true;
+
+            _senderId = senderId;
 
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
@@ -50,7 +60,7 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] IP Address: " + localEndPoint.Address.MapToIPv4());
             Console.WriteLine("[Client] Port: " + localEndPoint.Port);
 
-            Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), _senderID);
+            Message message = new Message("", EventType.ClientRegister(), ID.GetServerID(), _senderId);
 
             _networkStream = tcpClient.GetStream();
             lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
@@ -67,8 +77,11 @@ namespace Networking.Communicator
 
         public void Stop()
         {
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
             Console.WriteLine("[Client] Stop");
-            _sender.Send(new Message("", EventType.ClientDeregister(), ID.GetServerID(), _senderID));
+            _sender.Send(new Message("", EventType.ClientDeregister(), ID.GetServerID(), _senderId));
             _sender.Stop();
             _receiver.Stop();
 
@@ -76,19 +89,22 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] Stopped");
         }
 
-        public void Subscribe(IEventHandler eventHandler, string moduleName)
+        public void Subscribe(IEventHandler eventHandler, string theEvent)
         {
-            Console.WriteLine("[Client] Subscribe "+moduleName);
+            if (!_isStarted)
+                throw new Exception("Start the client first");
+
+            Console.WriteLine("[Client] Subscribe "+theEvent);
             List<IEventHandler> eventHandlers = new();
-            if (_moduleEventMap.ContainsKey(moduleName))
-                eventHandlers = _moduleEventMap[moduleName];
+            if (_eventHandlersMap.ContainsKey(theEvent))
+                eventHandlers = _eventHandlersMap[theEvent];
             eventHandlers.Add(eventHandler);
-            _moduleEventMap[moduleName] = eventHandlers;
+            _eventHandlersMap[theEvent] = eventHandlers;
         }
 
         public void HandleMessage(Message message)
         {
-            foreach (IEventHandler eventHandler in _moduleEventMap[message.EventType])
+            foreach (IEventHandler eventHandler in _eventHandlersMap[message.EventType])
             {
                 eventHandler.HandleMessageRecv(message);
             }
