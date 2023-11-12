@@ -42,7 +42,11 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            return new AnalyzerResult("RemoveUnusedLocalVariablesRule", totalUnusedLocals, "");
+            string errorString = totalUnusedLocals > 0
+                ? $"Removed {totalUnusedLocals} unused local variables."
+                : "No unused local variables found.";
+
+            return new AnalyzerResult("Ar2", totalUnusedLocals, errorString);
         }
 
         /// <summary>
