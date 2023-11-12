@@ -32,18 +32,19 @@ namespace Analyzer.Pipeline
         public override AnalyzerResult Run()
         {
             int totalUnusedLocals = 0;
+            List<string> unusedVariableNames = new List<string>();
 
             foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
-                    int unusedLocalsCount = RemoveUnusedLocalVariables(method);
+                    int unusedLocalsCount = RemoveUnusedLocalVariables(method, unusedVariableNames);
                     totalUnusedLocals += unusedLocalsCount;
                 }
             }
 
             string errorString = totalUnusedLocals > 0
-                ? $"Removed {totalUnusedLocals} unused local variables."
+                ? $"Removed {totalUnusedLocals} unused local variables: {string.Join(", ", unusedVariableNames)}"
                 : "No unused local variables found.";
 
             return new AnalyzerResult("Ar2", totalUnusedLocals, errorString);
@@ -53,8 +54,9 @@ namespace Analyzer.Pipeline
         /// Removes unused local variables from a method and returns the count of removed local variables.
         /// </summary>
         /// <param name="method">The method to analyze and remove unused local variables from.</param>
+        /// <param name="unusedVariableNames">A list to store the names of unused variables.</param>
         /// <returns>The count of unused local variables removed from the method.</returns>
-        private static int RemoveUnusedLocalVariables(MethodDefinition method)
+        private static int RemoveUnusedLocalVariables(MethodDefinition method, List<string> unusedVariableNames)
         {
             int unusedLocalsCount = 0;
             _ = method.Body.GetILProcessor();
@@ -66,6 +68,7 @@ namespace Analyzer.Pipeline
                 if (!IsLocalVariableUsed(localVar, method.Body.Instructions))
                 {
                     unusedLocals.Add(localVar);
+                    unusedVariableNames.Add(localVar.ToString()); 
                 }
             }
 
