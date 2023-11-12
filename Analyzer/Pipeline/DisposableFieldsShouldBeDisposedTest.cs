@@ -142,8 +142,6 @@ namespace Analyzer.Pipeline
                         if (!IsDisposeCalledForField(disposeMethodInstructions, field))
                         {
                             missingDisposeCalls++;
-                            // You can report or log the violation here.
-                            // For this example, we're just counting them.
                         }
                     }
                 }
