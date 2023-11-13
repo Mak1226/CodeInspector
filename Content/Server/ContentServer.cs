@@ -69,6 +69,7 @@ namespace Content.Server
 
         public void ConfigureAnalyzer(Dictionary<int, bool> configuration)
         {
+
             analyzer.Configure(configuration, true);
         }
 

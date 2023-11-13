@@ -26,6 +26,7 @@ namespace ContentPage
     public partial class ResultPage : Page
     {
         private ContentServerViewModel viewModel;
+        private IDictionary<int, bool> accumulatedOptions = new Dictionary<int, bool>();
 
         /// <summary>
         /// Initializes content Server ViewModel
@@ -59,7 +60,7 @@ namespace ContentPage
             //// Bind the list to the DataGrid
             //dataGrid.ItemsSource = dataList;
         }
-        private void SelectCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBoxChecked(object sender, RoutedEventArgs e)
         {
             // Handle the CheckBox checked event if needed
             // For example, you might call a method on viewModel
@@ -69,12 +70,31 @@ namespace ContentPage
             if (analyzerItem != null && checkBox?.IsChecked == true)
             {
                 // Assuming Configure is a method on viewModel
-                viewModel.ConfigureAnalyzer(new Dictionary<int, bool>
-        {
-            { Convert.ToInt32(analyzerItem.AnalyzerId), true }
-        }, true);
+                int analyzerId = Convert.ToInt32(analyzerItem.AnalyzerId);
+                accumulatedOptions[analyzerId] = true;
+                viewModel.ConfigureAnalyzer(accumulatedOptions, true);
+                //        viewModel.ConfigureAnalyzer(new Dictionary<int, bool>
+                //{
+                //    { Convert.ToInt32(analyzerItem.AnalyzerId), true }
+                //}, true);
+                //    }
             }
         }
+        private void CheckBoxUnchecked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var analyzerItem = checkBox?.DataContext as AnalyzerConfigOption;
+
+            if (analyzerItem != null)
+            {
+                int analyzerId = Convert.ToInt32(analyzerItem.AnalyzerId);
+                accumulatedOptions.Remove(analyzerId);
+
+                viewModel.ConfigureAnalyzer(accumulatedOptions,true);
+            }
+        }
+
+
 
 
 

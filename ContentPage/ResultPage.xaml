@@ -19,7 +19,7 @@
                     <DataGridTemplateColumn Header="Select">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Checked="CheckBoxChecked" Unchecked="CheckBoxUnchecked" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
