@@ -4,27 +4,35 @@ using System.Collections.Generic;
 
 namespace Analyzer
 {
+    
     public class Analyzer : IAnalyzer
     {
-        private readonly MainPipeline _customAnalyzerPipeline;
+        private MainPipeline _customAnalyzerPipeline;
+        List<string> _pathOfDLLFilesOfStudent;
+        IDictionary<int, bool> _teacherOptions;
 
         public Analyzer()
         {
-            _customAnalyzerPipeline = new MainPipeline(); 
+            
         }
 
         public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
         {
-            _customAnalyzerPipeline.AddTeacherOptions(TeacherOptions);
+            _teacherOptions = TeacherOptions;
+            //_customAnalyzerPipeline.AddTeacherOptions(TeacherOptions);
         }
 
         public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher)
         {
-            _customAnalyzerPipeline.AddDLLFiles(PathOfDLLFilesOfStudent);
+            _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
+            //_customAnalyzerPipeline.AddDLLFiles(PathOfDLLFilesOfStudent);
         }
 
         public List<AnalyzerResult> Run()
         {
+            _customAnalyzerPipeline = new MainPipeline();
+            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+            _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             return _customAnalyzerPipeline.Start();
         }
 
