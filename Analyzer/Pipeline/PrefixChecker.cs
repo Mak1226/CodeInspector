@@ -38,45 +38,46 @@ namespace Analyzer.Pipeline
         {
             int errorCount = 0;
 
-            foreach (var type in parsedDLLFiles.Types)
+            foreach (var classObj in parsedDLLFiles.classObjList)
             {
-                if (type.IsInterface)
+                if (!IsCorrectTypeName(classObj.Name))
                 {
-                    if (!IsCorrectInterfaceName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect interface prefix: {type.Name}");
-                        errorCount++;
-                    }
-                }
-                else if(type.IsValueType)
-                {
-                    if (!IsCorrectTypeName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect type prefix: {type.Name}");
-                        errorCount++;
-                    }
-                }
-                else
-                {
-                    if (!IsCorrectGenericParameterName(type.Name))
-                    {
-                        Console.WriteLine($"[Error] Incorrect generic parameter prefix: {type.Name}");
-                        errorCount++;
-                    }
+                    //Console.WriteLine($"[Error] Incorrect type prefix: {classObj.Name}");
+                    errorCount++;
                 }
             }
 
-            if(errorCount == 0)
+            // To check interfaces
+            foreach (var interfaceObj in parsedDLLFiles.interfaceObjList)
             {
-            	verdict = 1;
+                if (!IsCorrectInterfaceName(interfaceObj.Name))
+                {
+                    //Console.WriteLine($"[Error] Incorrect interface prefix: {interfaceObj.Name}");
+                    errorCount++;
+                }
             }
-            
+
+            foreach (var structObj in parsedDLLFiles.structureObjList)
+            {
+                    if (!IsCorrectGenericParameterName(structObj.Name))
+                    {
+                        //Console.WriteLine($"[Error] Incorrect generic parameter prefix: {structObj.Name}");
+                        errorCount++;
+                    }
+            }
+
+            if (errorCount == 0)
+            {
+                verdict = 1;
+            }
             else
             {
-            	verdict = 0;
+                verdict = 0;
             }
+
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
+
 
         /// <summary>
         /// Checks if a type name follows the correct interface prefix.
