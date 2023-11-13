@@ -18,7 +18,7 @@ namespace Analyzer.Pipeline
         {
             errorMessage = "";
             verdict = 1;
-            analyzerID = "arrayFieldsShouldNotBeReadOnly";
+            analyzerID = "106";
         }
 
         /// <summary>

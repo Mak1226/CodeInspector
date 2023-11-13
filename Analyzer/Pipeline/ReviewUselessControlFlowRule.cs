@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {uselessControlFlowCount} occurrences of useless control flow."
                 : "No occurrences of useless control flow found.";
 
-            return new AnalyzerResult("Ar3", uselessControlFlowCount, errorString);
+            return new AnalyzerResult("110", uselessControlFlowCount, errorString);
         }
 
         /// <summary>

@@ -55,6 +55,12 @@ namespace Analyzer.Pipeline
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(parsedDLLFiles);
             _allAnalyzers[104] = new NoEmptyInterface(parsedDLLFiles);
+            _allAnalyzers[105] = new DepthOfInheritance(parsedDLLFiles);
+            _allAnalyzers[106] = new ArrayFieldsShouldNotBeReadOnlyRule(parsedDLLFiles);
+            _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(parsedDLLFiles);
+            _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(parsedDLLFiles);
+            _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(parsedDLLFiles);
+            _allAnalyzers[110] = new ReviewUselessControlFlowRule(parsedDLLFiles);
         }
 
         /// <summary>

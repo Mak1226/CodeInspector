@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                 ? $"Removed {totalUnusedLocals} unused local variables: {string.Join(", ", unusedVariableNames)}"
                 : "No unused local variables found.";
 
-            return new AnalyzerResult("Ar2", totalUnusedLocals, errorString);
+            return new AnalyzerResult("109", totalUnusedLocals, errorString);
         }
 
         /// <summary>

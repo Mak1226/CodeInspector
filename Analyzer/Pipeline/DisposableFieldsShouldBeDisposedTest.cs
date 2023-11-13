@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                 ? $"{violationCount} violations found: Some disposable fields are not properly disposed."
                 : "No violations found.";
 
-            return new AnalyzerResult("Ar4", violationCount, errorString);
+            return new AnalyzerResult("108", violationCount, errorString);
         }
 
         /// <summary>

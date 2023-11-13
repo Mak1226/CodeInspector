@@ -20,7 +20,7 @@ namespace Analyzer.Pipeline
         {
             errorMessages = new List<string>();
             verdict = 1;
-            analyzerID = "avoidSwitchStatements";
+            analyzerID = "107";
         }
 
         /// <summary>
