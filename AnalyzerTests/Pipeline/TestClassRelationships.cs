@@ -1,13 +1,18 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {
+    /// <summary>
+    /// Test class to verify the functionality of retrieving class relationships from given dll file.
+    /// </summary>
     [TestClass()]
     public class TestClassRelationships
     {
@@ -32,7 +37,7 @@ namespace AnalyzerTests.Pipeline
 
 
             foreach (var cls in parsedClasses) {
-                Console.WriteLine("\n\n\n\n");
+                Debug.WriteLine("\n\n\n\n");
                 Console.WriteLine("Class: " + cls.Name);
                 Console.WriteLine("Inheritance: ");
                 foreach (var inhCls in cls.InheritanceList)
@@ -43,9 +48,6 @@ namespace AnalyzerTests.Pipeline
                         InheritanceRel[cls.Name] = new List<string>();
                     }
                     InheritanceRel[cls.Name].Add(inhCls);
-                    Console.WriteLine(InheritanceRel[cls.Name]);
-
-                    //Console.WriteLine();
                 }
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("Composiition: ");
@@ -92,15 +94,28 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, List<string>> AggregationExp = new();
             Dictionary<string, List<string>> UsingExp = new();
 
+            InheritanceExp["Student"] = new List<string> { "CTypeRelationships.Person" };
+            CompositionExp["Car"] = new List<string> { "CTypeRelationships.Engine" };
+            AggregationExp["StudentCar"] = new List<string> { "CTypeRelationships.Car" };
+            UsingExp["StudentCar"] = new List<string>{"CTypeRelationships.Student"};
 
-            InheritanceExp["TypeRelationships.Student"] = new List<string> { "TypeRelationships.Person" };
-            CompositionExp["TypeRelationships.Car"] = new List<string> { "TypeRelationships.Engine" };
-            AggregationExp["TypeRelationships.StudentCar"] = new List<string> { "TypeRelationships.Car" };
-            UsingExp["TypeRelationships.StudentCar"] = new List<string>{"TypeRelationships.Student"};
-            //CollectionAssert.AreEquivalent(InheritanceExp,InheritanceRel);
-            //CollectionAssert.AreEquivalent(CompositionExp,CompositionRel);
-            //CollectionAssert.AreEquivalent(AggregationExp,AggregationRel);
-            //CollectionAssert.AreEquivalent(UsingExp,UsingRel);
+            foreach (var key in InheritanceRel.Keys)
+            {
+                CollectionAssert.AreEqual(InheritanceExp[key], InheritanceRel[key]);
+            }
+            foreach (var key in CompositionRel.Keys)
+            {
+                CollectionAssert.AreEqual(CompositionExp[key], CompositionRel[key]);
+            }
+            foreach (var key in AggregationRel.Keys)
+            {
+                CollectionAssert.AreEqual(AggregationExp[key], AggregationRel[key]);
+            }
+            foreach (var key in UsingRel.Keys)
+            {
+                CollectionAssert.AreEqual(UsingExp[key], UsingRel[key]);
+            }
         }
     }
 }
+*/

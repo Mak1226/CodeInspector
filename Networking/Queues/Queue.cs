@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Networking.Utils;
+using Networking.Models;
 
 namespace Networking.Queues
 {
@@ -8,7 +8,6 @@ namespace Networking.Queues
     {
         private PriorityQueue<Message, int> _queue;
         private readonly object _lock; // Create a lock object
-
         public Queue()
         {
             _queue = new();
@@ -50,7 +49,7 @@ namespace Networking.Queues
         {
             //assuming q has an element
             //TODO: check if q is empty or not
-            Message val=new();
+            Message val = new();
             try
             {
                 lock (_lock) // Acquire lock

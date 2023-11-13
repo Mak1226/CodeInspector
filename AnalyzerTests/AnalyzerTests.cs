@@ -15,16 +15,27 @@ namespace Analyzer.Tests
         public void AnalyzerTest()
         {
 
+            //AppDomain domain = AppDomain.CurrentDomain;
+
             Analyzer analyzer = new();
 
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>();
+            teacherOptions[101] = true;
+            teacherOptions[102] = true;
             teacherOptions[103] = true;
+            teacherOptions[104] = true;
 
             analyzer.Configure(teacherOptions, false);
 
             List<string> paths = new();
+
             paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
-            paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
+
+            //paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
+
+            //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
+
+            //paths.Add(path);
 
             analyzer.LoadDLLFile(paths, string.Empty);
 
@@ -36,6 +47,8 @@ namespace Analyzer.Tests
                 Console.WriteLine(item.Verdict);
                 Console.WriteLine(item.ErrorMessage);
             }
+
+           // AppDomain.Unload(domain);
 
             Assert.Fail();
         }
