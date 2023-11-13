@@ -30,9 +30,3 @@ namespace Analyzer.Pipeline
         public abstract AnalyzerResult Run();
     }
 }
-
-/*
-abstract class 
-pascal case
-'Base' should be suffix
-*/

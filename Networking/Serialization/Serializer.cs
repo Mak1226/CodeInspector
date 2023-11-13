@@ -1,20 +1,19 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Text.Json;
 
 namespace Networking.Serialization
 {
-	public class Serializer : ISerializer
+	public class Serializer
 	{
-        public T Deserialize<T>(string serializedString)
+        public static T Deserialize<T>(string serializedString)
         {
-            Trace.WriteLine("Not yet implemented");
-            throw new NotImplementedException();
+            T message = JsonSerializer.Deserialize<T>(serializedString);
+            return message;
         }
 
-        public string Serialize<T>(T genericObject)
+        public static string Serialize<T>(T genericObject)
         {
-            Trace.WriteLine("Not yet implemented");
-            throw new NotImplementedException();
+            string message=JsonSerializer.Serialize(genericObject);
+            return message;
         }
     }
 }

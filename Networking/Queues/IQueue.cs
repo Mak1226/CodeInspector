@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Networking.Models;
 
 namespace Networking.Queues
 {
@@ -12,8 +13,8 @@ namespace Networking.Queues
         enq
         deq
         */
-        public void Enqueue(string data, int priority);
-        public string Dequeue();
+        public void Enqueue(Message data, int priority);
+        public Message Dequeue();
         public bool canDequeue();
     }
 }

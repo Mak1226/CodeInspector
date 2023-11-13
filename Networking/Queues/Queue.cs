@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
+using Networking.Models;
 
 namespace Networking.Queues
 {
     public class Queue : IQueue
     {
-        private PriorityQueue<string, int> _queue;
+        private PriorityQueue<Message, int> _queue;
         private readonly object _lock; // Create a lock object
-
         public Queue()
         {
-            this._queue = new();
-            this._lock = new();
+            _queue = new();
+            _lock = new();
         }
 
-        public void Enqueue(string data, int priority)
+        public void Enqueue(Message data, int priority)
         {
             bool enqueued = false;
             int maxRetries = 3;
@@ -26,7 +26,7 @@ namespace Networking.Queues
                 {
                     lock (_lock) // Acquire lock
                     {
-                        this._queue.Enqueue(data, priority);
+                        _queue.Enqueue(data, priority);
                         enqueued = true;
                     } // Release lock
                 }
@@ -45,30 +45,29 @@ namespace Networking.Queues
             }
         }
 
-        public string Dequeue()
+        public Message Dequeue()
         {
             //assuming q has an element
             //TODO: check if q is empty or not
+            Message val = new();
             try
             {
-                string val;
                 lock (_lock) // Acquire lock
                 {
                     val = _queue.Dequeue();
                 } // Release lock
-                return val;
             }
             catch (Exception ex)
             {
                 Trace.WriteLine("[Queue] Exception found");
                 Trace.WriteLine($"{ex.StackTrace}");
             }
-            return "";
+            return val;
         }
 
         public bool canDequeue()
         {
-            return _queue.TryPeek(out string? _, out int _);
+            return _queue.TryPeek(out Message? _, out int _);
         }
     }
 }

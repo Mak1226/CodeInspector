@@ -29,7 +29,7 @@ namespace Analyzer.Pipeline
         {
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom1";
+            analyzerID = "103";
         }
 
         /// <summary>
@@ -54,6 +54,7 @@ namespace Analyzer.Pipeline
 
                 foreach (MethodDefinition method in cls.MethodsList)
                 {
+
                     if (!method.HasBody)
                     {
                         continue;
@@ -102,9 +103,18 @@ namespace Analyzer.Pipeline
 
                 if (UnusedFields.Count > 0)
                 {
+
+                    errorMessage += cls.Name.ToString() + " ";
+
                     verdict = 0;
                 }
 
+            }
+
+            if(verdict == 0)
+            {
+                errorMessage += "contains unused private field";
+                return;
             }
 
             verdict = 1;

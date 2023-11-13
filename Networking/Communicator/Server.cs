@@ -2,169 +2,145 @@
 /// Author:
 /////
 
-using System;
-using System.Diagnostics;
-using System.Text.Json;
 using System.Net.Sockets;
-using System.Collections.Generic;
-using Networking.Queues;
-using System.Reflection;
+using System.Net;
+using Networking.Utils;
+using Networking.Models;
+using Networking.Events;
 
 namespace Networking.Communicator
 {
     public class Server : ICommunicator
     {
-        private Queue _recvQueue = new();
-        private Thread _recvThread;
-        private Thread _recvQueueThread;
+        private bool _stopThread = false;
+        private Sender _sender;
+        private Thread _listenThread;
+        private Receiver _receiver;
+        private TcpListener _serverListener;
         Dictionary<string, NetworkStream> _clientIDToStream = new();
-        private Thread _sendThread;
-        private Queue _sendQueue = new();
+        Dictionary<string, string> _senderIDToClientID = new();
         private Dictionary<string, IEventHandler> _moduleEventMap = new();
+        private string _senderID;
 
-        private static byte[] ReturnBytes(string serializedObj, string eventType)
+
+        private string GetLocalIPAddress()
         {
-            var data = new Message(serializedObj, eventType);
-            string serStr = JsonSerializer.Serialize(data);
-            return System.Text.Encoding.ASCII.GetBytes(serStr);
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        void ICommunicator.Send(string serializedObj, string eventType, string destID)
+        public void Send(string Data, string eventType, string destID)
         {
-            Trace.WriteLine("[Server] Send" + serializedObj + " " + eventType + " " + destID);
-            _sendQueue.Enqueue(JsonSerializer.Serialize(new Message(serializedObj, eventType, destID)), 1 /* fix it */);
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
+            Message message = new Message(
+    Data, eventType, destID, _senderID
+);
+            _sender.Send(message);
+        }
+        public void Send(string Data, string eventType, string destID, string senderID)
+        {
+            Console.WriteLine("[Server] Send" + Data + " " + eventType + " " + destID);
+            Message message = new Message(
+    Data, eventType, destID, senderID
+);
+            _sender.Send(message);
         }
 
-        string ICommunicator.Start(string? destIP, int? destPort)
+        public string Start(string? destIP, int? destPort, string senderID)
         {
-            Trace.WriteLine("[Server] Start");
-            // Start the send thread
-            _sendThread = new Thread(SendLoop);
-            _sendThread.Start();
-            _recvThread = new Thread(Receive);
-            _recvQueueThread = new Thread(RecvLoop);
-            _recvThread.Start();
-            _recvQueueThread.Start();
-            // TODO: Add accept connections by client, create nwstream, and add to dict
-            return "";
-            //throw new NotImplementedException();
+            Console.WriteLine("[Server] Start" + destIP + " " + destPort);
+            _senderID = senderID;
+            _sender = new(_clientIDToStream, _senderIDToClientID, false);
+            _receiver = new(_clientIDToStream, _moduleEventMap, _senderIDToClientID);
+
+            int port = 12399;
+            Random random = new();
+            while (true)
+            {
+                try
+                {
+                    _serverListener = new TcpListener(IPAddress.Any, port);
+                    _serverListener.Start();
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                    {
+                        port = random.Next(1, 65534);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Socket error: " + ex.SocketErrorCode);
+                        throw ex;
+                    }
+                }
+            }
+            IPEndPoint localEndPoint = (IPEndPoint)_serverListener.LocalEndpoint;
+            Console.WriteLine("[Server] Server is listening on:");
+            Console.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
+            Console.WriteLine("[Server] Port: " + localEndPoint.Port);
+            _listenThread = new Thread(AcceptConnection);
+            _listenThread.Start();
+            Subscribe(new NetworkingEventHandler(), "networking");
+            return GetLocalIPAddress() + ":" + localEndPoint.Port;
         }
 
-        void ICommunicator.Stop()
+        public void Stop()
         {
-            Trace.WriteLine("[Server] Stop");
+            Console.WriteLine("[Server] Stop");
+            _stopThread = true;
+            _sender.Stop();
+            _receiver.Stop();
+            foreach (var stream in _clientIDToStream.Values)
+            {
+                stream.Close(); // Close the network stream
+            }
 
-            // Signal the send thread to stop
-            _sendQueue.Enqueue("StopIt", 10 /* fix it */);
-
-            // Wait for the send thread to stop
-            _sendThread.Join();
+            Console.WriteLine("[Server] Stopped _sender and _receiver");
+            _listenThread.Interrupt();
+            _serverListener.Stop();
+            //_listenThread.Join();
+            Console.WriteLine("[Server] Stopped");
         }
 
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
-            Trace.WriteLine("[Server] Subscribe");
+            Console.WriteLine("[Server] Subscribe");
             _moduleEventMap.Add(moduleName, eventHandler);
-            throw new NotImplementedException();
         }
-        void Receive()
-        {
-            while (true)
-            {
-                bool ifAval = false;
-                foreach (var item in _clientIDToStream)
-                {
-                    if (item.Value.DataAvailable == true)
-                    {
-                        ifAval = true;
-                        byte[] receiveData = new byte[1024];
-                        int bytesRead = item.Value.Read(receiveData, 0, receiveData.Length);
-                        string receivedMessage = System.Text.Encoding.ASCII.GetString(receiveData, 0, bytesRead);
-                        _recvQueue.Enqueue(receivedMessage, 1 /* fix it */);
-                    }
-                }
-                if (ifAval == false)
-                    Thread.Sleep(200);
-            }
-        }
-        private void handleMessage(Message message)
-        {
-            foreach (KeyValuePair<string, IEventHandler> pair in _moduleEventMap)
-            {
-                MethodInfo method = typeof(IEventHandler).GetMethod(message.EventType);
-                if (method != null)
-                {
-                    object[] parameters = new object[] { message.SerializedObj };
-                    method.Invoke(pair.Value, parameters);
-                }
-                else
-                    Console.WriteLine("Method not found");
-            }
-        }
-        private void RecvLoop()
-        {
-            while (true)
-            {
-                if (!_recvQueue.canDequeue())
-                {
-                    // wait for some time
-                    Thread.Sleep(500);
-                    continue;
-                }
 
-                // Get the next message to send
-                string message = _recvQueue.Dequeue();
+        void AcceptConnection()
+        {
+            string clientID = "A";
 
-                // If the message is a stop message, break out of the loop
+            while (!_stopThread)
+            {
+                Console.WriteLine("waiting for connection");
+                TcpClient client=new();
                 try
                 {
-                    if (message == "StopIt")
-                        break;
-                    Message message1 = JsonSerializer.Deserialize<Message>(message);
-                    handleMessage(message1);
+                    client = _serverListener.AcceptTcpClient();
                 }
-                catch
+                catch (SocketException e)
                 {
-                    // Send the serialized message
-                    throw new Exception();
-                }
-            }
-        }
-        private void SendLoop()
-        {
-            while (true)
-            {
-                if (!_sendQueue.canDequeue())
-                {
-                    // wait for some time
-                    Thread.Sleep(500);
-                    continue;
-                }
-
-                // Get the next message to send
-                string message = _sendQueue.Dequeue();
-
-
-                // If the message is a stop message, break out of the loop
-                if (message == "StopIt")
-                    break;
-                Message msg = JsonSerializer.Deserialize<Message>(message);
-
-                if (msg.DestID != "brodcast")
-                {
-                    byte[] messagetxt = ReturnBytes(msg.SerializedObj, msg.EventType);
-                    _clientIDToStream[msg.DestID].Write(messagetxt);
-                }
-                else
-                {   // send to all clients
-                    foreach (KeyValuePair<string, NetworkStream> pair in _clientIDToStream)
+                    if (e.SocketErrorCode == SocketError.Interrupted)
                     {
-                        byte[] messagetxt = ReturnBytes(msg.SerializedObj, msg.EventType);
-                        pair.Value.Write(messagetxt);
+                        Console.WriteLine("[Server] Listener stopped");
+                        break;
                     }
                 }
-
-
+                NetworkStream stream = client.GetStream();
+                lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
+                clientID += 'A';
+                Console.WriteLine("client connected");
             }
         }
     }

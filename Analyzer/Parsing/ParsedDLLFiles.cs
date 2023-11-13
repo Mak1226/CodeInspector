@@ -33,7 +33,8 @@ namespace Analyzer.Parsing
             foreach (var path in paths)
             {
                 // REFLECTION PARSING
-                Assembly assembly = Assembly.LoadFrom(path);
+
+                Assembly assembly = Assembly.Load(File.ReadAllBytes(path));
 
                 if (assembly != null)
                 {
@@ -128,7 +129,11 @@ namespace Analyzer.Parsing
                             }
                         }
                     }
+                    assemblyDef.Dispose();
                 }
+
+                assembly = null;
+                assemblyDef = null;
 
             }
 

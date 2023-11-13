@@ -7,13 +7,12 @@
 > connect event
 
 # to implement: 
-> threading : one for listen, one for send? , one for processing?
-> ser./des.
-> Ieventhandler impl
-> network streams
+> refactor the code
+> handle parsing multiple packets
+> interface problem
+> remove warnings
 
-# doubt:
-> how to implement pub/sub   
+
 
 # client: 
 send(data)-> data will contain the event type to trigger 
