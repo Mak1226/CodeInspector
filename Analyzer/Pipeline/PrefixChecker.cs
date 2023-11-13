@@ -96,18 +96,18 @@ namespace Analyzer.Pipeline
         /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectTypeName(string name)
         {
-	    if (name.Length < 3)
-	    {
-	        return true;
-	    }
+            if (name.Length < 3)
+            {
+                return true;
+            }
 
-		switch (name [0]) {	
-		case 'I':	
-			return Char.IsLower (name [1]) ? true : Char.IsUpper (name [2]);
-		default:
-			return true;
-		}
-        }
+            switch (name [0]) {	
+                case 'I':	
+                    return Char.IsLower (name [1]) ? true : Char.IsUpper (name [2]);
+                default:
+                    return true;
+                }
+            }
         
         /// <summary>
         /// Checks if a type name follows the correct generic parameter prefix.
@@ -115,9 +115,9 @@ namespace Analyzer.Pipeline
         /// <param name="name">The type name to check.</param>
         /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectGenericParameterName (string name)
-	{
-		return (((name.Length > 1) && (name [0] != 'T')) || Char.IsLower (name [0]));
-	}
+        {
+            return (((name.Length > 1) && (name [0] != 'T')) || Char.IsLower (name [0]));
+        }
     }
 }
 
