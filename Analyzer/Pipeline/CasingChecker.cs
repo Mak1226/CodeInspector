@@ -15,7 +15,7 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class CasingChecker : AnalyzerBase
     {
-        
+       
         private string errorMessage;
         private int verdict;
         private readonly string analyzerID;
@@ -38,53 +38,9 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         public override AnalyzerResult Run()
         {
-            // Flag to track if any casing mistake is found
-            bool hasMistake = false;
 
-            // Check namespace names for PascalCasing
-            foreach (string ns in parsedDLLFiles.GetNamespaces())
-            {
-                if (!IsPascalCase(ns))
-                {
-                    hasMistake = true;
-                    break; // If a mistake is found, exit the loop
-                }
-            }
-
-            if (!hasMistake)
-            {
-                // Check type names for PascalCasing
-                foreach (var type in parsedDLLFiles.GetTypes())
-                {
-                    if (!IsPascalCase(type))
-                    {
-                        hasMistake = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!hasMistake)
-            {
-                // Check method names for PascalCasing and parameter names for camelCasing
-                foreach (var method in parsedDLLFiles.GetMethods())
-                {
-                    if (!IsPascalCase(method.Name))
-                    {
-                        hasMistake = true;
-                        break;
-                    }
-
-                    if (!AreParametersCamelCased(method.Parameters))
-                    {
-                        hasMistake = true;
-                        break;
-                    }
-                }
-            }
-	
-	    // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
-            if(!hasMistake)
+   // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
+            if(!casecheck())
             {
                 verdict = 0;
             }
@@ -97,27 +53,66 @@ namespace Analyzer.Pipeline
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
 
-        // check if name is PascalCased
-	private static bool IsPascalCase (string name)
-	{
-		if (String.IsNullOrEmpty (name))
-			return true;
-
-		return Char.IsUpper (name [0]);
-	}
-	
-	// check if name is camelCased
-	private static bool IsCamelCase (string name)
-	{
-		if (String.IsNullOrEmpty (name))
-			return true;
-
-		return Char.IsLower (name [0]);
-	}
-	
-	private bool AreParametersCamelCased(Analyzer.Parsing.ParameterInfo[] parameters)
+        public bool casecheck()
         {
-            foreach (var param in parameters)
+            // Flag to track if any casing mistake is found
+            bool hasMistake = false;
+
+            // Check namespace names for PascalCasing
+            foreach(var classObj in parsedDLLFiles.classObjListMC)
+            {
+                if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
+                {
+                    hasMistake = true;
+                    break; // If a mistake is found, exit the loop
+                }
+            }
+
+            if (!hasMistake)
+            {
+                foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
+                {
+                    // Check method names for PascalCasing and parameter names for camelCasing
+                    foreach (MethodDefinition method in cls.MethodsList)
+                    {
+                        if (!IsPascalCase(method.Name))
+                        {
+                            hasMistake = true;
+                            break;
+                        }
+
+                        if (!AreParametersCamelCased(method))
+                        {
+                            hasMistake = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return hasMistake;
+        }
+
+        // check if name is PascalCased
+   private static bool IsPascalCase(string name)
+   {
+   if (String.IsNullOrEmpty (name))
+   return true;
+
+   return Char.IsUpper (name [0]);
+   }
+
+   // check if name is camelCased
+   private static bool IsCamelCase (string name)
+   {
+   if (String.IsNullOrEmpty (name))
+   return true;
+
+   return Char.IsLower (name [0]);
+   }
+
+   private bool AreParametersCamelCased(MethodDefinition method)
+        {
+            foreach (var param in method.Parameters)
             {
                 if (!IsCamelCase(param.Name))
                 {
