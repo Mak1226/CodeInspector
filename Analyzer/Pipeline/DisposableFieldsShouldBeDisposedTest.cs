@@ -42,8 +42,12 @@ namespace Analyzer.Pipeline
                     violationCount += missingDisposeCalls;
                 }
             }
+            // Provide an error string with information about the violations
+            string errorString = violationCount > 0
+                ? $"{violationCount} violations found: Some disposable fields are not properly disposed."
+                : "No violations found.";
 
-            return new AnalyzerResult("DisposableFieldsShouldBeDisposedRule", violationCount, null);
+            return new AnalyzerResult("108", violationCount, errorString);
         }
 
         /// <summary>
@@ -138,8 +142,6 @@ namespace Analyzer.Pipeline
                         if (!IsDisposeCalledForField(disposeMethodInstructions, field))
                         {
                             missingDisposeCalls++;
-                            // You can report or log the violation here.
-                            // For this example, we're just counting them.
                         }
                     }
                 }

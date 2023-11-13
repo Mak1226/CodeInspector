@@ -15,7 +15,13 @@ namespace Analyzer
                 Tuple.Create(101, "Abstract type no public constructor"),
                 Tuple.Create(102, "Avoid constructor in static types"),
                 Tuple.Create(103, "Avoid unused private fields"),
-                Tuple.Create(104, "Avoid empty interface")
+                Tuple.Create(104, "Avoid empty interface"),
+                Tuple.Create(105, "Depth of inheritance should be less than 3"),
+                Tuple.Create(106, "Array field should not be read only"),
+                Tuple.Create(107, "Avoid switch statements"),
+                Tuple.Create(108, "Disposable field should be disposed"),
+                Tuple.Create(109, "Avoid unused local variables"),
+                Tuple.Create(110, "Useless control flow rule")
             };
 
             return analyzers;

@@ -81,7 +81,26 @@ namespace Analyzer.Pipeline
             // Calculate the depth of inheritance for classes in the parsed DLL files
             Dictionary<Type, int> depthOfInheritance = CalculateDepthOfInheritance();
 
-            return new AnalyzerResult("104", depthOfInheritance.Count <= 3 ? 1 : 0, "");
+            // Check if any classes violate the depth of inheritance rule
+            // violatingClasses will contain a list of class types where the depth of inheritance is greater than 3
+            var violatingClasses = depthOfInheritance.Where(kv => kv.Value > 3).ToList();
+
+            if (violatingClasses.Count > 0)
+            {
+                // Build an error message with details about the violating classes
+                var errorMessageBuilder = new StringBuilder();
+                errorMessageBuilder.AppendLine("Classes violating depth of inheritance rule:");
+
+                foreach (var (classType, depth) in violatingClasses)
+                {
+                    errorMessageBuilder.AppendLine($"{classType.FullName}: Depth - {depth}");
+                }
+
+                return new AnalyzerResult("105", 0, errorMessageBuilder.ToString());
+            }
+
+            // No violations, return a success result
+            return new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes.");
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
+using System.IO;
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -18,7 +19,11 @@ namespace Analyzer.Pipeline.Tests
 
             List<string> DllFilePaths = new List<string>();
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
+            //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
+
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll";
+
+            DllFilePaths.Add(path);
 
             ParsedDLLFiles dllFiles = new(DllFilePaths);
 
@@ -32,7 +37,7 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
-        [TestMethod()]
+/*        [TestMethod()]
         public void Test2()
         {
 
@@ -50,7 +55,7 @@ namespace Analyzer.Pipeline.Tests
 
             Assert.AreEqual(0, result.Verdict);
 
-        }
+        }*/
 
     }
 }

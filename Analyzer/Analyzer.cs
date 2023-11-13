@@ -4,13 +4,22 @@ using System.Collections.Generic;
 
 namespace Analyzer
 {
+    
     public class Analyzer : IAnalyzer
     {
-        private readonly MainPipeline _customAnalyzerPipeline;
+        private MainPipeline _customAnalyzerPipeline;
 
         public Analyzer()
         {
-            _customAnalyzerPipeline = new MainPipeline(); 
+            List<string> _pathOfDLLFilesOfStudent;
+            IDictionary<int, bool> _teacherOptions;
+
+            _customAnalyzerPipeline = new MainPipeline();
+            _pathOfDLLFilesOfStudent = new();
+            _teacherOptions = new Dictionary<int, bool> ();
+
+            _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
+            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
         }
 
         public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
