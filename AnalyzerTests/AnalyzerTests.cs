@@ -41,12 +41,12 @@ namespace Analyzer.Tests
 
             var result = analyzer.Run();
 
-            foreach (var item in result)
-            {
-                Console.WriteLine(item.AnalyserID);
-                Console.WriteLine(item.Verdict);
-                Console.WriteLine(item.ErrorMessage);
-            }
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item.AnalyserID);
+            //    Console.WriteLine(item.Verdict);
+            //    Console.WriteLine(item.ErrorMessage);
+            //}
 
            // AppDomain.Unload(domain);
 

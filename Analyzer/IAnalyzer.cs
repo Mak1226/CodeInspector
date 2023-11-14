@@ -32,13 +32,13 @@ namespace Analyzer
         /// <returns>
         /// A list of <see cref="AnalyzerResult"/> objects representing the results of the analysis.
         /// </returns>
-        public List<AnalyzerResult> Run();
+        public Dictionary<string, List<AnalyzerResult>> Run();
 
         // TODO : Decide on return type
 
         /// <summary>
         /// Generates a relationship graph based on the loaded files.
         /// </summary>
-        public void GetRelationshipGraph();
+        public Byte[] GetRelationshipGraph(List<string> removableNamespaces);
     }
 }

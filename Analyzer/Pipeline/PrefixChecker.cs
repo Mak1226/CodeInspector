@@ -22,7 +22,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public PrefixCheckerAnalyzer(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public PrefixCheckerAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // The constructor can be used for any necessary setup or initialization.
             errorMessage = "";
@@ -34,11 +34,13 @@ namespace Analyzer.Pipeline
         /// Analyzes the DLL files to check type name prefixes for correctness.
         /// </summary>
         /// <returns>The number of errors found during the analysis.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
+            errorMessage = "";
+            verdict = 1;
             int errorCount = 0;
 
-            foreach (var classObj in parsedDLLFiles.classObjList)
+            foreach (var classObj in parsedDLLFile.classObjList)
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
@@ -48,7 +50,7 @@ namespace Analyzer.Pipeline
             }
 
             // To check interfaces
-            foreach (var interfaceObj in parsedDLLFiles.interfaceObjList)
+            foreach (var interfaceObj in parsedDLLFile.interfaceObjList)
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
@@ -57,7 +59,7 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            foreach (var structObj in parsedDLLFiles.structureObjList)
+            foreach (var structObj in parsedDLLFile.structureObjList)
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {

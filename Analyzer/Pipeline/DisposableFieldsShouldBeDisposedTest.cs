@@ -19,7 +19,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the DisposableFieldsShouldBeDisposedRule analyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public DisposableFieldsShouldBeDisposedRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public DisposableFieldsShouldBeDisposedRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
         }
 
@@ -27,12 +27,12 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the number of violations found.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int violationCount = 0;
 
             // Iterate through the classes in the DLL files
-            foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 // Check if the class implements IDisposable
                 if (ImplementsIDisposable(classObj.TypeObj))

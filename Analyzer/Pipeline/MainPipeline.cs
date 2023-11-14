@@ -17,12 +17,14 @@ namespace Analyzer.Pipeline
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _studentDLLFiles;
         private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
+        private List<ParsedDLLFile> _parsedDLLFiles;
 
         public MainPipeline()
         {
             _allAnalyzers = new();
             _teacherOptions = new Dictionary<int, bool> ();
             _studentDLLFiles = new List<string>();
+            _parsedDLLFiles = new List<ParsedDLLFile> ();
         }
 
         /// <summary>
@@ -49,49 +51,102 @@ namespace Analyzer.Pipeline
         /// </summary>
         private void GenerateAnalysers()
         {
-            ParsedDLLFiles parsedDLLFiles = new(_studentDLLFiles);
+            foreach (string file in _studentDLLFiles)
+            {
+                _parsedDLLFiles.Add(new ParsedDLLFile(file));
+            }
 
-            _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(parsedDLLFiles);
-            _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
-            _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(parsedDLLFiles);
-            _allAnalyzers[104] = new NoEmptyInterface(parsedDLLFiles);
-            _allAnalyzers[105] = new DepthOfInheritance(parsedDLLFiles);
-            _allAnalyzers[106] = new ArrayFieldsShouldNotBeReadOnlyRule(parsedDLLFiles);
-            _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(parsedDLLFiles);
-            _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(parsedDLLFiles);
-            _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(parsedDLLFiles);
-            _allAnalyzers[110] = new ReviewUselessControlFlowRule(parsedDLLFiles);
+
+            _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
+            //_allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
+            _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
+            _allAnalyzers[104] = new NoEmptyInterface(_parsedDLLFiles);
+            _allAnalyzers[105] = new DepthOfInheritance(_parsedDLLFiles);
+            _allAnalyzers[106] = new ArrayFieldsShouldNotBeReadOnlyRule(_parsedDLLFiles);
+            _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(_parsedDLLFiles);
+            _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(_parsedDLLFiles);
+            _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
+            _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
         }
+
 
         /// <summary>
         /// Starts the pipeline and runs all of the analyzers that have been selected by teacher
         /// </summary>
-        /// <returns>A list of analyzer results, where each result represents the results of running one analyzer</returns>
-        public List<AnalyzerResult> Start()
+        /// <returns></returns>
+        public Dictionary<string, List<AnalyzerResult>> Start()
         {
-            List<AnalyzerResult> results = new();
+            Dictionary<string, List<AnalyzerResult>> results = new();
 
-            foreach(var option in _teacherOptions)
+            foreach (ParsedDLLFile file in _parsedDLLFiles)
+            {
+                results[file.DLLFileName] = new List<AnalyzerResult>();
+            }
+
+            foreach(KeyValuePair<int,bool> option in _teacherOptions)
             {
                 if(option.Value == true)
                 {
-                    AnalyzerResult currentResult;
+                    Dictionary<string, AnalyzerResult> currentAnalyzerResult;
 
                     try
                     {
-                        currentResult = _allAnalyzers[option.Key].Run();
+                        currentAnalyzerResult = _allAnalyzers[option.Key].AnalyzeAllDLLs();
                     }
-                    catch(Exception _)
+                    catch (Exception _)
                     {
-                        currentResult = new AnalyzerResult(option.Key.ToString(), 1, "Internal error, analyzer failed to execute");
+                        currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
+
+                        foreach(ParsedDLLFile dllFile in _parsedDLLFiles)
+                        {
+                            currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(option.Key.ToString(), 1, "Internal error, analyzer failed to execute");
+                        }
                     }
 
-                    results.Add(currentResult);
+                    foreach(KeyValuePair<string , AnalyzerResult> dllResult in currentAnalyzerResult)
+                    {
+                        results[dllResult.Key].Add(dllResult.Value);
+                    }
                 }
-            }
+            }    
 
             return results;
         }
+
+        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
+        {
+            // TODO: Call ClassDiagram.Run() after modifications
+            Byte[] bytes = null;
+            return bytes;
+        }
+        /// <summary>
+        /// </summary>
+        /// <returns>A list of analyzer results, where each result represents the results of running one analyzer</returns>
+        //public Dictionary<string, List<AnalyzerResult> Start()
+        //{
+            //Dictionary<string, List<AnalyzerResult> results = new();
+
+            //foreach(var option in _teacherOptions)
+            //{
+            //    if(option.Value == true)
+            //    {
+            //        AnalyzerResult currentResult;
+
+            //        try
+            //        {
+            //            currentResult = _allAnalyzers[option.Key].AnalyzeSingleDLL();
+            //        }
+            //        catch(Exception _)
+            //        {
+            //            currentResult = new AnalyzerResult(option.Key.ToString(), 1, "Internal error, analyzer failed to execute");
+            //        }
+
+            //        results.Add(currentResult);
+            //    }
+            //}
+
+            //return results;
+        //}
 
     }
 }
