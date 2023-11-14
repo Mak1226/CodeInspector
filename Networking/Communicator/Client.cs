@@ -38,7 +38,7 @@ namespace Networking.Communicator
         public string Start(string? destIP, int? destPort, string senderID)
         {
             _senderID = senderID;
-
+    
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
 
