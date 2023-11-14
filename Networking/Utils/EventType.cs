@@ -42,5 +42,8 @@ namespace Networking.Utils
         {
             return "HandleClientDeregister";
         }
+        public static string StopThread() {
+            return "stopThread";
+        }
     }
 }

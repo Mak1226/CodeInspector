@@ -1,5 +1,6 @@
 ﻿using Networking.Communicator;
 using Networking.Models;
+using Networking.Serialization;
 using Networking.Utils;
 
 namespace Networking.Events
@@ -10,23 +11,24 @@ namespace Networking.Events
         ICommunicator server = CommunicationFactory.GetServer();
         public string HandleMessageRecv(Message message)
         {
-            if (message.EventType == EventType.ChatMessage())
+            Data data=Serializer.Deserialize<Data>(message.Data);
+            if (data.EventType == EventType.ChatMessage())
             {
                 return HandleChatMessage(message);
             }
-            else if (message.EventType == EventType.NewClientJoined())
+            else if (data.EventType == EventType.NewClientJoined())
             {
                 return HandleClientJoined(message);
             }
-            else if (message.EventType == EventType.ClientLeft())
+            else if (data.EventType == EventType.ClientLeft())
             {
                 return HandleClientLeft(message);
             }
-            else if (message.EventType == EventType.ClientRegister())
+            else if (data.EventType == EventType.ClientRegister())
             {
                 return HandleClientRegister(message);
             }
-            else if (message.EventType == EventType.ClientDeregister())
+            else if (data.EventType == EventType.ClientDeregister())
             {
                 return HandleClientDeregister(message);
             }
@@ -37,7 +39,7 @@ namespace Networking.Events
         {
             if (message.DestID != ID.GetServerID())
             {
-                ((Server)server).Send(message.Data, message.EventType, message.DestID, message.SenderID);
+                ((Server)server).Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
             }
             else
             {
@@ -48,13 +50,16 @@ namespace Networking.Events
 
         private string HandleClientJoined(Message message)
         {
-            server.Send(message.SenderID, EventType.NewClientJoined(), ID.GetBroadcastID());
+            //TODO: add respective module name
+            Data data = new Data(message.SenderID, EventType.NewClientJoined());
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
             return "";
         }
 
         private string HandleClientLeft(Message message)
         {
-            server.Send(message.SenderID, EventType.ClientLeft(), ID.GetBroadcastID());
+            Data data = new Data(message.SenderID, EventType.ClientLeft());
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
             return "";
         }
 
@@ -62,7 +67,8 @@ namespace Networking.Events
         {
             lock(((Server)server)._senderIDToClientID)
             {
-                ((Server)server)._senderIDToClientID[message.SenderID] = message.Data;
+                Data data=Serializer.Deserialize<Data>(message.Data);
+                ((Server)server)._senderIDToClientID[message.SenderID] = data.Payload;
             }
             HandleClientJoined(message);
             return "";

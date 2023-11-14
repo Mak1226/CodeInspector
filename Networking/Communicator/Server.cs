@@ -8,19 +8,21 @@ using Networking.Utils;
 using Networking.Models;
 using Networking.Events;
 using System.Diagnostics;
+using System;
 
 namespace Networking.Communicator
 {
     public class Server : ICommunicator
     {
         private bool _stopThread = false;
+        private string _moduleName;
         private Sender _sender;
         private Thread _listenThread;
         private Receiver _receiver;
         private TcpListener _serverListener;
         public Dictionary<string, NetworkStream> _clientIDToStream { get; set; } = new();
         public Dictionary<string, string> _senderIDToClientID { get; set; } = new();
-        private Dictionary<string, List<IEventHandler>> _eventHandlersMap = new();
+        private Dictionary<string, IEventHandler> _eventHandlersMap = new();
         private string _senderId;
         private bool _isStarted = false;
 
@@ -38,36 +40,48 @@ namespace Networking.Communicator
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
-        public void Send(string serializedData, string eventType, string destId)
+        public void Send(string serializedData, string moduleName, string destId)
         {
             if (!_isStarted)
                 throw new Exception("Start server first");
 
-            Console.WriteLine("[Server] Send" + serializedData + " " + eventType + " " + destId);
+            Console.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
             Message message = new Message(
-                serializedData, eventType, destId, _senderId
+                serializedData, moduleName, destId, _senderId
             );
             _sender.Send(message);
         }
-        public void Send(string serializedData, string eventType, string destId, string senderId)
+        public void Send(string serializedData, string destId)
         {
             if (!_isStarted)
                 throw new Exception("Start server first");
 
-            Console.WriteLine("[Server] Send" + serializedData + " " + eventType + " " + destId);
+            Console.WriteLine("[Server] Send" + serializedData + " " + _moduleName + " " + destId);
             Message message = new Message(
-                serializedData, eventType, destId, senderId
+                serializedData, _moduleName, destId, _senderId
+            );
+            _sender.Send(message);
+        }
+        public void Send(string serializedData, string moduleName, string destId, string senderId)
+        {
+            if (!_isStarted)
+                throw new Exception("Start server first");
+
+            Console.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
+            Message message = new Message(
+                serializedData, moduleName, destId, senderId
             );
             _sender.Send(message);
         }
 
-        public string Start(string? destIP, int? destPort, string senderId)
+        public string Start(string? destIP, int? destPort, string senderId,string moduleName)
         {
             if (_isStarted)
                 return "already started";
-
+            
             _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
+            _moduleName=moduleName;
             _senderId = senderId;
             _sender = new(_clientIDToStream, _senderIDToClientID, false);
             _receiver = new(_clientIDToStream, this);
@@ -101,11 +115,12 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Port: " + localEndPoint.Port);
             _listenThread = new Thread(AcceptConnection);
             _listenThread.Start();
-            Subscribe(new NetworkingEventHandler(), EventType.ChatMessage());
-            Subscribe(new NetworkingEventHandler(), EventType.NewClientJoined());
-            Subscribe(new NetworkingEventHandler(), EventType.ClientLeft());
-            Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
-            Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
+            //Subscribe(new NetworkingEventHandler(), EventType.ChatMessage());
+            //Subscribe(new NetworkingEventHandler(), EventType.NewClientJoined());
+            //Subscribe(new NetworkingEventHandler(), EventType.ClientLeft());
+            //Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
+            //Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
+            Subscribe(new NetworkingEventHandler(), ID.GetNetworkingID());
             return GetLocalIPAddress() + ":" + localEndPoint.Port;
         }
 
@@ -130,17 +145,22 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Stopped");
         }
 
-        public void Subscribe(IEventHandler eventHandler, string theEvent)
+        public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             if (!_isStarted)
                 throw new Exception("Start server first");
 
-            Console.WriteLine("[Server] Subscribe "+ theEvent);
-            List<IEventHandler> eventHandlers = new();
-            if (_eventHandlersMap.ContainsKey(theEvent))
-                eventHandlers = _eventHandlersMap[theEvent];
-            eventHandlers.Add(eventHandler);
-            _eventHandlersMap[theEvent] = eventHandlers;
+            Console.WriteLine("[Server] Subscribe " + moduleName);
+
+            //List<IEventHandler> eventHandlers = new();
+            if (_eventHandlersMap.ContainsKey(moduleName))
+                Console.WriteLine("");// already subs
+            else
+                _eventHandlersMap[moduleName] = eventHandler;
+
+                //eventHandlers = _eventHandlersMap[theEvent];
+                //eventHandlers.Add(eventHandler);
+                //_eventHandlersMap[theEvent] = eventHandlers;
         }
 
         void AcceptConnection()
@@ -150,7 +170,7 @@ namespace Networking.Communicator
             while (!_stopThread)
             {
                 Console.WriteLine("waiting for connection");
-                TcpClient client=new();
+                TcpClient client = new();
                 try
                 {
                     client = _serverListener.AcceptTcpClient();
@@ -172,10 +192,13 @@ namespace Networking.Communicator
 
         public void HandleMessage(Message message)
         {
-            foreach (IEventHandler eventHandler in _eventHandlersMap[message.EventType])
-            {
-                eventHandler.HandleMessageRecv(message);
-            }
+            //foreach (IEventHandler eventHandler in _eventHandlersMap[message.EventType])
+            //{
+            //    eventHandler.HandleMessageRecv(message);
+            //}
+            //eventHandler.HandleMessageRecv(message);
+            _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+
         }
     }
 }

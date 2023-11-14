@@ -27,7 +27,7 @@ namespace Networking.Communicator
         /// <returns>
         /// A string IP address of the communicator ":" port of the communicator
         /// </returns>
-        public string Start(string? destIP, int? destPort,string senderId);
+        public string Start(string? destIP, int? destPort, string senderId, string moduleName);
 
         /// <summary>
         /// Server: Stops listening and stops all threads
@@ -41,13 +41,14 @@ namespace Networking.Communicator
         /// <param name="serializedData">Serialized data to be sent</param>
         /// <param name="eventType">The event type whose subscribers the data is to be delivered</param>
         /// <param name="destId">The Id of destination</param>
-        public void Send(string serializedData, string eventType, string destId);
+        public void Send(string serializedData, string moduleName, string destId);
+        public void Send(string serializedData, string destId);
 
         /// <summary>
         /// Subscribe a handler to an event
         /// </summary>
         /// <param name="eventHandler">The implemented class of the event handler</param>
         /// <param name="theEvent">The event to subscribe; use functions in EventType</param>
-        public void Subscribe(IEventHandler eventHandler, string theEvent);
+        public void Subscribe(IEventHandler eventHandler, string moduleName);
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Networking.Communicator; // Assuming this is the namespace of your class library
+using Networking.Models;
+using Networking.Serialization;
 using Networking.Utils;
 using System;
 
@@ -10,11 +12,12 @@ namespace ServerApp
         {
 
             ICommunicator server = CommunicationFactory.GetServer();
-            string addr = server.Start(null, null, ID.GetServerID());
+            string addr = server.Start(null, null, ID.GetServerID(),ID.GetNetworkingID());
             /*server.Subscribe(new Events(), "asdfasf");*/
             Console.ReadKey();
             //Console.ReadKey();
-            server.Send("omg", EventType.ChatMessage(), "hee");
+            Data data= new Data("omg",EventType.ChatMessage());
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
             /*ICommunicator client = CommunicationFactory.GetClient();
             string[] address = addr.Split(':');
             client.Start(address[0], int.Parse(address[1]), "clientA");
