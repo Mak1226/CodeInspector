@@ -32,14 +32,14 @@ namespace Analyzer
             _customAnalyzerPipeline.AddDLLFiles(PathOfDLLFilesOfStudent);
         }
 
-        public List<AnalyzerResult> Run()
+        public Dictionary<string , List<AnalyzerResult>> Run()
         {
             return _customAnalyzerPipeline.Start();
         }
 
-        public void GetRelationshipGraph()
+        public Byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-            return;
+            return _customAnalyzerPipeline.GenerateClassDiagram(removableNamespaces);
         }
     }
 }

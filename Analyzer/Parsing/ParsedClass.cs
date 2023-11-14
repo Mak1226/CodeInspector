@@ -40,6 +40,7 @@ namespace Analyzer.Parsing
         {
             _typeObj = type;
             _name = type.Name;
+
             _constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
@@ -154,6 +155,7 @@ namespace Analyzer.Parsing
         {
             get { return _parentClass; }
         }
+
 
 
         /// <summary>

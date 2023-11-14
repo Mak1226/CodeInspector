@@ -25,7 +25,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the AvoidUnusedPrivateFieldsRule class.
         /// </summary>
         /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
-        public AvoidUnusedPrivateFieldsRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public AvoidUnusedPrivateFieldsRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             errorMessage = "";
             verdict = 1;
@@ -36,9 +36,9 @@ namespace Analyzer.Pipeline
         /// Checks for unused private fields in the parsed DLL.
         /// </summary>
         /// <returns>True if no unused private fields are found; otherwise, false.</returns>
-        private void Check()
+        private void Check(ParsedDLLFile parsedDLLFile)
         {
-            foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
                 List<string> UnusedFields = new();
 
@@ -120,9 +120,12 @@ namespace Analyzer.Pipeline
             verdict = 1;
         }
 
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            Check();
+            errorMessage = "";
+            verdict = 1;
+
+            Check(parsedDLLFile);
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
     }

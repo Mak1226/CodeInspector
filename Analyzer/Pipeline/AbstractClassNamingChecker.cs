@@ -22,7 +22,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the AbstractClassNamingChecker analyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files.</param>
-        public AbstractClassNamingChecker(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public AbstractClassNamingChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // TODO if required
             errorMessage = "";
@@ -34,10 +34,13 @@ namespace Analyzer.Pipeline
         /// Returns 1 if all abstract classes meet the criteria, otherwise 0.
         /// </summary>
         /// <returns>The score for the analyzer.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
+            errorMessage = "";
+            verdict = 1;
+
             // Check if there is at least one abstract class that does not meet the criteria
-            if (IncorrectAbstractClassName())
+            if (IncorrectAbstractClassName(parsedDLLFile))
             {
                 verdict = 0; // If there is any abstract class not meeting the criteria, set the score to 0
             }
@@ -73,9 +76,9 @@ namespace Analyzer.Pipeline
         /// Checks if there is at least one abstract class that does not meet the criteria.
         /// </summary>
         /// <returns>True if there is any abstract class not meeting the criteria, false if all meet the criteria.</returns>
-        private bool IncorrectAbstractClassName()
+        private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
-            foreach (ParsedClass classObj in parsedDLLFiles.classObjList)
+            foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
 

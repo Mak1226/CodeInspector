@@ -24,11 +24,11 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public CasingChecker(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public CasingChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            // The constructor can be used for any necessary setup or initialization.
             errorMessage = "";
             verdict = 1;
+            // The constructor can be used for any necessary setup or initialization.
             analyzerID = "Custom2";
         }
 
@@ -36,11 +36,13 @@ namespace Analyzer.Pipeline
         /// Analyzes the DLL files to check casing for correctness.
         /// </summary>
         /// <returns>the verdict if the casing is right or not</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
+            errorMessage = "";
+            verdict = 1;
 
-   // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
-            if(!casecheck())
+            // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
+            if (!casecheck(parsedDLLFile))
             {
                 verdict = 0;
             }
@@ -53,13 +55,13 @@ namespace Analyzer.Pipeline
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
 
-        public bool casecheck()
+        public bool casecheck(ParsedDLLFile parsedDLLFile)
         {
             // Flag to track if any casing mistake is found
             bool hasMistake = false;
 
             // Check namespace names for PascalCasing
-            foreach(var classObj in parsedDLLFiles.classObjListMC)
+            foreach(var classObj in parsedDLLFile.classObjListMC)
             {
                 if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
                 {
@@ -70,7 +72,7 @@ namespace Analyzer.Pipeline
 
             if (!hasMistake)
             {
-                foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
+                foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
                 {
                     // Check method names for PascalCasing and parameter names for camelCasing
                     foreach (MethodDefinition method in cls.MethodsList)

@@ -17,23 +17,24 @@ namespace Analyzer.Pipeline.Tests
         public void Test1()
         {
 
-            List<string> DllFilePaths = new List<string>();
+            //List<string> DllFilePaths = new List<string>();
 
             //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
 
             string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll";
+            ParsedDLLFile dllFile = new ParsedDLLFile(path);
 
-            DllFilePaths.Add(path);
+            //DllFilePaths.Add(path);
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
 
-            var result = avoidUnusedPrivateFieldsRule.Run();
-            
-            Console.WriteLine(result.ErrorMessage);
+            var result = avoidUnusedPrivateFieldsRule.AnalyzeAllDLLs();
 
-            Assert.AreEqual(1, result.Verdict);
+            Console.WriteLine(result[dllFile.DLLFileName].ErrorMessage);
+
+            Assert.AreEqual(1, result[dllFile.DLLFileName].Verdict);
 
         }
 

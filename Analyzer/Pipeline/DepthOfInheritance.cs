@@ -16,7 +16,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the DepthOfInheritance analyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public DepthOfInheritance(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public DepthOfInheritance(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // The constructor can be used for any necessary setup or initialization.
             // In this case, it sets the parsedDLLFiles field with the provided DLL files.
@@ -28,13 +28,13 @@ namespace Analyzer.Pipeline
         /// <returns>
         /// A dictionary that maps class types to their depth of inheritance.
         /// </returns>
-        public Dictionary<Type, int> CalculateDepthOfInheritance()
+        public Dictionary<Type, int> CalculateDepthOfInheritance(ParsedDLLFile parsedDLLFile)
         {
             // Create a dictionary to store class types and their corresponding depth of inheritance
             Dictionary<Type, int> depthOfInheritanceMap = new();
 
             // Iterate through the ParsedClass objects in the DLL files
-            foreach (ParsedClass classObj in parsedDLLFiles.classObjList)
+            foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 // Calculate the depth of inheritance for the current class
                 int depth = CalculateDepth(classObj.TypeObj);
@@ -76,10 +76,10 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the depth of inheritance for classes.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             // Calculate the depth of inheritance for classes in the parsed DLL files
-            Dictionary<Type, int> depthOfInheritance = CalculateDepthOfInheritance();
+            Dictionary<Type, int> depthOfInheritance = CalculateDepthOfInheritance(parsedDLLFile);
 
             // Check if any classes violate the depth of inheritance rule
             // violatingClasses will contain a list of class types where the depth of inheritance is greater than 3
