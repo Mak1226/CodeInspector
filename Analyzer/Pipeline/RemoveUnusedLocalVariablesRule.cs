@@ -20,7 +20,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the RemoveUnusedLocalVariablesRule with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public RemoveUnusedLocalVariablesRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public RemoveUnusedLocalVariablesRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // The constructor sets the parsedDLLFiles field with the provided DLL files.
         }
@@ -29,12 +29,12 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the number of unused local variables removed.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int totalUnusedLocals = 0;
             List<string> unusedVariableNames = new();
 
-            foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                 ? $"Removed {totalUnusedLocals} unused local variables: {string.Join(", ", unusedVariableNames)}"
                 : "No unused local variables found.";
 
-            return new AnalyzerResult("Ar2", totalUnusedLocals, errorString);
+            return new AnalyzerResult("109", totalUnusedLocals, errorString);
         }
 
         /// <summary>

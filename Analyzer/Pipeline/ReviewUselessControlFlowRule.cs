@@ -13,7 +13,7 @@ namespace Analyzer.Pipeline
     /// </summary>
     internal class ReviewUselessControlFlowRule : AnalyzerBase
     {
-        public ReviewUselessControlFlowRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public ReviewUselessControlFlowRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
         }
 
@@ -21,11 +21,11 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the count of useless control flow occurrences.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int uselessControlFlowCount = 0;
 
-            foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {uselessControlFlowCount} occurrences of useless control flow."
                 : "No occurrences of useless control flow found.";
 
-            return new AnalyzerResult("Ar3", uselessControlFlowCount, errorString);
+            return new AnalyzerResult("110", uselessControlFlowCount, errorString);
         }
 
         /// <summary>
