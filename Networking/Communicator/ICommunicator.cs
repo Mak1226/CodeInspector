@@ -1,68 +1,53 @@
 ﻿/////
+/// Author: 
 /////
 
 
 using Networking.Events;
-/// Author: 
 namespace Networking.Communicator
 {
-    /*
-     * destination username
-     * 
-     * receive class-> managing the packets received
-     * the map of clientId and net stream
-     * sending class-> for sending the packets -> send the networkstream to write to
-     * the network stream
-     * the ser. data
-     * have to maintain the sending q
-     * in the server/client class what do we have to maintain?
-     * the mapping btw clientid and net stream and client id and username
-     * 
-     */
     public interface ICommunicator
     {
         /// <summary>
-        /// start(server dest) -> client:
-        ///     call the listen start all threads connect to server 
-        /// start(server dest=null) -> server:
-        ///     call the listen start all threads returns serverID
+        /// Server: Starts listening for TCP connections and starts sending and receiving threads 
+        /// Client: Connects to the server and starts sending and receiving threads 
         /// </summary>
-        /// <param name="destIP">Server IP when called by client</param>
-        /// <param name="destPort">Server Port when called by client</param>
-        /// <returns>server: Server IP, port</returns>
-        public string Start(string? destIP, int? destPort,string senderID);
+        /// <param name="destIP">
+        /// Server: null,
+        /// Client: IP address of the server
+        /// </param>
+        /// <param name="destPort">
+        /// Server: null,
+        /// Client: Port number of the server
+        /// </param>
+        /// <param name="senderId">
+        /// The unique identification of the communicator
+        /// Server: "server"; can get from Utils.ID
+        /// </param>
+        /// <returns>
+        /// A string IP address of the communicator ":" port of the communicator
+        /// </returns>
+        public string Start(string? destIP, int? destPort,string senderId);
 
         /// <summary>
-        /// Server: Stops the server and stops all threads
-        /// Client: Stops listening to the server and stops all threads
+        /// Server: Stops listening and stops all threads
+        /// Client: Stops listening to the server and stops all threads, also sends message to server that the client is stopping
         /// </summary>
         public void Stop();
 
         /// <summary>
-        /// Sends `serializedObj` to `destID`. We call `Send` upon happening of event `eventType`.
-        /// </summary>x
-        /// <param name="serializedObj"></param>
-        /// <param name="eventType"></param>
-        /// <param name="destID"></param>
-        public void Send(string Data, string eventType, string destID);
-        /*
-         * {
-         * "destid":
-         * "eventType":
-         * "data":"
-         *              {
-         *                  "prop1":,
-         *                  "prop2"
-         *              }
-         *        "
-         * }
-         */
+        /// Sends serialized data to destination. 
+        /// </summary>
+        /// <param name="serializedData">Serialized data to be sent</param>
+        /// <param name="eventType">The event type whose subscribers the data is to be delivered</param>
+        /// <param name="destId">The Id of destination</param>
+        public void Send(string serializedData, string eventType, string destId);
 
         /// <summary>
-        /// The module `moduleName` gets subscribed to events implemented in `eventHandler`
+        /// Subscribe a handler to an event
         /// </summary>
-        /// <param name="eventHandler"></param>
-        /// <param name="moduleName"></param>
-        public void Subscribe(IEventHandler eventHandler, string moduleName);
+        /// <param name="eventHandler">The implemented class of the event handler</param>
+        /// <param name="theEvent">The event to subscribe; use functions in EventType</param>
+        public void Subscribe(IEventHandler eventHandler, string theEvent);
     }
 }

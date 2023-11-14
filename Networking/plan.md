@@ -1,4 +1,9 @@
-﻿# events:
+﻿# TODO:
+> Change all instances of *ID to *Id
+
+
+
+# events:
 > file received on the server -> 
 > chat message received
 > analyzer result received on the client
