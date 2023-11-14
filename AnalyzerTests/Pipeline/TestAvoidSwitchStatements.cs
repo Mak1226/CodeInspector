@@ -18,7 +18,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> DllFilePaths = new List<string>();
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\SwitchStatements.dll");
+            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\Rules.dll");
 
             ParsedDLLFiles dllFiles = new(DllFilePaths);
 
