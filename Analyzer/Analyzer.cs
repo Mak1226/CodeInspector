@@ -4,41 +4,45 @@ using System.Collections.Generic;
 
 namespace Analyzer
 {
-    
+
     public class Analyzer : IAnalyzer
     {
-        private MainPipeline _customAnalyzerPipeline;
-        List<string> _pathOfDLLFilesOfStudent;
-        IDictionary<int, bool> _teacherOptions;
+        private List<string> _pathOfDLLFilesOfStudent;
+        private IDictionary<int, bool> _teacherOptions;
 
         public Analyzer()
         {
-            
+            _pathOfDLLFilesOfStudent = new List<string>();
+            _teacherOptions = new Dictionary<int, bool>();
         }
 
         public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
         {
             _teacherOptions = TeacherOptions;
-            //_customAnalyzerPipeline.AddTeacherOptions(TeacherOptions);
         }
 
         public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher)
         {
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
-            //_customAnalyzerPipeline.AddDLLFiles(PathOfDLLFilesOfStudent);
         }
 
-        public List<AnalyzerResult> Run()
+        public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            _customAnalyzerPipeline = new MainPipeline();
-            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+            MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
+            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+
             return _customAnalyzerPipeline.Start();
         }
 
-        public void GetRelationshipGraph()
+        public Byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-            return;
+
+            MainPipeline _customAnalyzerPipeline = new();
+            _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
+            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+
+            return _customAnalyzerPipeline.GenerateClassDiagram(removableNamespaces);
         }
     }
 }

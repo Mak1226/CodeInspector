@@ -16,20 +16,23 @@ namespace Analyzer.Pipeline
         private int verdict;
         private readonly string analyzerID;
 
-        public AvoidSwitchStatementsAnalyzer(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public AvoidSwitchStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             errorMessages = new List<string>();
             verdict = 1;
-            analyzerID = "avoidSwitchStatements";
+            analyzerID = "107";
         }
 
         /// <summary>
         /// Runs the analysis to check for the presence of switch statements in methods.
         /// </summary>
         /// <returns>An <see cref="AnalyzerResult"/> based on the analysis.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            CheckForSwitchStatements();
+            errorMessages = new List<string>();
+            verdict = 1;
+
+            CheckForSwitchStatements(parsedDLLFile);
 
             // Concatenate all error messages into a single string
             string errorMessageString = string.Join(", ", errorMessages);
@@ -51,9 +54,9 @@ namespace Analyzer.Pipeline
         /// <summary>
         /// Checks each method for the presence of switch statements.
         /// </summary>
-        private void CheckForSwitchStatements()
+        private void CheckForSwitchStatements(ParsedDLLFile parsedDLLFile)
         {
-            foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in cls.MethodsList)
                 {

@@ -21,7 +21,7 @@ namespace Analyzer.Pipeline
         ///
         /// </summary>
         /// <param name="dllFiles"></param>
-        public NoEmptyInterface(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public NoEmptyInterface(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             errorMessage = "";
             verdict = 1;
@@ -32,11 +32,11 @@ namespace Analyzer.Pipeline
         ///
         /// </summary>
         /// <returns></returns>
-        public List<Type> FindEmptyInterfaces()
+        public List<Type> FindEmptyInterfaces(ParsedDLLFile parsedDLLFile)
         {
             List<Type> emptyInterfaceList = new List<Type>();
 
-            foreach (ParsedInterface interfaceObj in parsedDLLFiles.interfaceObjList)
+            foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
                 Type interfaceType = interfaceObj.TypeObj;
 
@@ -75,9 +75,12 @@ namespace Analyzer.Pipeline
         /// 
         /// </summary>
         /// <returns></returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            List<Type> emptyInterfaces = FindEmptyInterfaces();
+            errorMessage = "";
+            verdict = 1;
+
+            List<Type> emptyInterfaces = FindEmptyInterfaces(parsedDLLFile);
             if (emptyInterfaces.Count > 0)
             {
                 verdict = 1;
