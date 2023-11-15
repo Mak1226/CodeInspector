@@ -79,6 +79,5 @@ namespace Analyzer.Parsing
             get { return _parentInterfaces; }
         }
 
-        // Add additional methods or properties as required.
     }
 }

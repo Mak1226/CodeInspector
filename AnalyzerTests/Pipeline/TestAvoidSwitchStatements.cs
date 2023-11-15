@@ -1,4 +1,4 @@
-﻿/*using Analyzer.Parsing;
+/*using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     [TestClass()]
-    public class TestNoEmptyInterface
+    public class TestAvoidSwitchStatemets
     {
         [TestMethod()]
         public void MainPipelineTest()
@@ -18,13 +18,13 @@ namespace AnalyzerTests.Pipeline
 
             List<string> DllFilePaths = new List<string>();
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\DemoDLL.dll");
+            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\SwitchStatements.dll");
 
             ParsedDLLFiles dllFiles = new(DllFilePaths);
 
-            NoEmptyInterface iFace = new(dllFiles);
+            AvoidSwitchStatementsAnalyzer avoidSwitchStatements = new(dllFiles);
 
-            var result = iFace.Run();
+            var result = avoidSwitchStatements.Run();
 
             Assert.AreEqual(1, result.Verdict);
         }

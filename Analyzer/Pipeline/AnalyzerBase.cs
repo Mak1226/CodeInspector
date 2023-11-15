@@ -15,18 +15,30 @@ namespace Analyzer.Pipeline
         /// <summary>
         /// The parsed DLL files to be used for analysis.
         /// </summary>
-        public ParsedDLLFiles parsedDLLFiles;
+        public List<ParsedDLLFile> parsedDLLFilesList;
+        private Dictionary<string, AnalyzerResult> result;
 
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public AnalyzerBase(ParsedDLLFiles dllFiles)
+        public AnalyzerBase(List<ParsedDLLFile> dllFiles)
         {
             // Set the parsedDLLFiles field with the provided DLL files
-            parsedDLLFiles = dllFiles;
+            parsedDLLFilesList = dllFiles;
+            result = new Dictionary<string, AnalyzerResult>();
         }
 
-        public abstract AnalyzerResult Run();
+        public Dictionary<string, AnalyzerResult> AnalyzeAllDLLs()
+        {
+            foreach(ParsedDLLFile parsedDLL in  parsedDLLFilesList)
+            {
+                result[parsedDLL.DLLFileName] = AnalyzeSingleDLL(parsedDLL);
+            }
+
+            return result;
+        }
+
+        protected abstract AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile _parsedDLLFile);
     }
 }

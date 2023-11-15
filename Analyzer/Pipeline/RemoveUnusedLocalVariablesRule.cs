@@ -20,7 +20,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the RemoveUnusedLocalVariablesRule with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public RemoveUnusedLocalVariablesRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public RemoveUnusedLocalVariablesRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // The constructor sets the parsedDLLFiles field with the provided DLL files.
         }
@@ -29,28 +29,34 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the number of unused local variables removed.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int totalUnusedLocals = 0;
+            List<string> unusedVariableNames = new List<string>();
 
-            foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
-                    int unusedLocalsCount = RemoveUnusedLocalVariables(method);
+                    int unusedLocalsCount = RemoveUnusedLocalVariables(method, unusedVariableNames);
                     totalUnusedLocals += unusedLocalsCount;
                 }
             }
 
-            return new AnalyzerResult("RemoveUnusedLocalVariablesRule", totalUnusedLocals, "");
+            string errorString = totalUnusedLocals > 0
+                ? $"Removed {totalUnusedLocals} unused local variables: {string.Join(", ", unusedVariableNames)}"
+                : "No unused local variables found.";
+
+            return new AnalyzerResult("109", totalUnusedLocals, errorString);
         }
 
         /// <summary>
         /// Removes unused local variables from a method and returns the count of removed local variables.
         /// </summary>
         /// <param name="method">The method to analyze and remove unused local variables from.</param>
+        /// <param name="unusedVariableNames">A list to store the names of unused variables.</param>
         /// <returns>The count of unused local variables removed from the method.</returns>
-        private static int RemoveUnusedLocalVariables(MethodDefinition method)
+        private static int RemoveUnusedLocalVariables(MethodDefinition method, List<string> unusedVariableNames)
         {
             int unusedLocalsCount = 0;
             _ = method.Body.GetILProcessor();
@@ -62,6 +68,7 @@ namespace Analyzer.Pipeline
                 if (!IsLocalVariableUsed(localVar, method.Body.Instructions))
                 {
                     unusedLocals.Add(localVar);
+                    unusedVariableNames.Add(localVar.ToString()); 
                 }
             }
 
