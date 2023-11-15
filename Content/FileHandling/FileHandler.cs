@@ -14,6 +14,7 @@ using Content.Encoder;
 using Networking.Utils;
 using Networking.Communicator;
 using System.Diagnostics;
+using Networking.Serialization;
 
 namespace Content.FileHandling
 {
@@ -57,9 +58,18 @@ namespace Content.FileHandling
             // extracting paths of all dll files from the given directory
             string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
             string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
+
+            // Encode RecieveEventType
+            Dictionary<string, string> sendData = new()
+            {
+                { "EventType", "File" },
+                { "Data", encoding }
+            };
+            encoding = Serializer.Serialize(sendData);
+
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
-            _fileSender.Send(encoding, EventType.AnalyseFile(), "server");
+            _fileSender.Send(encoding, "Content", "server");
         }
 
         /// <summary>
@@ -69,6 +79,14 @@ namespace Content.FileHandling
         /// <returns></returns>
         public void HandleRecieve(string encoding)
         {
+            Dictionary<string, string> recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
+            if (recvData["EventType"] != "File")
+            {
+                // Packet not meant for this module
+                return;
+            }
+
+            encoding = recvData["Data"];
             _fileEncoder.DecodeFrom(encoding);
             string sessionID = _fileEncoder.sessionID;
             string sessionPath = sessionID;

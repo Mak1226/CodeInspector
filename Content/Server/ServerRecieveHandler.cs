@@ -19,35 +19,6 @@ namespace Content.Server
         {
             _server = server;
         }
-        public string HandleAnalyserResult(Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleChatMessage(Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleClientJoined(Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleClientLeft(Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleConnectionRequest(Message data)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Recieved file
@@ -58,6 +29,11 @@ namespace Content.Server
         {
             _server.HandleRecieve(data.Data, data.SenderID);
             return "";
+        }
+
+        public string HandleMessageRecv(Message message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
