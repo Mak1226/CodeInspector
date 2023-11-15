@@ -119,34 +119,5 @@ namespace Analyzer.Pipeline
             Byte[] bytes = null;
             return bytes;
         }
-        /// <summary>
-        /// </summary>
-        /// <returns>A list of analyzer results, where each result represents the results of running one analyzer</returns>
-        //public Dictionary<string, List<AnalyzerResult> Start()
-        //{
-            //Dictionary<string, List<AnalyzerResult> results = new();
-
-            //foreach(var option in _teacherOptions)
-            //{
-            //    if(option.Value == true)
-            //    {
-            //        AnalyzerResult currentResult;
-
-            //        try
-            //        {
-            //            currentResult = _allAnalyzers[option.Key].AnalyzeSingleDLL();
-            //        }
-            //        catch(Exception _)
-            //        {
-            //            currentResult = new AnalyzerResult(option.Key.ToString(), 1, "Internal error, analyzer failed to execute");
-            //        }
-
-            //        results.Add(currentResult);
-            //    }
-            //}
-
-            //return results;
-        //}
-
     }
 }
