@@ -10,6 +10,7 @@
  * Description  = Unit tests for IFileHandler
 *****************************************************************************/
 using Content.FileHandling;
+using ContentUnitTesting.ContentTest;
 using Networking.Communicator;
 
 namespace ContentUnitTesting
@@ -69,6 +70,25 @@ namespace ContentUnitTesting
             int previousMessageCount = _fileSender.CheckMessageCount();
             fileHandler.Upload(tempDirectory, "TestSessionId");
             Assert.IsTrue((_fileSender.CheckMessageCount() - previousMessageCount) == 1);
+            Directory.Delete(tempDirectory, true);
+
+        }
+
+        [TestMethod]
+        public void FileSendRecieveTest()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
+            Directory.CreateDirectory(tempDirectory + "\\subdir1");
+            File.WriteAllText(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"), "DLL Content 3");
+
+            IFileHandler fileHandler = new FileHandler(_fileSender);
+            fileHandler.Upload(tempDirectory, "TestSessionId");
+
+            fileHandler.HandleRecieve(_fileSender.serializedObj); 
+
             Directory.Delete(tempDirectory, true);
 
         }

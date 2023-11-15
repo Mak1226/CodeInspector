@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ContentUnitTesting
+namespace ContentUnitTesting.ContentTest
 {
     public class MockCommunicator : ICommunicator
     {
         private int _sentMessageCounter;
+        public string serializedObj { get; private set; }
         public MockCommunicator()
         {
             _sentMessageCounter = 0;
@@ -18,6 +19,7 @@ namespace ContentUnitTesting
         public void Send(string serializedObj, string eventType, string? destID = null)
         {
             _sentMessageCounter++;
+            this.serializedObj = serializedObj;
         }
         public int CheckMessageCount()
         {
