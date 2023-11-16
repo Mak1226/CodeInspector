@@ -43,7 +43,6 @@ namespace Analyzer.Pipeline
             if (IncorrectAbstractClassName(parsedDLLFile))
             {
                 verdict = 0; // If there is any abstract class not meeting the criteria, set the score to 0
-                Console.WriteLine("INCORRECT ABSSTRACT CLASS NAMING");
             }
 
             else
@@ -90,6 +89,7 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
+                        Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
                         return true; // If any abstract class does not meet the criteria, return true
                     }
                 }
