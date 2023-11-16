@@ -132,7 +132,7 @@ namespace Analyzer.Pipeline
             verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(analyzerID, verdict, errorMessage == "" ? "No violations found." : errorMessage);
         }
     }
 }
