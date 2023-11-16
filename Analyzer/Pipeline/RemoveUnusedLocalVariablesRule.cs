@@ -74,9 +74,9 @@ namespace Analyzer.Pipeline
             foreach (VariableDefinition localVar in unusedLocals)
             {
                 // Remove the instructions that load or store the unused local variable
-                RemoveUnusedLocalVariableInstructions(localVar, method.Body.Instructions);
+                //RemoveUnusedLocalVariableInstructions(localVar, method.Body.Instructions);
                 // Remove the local variable definition from the method
-                method.Body.Variables.Remove(localVar);
+                //method.Body.Variables.Remove(localVar);
                 unusedLocalsCount++;
             }
 

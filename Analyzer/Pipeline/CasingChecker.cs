@@ -29,7 +29,7 @@ namespace Analyzer.Pipeline
             errorMessage = "";
             verdict = 1;
             // The constructor can be used for any necessary setup or initialization.
-            analyzerID = "Custom2";
+            analyzerID = "112";
         }
 
         /// <summary>
@@ -94,35 +94,35 @@ namespace Analyzer.Pipeline
             return hasMistake;
         }
 
-        // check if name is PascalCased
-       private static bool IsPascalCase(string name)
-       {
-       if (String.IsNullOrEmpty (name))
-       return true;
+            // check if name is PascalCased
+        private static bool IsPascalCase(string name)
+        {
+           if (String.IsNullOrEmpty (name))
+           return true;
 
-       return Char.IsUpper (name [0]);
-       }
+           return Char.IsUpper (name [0]);
+           }
 
-       // check if name is camelCased
-       private static bool IsCamelCase (string name)
-       {
-       if (String.IsNullOrEmpty (name))
-       return true;
+           // check if name is camelCased
+           private static bool IsCamelCase (string name)
+           {
+           if (String.IsNullOrEmpty (name))
+           return true;
 
-       return Char.IsLower (name [0]);
-       }
+           return Char.IsLower (name [0]);
+           }
 
-       private bool AreParametersCamelCased(MethodDefinition method)
-            {
-                foreach (var param in method.Parameters)
-                {
-                    if (!IsCamelCase(param.Name))
+           private bool AreParametersCamelCased(MethodDefinition method)
+           {
+                    foreach (var param in method.Parameters)
                     {
-                        return false;
+                        if (!IsCamelCase(param.Name))
+                        {
+                            return false;
+                        }
                     }
-                }
-                return true;
-            }
+                    return true;
+           }
 
         }
 }

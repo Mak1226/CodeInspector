@@ -22,7 +22,7 @@ namespace Analyzer.Pipeline
         {
             errorMessage = "";
             verdict = 1;
-            analyzerID = "105";
+            analyzerID = "116";
         }
 
         /// <summary>

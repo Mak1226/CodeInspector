@@ -30,6 +30,12 @@ namespace Analyzer.Tests
             teacherOptions[108] = true;
             teacherOptions[109] = true;
             teacherOptions[110] = true;
+            teacherOptions[111] = true;
+            teacherOptions[112] = true;
+            teacherOptions[113] = true;
+            teacherOptions[114] = true;
+            teacherOptions[115] = true;
+            teacherOptions[116] = true;
 
             analyzer.Configure(teacherOptions);
 
