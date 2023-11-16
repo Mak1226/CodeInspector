@@ -29,7 +29,7 @@ namespace Content.Server
         {
             server = _server;
             ServerRecieveHandler recieveHandler = new ServerRecieveHandler(this);
-            server.Subscribe(recieveHandler, "Content");
+            server.Subscribe(recieveHandler, "Content-Files");
 
             fileHandler = new FileHandler(server);
 
@@ -63,8 +63,7 @@ namespace Content.Server
             analyzerResult = analyzer.Run();
 
             // Send Analysis results to client
-            //server.Send(serializer.Serialize(analyzerResult), EventType.AnalyserResult(), clientID);
-            // ClientID is currently not implemented
+            server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
 
             // Notification for viewModel
             AnalyzerResultChanged?.Invoke(analyzerResult);

@@ -23,17 +23,12 @@ namespace Content.Server
         /// <summary>
         /// Recieved file
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        public string HandleFile(Message data)
-        {
-            _server.HandleRecieve(data.Data, data.SenderID);
-            return "";
-        }
-
         public string HandleMessageRecv(Message message)
         {
-            throw new NotImplementedException();
+            _server.HandleRecieve(message.Data, message.SenderID);
+            return "";
         }
     }
 }

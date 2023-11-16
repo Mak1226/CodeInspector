@@ -15,6 +15,7 @@ using Networking.Utils;
 using Networking.Communicator;
 using System.Diagnostics;
 using Networking.Serialization;
+using System.Text.Json;
 
 namespace Content.FileHandling
 {
@@ -69,7 +70,7 @@ namespace Content.FileHandling
 
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
-            _fileSender.Send(encoding, "Content", "server");
+            _fileSender.Send(encoding, "Content-Files", "server");
         }
 
         /// <summary>
@@ -79,7 +80,15 @@ namespace Content.FileHandling
         /// <returns></returns>
         public void HandleRecieve(string encoding)
         {
-            Dictionary<string, string> recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
+            Dictionary<string, string> recvData;
+            try
+            {
+                recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
+            }
+            catch (JsonException) 
+            {
+                return;
+            }
             if (recvData["EventType"] != "File")
             {
                 // Packet not meant for this module
