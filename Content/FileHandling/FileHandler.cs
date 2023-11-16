@@ -55,9 +55,27 @@ namespace Content.FileHandling
         {
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
-            string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
-            string encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
-            _filesList = dllFiles.ToList();
+            // Check if the path is a directory (folder)
+            string encoding;
+            if (Directory.Exists(filepath))
+            {
+                string[] dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories);
+                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
+                _filesList = dllFiles.ToList();
+            }
+            // Check if the path is a file
+            else if (File.Exists(filepath))
+            {
+                List<string> dllFiles = new List<string> { filepath };
+                encoding = _fileEncoder.GetEncoded(dllFiles, filepath, sessionID);
+                // Do something specific for files
+            }
+            else
+            {
+                Trace.WriteLine("Not a valid dll or directory with dll");
+                encoding = "";
+            }
+            
             Trace.Write(encoding);
             _fileSender.Send(encoding, EventType.AnalyseFile(), "server");
         }
