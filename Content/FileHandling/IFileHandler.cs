@@ -23,7 +23,8 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="filepath">path to file</param>
         /// <param name="sessionID">ID of this session</param>
-        void Upload(string filepath, string sessionID);
+        /// <returns>Encoded string containing the files and other details encoded</returns>
+        string HandleSend(string filepath, string sessionID);
 
         /// <summary>
         /// Handle a received file by saving it to a directory

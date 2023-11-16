@@ -11,8 +11,6 @@
  *****************************************************************************/
 
 using Content.Encoder;
-using Networking.Utils;
-using Networking.Communicator;
 using System.Diagnostics;
 using Networking.Serialization;
 using System.Text.Json;
@@ -26,18 +24,16 @@ namespace Content.FileHandling
     public class FileHandler : IFileHandler
     {
         private List<string> _filesList;
-        private ICommunicator _fileSender;
         private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
         /// <summary>
         /// saves files in //data/
         /// </summary>
-        public FileHandler(ICommunicator fileSender)
+        public FileHandler()
         {
             _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
-            _fileSender = fileSender;
         }
         /// <summary>
         /// Retrieves a list of file paths representing the files stored or managed by the file handler.
@@ -53,7 +49,7 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="filepath"></param>
         /// <param name="sessionID"></param>
-        public void Upload(string filepath, string sessionID)
+        public string HandleUpload(string filepath, string sessionID)
         {
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
@@ -70,7 +66,7 @@ namespace Content.FileHandling
 
             _filesList = dllFiles.ToList();
             Trace.Write(encoding);
-            _fileSender.Send(encoding, "Content-Files", "server");
+            return encoding;
         }
 
         /// <summary>
