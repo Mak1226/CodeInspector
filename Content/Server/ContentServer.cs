@@ -16,7 +16,7 @@ namespace Content.Server
         IAnalyzer analyzer;
         AnalyzerResultSerializer serializer;
 
-        public Action<Dictionary<string, List<AnalyzerResult>>> AnalyzerResultChanged;
+        public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult {  get; private set; }
 
@@ -36,6 +36,8 @@ namespace Content.Server
             analyzer = _analyzer;
 
             serializer = new AnalyzerResultSerializer();
+
+            analyzerResult = new();
         }
 
         /// <summary>
@@ -55,7 +57,7 @@ namespace Content.Server
             analyzerResult = analyzer.Run();
 
             // Send Analysis results to client
-            //server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
+            server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
 
             // Notification for viewModel
             AnalyzerResultChanged?.Invoke(analyzerResult);

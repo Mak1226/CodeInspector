@@ -1,63 +1,35 @@
 ﻿using Analyzer;
+using Content.Server;
 using Networking.Communicator;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Content.Server
+namespace Content.Client
 {
-    public class AnalyzerConfigOption
-    {
-        public int AnalyzerId { get; set; }
-        public string Description { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
-    /// <summary>
-    /// Viewmodel for the Content Server model
-    /// </summary>
-    public class ContentServerViewModel : INotifyPropertyChanged
+    public class ContentClientViewModel
     {
         private Dictionary<string, List<AnalyzerResult>> analyzerResults;
-        private ContentServer contentServer;
-        private List<AnalyzerConfigOption> configOptionsList;
-        //private Tuple<string, List<Tuple<string, int, string>>> dataList;
-
+        private ContentClient contentClient;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
-        public ContentServerViewModel(ICommunicator server)
+        public ContentClientViewModel(ICommunicator client, string sessionID)
         {
-            contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer());
-            contentServer.AnalyzerResultChanged += (result) =>
+            contentClient = new ContentClient(client, sessionID);
+            contentClient.AnalyzerResultChanged += (result) =>
             {
                 analyzerResults = result;
-                //UpdateDataList(analyzerResults);
                 OnPropertyChanged(nameof(analyzerResults));
                 OnPropertyChanged(nameof(DataList));
             };
-
-            // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
-            configOptionsList = new List<AnalyzerConfigOption>();
-            foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
-            {
-
-                configOptionsList.Add(new AnalyzerConfigOption
-                {
-                    AnalyzerId = option.Item1,
-                    Description = option.Item2,
-                    IsSelected = false // Set the default value for IsSelected as needed
-                });
-            }
-            analyzerResults = contentServer.analyzerResult;
-        }
-
-        public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions)
-        {
-            // Call Analyzer.Configure
-            contentServer.Configure(teacherOptions);
+            analyzerResults = contentClient.analyzerResult;
         }
 
         /// <summary>
@@ -94,12 +66,6 @@ namespace Content.Server
             }
             set { throw new NotImplementedException(); }
 
-        }
-
-        public List<AnalyzerConfigOption> ConfigOptionsList
-        {
-            get { return configOptionsList; }
-            set { configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
         }
 
         private void OnPropertyChanged(string propertyName)

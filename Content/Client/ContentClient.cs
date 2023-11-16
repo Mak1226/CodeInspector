@@ -10,6 +10,8 @@
  * Description = Class that represents a client for handling file uploads.
  *****************************************************************************/
 
+using Analyzer;
+using Content.Encoder;
 using Content.FileHandling;
 using Networking.Communicator;
 
@@ -23,6 +25,11 @@ namespace Content.Client
         ICommunicator _client;
         IFileHandler _fileUploader;
         string _sessionID;
+        AnalyzerResultSerializer _serializer;
+
+        public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+        public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
+
         /// <summary>
         /// Initializes a new instance of the ContentClient class.
         /// </summary>
@@ -31,7 +38,11 @@ namespace Content.Client
             _client = client;
             _fileUploader = new FileHandler();
             _sessionID = sessionID;
+            _serializer = new AnalyzerResultSerializer();
+
+            analyzerResult = new();
         }
+
         /// <summary>
         /// Handles the upload of files from a folder to the folder specified for that session.
         /// </summary>
@@ -40,6 +51,12 @@ namespace Content.Client
         {
             string encoding = _fileUploader.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
+        }
+
+        public void HandleReceive(string encoding)
+        {
+            analyzerResult = _serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(encoding);
+            AnalyzerResultChanged?.Invoke(analyzerResult);
         }
     }
 }
