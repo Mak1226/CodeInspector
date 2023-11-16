@@ -1,4 +1,5 @@
-﻿using Analyzer.Pipeline;
+﻿using Analyzer.DynamicAnalyzer;
+using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
 
@@ -9,21 +10,29 @@ namespace Analyzer
     {
         private List<string> _pathOfDLLFilesOfStudent;
         private IDictionary<int, bool> _teacherOptions;
+        private List<string>? _pathOfDLLFilesOfCustomAnalyzers;
 
         public Analyzer()
         {
             _pathOfDLLFilesOfStudent = new List<string>();
             _teacherOptions = new Dictionary<int, bool>();
+            _pathOfDLLFilesOfCustomAnalyzers = new List<string>();
+            
         }
 
-        public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag)
+        public void Configure(IDictionary<int, bool> TeacherOptions)
         {
             _teacherOptions = TeacherOptions;
         }
 
-        public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher)
+        public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
+        }
+
+        public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
+        {
+            _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
         }
 
         public Dictionary<string, List<AnalyzerResult>> Run()
@@ -43,6 +52,11 @@ namespace Analyzer
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
 
             return _customAnalyzerPipeline.GenerateClassDiagram(removableNamespaces);
+        }
+
+        public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
+        {
+            return  new InvokeCustomAnalyzers(_pathOfDLLFilesOfCustomAnalyzers, _pathOfDLLFilesOfStudent).Start();
         }
     }
 }
