@@ -13,8 +13,11 @@
 using Content.Client;
 using Networking.Communicator;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace ContentPage
 {
@@ -74,56 +77,30 @@ namespace ContentPage
         //}
         private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
-            openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
+            //Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            //openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
+            //openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
 
-            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            //System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            OpenFileDialog ofd = new OpenFileDialog();
 
-            bool isFolderSelected = false;
-            string selectedPath = null;
+            ofd.CheckFileExists = false;
+            string defaultFilename = "This folder";
+            ofd.FileName = defaultFilename;
+            DialogResult result = ofd.ShowDialog();
 
-            // Show dialog to choose between file and folder
-            MessageBoxResult dialogResult = MessageBox.Show("Choose 'Yes' to select a file or 'No' to select a folder.", "File or Folder?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (dialogResult == MessageBoxResult.Yes)
+            if (result == DialogResult.OK)
             {
-                // File selection
-                bool? response = openFileDialog.ShowDialog();
+                string folderPath = ofd.FileName;
+                Trace.WriteLine(folderPath);
 
-                if (response == true)
-                {
-                    string filePath = openFileDialog.FileName;
-                    Trace.WriteLine(filePath);
-                    // Process the selected file
-                    // ...
-                }
+                // Pass folder path to Content Client
+                _uploadClient.HandleUpload(folderPath);
             }
-            else if (dialogResult == MessageBoxResult.No)
-            {
-                // Folder selection
-                System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+            //bool isFolderSelected = false;
+            //string selectedPath = null;
 
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    isFolderSelected = true;
-                    selectedPath = folderDialog.SelectedPath;
-                    Trace.WriteLine(selectedPath);
-                    // Process the selected folder
-                    // ...
-                }
-            }
 
-            // Handle the selected file or folder based on 'isFolderSelected' and 'selectedPath'
-            if (isFolderSelected)
-            {
-                _uploadClient.HandleUpload(selectedPath);
-            }
-            else
-            {
-                // Handle the file selection
-                // _uploadClient.HandleUpload(filePath);
-            }
         }
 
 
