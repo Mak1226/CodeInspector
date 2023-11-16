@@ -59,7 +59,6 @@ namespace Analyzer.Pipeline
         private static int RemoveUnusedLocalVariables(MethodDefinition method, List<string> unusedVariableNames)
         {
             int unusedLocalsCount = 0;
-            _ = method.Body.GetILProcessor();
             List<VariableDefinition> unusedLocals = new();
 
             foreach (VariableDefinition localVar in method.Body.Variables)
@@ -68,7 +67,7 @@ namespace Analyzer.Pipeline
                 if (!IsLocalVariableUsed(localVar, method.Body.Instructions))
                 {
                     unusedLocals.Add(localVar);
-                    unusedVariableNames.Add(localVar.ToString()); 
+                    unusedVariableNames.Add(localVar.ToString()); // Add the name to the list
                 }
             }
 
@@ -94,19 +93,28 @@ namespace Analyzer.Pipeline
         {
             foreach (Instruction instruction in instructions)
             {
-                // Check if the current instruction is a load (Ldloc) or store (Stloc) operation for a local variable
-                if (instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Stloc)
+                if (UsesLocalVariable(instruction, localVar))
                 {
-                    VariableDefinition localVariableReference = (VariableDefinition)instruction.Operand;
-                    if (localVariableReference == localVar)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
             return false;
         }
+
+        private static bool UsesLocalVariable(Instruction instruction, VariableDefinition localVar)
+        {
+            if (instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Ldloca || instruction.OpCode == OpCodes.Stloc)
+            {
+                if (instruction.Operand == localVar)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         /// <summary>
         /// Removes instructions that reference a specific unused local variable from a collection of instructions.

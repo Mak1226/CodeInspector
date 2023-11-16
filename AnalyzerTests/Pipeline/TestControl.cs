@@ -10,10 +10,10 @@ using Analyzer.Parsing;
 namespace Analyzer.Pipeline.Tests
 {
     [TestClass()]
-    public class TestDepth
+    public class TestControl
     {
         [TestMethod()]
-        public void TestDepthOfInh()
+        public void Test1()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
@@ -26,7 +26,7 @@ namespace Analyzer.Pipeline.Tests
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
-            DepthOfInheritance analyzer = new(dllFiles);
+            ReviewUselessControlFlowRule analyzer = new(dllFiles);
 
             // Run the analyzer
             var result = analyzer.AnalyzeAllDLLs();
