@@ -127,7 +127,14 @@ namespace Networking.Communicator
             //{
             //    eventHandler.HandleMessageRecv(message);
             //}
-            _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            try
+            {
+                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            }
+            catch
+            {
+                
+            }
 
         }
 

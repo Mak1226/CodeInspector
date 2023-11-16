@@ -18,14 +18,14 @@ namespace ContentPage
         private void FileUploadButton_Click(object sender, RoutedEventArgs e)
         {
             ICommunicator client = CommunicationFactory.GetClient();
-            client.Start("localhost", 12399, "TestClient");
+            client.Start("localhost", 12399, "TestClient", "Content");
             Page uploadPage = new FileUpload(client, "TestClient");
             MainFrame.Navigate(uploadPage);
         }
         private void ResultPageButton_Click(object sender, RoutedEventArgs e)
         {
             ICommunicator server = CommunicationFactory.GetServer();
-            server.Start(null, null, ID.GetServerID());
+            server.Start(null, null, ID.GetServerID(), "Content");
             Page resultPage = new ResultPage(server);
             MainFrame.Navigate(resultPage);
         }

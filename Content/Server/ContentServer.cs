@@ -55,7 +55,7 @@ namespace Content.Server
             analyzerResult = analyzer.Run();
 
             // Send Analysis results to client
-            server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
+            //server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
 
             // Notification for viewModel
             AnalyzerResultChanged?.Invoke(analyzerResult);
