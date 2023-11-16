@@ -26,7 +26,7 @@
         <StackPanel Orientation="Vertical">
 
             <!-- Configuration Options Table -->
-            <DataGrid Height="Auto" HorizontalAlignment="Left" Name="configOptionsGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding ConfigOptionsList}">
+            <DataGrid Height="Auto" HorizontalAlignment="Left" Name="configOptionsGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding ConfigOptionsList}" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}" />
                     <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}" />

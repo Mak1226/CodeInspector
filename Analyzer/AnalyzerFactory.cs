@@ -19,6 +19,7 @@ namespace Analyzer
                 Tuple.Create("105", "Prefix checker I should be capital"),
                 Tuple.Create("106", "Avoid unused local variables"),
                 Tuple.Create("107", "Check if not implemented method is there"),
+                
             };
 
             return analyzers;
