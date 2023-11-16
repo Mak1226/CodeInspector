@@ -11,6 +11,10 @@ namespace Networking.Utils
         {
             return "broadcast";
         }
+        public static string GetNetworkingID()
+        {
+            return "networking";
+        }
     }
 }
 
