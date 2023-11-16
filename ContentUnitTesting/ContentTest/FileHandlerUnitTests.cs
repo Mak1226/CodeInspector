@@ -11,7 +11,7 @@
 *****************************************************************************/
 using Content.FileHandling;
 
-namespace ContentUnitTesting
+namespace ContentUnitTesting.ContentTest
 {
     /// <summary>
     /// Class to test interface IFileHandler
