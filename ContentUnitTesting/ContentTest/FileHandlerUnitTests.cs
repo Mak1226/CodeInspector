@@ -10,8 +10,6 @@
  * Description  = Unit tests for IFileHandler
 *****************************************************************************/
 using Content.FileHandling;
-using ContentUnitTesting.ContentTest;
-using Networking.Communicator;
 
 namespace ContentUnitTesting
 {
