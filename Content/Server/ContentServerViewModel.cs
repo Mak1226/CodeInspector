@@ -68,11 +68,17 @@ namespace Content.Server
         /// </summary>
         public List<Tuple<string, int, string>> DataList
         {
-            get
+            //get
+            //{
+            //    return dataList;
+            //}
+            //set { throw new NotImplementedException(); }
+            get => dataList;
+            set
             {
-                return dataList;
+                dataList = value;
+                OnPropertyChanged(nameof(DataList));
             }
-            set { throw new NotImplementedException(); }
 
         }
 
