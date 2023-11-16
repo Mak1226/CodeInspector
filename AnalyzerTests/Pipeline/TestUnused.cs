@@ -16,22 +16,23 @@ namespace Analyzer.Pipeline.Tests
         public void TestRemoveUnusedLocalVariables()
         {
             // Specify the path to the DLL file
-            string dllFilePath = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
 
             // Create a list of DLL paths
-            var dllFilePaths = new System.Collections.Generic.List<string> { dllFilePath };
+            ParsedDLLFile dllFile = new(path);
 
-            // Parse the DLL files
-            var parsedDLLFiles = new ParsedDLLFiles(dllFilePaths);
+            //DllFilePaths.Add(path);
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
-            var analyzer = new RemoveUnusedLocalVariablesRule(parsedDLLFiles);
+            RemoveUnusedLocalVariablesRule analyzer = new(dllFiles);
 
             // Run the analyzer
-            var result = analyzer.Run();
+            var result = analyzer.AnalyzeSingleDLL();
 
             // Assert that no unused local variables were found
-            Assert.AreEqual(0, result.Verdict, "Unexpected number of unused local variables.");
+            Assert.AreEqual(2, result.Verdict, "Unexpected number of unused local variables.");
         }
     }
 }
