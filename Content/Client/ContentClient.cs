@@ -38,7 +38,7 @@ namespace Content.Client
         /// <param name="folderPath">The path to the folder containing files to upload.</param>
         public void HandleUpload(string folderPath)
         {
-            string encoding = _fileUploader.HandleSend(folderPath, _sessionID);
+            string encoding = _fileUploader.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
         }
     }

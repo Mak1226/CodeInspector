@@ -31,7 +31,7 @@ namespace Content.Server
             ServerRecieveHandler recieveHandler = new ServerRecieveHandler(this);
             server.Subscribe(recieveHandler, "Content-Files");
 
-            fileHandler = new FileHandler(server);
+            fileHandler = new FileHandler();
 
             analyzer = _analyzer;
 
