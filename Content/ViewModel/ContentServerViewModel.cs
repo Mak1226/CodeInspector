@@ -2,6 +2,7 @@
 using Content.Model;
 using Networking.Communicator;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Content.ViewModel
 {
@@ -43,7 +44,6 @@ namespace Content.ViewModel
             configOptionsList = new List<AnalyzerConfigOption>();
             foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
             {
-
                 configOptionsList.Add(new AnalyzerConfigOption
                 {
                     AnalyzerId = option.Item1,
@@ -92,7 +92,6 @@ namespace Content.ViewModel
                 }
                 return outList;
             }
-            set { throw new NotImplementedException(); }
 
         }
 
