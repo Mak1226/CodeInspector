@@ -13,8 +13,11 @@
 using Content.Client;
 using Networking.Communicator;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace ContentPage
 {
@@ -72,8 +75,33 @@ namespace ContentPage
         //        _uploadClient.HandleUpload(folderPath);
         //    }
         //}
-        
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            //openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
+            //openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
 
+            //System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.CheckFileExists = false;
+            string defaultFilename = "This folder";
+            ofd.FileName = defaultFilename;
+            DialogResult result = ofd.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string folderPath = ofd.FileName;
+                Trace.WriteLine(folderPath);
+
+                // Pass folder path to Content Client
+                _uploadClient.HandleUpload(folderPath);
+            }
+            //bool isFolderSelected = false;
+            //string selectedPath = null;
+
+
+        }
 
 
 
