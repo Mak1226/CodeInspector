@@ -14,20 +14,23 @@ namespace Analyzer.Pipeline
         private int verdict;
         private readonly string analyzerID;
 
-        public ArrayFieldsShouldNotBeReadOnlyRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public ArrayFieldsShouldNotBeReadOnlyRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             errorMessage = "";
             verdict = 1;
-            analyzerID = "arrayFieldsShouldNotBeReadOnly";
+            analyzerID = "106";
         }
 
         /// <summary>
         /// Runs the analysis to check for readonly array fields in classes.
         /// </summary>
         /// <returns>An <see cref="AnalyzerResult"/> based on the analysis.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            CheckForReadOnlyArrayFields();
+            errorMessage = "";
+            verdict = 1;
+
+            CheckForReadOnlyArrayFields(parsedDLLFile);
 
             // If no errors, add a message indicating everything looks fine
             if (string.IsNullOrEmpty(errorMessage))
@@ -41,9 +44,9 @@ namespace Analyzer.Pipeline
         /// <summary>
         /// Checks each class for readonly array fields.
         /// </summary>
-        private void CheckForReadOnlyArrayFields()
+        private void CheckForReadOnlyArrayFields(ParsedDLLFile parsedDLLFile)
         {
-            foreach (ParsedClassMonoCecil cls in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
                 foreach (FieldDefinition field in cls.FieldsList)
                 {

@@ -41,6 +41,7 @@ namespace Analyzer.Parsing
         {
             _typeObj = type;
             _name = type.Name;
+
             _constructors = new List<MethodDefinition>();
             _methods = new List<MethodDefinition>();
             _interfaces = new List<InterfaceImplementation>();
@@ -375,6 +376,5 @@ namespace Analyzer.Parsing
         {
             get { return _parentClass; }
         }
-
     }
 }

@@ -24,7 +24,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the AbstractTypeNoPublicConstructor analyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles"></param>
-        public AbstractTypeNoPublicConstructor(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public AbstractTypeNoPublicConstructor(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessage = "";
             _verdict = 1;
@@ -35,11 +35,11 @@ namespace Analyzer.Pipeline
         /// 
         /// </summary>
         /// <returns>List of all abstract types that have public constructors.</returns>
-        private List<Type> FindAbstractTypeWithPublicConstructor() 
+        private List<Type> FindAbstractTypeWithPublicConstructor(ParsedDLLFile parsedDLLFile) 
         {
             List<Type> abstractTypesWithPublicConstructors = new List<Type>();  // List which stores all abstract types that have public constructors
             // Loop over all classes in the provided DLLs
-            foreach (ParsedClass classObj in parsedDLLFiles.classObjList)
+            foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
                 if (classType.GetTypeInfo().IsAbstract)
@@ -89,9 +89,12 @@ namespace Analyzer.Pipeline
         /// 
         /// </summary>
         /// <returns></returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            List<Type> abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor();
+            _errorMessage = "";
+            _verdict = 1;
+
+            List<Type> abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor(parsedDLLFile);
             if (abstractTypesWithPublicConstructor.Count > 0)
             {
                 _verdict = 0;
