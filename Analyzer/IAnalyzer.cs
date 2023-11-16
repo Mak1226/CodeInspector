@@ -17,14 +17,16 @@ namespace Analyzer
         /// </summary>
         /// <param name="TeacherOptions">A dictionary of teacher-specific options.</param>
         /// <param name="TeacherFlag">A flag indicating whether the analyzer is being extended by a teacher.</param>
-        public void Configure(IDictionary<int, bool> TeacherOptions, bool TeacherFlag);
+        public void Configure(IDictionary<int, bool> TeacherOptions);
 
         /// <summary>
         /// Loads DLL files from the student and teacher for analysis.
         /// </summary>
         /// <param name="PathOfDLLFilesOfStudent">A list of file paths for the student's DLL files.</param>
         /// <param name="PathOfDLLFileOfTeacher">The file path for the teacher's DLL file.</param>
-        public void LoadDLLFile(List<string> PathOfDLLFilesOfStudent, string? PathOfDLLFileOfTeacher);
+        public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent);
+
+        public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers);
 
         /// <summary>
         /// Runs the analysis and returns a list of <see cref="AnalyzerResult"/> objects.
@@ -40,5 +42,7 @@ namespace Analyzer
         /// Generates a relationship graph based on the loaded files.
         /// </summary>
         public Byte[] GetRelationshipGraph(List<string> removableNamespaces);
+
+        public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers();
     }
 }
