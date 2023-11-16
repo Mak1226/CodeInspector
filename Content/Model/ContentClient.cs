@@ -15,7 +15,7 @@ using Content.Encoder;
 using Content.FileHandling;
 using Networking.Communicator;
 
-namespace Content.Client
+namespace Content.Model
 {
     /// <summary>
     /// Class that handles communication between ContentPage and Content

@@ -1,8 +1,7 @@
 ﻿using Networking.Events;
 using Networking.Models;
-using System.Net.Sockets;
 
-namespace Content.Server
+namespace Content.Model
 {
     /// <summary>
     /// Notifier for message recieved by server

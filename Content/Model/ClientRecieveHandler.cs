@@ -1,12 +1,7 @@
 ﻿using Networking.Events;
 using Networking.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Content.Client
+namespace Content.Model
 {
     internal class ClientRecieveHandler : IEventHandler
     {
@@ -17,7 +12,8 @@ namespace Content.Client
         }
         public string HandleMessageRecv(Message message)
         {
-            _client.HandleRecieve(message.Data);
+            _client.HandleReceive(message.Data);
+            return "";
         }
     }
 }

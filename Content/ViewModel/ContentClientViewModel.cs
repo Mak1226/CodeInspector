@@ -1,16 +1,11 @@
 ﻿using Analyzer;
-using Content.Server;
+using Content.Model;
 using Networking.Communicator;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Content.Client
+namespace Content.ViewModel
 {
-    public class ContentClientViewModel
+    public class ContentClientViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private Dictionary<string, List<AnalyzerResult>> analyzerResults;
         private ContentClient contentClient;
@@ -64,7 +59,7 @@ namespace Content.Client
                 }
                 return outList;
             }
-            set { throw new NotImplementedException(); }
+            set { throw new FieldAccessException(); }
 
         }
 
@@ -74,5 +69,9 @@ namespace Content.Client
         }
 
 
+        public void HandleUpload(string path)
+        {
+            contentClient.HandleUpload(path);
+        }
     }
 }

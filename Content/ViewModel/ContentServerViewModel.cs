@@ -1,9 +1,9 @@
 ﻿using Analyzer;
+using Content.Model;
 using Networking.Communicator;
-using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Content.Server
+namespace Content.ViewModel
 {
     public class AnalyzerConfigOption
     {
@@ -15,7 +15,7 @@ namespace Content.Server
     /// <summary>
     /// Viewmodel for the Content Server model
     /// </summary>
-    public class ContentServerViewModel : INotifyPropertyChanged
+    public class ContentServerViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private Dictionary<string, List<AnalyzerResult>> analyzerResults;
         private ContentServer contentServer;

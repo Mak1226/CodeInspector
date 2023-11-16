@@ -3,7 +3,7 @@ using Content.FileHandling;
 using Content.Encoder;
 using Analyzer;
 
-namespace Content.Server
+namespace Content.Model
 {
 
     /// <summary>
@@ -18,14 +18,14 @@ namespace Content.Server
 
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
-        public Dictionary<string, List<AnalyzerResult>> analyzerResult {  get; private set; }
+        public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
         /// </summary>
         /// <param name="_server">Networking server</param>
         /// <param name="_analyzer">Analyzer</param>
-        public ContentServer(ICommunicator _server, IAnalyzer _analyzer) 
+        public ContentServer(ICommunicator _server, IAnalyzer _analyzer)
         {
             server = _server;
             ServerRecieveHandler recieveHandler = new ServerRecieveHandler(this);
