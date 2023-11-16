@@ -23,7 +23,7 @@ namespace Content.Model
     public class ContentClient
     {
         ICommunicator _client;
-        IFileHandler _fileUploader;
+        IFileHandler _fileHandler;
         string _sessionID;
         AnalyzerResultSerializer _serializer;
 
@@ -36,7 +36,10 @@ namespace Content.Model
         public ContentClient(ICommunicator client, string sessionID)
         {
             _client = client;
-            _fileUploader = new FileHandler();
+            ClientRecieveHandler recieveHandler = new ClientRecieveHandler(this);
+            _client.Subscribe(recieveHandler, "Content-Results");
+
+            _fileHandler = new FileHandler();
             _sessionID = sessionID;
             _serializer = new AnalyzerResultSerializer();
 
@@ -49,7 +52,7 @@ namespace Content.Model
         /// <param name="folderPath">The path to the folder containing files to upload.</param>
         public void HandleUpload(string folderPath)
         {
-            string encoding = _fileUploader.HandleUpload(folderPath, _sessionID);
+            string encoding = _fileHandler.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
         }
 
