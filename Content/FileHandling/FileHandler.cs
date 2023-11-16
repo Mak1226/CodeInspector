@@ -65,7 +65,7 @@ namespace Content.FileHandling
             else if (File.Exists(filepath))
             {
                 dllFiles = new List<string> { filepath };
-                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
+                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
                 // Do something specific for files
             }
             else
