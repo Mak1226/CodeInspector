@@ -1,4 +1,5 @@
 ﻿using Analyzer.Parsing;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Analyzer.Pipeline
         private List<string> _studentDLLFiles;
         private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
         private List<ParsedDLLFile> _parsedDLLFiles;
+        private readonly Dictionary<string, List<AnalyzerResult>> _results;
+        private readonly object _lock;
 
         public MainPipeline()
         {
@@ -25,6 +28,8 @@ namespace Analyzer.Pipeline
             _teacherOptions = new Dictionary<int, bool> ();
             _studentDLLFiles = new List<string>();
             _parsedDLLFiles = new List<ParsedDLLFile> ();
+            _results = new();
+            _lock = new object();
         }
 
         /// <summary>
@@ -69,6 +74,31 @@ namespace Analyzer.Pipeline
             _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
         }
 
+        private void RunAnalyzer (int analyzerID)
+        {
+            Dictionary<string, AnalyzerResult> currentAnalyzerResult;
+
+            try
+            {
+                currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
+            }
+            catch (Exception _)
+            {
+                currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
+
+                foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
+                {
+                    currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(analyzerID.ToString(), 1, "Internal error, analyzer failed to execute");
+                }
+            }
+
+            foreach (KeyValuePair<string, AnalyzerResult> dllResult in currentAnalyzerResult)
+            {
+                lock (_lock) {
+                    _results[dllResult.Key].Add(dllResult.Value);
+                }
+            }
+        }
 
         /// <summary>
         /// Starts the pipeline and runs all of the analyzers that have been selected by teacher
@@ -76,41 +106,30 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         public Dictionary<string, List<AnalyzerResult>> Start()
         {
-            Dictionary<string, List<AnalyzerResult>> results = new();
+
+            List<Thread> threads = new();
 
             foreach (ParsedDLLFile file in _parsedDLLFiles)
             {
-                results[file.DLLFileName] = new List<AnalyzerResult>();
+                _results[file.DLLFileName] = new List<AnalyzerResult>();
             }
 
             foreach(KeyValuePair<int,bool> option in _teacherOptions)
             {
                 if(option.Value == true)
                 {
-                    Dictionary<string, AnalyzerResult> currentAnalyzerResult;
-
-                    try
-                    {
-                        currentAnalyzerResult = _allAnalyzers[option.Key].AnalyzeAllDLLs();
-                    }
-                    catch (Exception _)
-                    {
-                        currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
-
-                        foreach(ParsedDLLFile dllFile in _parsedDLLFiles)
-                        {
-                            currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(option.Key.ToString(), 1, "Internal error, analyzer failed to execute");
-                        }
-                    }
-
-                    foreach(KeyValuePair<string , AnalyzerResult> dllResult in currentAnalyzerResult)
-                    {
-                        results[dllResult.Key].Add(dllResult.Value);
-                    }
+                    Thread WorkerThread = new Thread(() => RunAnalyzer(option.Key));
+                    WorkerThread.Start();
+                    threads.Add(WorkerThread);
                 }
             }    
 
-            return results;
+            foreach(Thread workerThread in threads)
+            {
+                workerThread.Join();
+            }
+
+            return _results;
         }
 
         public Byte[] GenerateClassDiagram(List<string> removableNamespaces)

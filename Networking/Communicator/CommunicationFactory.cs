@@ -2,9 +2,6 @@
 /// Author:
 /////
 
-using System;
-using System.Diagnostics;
-
 namespace Networking.Communicator
 {
     public static class CommunicationFactory
@@ -13,14 +10,18 @@ namespace Networking.Communicator
         private static readonly Server _server = new();
 
         /// <summary>
-        /// Communication factory
+        /// Gets the server from the communication factory
         /// </summary>
-        /// <param name="isServer">True iff server communicator is requested</param>
-        /// <returns>The requested communicator</returns>
+        /// <returns>The server</returns>
         public static ICommunicator GetServer()
         {
             return _server;
         }
+
+        /// <summary>
+        /// Gets the client from the communication factory
+        /// </summary>
+        /// <returns>The client</returns>
         public static ICommunicator GetClient()
         {
             return _client;

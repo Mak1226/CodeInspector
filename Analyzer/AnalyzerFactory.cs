@@ -21,7 +21,8 @@ namespace Analyzer
                 Tuple.Create(107, "Avoid switch statements"),
                 Tuple.Create(108, "Disposable field should be disposed"),
                 Tuple.Create(109, "Avoid unused local variables"),
-                Tuple.Create(110, "Useless control flow rule")
+                Tuple.Create(110, "Useless control flow rule"),
+
             };
 
             return analyzers;

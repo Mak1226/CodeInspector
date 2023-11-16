@@ -10,10 +10,10 @@ using Analyzer.Parsing;
 namespace Analyzer.Pipeline.Tests
 {
     [TestClass()]
-    public class TestDepth
+    public class TestUnused
     {
         [TestMethod()]
-        public void TestDepthOfInh()
+        public void TestRemoveUnusedLocalVariables()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
@@ -26,7 +26,7 @@ namespace Analyzer.Pipeline.Tests
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
-            DepthOfInheritance analyzer = new(dllFiles);
+            RemoveUnusedLocalVariablesRule analyzer = new(dllFiles);
 
             // Run the analyzer
             var result = analyzer.AnalyzeAllDLLs();
@@ -40,6 +40,8 @@ namespace Analyzer.Pipeline.Tests
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }
 
+            // Assert that no unused local variables were found
+            //Assert.AreEqual(2, result.Verdict, "Unexpected number of unused local variables.");
         }
     }
 }
