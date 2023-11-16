@@ -11,7 +11,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for reviewing and detecting useless control flow in IL code.
     /// </summary>
-    internal class ReviewUselessControlFlowRule : AnalyzerBase
+    public class ReviewUselessControlFlowRule : AnalyzerBase
     {
         public ReviewUselessControlFlowRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {

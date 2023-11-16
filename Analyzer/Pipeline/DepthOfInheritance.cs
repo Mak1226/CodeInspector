@@ -10,7 +10,7 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for calculating the depth of inheritance for classes in DLL files.
     /// </summary>
-    internal class DepthOfInheritance : AnalyzerBase
+    public class DepthOfInheritance : AnalyzerBase
     {
         /// <summary>
         /// Initializes a new instance of the DepthOfInheritance analyzer with parsed DLL files.
