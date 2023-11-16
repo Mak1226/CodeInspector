@@ -75,6 +75,7 @@ namespace Analyzer.Pipeline
             else
             {
                 verdict = 0;
+                Console.WriteLine("INCORRECT PREFIX");
             }
 
             return new AnalyzerResult(analyzerID, verdict, errorMessage);

@@ -66,6 +66,7 @@ namespace Analyzer.Pipeline
                 if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
                 {
                     hasMistake = true;
+                    Console.WriteLine("INCORRECT NAMESPACE NAMING");
                     break; // If a mistake is found, exit the loop
                 }
             }
@@ -80,12 +81,14 @@ namespace Analyzer.Pipeline
                         if (!IsPascalCase(method.Name))
                         {
                             hasMistake = true;
+                            Console.WriteLine("INCORRECT METHOD NAMING");
                             break;
                         }
 
                         if (!AreParametersCamelCased(method))
                         {
                             hasMistake = true;
+                            Console.WriteLine("INCORRECT PARAMETER NAMING");
                             break;
                         }
                     }

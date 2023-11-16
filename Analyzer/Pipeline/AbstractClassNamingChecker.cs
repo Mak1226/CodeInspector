@@ -43,6 +43,7 @@ namespace Analyzer.Pipeline
             if (IncorrectAbstractClassName(parsedDLLFile))
             {
                 verdict = 0; // If there is any abstract class not meeting the criteria, set the score to 0
+                Console.WriteLine("INCORRECT ABSSTRACT CLASS NAMING");
             }
 
             else
