@@ -94,7 +94,10 @@ namespace ContentPage
                 string folderPath = ofd.FileName;
                 Trace.WriteLine(folderPath);
                 // Pass folder path to Content Client
-                _client.HandleUpload(folderPath.Substring(0, folderPath.Length - 12));
+                if (Directory.Exists(folderPath.Substring(0, folderPath.Length - 12)))
+                    _client.HandleUpload(folderPath.Substring(0, folderPath.Length - 12));
+                else
+                    _client.HandleUpload(folderPath);
             }
             //bool isFolderSelected = false;
             //string selectedPath = null;
