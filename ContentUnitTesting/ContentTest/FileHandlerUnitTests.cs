@@ -65,7 +65,7 @@ namespace ContentUnitTesting
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
             Directory.CreateDirectory(tempDirectory + "\\subdir1");
             File.WriteAllText(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"), "DLL Content 3");
-
+            //Console.WriteLine(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"));
             IFileHandler fileHandler = new FileHandler(_fileSender);
             int previousMessageCount = _fileSender.CheckMessageCount();
             fileHandler.Upload(tempDirectory, "TestSessionId");
@@ -87,7 +87,29 @@ namespace ContentUnitTesting
             IFileHandler fileHandler = new FileHandler(_fileSender);
             fileHandler.Upload(tempDirectory, "TestSessionId");
 
-            fileHandler.HandleRecieve(_fileSender.serializedObj); 
+            fileHandler.HandleRecieve(_fileSender.serializedObj);
+            string receivedDirectory = Path.Combine(Environment.CurrentDirectory, "TestSessionId");
+
+            // Check if all files in the "TestSessionId" directory have the same content as the original files
+            foreach (string originalFilePath in Directory.GetFiles(tempDirectory, "*", SearchOption.AllDirectories))
+            {
+                string relativePath = originalFilePath.Substring(tempDirectory.Length+1);
+                string newPathOfFile = Path.Combine(receivedDirectory, relativePath);
+                Assert.IsTrue(File.Exists(newPathOfFile));
+                if (File.Exists(newPathOfFile))
+                {
+                    string originalContent = File.ReadAllText(originalFilePath);
+                    string newContent = File.ReadAllText(newPathOfFile);
+
+                    Assert.AreEqual(originalContent,newContent);
+                    if (originalContent != newContent)
+                    {
+                        Console.WriteLine($"Content mismatch for file: {relativePath}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Content comparison completed.");
 
             Directory.Delete(tempDirectory, true);
 
