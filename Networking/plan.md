@@ -1,4 +1,9 @@
-﻿# events:
+﻿# TODO:
+> Change all instances of *ID to *Id
+
+
+
+# events:
 > file received on the server -> 
 > chat message received
 > analyzer result received on the client
@@ -8,10 +13,24 @@
 
 # to implement: 
 > refactor the code
-> handle parsing multiple packets
-> interface problem
 > remove warnings
+> interchange payload and data names in message
 
+# new pub sub model details:
+
+- each module will subscribe with module Name, and a message handler function
+- message will contain following fields:
+	- source id
+	- dest id
+	- data
+		- will contain event type
+		- and payload to be sent
+	- module Name -> will be directed to this module 
+- each module will have their own event type contract
+	- so if packet is directed to networking team then it will contain one of the events defined by networking team only.
+- each module will give one message handler object only. Its upto the module to handle different event types within the same function itself.
+- by this each module are free to have their own events
+- networking team not dependent on any module
 
 
 # client: 
