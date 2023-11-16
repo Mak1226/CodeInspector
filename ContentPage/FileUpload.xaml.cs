@@ -10,7 +10,7 @@
  * Description = Page that lets user upload files for analysis
  *****************************************************************************/
 
-using Content.Client;
+using Content.ViewModel;
 using Networking.Communicator;
 using System.Diagnostics;
 using System.Windows;
@@ -24,16 +24,16 @@ namespace ContentPage
     /// </summary>
     public partial class FileUpload : Page
     {
-        private readonly ContentClient _uploadClient;
+        private readonly ContentClientViewModel _client;
 
         /// <summary>
         /// Initialses the page
         /// </summary>
         /// <param name="client">The input ICommuncator that can send messages to server</param>
         /// <param name="sessionID">Some unique identifier for this user</param>
-        public FileUpload(ICommunicator client, string sessionID)
+        public FileUpload(ContentClientViewModel client)
         {
-            _uploadClient = new ContentClient(client, sessionID);
+            _client = client;
             InitializeComponent();
         }
 
@@ -69,7 +69,7 @@ namespace ContentPage
                 Trace.WriteLine(folderPath);
 
                 // Pass folder path to Content Client
-                _uploadClient.HandleUpload(folderPath);
+                _client.HandleUpload(folderPath);
             }
         }
 

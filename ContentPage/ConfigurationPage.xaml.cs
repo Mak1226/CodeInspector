@@ -14,9 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Analyzer;
-using Content.Server;
-using Networking.Communicator;
+using Content.ViewModel;
 
 namespace ContentPage
 {

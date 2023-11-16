@@ -19,7 +19,7 @@ namespace ContentPage
         {
             ICommunicator client = CommunicationFactory.GetClient();
             client.Start("localhost", 12399, "TestClient", "Content");
-            Page uploadPage = new FileUpload(client, "TestClient");
+            Page uploadPage = new ClientPage(client, "TestClient");
             MainFrame.Navigate(uploadPage);
 
             // Hide the buttons
@@ -30,7 +30,7 @@ namespace ContentPage
         {
             ICommunicator server = CommunicationFactory.GetServer();
             server.Start(null, null, ID.GetServerID(), "Content");
-            Page clientPage = new ClientPage(server);
+            Page clientPage = new ServerPage(server);
             MainFrame.Navigate(clientPage);
 
             // Hide the buttons

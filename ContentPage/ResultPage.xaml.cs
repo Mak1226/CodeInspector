@@ -10,13 +10,8 @@
  * Description = Page that visualises result of an analysis
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
-using Analyzer;
-using Content.Server;
-using Networking.Communicator;
+using Content.ViewModel;
 
 namespace ContentPage
 {
@@ -25,20 +20,18 @@ namespace ContentPage
     /// </summary>
     public partial class ResultPage : Page
     {
-        private ContentServerViewModel viewModel;
+        private readonly IContentViewModel _viewModel;
         /*private IDictionary<int, bool> accumulatedOptions = new Dictionary<int, bool>()*/
 
         /// <summary>
         /// Initializes content Server ViewModel
         /// </summary>
         /// <param name="server">Running server</param>
-        public ResultPage(ContentServerViewModel viewModel)
+        public ResultPage(IContentViewModel viewModel)
         {
             InitializeComponent();
-            this.viewModel = viewModel;
-            DataContext = viewModel;
-
-            
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
        
 
