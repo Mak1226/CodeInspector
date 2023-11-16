@@ -27,7 +27,7 @@ namespace Analyzer.Pipeline
             // TODO if required
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom3";
+            analyzerID = "111";
         }
 
         /// <summary>

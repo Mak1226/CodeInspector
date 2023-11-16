@@ -27,8 +27,10 @@ namespace Analyzer.Pipeline
             // The constructor can be used for any necessary setup or initialization.
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom4";
+            analyzerID = "115";
         }
+
+
 
         /// <summary>
         /// Analyzes the DLL files to check type name prefixes for correctness.
