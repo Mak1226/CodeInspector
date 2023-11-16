@@ -72,59 +72,8 @@ namespace ContentPage
         //        _uploadClient.HandleUpload(folderPath);
         //    }
         //}
-        private void UploadButton_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
-            openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
+        
 
-            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-
-            bool isFolderSelected = false;
-            string selectedPath = null;
-
-            // Show dialog to choose between file and folder
-            MessageBoxResult dialogResult = MessageBox.Show("Choose 'Yes' to select a file or 'No' to select a folder.", "File or Folder?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (dialogResult == MessageBoxResult.Yes)
-            {
-                // File selection
-                bool? response = openFileDialog.ShowDialog();
-
-                if (response == true)
-                {
-                    string filePath = openFileDialog.FileName;
-                    Trace.WriteLine(filePath);
-                    // Process the selected file
-                    // ...
-                }
-            }
-            else if (dialogResult == MessageBoxResult.No)
-            {
-                // Folder selection
-                System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
-
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    isFolderSelected = true;
-                    selectedPath = folderDialog.SelectedPath;
-                    Trace.WriteLine(selectedPath);
-                    // Process the selected folder
-                    // ...
-                }
-            }
-
-            // Handle the selected file or folder based on 'isFolderSelected' and 'selectedPath'
-            if (isFolderSelected)
-            {
-                _uploadClient.HandleUpload(selectedPath);
-            }
-            else
-            {
-                // Handle the file selection
-                // _uploadClient.HandleUpload(filePath);
-            }
-        }
 
 
 
