@@ -32,7 +32,7 @@ namespace Analyzer.Pipeline
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int totalUnusedLocals = 0;
-            List<string> unusedVariableNames = new List<string>();
+            List<string> unusedVariableNames = new();
 
             foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
