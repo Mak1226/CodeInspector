@@ -26,8 +26,8 @@ namespace ContentPage
         {
             ICommunicator server = CommunicationFactory.GetServer();
             server.Start(null, null, ID.GetServerID());
-            Page resultPage = new ResultPage(server);
-            MainFrame.Navigate(resultPage);
+            Page clientPage = new ClientPage(server);
+            MainFrame.Navigate(clientPage);
         }
     }
 }

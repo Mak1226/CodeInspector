@@ -43,6 +43,7 @@ namespace Content.Server
             configOptionsList = new List<AnalyzerConfigOption>();
             foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
             {
+
                 configOptionsList.Add(new AnalyzerConfigOption
                 {
                     AnalyzerId = option.Item1,
