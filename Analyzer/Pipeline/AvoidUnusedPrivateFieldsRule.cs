@@ -104,7 +104,13 @@ namespace Analyzer.Pipeline
                 if (UnusedFields.Count > 0)
                 {
 
-                    errorMessage += cls.Name.ToString() + " ";
+                    errorMessage += cls.Name.ToString() + " -> ";
+
+                    foreach (var filedName in UnusedFields)
+                    {
+                        errorMessage += filedName + " ";
+                    }
+                    errorMessage += ", ";
 
                     verdict = 0;
                 }
@@ -113,7 +119,7 @@ namespace Analyzer.Pipeline
 
             if(verdict == 0)
             {
-                errorMessage += "contains unused private field";
+                errorMessage += "these are unused private field";
                 return;
             }
 
