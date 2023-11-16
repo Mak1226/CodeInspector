@@ -13,6 +13,7 @@ namespace Networking.Utils
 {
     public class Receiver
     {
+        //TODO: HANDLE THREAD SLEEP IN RECV LOOP
         private Queue _recvQueue = new();
         private Thread _recvThread;
         private Thread _recvQueueThread;
@@ -36,7 +37,8 @@ namespace Networking.Utils
         {
             Console.WriteLine("[Receiver] Stop");
             _stopThread = true;
-            _recvQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
+            //_recvQueue.Enqueue(new Message(Serializer.Serialize<Data>(
+            //    new Data(EventType.StopThread())),, 10 /* TODO */);
             _recvThread.Join();
             _recvQueueThread.Join();
         }
@@ -78,11 +80,17 @@ namespace Networking.Utils
 
                         string receivedMessage = Encoding.ASCII.GetString(receiveData);
                         Message message = Serializer.Deserialize<Message>(receivedMessage);
-                        if (message.EventType == EventType.ClientRegister())
+                        if (message.ModuleName == ID.GetNetworkingID())
                         {
-                            message.Data = item.Key;
+                            Data data=Serializer.Deserialize<Data>(message.Data);    
+                            if (data.EventType == EventType.ClientRegister())
+                            {
+                                data.Payload = item.Key;
+                                message.Data=Serializer.Serialize<Data>(data);
+                                //message.Data = item.Key;
+                            }
                         }
-                        _recvQueue.Enqueue(message, Priority.GetPriority(message.EventType) /* fix it */);
+                        _recvQueue.Enqueue(message, Priority.GetPriority(message.ModuleName) /* fix it */);
                     }
                 }
                 if (ifAval == false)
@@ -130,8 +138,8 @@ namespace Networking.Utils
                 Message message = _recvQueue.Dequeue();
 
                 // If the message is a stop message, break out of the loop
-                if (message.StopThread)
-                    break;
+                //if (message.StopThread)
+                //    break;
 
                 //handleMessage(message);
                 if(_comm is Client client)
