@@ -11,8 +11,6 @@
 *****************************************************************************/
 using Analyzer;
 using Networking.Serialization;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Content.Encoder
