@@ -10,9 +10,9 @@ namespace Content.Server
     /// </summary>
     public class ContentServerViewModel : INotifyPropertyChanged
     {
-        private List<AnalyzerResult> analyzerResults;
+        private Dictionary<string, List<AnalyzerResult>> analyzerResults;
         private ContentServer contentServer;
-        private List<Tuple<string, int, string>> dataList;
+        private Dictionary<String, List<Tuple<string, int, string>>> dataList;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -27,7 +27,8 @@ namespace Content.Server
             contentServer.AnalyzerResultChanged += (result) =>
             {
                 analyzerResults = result;
-                UpdateDataList(analyzerResults);
+                //UpdateDataList(analyzerResults);
+                OnPropertyChanged(nameof(analyzerResults));
             };
 
         }
@@ -35,8 +36,10 @@ namespace Content.Server
         /// <summary>
         /// Analysis result
         /// Currenly only shows the latest one
+        /// 
+        /// Dictionary keys are filenames. Entries are tuples of (Analyzer ID, Verdict, ErrorMessage)
         /// </summary>
-        public List<Tuple<string, int, string>> DataList
+        public Dictionary<String, List<Tuple<string, int, string>>> DataList
         {
             get 
             {
@@ -45,16 +48,34 @@ namespace Content.Server
             set { throw new NotImplementedException(); }
         }
 
+        public Dictionary<string, List<AnalyzerResult>> AnalyzerResults
+        {
+            get
+            {
+                return analyzerResults;
+            }
+            set { throw new FieldAccessException(); }
+        }
+
         /// <summary>
         /// Update data list whenever analyzer result in content server is updated
         /// </summary>
         /// <param name="analyzerResults">Analyzer Result from content server</param>
-        public void UpdateDataList(List<AnalyzerResult> analyzerResults)
+        public void UpdateDataList(Dictionary<string, List<AnalyzerResult>> analyzerResults)
         {
             dataList = new();
-            foreach (AnalyzerResult result in analyzerResults)
+            foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
             {
-                dataList.Add(new Tuple<string, int, string>(result.AnalyserID, result.Verdict, result.ErrorMessage));
+                foreach (AnalyzerResult result in kvp.Value)
+                {
+                    dataList[kvp.Key].Add(
+                        new Tuple<string, int, string>(
+                            result.AnalyserID, 
+                            result.Verdict, 
+                            result.ErrorMessage
+                            )
+                        );
+                }
             }
 
             OnPropertyChanged(nameof(dataList));

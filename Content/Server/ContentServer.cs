@@ -16,9 +16,9 @@ namespace Content.Server
         IAnalyzer analyzer;
         AnalyzerResultSerializer serializer;
 
-        public Action<List<AnalyzerResult>> AnalyzerResultChanged;
+        public Action<Dictionary<string, List<AnalyzerResult>>> AnalyzerResultChanged;
 
-        public List<AnalyzerResult >analyzerResult {  get; private set; }
+        public Dictionary<string, List<AnalyzerResult>> analyzerResult {  get; private set; }
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -35,14 +35,6 @@ namespace Content.Server
 
             analyzer = _analyzer;
 
-            // Currently hardcoded, uses all analyzers
-            Dictionary<int, bool> configuration = new Dictionary<int, bool>();
-            foreach (Tuple<int, string> config in AnalyzerFactory.GetAllConfigurationOptions())
-            {
-                configuration[config.Item1] = true;
-            }
-            analyzer.Configure(configuration, true);
-
             serializer = new AnalyzerResultSerializer();
         }
 
@@ -57,7 +49,7 @@ namespace Content.Server
             fileHandler.HandleRecieve(encodedFiles);
 
             // Analyse DLL files
-            analyzer.LoadDLLFile(fileHandler.GetFiles(), null);
+            analyzer.LoadDLLFileOfStudent(fileHandler.GetFiles());
 
             // Save analysis results 
             analyzerResult = analyzer.Run();
@@ -71,7 +63,7 @@ namespace Content.Server
 
         public void Configure(Dictionary<int, bool> configuration)
         {
-            analyzer.Configure(configuration, true);
+            analyzer.Configure(configuration);
         }
 
     }
