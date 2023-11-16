@@ -8,7 +8,8 @@
  * Project      = Content
  *
  * Description  = Serializer for Analyzer Results
-*****************************************************************************/using Analyzer;
+*****************************************************************************/
+using Analyzer;
 using Networking.Serialization;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Content.Encoder
 
             else if (genericObject.GetType() == typeof(Dictionary<string, List<AnalyzerResult>>))
             {
-                var dictionary = genericObject as Dictionary<string, List<AnalyzerResult>>
+                var dictionary = genericObject as Dictionary<string, List<AnalyzerResult>>;
                 var serializedDictionary = new Dictionary<string, List<string>>();
                 foreach (var kvp in dictionary)
                 {
@@ -56,12 +57,12 @@ namespace Content.Encoder
                 return JsonSerializer.Serialize(serializedDictionary);
             }
 
-            return "Invlaid type";
+            return "Invalid type";
         }
         private T DeserializeAnalyzerResult<T>(string serializedString)
         {
             // Implement custom deserialization logic for AnalyzerResult
-            var lines = serializedString.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            var lines = serializedString.Split("||\n", StringSplitOptions.RemoveEmptyEntries);
 
             string analyserID = string.Empty;
             int verdict = 0;
@@ -105,7 +106,7 @@ namespace Content.Encoder
                 throw new ArgumentException("Serialized string is null or empty.", nameof(serializedString));
             }
 
-            var deserializedDict = new Dictionary<string, List<string>>();
+            var deserializedDict = new Dictionary<string, List<AnalyzerResult>>();
             var serializedDictionary = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(serializedString);
             foreach (var kvp in serializedDictionary)
             {

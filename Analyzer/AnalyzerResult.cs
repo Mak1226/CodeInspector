@@ -18,5 +18,15 @@ namespace Analyzer
             Verdict = verdict;
             ErrorMessage = errorMessage;
         }
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            AnalyzerResult other = (AnalyzerResult)obj;
+            return AnalyserID == other.AnalyserID && Verdict == other.Verdict && ErrorMessage == other.ErrorMessage;
+        }
     }
 }
