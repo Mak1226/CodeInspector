@@ -5,6 +5,12 @@ using System.ComponentModel;
 
 namespace Content.Server
 {
+    public class AnalyzerConfigOption
+    {
+        public int AnalyzerId { get; set; }
+        public string Description { get; set; }
+        public bool IsSelected { get; set; }
+    }
 
     /// <summary>
     /// Viewmodel for the Content Server model
@@ -13,7 +19,9 @@ namespace Content.Server
     {
         private Dictionary<string, List<AnalyzerResult>> analyzerResults;
         private ContentServer contentServer;
+        private List<AnalyzerConfigOption> configOptionsList;
         //private Tuple<string, List<Tuple<string, int, string>>> dataList;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,9 +30,7 @@ namespace Content.Server
         /// </summary>
         public ContentServerViewModel(ICommunicator server)
         {
-            IAnalyzer analyzer = AnalyzerFactory.GetAnalyzer();
-
-            contentServer = new ContentServer(server, analyzer);
+            contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer());
             contentServer.AnalyzerResultChanged += (result) =>
             {
                 analyzerResults = result;
@@ -33,6 +39,25 @@ namespace Content.Server
                 OnPropertyChanged(nameof(DataList));
             };
 
+            // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
+            configOptionsList = new List<AnalyzerConfigOption>();
+            foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
+            {
+
+                configOptionsList.Add(new AnalyzerConfigOption
+                {
+                    AnalyzerId = option.Item1,
+                    Description = option.Item2,
+                    IsSelected = false // Set the default value for IsSelected as needed
+                });
+            }
+
+        }
+
+        public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions)
+        {
+            // Call Analyzer.Configure
+            contentServer.Configure(teacherOptions);
         }
 
         /// <summary>
@@ -68,32 +93,14 @@ namespace Content.Server
                 return outList;
             }
             set { throw new NotImplementedException(); }
+
         }
 
-
-        /// <summary>
-        /// Update data list whenever analyzer result in content server is updated
-        /// </summary>
-        /// <param name="analyzerResults">Analyzer Result from content server</param>
-        //public void UpdateDataList(Dictionary<string, List<AnalyzerResult>> analyzerResults)
-        //{
-        //    dataList = new();
-        //    foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
-        //    {
-        //        foreach (AnalyzerResult result in kvp.Value)
-        //        {
-        //            dataList[kvp.Key].Add(
-        //                new Tuple<string, int, string>(
-        //                    result.AnalyserID,
-        //                    result.Verdict,
-        //                    result.ErrorMessage
-        //                    )
-        //                );
-        //        }
-        //    }
-
-        //    OnPropertyChanged(nameof(dataList));
-        //}
+        public List<AnalyzerConfigOption> ConfigOptionsList
+        {
+            get { return configOptionsList; }
+            set { configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
+        }
 
         private void OnPropertyChanged(string propertyName)
         {

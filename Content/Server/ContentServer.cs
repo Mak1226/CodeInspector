@@ -61,7 +61,7 @@ namespace Content.Server
             AnalyzerResultChanged?.Invoke(analyzerResult);
         }
 
-        public void Configure(Dictionary<int, bool> configuration)
+        public void Configure(IDictionary<int, bool> configuration)
         {
             analyzer.Configure(configuration);
         }
