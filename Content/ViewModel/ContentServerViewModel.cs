@@ -106,6 +106,9 @@ namespace Content.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        public void SetSessionID(string? sessionID)
+        {
+            contentServer.SetSessionID(sessionID);   
+        }
     }
 }

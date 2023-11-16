@@ -15,10 +15,12 @@ namespace Content.Model
         IFileHandler fileHandler;
         IAnalyzer analyzer;
         AnalyzerResultSerializer serializer;
+        string? sessionID;
 
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+        private Dictionary<string, Dictionary<string, List<AnalyzerResult>>> sessionAnalysisResultDict;
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -38,6 +40,7 @@ namespace Content.Model
             serializer = new AnalyzerResultSerializer();
 
             analyzerResult = new();
+            sessionAnalysisResultDict = new();
         }
 
         /// <summary>
@@ -47,6 +50,11 @@ namespace Content.Model
         /// <param name="clientID">Unique ID of client</param>
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
+            if (sessionID == null)
+            {
+                return; //If no session is loaded, don't do anything
+            }
+
             // Save files to user session directory
             fileHandler.HandleRecieve(encodedFiles);
 
@@ -55,6 +63,7 @@ namespace Content.Model
 
             // Save analysis results 
             analyzerResult = analyzer.Run();
+            sessionAnalysisResultDict[sessionID] = analyzerResult;
 
             // Send Analysis results to client
             server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
@@ -66,6 +75,28 @@ namespace Content.Model
         public void Configure(IDictionary<int, bool> configuration)
         {
             analyzer.Configure(configuration);
+        }
+
+        public void SetSessionID(string? sessionID)
+        {
+            if (sessionID == null)
+            {
+                this.sessionID = null;
+                return;
+            }
+
+
+            this.sessionID = sessionID;
+            if (sessionAnalysisResultDict.ContainsKey(sessionID)) 
+            {
+                analyzerResult = sessionAnalysisResultDict[sessionID];
+            }
+            else
+            {
+                analyzerResult = new();
+                sessionAnalysisResultDict[sessionID] = analyzerResult;
+            }
+            AnalyzerResultChanged?.Invoke(analyzerResult);
         }
 
     }

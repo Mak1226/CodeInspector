@@ -13,7 +13,7 @@ namespace ContentPage
 
         /// <summary>
         /// Create a server page instance.
-        /// Refer <see cref="ServerPage.LoadResultPage"/> on how to change result to each client's
+        /// Refer <see cref="SetSessionID"/> on how to change result to each client's
         /// </summary>
         /// <param name="server">Running networking server</param>
         public ServerPage(ICommunicator server)
@@ -22,18 +22,25 @@ namespace ContentPage
             viewModel = new ContentServerViewModel(server);
             DataContext = viewModel;
 
-            LoadResultPage(""); // Load ResultPage initially
+            LoadResultPage(); // Load ResultPage initially
             LoadConfigurationPage(); // Optionally, load ConfigurationPage initially
         }
 
-       
         /// <summary>
-        /// Load the result page of the given client/session
+        /// Set the session/client ID that the server is currently viewing and update result tabs
+        /// 
+        /// Note that this function has to be called first for server to show any result
         /// </summary>
-        /// <param name="sessionID">ID of the client</param>
-        public void LoadResultPage(string sessionID)
+        /// <param name="sessionID">Session ID or Client ID</param>
+        public void SetSessionID(string sessionID)
         {
-            ResultPage resultPage = new ResultPage(viewModel, sessionID);
+            viewModel.SetSessionID(sessionID);
+        }
+
+       
+        private void LoadResultPage()
+        {
+            ResultPage resultPage = new ResultPage(viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
         }

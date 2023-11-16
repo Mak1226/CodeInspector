@@ -24,7 +24,7 @@ namespace ContentPage
             DataContext = viewModel;
 
             UploadFrame.Navigate(new FileUpload(viewModel));
-            ResultFrame.Navigate(new ResultPage(viewModel, sessionID));
+            ResultFrame.Navigate(new ResultPage(viewModel));
         }
     }
 }

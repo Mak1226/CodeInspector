@@ -19,8 +19,8 @@ namespace ContentPage
         {
             ICommunicator client = CommunicationFactory.GetClient();
             client.Start("localhost", 12399, "TestClient", "Content");
-            Page uploadPage = new ClientPage(client, "TestClient");
-            MainFrame.Navigate(uploadPage);
+            Page clientPage = new ClientPage(client, "TestClient");
+            MainFrame.Navigate(clientPage);
 
             // Hide the buttons
             FileUploadButton.Visibility = Visibility.Collapsed;
@@ -30,8 +30,11 @@ namespace ContentPage
         {
             ICommunicator server = CommunicationFactory.GetServer();
             server.Start(null, null, ID.GetServerID(), "Content");
-            Page clientPage = new ServerPage(server);
-            MainFrame.Navigate(clientPage);
+            ServerPage serverPage = new ServerPage(server);
+            MainFrame.Navigate(serverPage);
+
+            // TestClient by default
+            serverPage.SetSessionID("TestClient");
 
             // Hide the buttons
             ResultPageButton.Visibility = Visibility.Collapsed;

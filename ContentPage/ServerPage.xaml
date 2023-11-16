@@ -12,6 +12,7 @@
 
         <StackPanel Orientation="Vertical">
             <Frame x:Name="ConfigFrame" />
+            <Separator Height="20"></Separator>
             <Frame x:Name="ResultFrame" />
             
         </StackPanel>
