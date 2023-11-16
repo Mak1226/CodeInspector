@@ -29,7 +29,7 @@ namespace Content.Client
         public ContentClient(ICommunicator client, string sessionID)
         {
             _client = client;
-            _fileUploader = new FileHandler(_client);
+            _fileUploader = new FileHandler();
             _sessionID = sessionID;
         }
         /// <summary>
@@ -38,7 +38,8 @@ namespace Content.Client
         /// <param name="folderPath">The path to the folder containing files to upload.</param>
         public void HandleUpload(string folderPath)
         {
-            _fileUploader.Upload(folderPath, _sessionID);
+            string encoding = _fileUploader.HandleSend(folderPath, _sessionID);
+            _client.Send(encoding, "Content-Files", "server");
         }
     }
 }
