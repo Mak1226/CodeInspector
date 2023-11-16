@@ -1,5 +1,6 @@
 ﻿using Analyzer;
 using Networking.Communicator;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Content.Server
@@ -12,7 +13,7 @@ namespace Content.Server
     {
         private Dictionary<string, List<AnalyzerResult>> analyzerResults;
         private ContentServer contentServer;
-        private Dictionary<String, List<Tuple<string, int, string>>> dataList;
+        //private Tuple<string, List<Tuple<string, int, string>>> dataList;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -29,6 +30,7 @@ namespace Content.Server
                 analyzerResults = result;
                 //UpdateDataList(analyzerResults);
                 OnPropertyChanged(nameof(analyzerResults));
+                OnPropertyChanged(nameof(DataList));
             };
 
         }
@@ -39,47 +41,59 @@ namespace Content.Server
         /// 
         /// Dictionary keys are filenames. Entries are tuples of (Analyzer ID, Verdict, ErrorMessage)
         /// </summary>
-        public Dictionary<String, List<Tuple<string, int, string>>> DataList
+        public List<Tuple<string, List<Tuple<string, int, string>>>> DataList
         {
-            get 
+            get
             {
-                return dataList; 
+                if (analyzerResults == null)
+                {
+                    return new();
+                }
+
+
+                List<Tuple<string, List<Tuple<string, int, string>>>> outList = new();
+                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
+                {
+                    List<Tuple<string, int, string>> resultList = new();
+                    foreach (AnalyzerResult result in kvp.Value)
+                    {
+                        resultList.Add(new(
+                            result.AnalyserID,
+                            result.Verdict,
+                            result.ErrorMessage)
+                            );
+                    }
+                    outList.Add(new(kvp.Key, resultList));
+                }
+                return outList;
             }
             set { throw new NotImplementedException(); }
         }
 
-        public Dictionary<string, List<AnalyzerResult>> AnalyzerResults
-        {
-            get
-            {
-                return analyzerResults;
-            }
-            set { throw new FieldAccessException(); }
-        }
 
         /// <summary>
         /// Update data list whenever analyzer result in content server is updated
         /// </summary>
         /// <param name="analyzerResults">Analyzer Result from content server</param>
-        public void UpdateDataList(Dictionary<string, List<AnalyzerResult>> analyzerResults)
-        {
-            dataList = new();
-            foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
-            {
-                foreach (AnalyzerResult result in kvp.Value)
-                {
-                    dataList[kvp.Key].Add(
-                        new Tuple<string, int, string>(
-                            result.AnalyserID, 
-                            result.Verdict, 
-                            result.ErrorMessage
-                            )
-                        );
-                }
-            }
+        //public void UpdateDataList(Dictionary<string, List<AnalyzerResult>> analyzerResults)
+        //{
+        //    dataList = new();
+        //    foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
+        //    {
+        //        foreach (AnalyzerResult result in kvp.Value)
+        //        {
+        //            dataList[kvp.Key].Add(
+        //                new Tuple<string, int, string>(
+        //                    result.AnalyserID,
+        //                    result.Verdict,
+        //                    result.ErrorMessage
+        //                    )
+        //                );
+        //        }
+        //    }
 
-            OnPropertyChanged(nameof(dataList));
-        }
+        //    OnPropertyChanged(nameof(dataList));
+        //}
 
         private void OnPropertyChanged(string propertyName)
         {
