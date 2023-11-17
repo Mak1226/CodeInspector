@@ -18,7 +18,7 @@ namespace Analyzer.Pipeline
         public CyclomaticComplexity(List<ParsedDLLFile> dllFiles , int maxAllowedComplexity=10) : base(dllFiles)
         {
             _maxAllowedComplexity = maxAllowedComplexity;
-            _analyzerID = "customID";
+            _analyzerID = "113";
         }
 
 
