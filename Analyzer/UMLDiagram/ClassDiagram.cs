@@ -133,6 +133,7 @@ namespace Analyzer.UMLDiagram
             {
                 foreach (Type parent in interfaceObj.ParentInterfaces)
                 {
+                    
                     if(!isPartOfRemovableNamespace(parent.FullName , removableNamespaces))
                     {
                         _plantUMLCode.AppendLine($"interface {interfaceObj.TypeObj.FullName} implements {parent}");
@@ -203,12 +204,14 @@ namespace Analyzer.UMLDiagram
         {
             String[] splitted_string = objName.Split(".");
 
-            if (removableNamespaces.Contains(splitted_string[0]))
+            if (removableNamespaces != null && removableNamespaces.Contains(splitted_string[0].Remove(0 , 1)))
             {
+                Console.WriteLine(objName);
                 return true;
             }
             else
             {
+                //Console.WriteLine(objName);
                 return false;
             }
         }

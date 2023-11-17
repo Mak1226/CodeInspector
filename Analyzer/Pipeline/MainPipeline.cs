@@ -73,8 +73,8 @@ namespace Analyzer.Pipeline
             _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(_parsedDLLFiles);
             _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
             _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
-            _allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
-            _allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
+            //_allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
+            //_allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
             //_allAnalyzers[113] = new AbstractClassNamingChecker(_parsedDLLFiles);
             _allAnalyzers[114] = new NewLineLiteralRule(_parsedDLLFiles);
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
@@ -139,11 +139,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
-        public async Task<Byte[]> GenerateClassDiagram(List<string> removableNamespaces)
+        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            Byte[] bytes = await classDiag.Run(removableNamespaces);
+            Byte[] bytes = classDiag.Run(removableNamespaces).Result;
             return bytes;
         }
     }
