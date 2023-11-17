@@ -73,8 +73,8 @@ namespace Dashboard
             viewModel?.ConnectInstructor();
             if(viewModel != null)
             {
-                FileUpload fileUpload = new(viewModel.Communicator, StudentRollTextBox.Text);
-                ContentFrame.Content = fileUpload;
+                ClientPage clientPage = new(viewModel.Communicator, StudentRollTextBox.Text);
+                ContentFrame.Content = clientPage;
             }
 
         }

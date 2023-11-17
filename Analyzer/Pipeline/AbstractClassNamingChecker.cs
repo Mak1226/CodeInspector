@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+/*using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,8 +102,9 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-            return false; // If all abstract classes meet the criteria, return false
+           return false; // If all abstract classes meet the criteria, return false
         }
     }
 }
 
+*/
