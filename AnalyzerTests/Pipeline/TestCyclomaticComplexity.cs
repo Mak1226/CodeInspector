@@ -239,8 +239,8 @@ namespace AnalyzerTests.Pipeline
             foreach (KeyValuePair<string, AnalyzerResult> kv in result)
             {
                 Console.WriteLine(kv.Key);
-                Console.WriteLine($"{kv.Value.AnalyserID}");
-                Console.WriteLine($"{kv.Value.Verdict}");
+                //Console.WriteLine($"{kv.Value.AnalyserID}");
+                //Console.WriteLine($"{kv.Value.Verdict}");
 
                 //Assert.AreEqual(kv.Value.Verdict, 0);
                 Console.WriteLine($"{kv.Value.ErrorMessage}");
