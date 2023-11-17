@@ -1,4 +1,5 @@
 ﻿using Analyzer.Parsing;
+using Analyzer.UMLDiagram;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -138,10 +139,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
-        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
+        public async Task<Byte[]> GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications
-            Byte[] bytes = null;
+            ClassDiagram classDiag = new(_parsedDLLFiles);
+            Byte[] bytes = await classDiag.Run(removableNamespaces);
             return bytes;
         }
     }
