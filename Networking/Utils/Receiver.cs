@@ -26,8 +26,14 @@ namespace Networking.Utils
         {
             Console.WriteLine("[Receiver] Init");
             _clientIDToStream = clientIDToStream;
-            _recvThread = new Thread(Receive);
-            _recvQueueThread = new Thread(RecvLoop);
+            _recvThread = new Thread(Receive)
+            {
+                IsBackground = true
+            };
+            _recvQueueThread = new Thread(RecvLoop)
+            {
+                IsBackground = true
+            };
             _recvThread.Start();
             _recvQueueThread.Start();
             _comm = comm;
