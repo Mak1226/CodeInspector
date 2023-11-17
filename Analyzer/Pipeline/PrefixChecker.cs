@@ -27,8 +27,10 @@ namespace Analyzer.Pipeline
             // The constructor can be used for any necessary setup or initialization.
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom4";
+            analyzerID = "115";
         }
+
+
 
         /// <summary>
         /// Analyzes the DLL files to check type name prefixes for correctness.
@@ -44,7 +46,7 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect type prefix: {classObj.Name}");
+                    Console.WriteLine($"INCORRECT TYPE PREFIX : {classObj.Name}");
                     errorCount++;
                 }
             }
@@ -54,7 +56,7 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect interface prefix: {interfaceObj.Name}");
+                    Console.WriteLine($"INCORRECT INTERFACE PREFIX : {interfaceObj.Name}");
                     errorCount++;
                 }
             }
@@ -63,7 +65,7 @@ namespace Analyzer.Pipeline
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {
-                        //Console.WriteLine($"[Error] Incorrect generic parameter prefix: {structObj.Name}");
+                        Console.WriteLine($"INCORRECT PARAMETER PREFIX : {structObj.Name}");
                         errorCount++;
                     }
             }

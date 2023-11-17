@@ -27,7 +27,7 @@ namespace Analyzer.Pipeline
             // TODO if required
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom3";
+            analyzerID = "111";
         }
 
         /// <summary>
@@ -89,6 +89,7 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
+                        Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
                         return true; // If any abstract class does not meet the criteria, return true
                     }
                 }
