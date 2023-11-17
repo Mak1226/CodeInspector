@@ -24,14 +24,12 @@ namespace Content.FileHandling
     public class FileHandler : IFileHandler
     {
         private List<string> _filesList;
-        private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
         /// <summary>
         /// saves files in //data/
         /// </summary>
         public FileHandler()
         {
-            _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
         }
@@ -93,7 +91,7 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="sessionID"></param>
         /// <returns></returns>
-        public void HandleRecieve(string encoding)
+        public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
             try
@@ -102,12 +100,12 @@ namespace Content.FileHandling
             }
             catch (JsonException) 
             {
-                return;
+                return null;
             }
             if (recvData["EventType"] != "File")
             {
                 // Packet not meant for this module
-                return;
+                return null;
             }
 
             encoding = recvData["Data"];
@@ -118,10 +116,12 @@ namespace Content.FileHandling
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
             _filesList = new List<String>();
-           foreach (var file in decodedFiles)
+            foreach (var file in decodedFiles)
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));
             }
+
+            return sessionID;
         }
     }
 }

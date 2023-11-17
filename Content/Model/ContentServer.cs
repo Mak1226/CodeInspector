@@ -11,16 +11,17 @@ namespace Content.Model
     /// </summary>
     public class ContentServer
     {
-        ICommunicator server;
-        IFileHandler fileHandler;
-        IAnalyzer analyzer;
-        AnalyzerResultSerializer serializer;
+        readonly ICommunicator server;
+        readonly IFileHandler fileHandler;
+        readonly IAnalyzer analyzer;
+        readonly AnalyzerResultSerializer serializer;
+        
         string? sessionID;
 
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
-        private Dictionary<string, Dictionary<string, List<AnalyzerResult>>> sessionAnalysisResultDict;
+        private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> sessionAnalysisResultDict;
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -50,26 +51,28 @@ namespace Content.Model
         /// <param name="clientID">Unique ID of client</param>
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
-            if (sessionID == null)
-            {
-                return; //If no session is loaded, don't do anything
+            // Save files to user session directory and collect sessionID
+            string? recievedSessionID = fileHandler.HandleRecieve(encodedFiles);
+            if (recievedSessionID == null) 
+            { 
+                return; // FileHandler failed
             }
-
-            // Save files to user session directory
-            fileHandler.HandleRecieve(encodedFiles);
 
             // Analyse DLL files
             analyzer.LoadDLLFileOfStudent(fileHandler.GetFiles());
 
-            // Save analysis results 
-            analyzerResult = analyzer.Run();
-            sessionAnalysisResultDict[sessionID] = analyzerResult;
-
             // Send Analysis results to client
             server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
 
-            // Notification for viewModel
-            AnalyzerResultChanged?.Invoke(analyzerResult);
+            // Save analysis results 
+            sessionAnalysisResultDict[recievedSessionID] = analyzer.Run();
+            if (sessionID == recievedSessionID)
+            {
+                analyzerResult = sessionAnalysisResultDict[sessionID];
+                // Notification for viewModel
+                AnalyzerResultChanged?.Invoke(analyzerResult);
+            }
+
         }
 
         public void Configure(IDictionary<int, bool> configuration)

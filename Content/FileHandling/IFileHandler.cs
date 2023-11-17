@@ -29,9 +29,9 @@ namespace Content.FileHandling
         /// <summary>
         /// Handle a received file by saving it to a directory
         /// </summary>
-        /// <param name="sessionID">ID of this session</param>
-        /// <returns></returns>
-        void HandleRecieve(string encoding);
+        /// <param name="encoding">The XML encoded string of the files</param>
+        /// <returns>The session ID of the recieved message. Null if unable to recieve</returns>
+        string? HandleRecieve(string encoding);
         List<string> GetFiles();
     }
 }
