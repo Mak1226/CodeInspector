@@ -9,17 +9,26 @@
       Title="ResultPage">
 
     <Grid>
-        <TabControl Height="311" HorizontalAlignment="Left" Name="tabControl1" VerticalAlignment="Top" Width="503">
-            <TabItem Header="Result" Name="ResultTable">
-                <DataGrid Height="278" HorizontalAlignment="Left" Margin="1,1,0,0" Name="dataGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding Item1}" />
-                        <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Item2}" />
-                        <DataGridTextColumn Width="100" Header="Error Message" Binding="{Binding Item3}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
-        </TabControl>
+        <TabControl ItemsSource="{Binding DataList}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Item1}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ListView ItemsSource="{Binding Item2}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Analyzer ID" DisplayMemberBinding="{Binding Item1}" />
+                                <GridViewColumn Header="Verdict" DisplayMemberBinding="{Binding Item2}" />
+                                <GridViewColumn Header="Error Message" DisplayMemberBinding="{Binding Item3}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+</TabControl>
     </Grid>
 
 </Page>

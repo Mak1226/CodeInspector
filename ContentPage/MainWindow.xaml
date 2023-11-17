@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-            <Button x:Name="FileUploadButton" Width="200" Height="20" Content="Client" Click="FileUploadButton_Click"/>
-            <Button x:Name="ResultPageButton" Width="200" Height="20" Content="Server" Click="ResultPageButton_Click"/>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" >
+            <Button x:Name="FileUploadButton" Width="200" Height="20" Content="Client" Click="FileUploadButtonClick"/>
+            <Button x:Name="ResultPageButton" Width="200" Height="20" Content="Server" Click="ClientPageButtonClick"/>
         </StackPanel>
         <Frame x:Name="MainFrame"></Frame>
     </Grid>
