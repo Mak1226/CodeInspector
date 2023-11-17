@@ -127,7 +127,8 @@ namespace Networking.Communicator
             //{
             //    eventHandler.HandleMessageRecv(message);
             //}
-            _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            if(message.ModuleName != ID.GetNetworkingID() || _eventHandlersMap.ContainsKey(message.ModuleName))
+                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
 
         }
 

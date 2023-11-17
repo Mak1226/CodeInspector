@@ -74,14 +74,14 @@ namespace Networking.Communicator
             _sender.Send(message);
         }
 
-        public string Start(string? destIP, int? destPort, string senderId,string moduleName)
+        public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
                 return "already started";
-            
+
             _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
-            _moduleName=moduleName;
+            _moduleName = moduleName;
             _senderId = senderId;
             _sender = new(_clientIDToStream, _senderIDToClientID, false);
             _receiver = new(_clientIDToStream, this);
@@ -113,7 +113,10 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Server is listening on:");
             Console.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
             Console.WriteLine("[Server] Port: " + localEndPoint.Port);
-            _listenThread = new Thread(AcceptConnection);
+            _listenThread = new Thread(AcceptConnection)
+            {
+                IsBackground = true
+            };
             _listenThread.Start();
             //Subscribe(new NetworkingEventHandler(), EventType.ChatMessage());
             //Subscribe(new NetworkingEventHandler(), EventType.NewClientJoined());
@@ -197,7 +200,10 @@ namespace Networking.Communicator
             //    eventHandler.HandleMessageRecv(message);
             //}
             //eventHandler.HandleMessageRecv(message);
-            _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            if (message.DestID == ID.GetServerID())
+                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            else
+                Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
 
         }
     }
