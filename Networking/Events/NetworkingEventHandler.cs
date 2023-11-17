@@ -37,14 +37,14 @@ namespace Networking.Events
 
         private string HandleChatMessage(Message message)
         {
-            if (message.DestID != ID.GetServerID())
-            {
-                ((Server)server).Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
-            }
-            else
-            {
-                Console.WriteLine("message received in server:" + message.Data);
-            }
+            //if (message.DestID != ID.GetServerID())
+            //{
+            //    ((Server)server).Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
+            //}
+            //else
+            //{
+            Console.WriteLine("message received in server:" + message.Data);
+            //}
             return "";
         }
 
