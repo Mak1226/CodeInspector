@@ -21,7 +21,9 @@ namespace Content.Model
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+
         private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> sessionAnalysisResultDict;
+        private object sessionLock = new object();
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -62,15 +64,19 @@ namespace Content.Model
             analyzer.LoadDLLFileOfStudent(fileHandler.GetFiles());
 
             // Send Analysis results to client
-            server.Send(serializer.Serialize(analyzerResult), "Content-Results", clientID);
 
             // Save analysis results 
-            sessionAnalysisResultDict[recievedSessionID] = analyzer.Run();
-            if (sessionID == recievedSessionID)
+            lock (sessionLock)
             {
-                analyzerResult = sessionAnalysisResultDict[sessionID];
-                // Notification for viewModel
-                AnalyzerResultChanged?.Invoke(analyzerResult);
+                var res = analyzer.Run();
+                sessionAnalysisResultDict[recievedSessionID] = res;
+                server.Send(serializer.Serialize(res), "Content-Results", clientID);
+                if (sessionID == recievedSessionID)
+                {
+                    analyzerResult = res;
+                    // Notification for viewModel
+                    AnalyzerResultChanged?.Invoke(analyzerResult);
+                }
             }
 
         }
