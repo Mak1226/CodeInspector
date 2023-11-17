@@ -67,6 +67,7 @@ namespace Analyzer.Pipeline
                 {
                     hasMistake = true;
                     Console.WriteLine($"INCORRECT NAMESPACE NAMING : {classObj.TypeObj.BaseType.Namespace}");
+                    errorMessage = "INCORRECT NAMESPACE NAMING : " + classObj.TypeObj.BaseType.Namespace;
                 }
             }
 
@@ -81,6 +82,7 @@ namespace Analyzer.Pipeline
                         {
                             hasMistake = true;
                             Console.WriteLine($"INCORRECT METHOD NAMING : {method.Name}");
+                            errorMessage = "INCORRECT METHOD NAMING : " + method.Name;
                         }
 
                         if (!AreParametersCamelCased(method))
@@ -114,12 +116,13 @@ namespace Analyzer.Pipeline
            private bool AreParametersCamelCased(MethodDefinition method)
            {
                     int flag = 0;
-                    
+                   
                     foreach (var param in method.Parameters)
                     {
                         if (!IsCamelCase(param.Name))
                         {
-                            Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");                            
+                            Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");
+                            errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
                             flag = 1;
                         }
                     }
