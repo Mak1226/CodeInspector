@@ -275,7 +275,7 @@ namespace Analyzer.Parsing
                     var objType = argument.ParameterType.Resolve();
 
                     //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
-                    if (objType != _typeObj && !objType.GetType().IsGenericType)
+                    if (objType != _typeObj && objType!= null && !(objType.GetType().IsGenericType))
                     {
                         if (pair.Key.IsConstructor)
                         {

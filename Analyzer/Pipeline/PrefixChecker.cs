@@ -46,7 +46,7 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect type prefix: {classObj.Name}");
+                    Console.WriteLine($"INCORRECT TYPE PREFIX : {classObj.Name}");
                     errorCount++;
                 }
             }
@@ -56,7 +56,7 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect interface prefix: {interfaceObj.Name}");
+                    Console.WriteLine($"INCORRECT INTERFACE PREFIX : {interfaceObj.Name}");
                     errorCount++;
                 }
             }
@@ -65,7 +65,7 @@ namespace Analyzer.Pipeline
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {
-                        //Console.WriteLine($"[Error] Incorrect generic parameter prefix: {structObj.Name}");
+                        Console.WriteLine($"INCORRECT PARAMETER PREFIX : {structObj.Name}");
                         errorCount++;
                     }
             }
