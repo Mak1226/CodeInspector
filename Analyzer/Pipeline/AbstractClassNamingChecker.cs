@@ -78,7 +78,7 @@ namespace Analyzer.Pipeline
         /// <returns>True if there is any abstract class not meeting the criteria, false if all meet the criteria.</returns>
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
-            private int flag = 0;
+            int flag = 0;
             
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
@@ -92,7 +92,7 @@ namespace Analyzer.Pipeline
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
                         Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
-                        flag = 1 // If any abstract class does not meet the criteria, return true
+                        flag = 1; // If any abstract class does not meet the criteria, return true
                     }
                 }
             }

@@ -113,7 +113,7 @@ namespace Analyzer.Pipeline
 
            private bool AreParametersCamelCased(MethodDefinition method)
            {
-                    private int flag = 0;
+                    int flag = 0;
                     
                     foreach (var param in method.Parameters)
                     {
