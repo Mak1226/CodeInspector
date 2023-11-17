@@ -23,39 +23,41 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void TestGoodExample()
         {
-            List<string> DllFilePaths = new List<string>();
+            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST.dll");
+            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
+            DllFileObjs.Add(parsedDllObj); 
 
-            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(dllFiles);
+            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
 
-            var resultObj = avoidConstructorInStaticTypes.Run();
+            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            var result = resultObj.Verdict;
-            Assert.AreEqual(1, result);
+            var result = resultObj["ACIST.dll"];
+            Assert.AreEqual(1, result.Verdict);
         }
 
         /// <summary>
         /// Test method for a case in which classes don't follow the above mentioned rule.
         /// </summary>
         [TestMethod()]
-        public void TestBadExample() 
+        public void TestBadExample()
         {
-            List<string> DllFilePaths = new List<string>();
+            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST1.dll");
+            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST1.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
+            DllFileObjs.Add(parsedDllObj);
 
-            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(dllFiles);
+            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
 
-            var resultObj = avoidConstructorInStaticTypes.Run();
+            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            var result = resultObj.Verdict;
-            Assert.AreEqual(0, result);
+            var result = resultObj["ACIST1.dll"];
+            Assert.AreEqual(0, result.Verdict);
         }
-        
+
     }
 }
