@@ -1,33 +1,29 @@
-/*using Analyzer.Parsing;
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {
-    [TestClass()]
-    public class TestAvoidSwitchStatemets
+    [TestClass]
+    public class TestAvoidSwitchStatements
     {
-        [TestMethod()]
-        public void MainPipelineTest()
+        [TestMethod]
+        public void MainPipelineTestWithoutSwitchStatements()
         {
+            List<string> dllFilePaths = new List<string>
+            {
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\Rules.dll"
+            };
 
-            List<string> DllFilePaths = new List<string>();
+            List<ParsedDLLFile> dllFiles = dllFilePaths.Select(path => new ParsedDLLFile(path)).ToList();
+            AvoidSwitchStatementsAnalyzer avoidSwitchStatements = new AvoidSwitchStatementsAnalyzer(dllFiles);
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\SwitchStatements.dll");
+            var result = avoidSwitchStatements.AnalyzeAllDLLs();
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
-
-            AvoidSwitchStatementsAnalyzer avoidSwitchStatements = new(dllFiles);
-
-            var result = avoidSwitchStatements.Run();
-
-            Assert.AreEqual(1, result.Verdict);
+            Assert.AreEqual(1, result[dllFiles[0].DLLFileName].Verdict); // Expecting success as no switch statements are present
         }
     }
 }
-*/

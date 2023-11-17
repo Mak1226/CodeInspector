@@ -21,11 +21,6 @@ namespace Analyzer.Parsing
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
 
-        // TODO: Map objects
-        public Dictionary<Type, ParsedClass> mapTypeToParsedClass = new();
-        public Dictionary<Type, ParsedClassMonoCecil> mapTypeDefinitionToParsedClass = new();
-
-
         public string DLLFileName
         {
             get { return _DLLFileName; }
@@ -74,7 +69,6 @@ namespace Analyzer.Parsing
                             {
                                 ParsedClass classObj = new ParsedClass(type);
                                 classObjList.Add(classObj);
-                                mapTypeToParsedClass[type] = classObj;
                             }
                         }
                         else if (type.IsInterface)
@@ -123,7 +117,6 @@ namespace Analyzer.Parsing
                             {
                                 ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
                                 classObjListMC.Add(classObj);
-                                mapTypeDefinitionToParsedClass[type.Resolve().GetType()] = classObj;
                             }
                             else if (type.IsInterface)
                             {
