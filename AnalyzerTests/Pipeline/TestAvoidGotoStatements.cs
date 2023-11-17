@@ -9,6 +9,25 @@ namespace Analyzer.Pipeline.Tests
     [TestClass]
     public class AvoidGotoStatementsAnalyzerTests
     {
+        /*[TestMethod]
+        public void NoGotoStatements_ShouldPass()
+        {
+            // Arrange
+            List<string> dllFilePaths = new List<string>
+            {
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\Goto.dll"
+            };
+
+            ParsedDLLFiles dllFiles = new ParsedDLLFiles(dllFilePaths);
+            AvoidGotoStatementsAnalyzer analyzer = new AvoidGotoStatementsAnalyzer(dllFiles);
+
+            // Act
+            var result = analyzer.Run();
+
+            // Assert
+            Assert.AreEqual(1, result.Verdict); // Verdict should be 1 for passing
+        }*/
+
         [TestMethod]
         public void GotoStatementsPresent_ShouldFail()
         {
