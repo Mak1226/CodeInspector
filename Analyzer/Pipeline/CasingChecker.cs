@@ -42,7 +42,7 @@ namespace Analyzer.Pipeline
             verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
-            if (!casecheck(parsedDLLFile))
+            if (casecheck(parsedDLLFile))
             {
                 verdict = 0;
             }
@@ -67,7 +67,6 @@ namespace Analyzer.Pipeline
                 {
                     hasMistake = true;
                     Console.WriteLine($"INCORRECT NAMESPACE NAMING : {classObj.TypeObj.BaseType.Namespace}");
-                    break; // If a mistake is found, exit the loop
                 }
             }
 
@@ -82,13 +81,11 @@ namespace Analyzer.Pipeline
                         {
                             hasMistake = true;
                             Console.WriteLine($"INCORRECT METHOD NAMING : {method.Name}");
-                            break;
                         }
 
                         if (!AreParametersCamelCased(method))
                         {
                             hasMistake = true;
-                            break;
                         }
                     }
                 }
@@ -96,7 +93,7 @@ namespace Analyzer.Pipeline
             return hasMistake;
         }
 
-            // check if name is PascalCased
+        // check if name is PascalCased
         private static bool IsPascalCase(string name)
         {
            if (String.IsNullOrEmpty (name))
@@ -116,14 +113,22 @@ namespace Analyzer.Pipeline
 
            private bool AreParametersCamelCased(MethodDefinition method)
            {
+                    private int flag = 0;
+                    
                     foreach (var param in method.Parameters)
                     {
                         if (!IsCamelCase(param.Name))
                         {
                             Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");                            
-                            return false;
+                            flag = 1;
                         }
                     }
+
+                    if(flag==1)
+                    {
+                        return false;
+                    }
+
                     return true;
            }
 
