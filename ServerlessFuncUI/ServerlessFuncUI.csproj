@@ -8,9 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContentPage\ContentPage.csproj" />
-    <ProjectReference Include="..\ServerlessFuncUI\ServerlessFuncUI.csproj" />
-    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cloud_UX\Cloud_UX.csproj" />
+    <ProjectReference Include="..\ServerlessFunc\ServerlessFunc.csproj" />
   </ItemGroup>
 
 </Project>

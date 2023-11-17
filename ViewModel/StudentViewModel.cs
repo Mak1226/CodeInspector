@@ -219,8 +219,8 @@ namespace ViewModel
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
             {
-                var ipPort = client.Start(InstructorIp, int.Parse(InstructorPort), StudentRoll);
-                client.Subscribe(this, "StudentViewModel");
+                var ipPort = client.Start(InstructorIp, int.Parse(InstructorPort), StudentRoll, "Dashboard");
+                client.Subscribe(this, "Dashboard");
                 Debug.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
@@ -231,7 +231,7 @@ namespace ViewModel
                     OnPropertyChanged(nameof(ReceivePort));
 
                     var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
-                    client.Send(message, EventType.ChatMessage(), "server");
+                    client.Send(message, "server");
                 }
                 catch { }
             }
@@ -254,39 +254,10 @@ namespace ViewModel
             StudentRoll = roll;
         }
 
-        public string HandleAnalyserResult(Networking.Models.Message data)
+        public string HandleMessageRecv(Networking.Models.Message data)
         {
-            throw new NotImplementedException();
-        }
-
-        public string HandleChatMessage(Networking.Models.Message data)
-        { 
             HandleMessage(data.Data);
             return "";
-        }
-
-        public string HandleClientJoined(Networking.Models.Message data)
-        {
-            return "";
-        }
-
-        public string HandleClientLeft(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleConnectionRequest(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleFile(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-        string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
-        {
-            throw new NotImplementedException();
         }
     }
 }

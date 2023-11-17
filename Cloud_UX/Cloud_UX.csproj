@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContentPage\ContentPage.csproj" />
-    <ProjectReference Include="..\ServerlessFuncUI\ServerlessFuncUI.csproj" />
-    <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+    <ProjectReference Include="..\ServerlessFunc\ServerlessFunc.csproj" />
   </ItemGroup>
 
 </Project>

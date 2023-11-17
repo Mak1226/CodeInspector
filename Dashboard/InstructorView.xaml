@@ -64,8 +64,17 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightCyan" />
                 </Grid.Background>
-                <!--<TextBlock Text="Content and Status" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                <Frame x:Name="ResultFrame"/>
+                <TabControl>
+                    <!-- Tab 1 -->
+                    <TabItem Header="Content">
+                        <Frame x:Name="ResultFrame" />
+                    </TabItem>
+
+                    <!-- Tab 2 -->
+                    <TabItem Header="Cloud">
+                        <Frame x:Name="CloudFrame" />
+                    </TabItem>
+                </TabControl>
             </Grid>
             <Grid Grid.Column="1" Margin="5,5,5,5">
                 <Grid.Background>
