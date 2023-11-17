@@ -1,4 +1,4 @@
-/*using System;
+using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class CasingChecker : AnalyzerBase
     {
-
+       
         private string errorMessage;
         private int verdict;
         private readonly string analyzerID;
@@ -61,12 +61,13 @@ namespace Analyzer.Pipeline
             bool hasMistake = false;
 
             // Check namespace names for PascalCasing
-            foreach (var classObj in parsedDLLFile.classObjListMC)
+            foreach(var classObj in parsedDLLFile.classObjListMC)
             {
                 if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
                 {
                     hasMistake = true;
                     Console.WriteLine($"INCORRECT NAMESPACE NAMING : {classObj.TypeObj.BaseType.Namespace}");
+                    errorMessage = "INCORRECT NAMESPACE NAMING : " + classObj.TypeObj.BaseType.Namespace;
                 }
             }
 
@@ -81,6 +82,7 @@ namespace Analyzer.Pipeline
                         {
                             hasMistake = true;
                             Console.WriteLine($"INCORRECT METHOD NAMING : {method.Name}");
+                            errorMessage = "INCORRECT METHOD NAMING : " + method.Name;
                         }
 
                         if (!AreParametersCamelCased(method))
@@ -96,27 +98,42 @@ namespace Analyzer.Pipeline
         // check if name is PascalCased
         private static bool IsPascalCase(string name)
         {
-            if (String.IsNullOrEmpty(name))
-                return true;
+           if (String.IsNullOrEmpty (name))
+           return true;
 
-            return Char.IsUpper(name[0]);
-        }
+           return Char.IsUpper (name [0]);
+           }
 
-        // check if name is camelCased
-        private static bool IsCamelCase(string name)
-        {
-            if (String.IsNullOrEmpty(name))
-                return true;
+           // check if name is camelCased
+           private static bool IsCamelCase (string name)
+           {
+           if (String.IsNullOrEmpty (name))
+           return true;
 
-            return Char.IsLower(name[0]);
-        }
-    
+           return Char.IsLower (name [0]);
+           }
+
            private bool AreParametersCamelCased(MethodDefinition method)
            {
-                    private int flag = 0;
+                    int flag = 0;
+                   
+                    foreach (var param in method.Parameters)
+                    {
+                        if (!IsCamelCase(param.Name))
+                        {
+                            Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");
+                            errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
+                            flag = 1;
+                        }
+                    }
+
+                    if(flag==1)
+                    {
+                        return false;
+                    }
 
                     return true;
            }
 
+        }
 }
-}*/
