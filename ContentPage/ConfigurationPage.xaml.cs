@@ -23,8 +23,8 @@ namespace ContentPage
     /// </summary>
     public partial class ConfigurationPage : Page
     {
-        private ContentServerViewModel viewModel;
-        private IDictionary<int, bool> accumulatedOptions = new Dictionary<int, bool>();
+        private readonly ContentServerViewModel _viewModel;
+        private readonly IDictionary<int, bool> _accumulatedOptions = new Dictionary<int, bool>();
 
         /// <summary>
         /// Initializes content Server ViewModel
@@ -33,7 +33,7 @@ namespace ContentPage
         public ConfigurationPage(ContentServerViewModel viewModel)
         {
             InitializeComponent();
-            this.viewModel = viewModel;
+            _viewModel = viewModel;
             DataContext = viewModel;
         }
         private void CheckBoxChecked(object sender, RoutedEventArgs e)
@@ -41,14 +41,13 @@ namespace ContentPage
             // Handle the CheckBox checked event if needed
             // For example, you might call a method on viewModel
             var checkBox = sender as CheckBox;
-            var analyzerItem = checkBox?.DataContext as AnalyzerConfigOption;
 
-            if (analyzerItem != null && checkBox?.IsChecked == true)
+            if (checkBox?.DataContext is AnalyzerConfigOption analyzerItem && checkBox?.IsChecked == true)
             {
                 // Assuming Configure is a method on viewModel
-                int analyzerId = Convert.ToInt32(analyzerItem.AnalyzerId);
-                accumulatedOptions[analyzerId] = true;
-                viewModel.ConfigureAnalyzer(accumulatedOptions);
+                int analyzerId = Convert.ToInt32( analyzerItem.AnalyzerId );
+                _accumulatedOptions[analyzerId] = true;
+                _viewModel.ConfigureAnalyzer( _accumulatedOptions );
                 //        viewModel.ConfigureAnalyzer(new Dictionary<int, bool>
                 //{
                 //    { Convert.ToInt32(analyzerItem.AnalyzerId), true }
@@ -59,14 +58,13 @@ namespace ContentPage
         private void CheckBoxUnchecked(object sender, RoutedEventArgs e)
         {
             var checkBox = sender as CheckBox;
-            var analyzerItem = checkBox?.DataContext as AnalyzerConfigOption;
 
-            if (analyzerItem != null)
+            if (checkBox?.DataContext is AnalyzerConfigOption analyzerItem)
             {
-                int analyzerId = Convert.ToInt32(analyzerItem.AnalyzerId);
-                accumulatedOptions.Remove(analyzerId);
+                int analyzerId = Convert.ToInt32( analyzerItem.AnalyzerId );
+                _accumulatedOptions.Remove( analyzerId );
 
-                viewModel.ConfigureAnalyzer(accumulatedOptions);
+                _viewModel.ConfigureAnalyzer( _accumulatedOptions );
             }
         }
 

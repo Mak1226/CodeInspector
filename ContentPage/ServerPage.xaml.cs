@@ -9,7 +9,7 @@ namespace ContentPage
     /// </summary>
     public partial class ServerPage : Page
     {
-        private ContentServerViewModel viewModel;
+        private readonly ContentServerViewModel _viewModel;
 
         /// <summary>
         /// Create a server page instance.
@@ -19,8 +19,8 @@ namespace ContentPage
         public ServerPage(ICommunicator server)
         {
             InitializeComponent();
-            viewModel = new ContentServerViewModel(server);
-            DataContext = viewModel;
+            _viewModel = new ContentServerViewModel(server);
+            DataContext = _viewModel;
 
             LoadResultPage(); // Load ResultPage initially
             LoadConfigurationPage(); // Optionally, load ConfigurationPage initially
@@ -34,20 +34,20 @@ namespace ContentPage
         /// <param name="sessionID">Session ID or Client ID</param>
         public void SetSessionID(string sessionID)
         {
-            viewModel.SetSessionID(sessionID);
+            _viewModel.SetSessionID(sessionID);
         }
 
        
         private void LoadResultPage()
         {
-            ResultPage resultPage = new ResultPage(viewModel);
+            ResultPage resultPage = new (_viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
         }
 
         private void LoadConfigurationPage()
         {
-            ConfigurationPage configPage = new ConfigurationPage(viewModel);
+            ConfigurationPage configPage = new (_viewModel);
             ConfigFrame.NavigationService.Navigate(configPage);
             
         }
