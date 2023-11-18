@@ -7,6 +7,7 @@ namespace Networking.Utils
 {
     public class Sender
     {
+        //TODO: HANDLE THREAD SLEEP
         private Queue _sendQueue = new();
         private Thread _sendThread;
         private bool _isClient;
@@ -20,21 +21,24 @@ namespace Networking.Utils
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
             this.clientIDToStream = clientIDToStream;
-            _sendThread = new Thread(SendLoop);
+            _sendThread = new Thread(SendLoop)
+            {
+                IsBackground = true
+            };
             _sendThread.Start();
         }
 
         public void Stop()
         {
             Console.WriteLine("[Sender] Stop");
-            _sendQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
+            //_sendQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
             _sendThread.Join();
         }
 
         public void Send(Message message)
         {
             // NOTE: destID should be in line with the dict passed 
-            _sendQueue.Enqueue(message, Priority.GetPriority(message.EventType)/* TODO */);
+            _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName)/* TODO */);
         }
 
         public void SendLoop()
@@ -52,8 +56,8 @@ namespace Networking.Utils
                 Message message = _sendQueue.Dequeue();
 
                 // If the message is a stop message, break out of the loop
-                if (message.StopThread)
-                    break;
+                //if (message.StopThread)
+                //    break;
 
                 string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);

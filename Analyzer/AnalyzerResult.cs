@@ -18,5 +18,31 @@ namespace Analyzer
             Verdict = verdict;
             ErrorMessage = errorMessage;
         }
+
+        public static bool operator ==(AnalyzerResult obj1, AnalyzerResult obj2)
+        {
+           if(obj1.Verdict == obj2.Verdict && obj1.AnalyserID == obj2.AnalyserID && obj1.ErrorMessage==obj2.ErrorMessage) 
+           { 
+                return true;
+           }
+
+           return false;
+        }
+
+        public static bool operator !=(AnalyzerResult obj1, AnalyzerResult obj2)
+        {
+            return !(obj1 == obj2);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            AnalyzerResult other = (AnalyzerResult)obj;
+            return AnalyserID == other.AnalyserID && Verdict == other.Verdict && ErrorMessage == other.ErrorMessage;
+        }
     }
 }

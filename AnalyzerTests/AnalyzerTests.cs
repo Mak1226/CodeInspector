@@ -24,6 +24,18 @@ namespace Analyzer.Tests
             teacherOptions[102] = true;
             teacherOptions[103] = true;
             teacherOptions[104] = true;
+            teacherOptions[105] = true;
+            teacherOptions[106] = true;
+            teacherOptions[107] = true;
+            teacherOptions[108] = true;
+            teacherOptions[109] = true;
+            teacherOptions[110] = true;
+            teacherOptions[111] = true;
+            teacherOptions[112] = true;
+            teacherOptions[113] = true;
+            teacherOptions[114] = true;
+            teacherOptions[115] = true;
+            teacherOptions[116] = true;
 
             analyzer.Configure(teacherOptions);
 

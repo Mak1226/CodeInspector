@@ -21,7 +21,7 @@ namespace Analyzer.Pipeline.Tests
 
             //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
 
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll";
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\UnusedPrivateFields.dll";
             ParsedDLLFile dllFile = new ParsedDLLFile(path);
 
             //DllFilePaths.Add(path);

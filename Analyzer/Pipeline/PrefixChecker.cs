@@ -13,11 +13,11 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class PrefixCheckerAnalyzer : AnalyzerBase
     {
-        
+       
         private string errorMessage;
         private int verdict;
         private readonly string analyzerID;
-        
+       
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
@@ -27,8 +27,10 @@ namespace Analyzer.Pipeline
             // The constructor can be used for any necessary setup or initialization.
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom4";
+            analyzerID = "115";
         }
+
+
 
         /// <summary>
         /// Analyzes the DLL files to check type name prefixes for correctness.
@@ -44,7 +46,8 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect type prefix: {classObj.Name}");
+                    Console.WriteLine($"INCORRECT TYPE PREFIX : {classObj.Name}");
+                    errorMessage = "INCORRECT TYPE PREFIX : " + classObj.Name;
                     errorCount++;
                 }
             }
@@ -54,7 +57,8 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
-                    //Console.WriteLine($"[Error] Incorrect interface prefix: {interfaceObj.Name}");
+                    Console.WriteLine($"INCORRECT INTERFACE PREFIX : {interfaceObj.Name}");
+                    errorMessage = "INCORRECT INTERFACE PREFIX : " + interfaceObj.Name;
                     errorCount++;
                 }
             }
@@ -63,7 +67,8 @@ namespace Analyzer.Pipeline
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {
-                        //Console.WriteLine($"[Error] Incorrect generic parameter prefix: {structObj.Name}");
+                        Console.WriteLine($"INCORRECT PARAMETER PREFIX : {structObj.Name}");
+                        errorMessage = "INCORRECT PARAMETER PREFIX : " + structObj.Name;
                         errorCount++;
                     }
             }
@@ -91,7 +96,7 @@ namespace Analyzer.Pipeline
             return name.Length > 2 && name[0] == 'I' && char.IsUpper(name[1]);
         }
 
-	    /// <summary>
+   /// <summary>
         /// Checks if a type name follows the correct type prefix.
         /// </summary>
         /// <param name="name">The type name to check.</param>
@@ -103,14 +108,14 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-            switch (name [0]) {	
-                case 'I':	
+            switch (name [0]) {
+                case 'I':
                     return Char.IsLower (name [1]) ? true : Char.IsUpper (name [2]);
                 default:
                     return true;
                 }
             }
-        
+       
         /// <summary>
         /// Checks if a type name follows the correct generic parameter prefix.
         /// </summary>
@@ -122,4 +127,3 @@ namespace Analyzer.Pipeline
         }
     }
 }
-

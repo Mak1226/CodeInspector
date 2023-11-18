@@ -1,60 +1,91 @@
 ﻿using Networking.Communicator;
 using Networking.Models;
-using System.Net.Sockets;
+using Networking.Serialization;
 using Networking.Utils;
 
 namespace Networking.Events
 {
     public class NetworkingEventHandler : IEventHandler
     {
+
         ICommunicator server = CommunicationFactory.GetServer();
-        public string HandleAnalyserResult(Message message)
+        public string HandleMessageRecv(Message message)
         {
-            throw new NotImplementedException();
-        }
-
-        public string HandleChatMessage(Message message)
-        {
-            if (message.DestID != ID.GetServerID())
+            Data data=Serializer.Deserialize<Data>(message.Data);
+            if (data.EventType == EventType.ChatMessage())
             {
-                ((Server)server).Send(message.Data, message.EventType, message.DestID, message.SenderID);
+                return HandleChatMessage(message);
             }
-            else
+            else if (data.EventType == EventType.NewClientJoined())
             {
-                Console.WriteLine("message received in server:"+message.Data);
+                return HandleClientJoined(message);
+            }
+            else if (data.EventType == EventType.ClientLeft())
+            {
+                return HandleClientLeft(message);
+            }
+            else if (data.EventType == EventType.ClientRegister())
+            {
+                return HandleClientRegister(message);
+            }
+            else if (data.EventType == EventType.ClientDeregister())
+            {
+                return HandleClientDeregister(message);
             }
             return "";
         }
 
-        public string HandleClientJoined(Message message)
+        private string HandleChatMessage(Message message)
         {
-            server.Send(message.SenderID, EventType.NewClientJoined(), ID.GetBroadcastID());
+            //if (message.DestID != ID.GetServerID())
+            //{
+            //    ((Server)server).Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
+            //}
+            //else
+            //{
+            Console.WriteLine("message received in server:" + message.Data);
+            //}
             return "";
         }
 
-        public string HandleClientLeft(Message message)
+        private string HandleClientJoined(Message message)
         {
-            server.Send(message.Data, EventType.ClientLeft(), ID.GetBroadcastID());
+            //TODO: add respective module name
+            Data data = new Data(message.SenderID, EventType.NewClientJoined());
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
             return "";
         }
 
-        public string HandleConnectionRequest(Message message)
+        private string HandleClientLeft(Message message)
         {
-            throw new NotImplementedException();
+            Data data = new Data(message.SenderID, EventType.ClientLeft());
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
+            return "";
         }
 
-        public string HandleFile(Message message)
+        private string HandleClientRegister(Message message)
         {
-            throw new NotImplementedException();
-        }
-        public string HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
-        {
-            lock (senderIDToClientID)
+            lock(((Server)server)._senderIDToClientID)
             {
-                senderIDToClientID[message.SenderID] = message.Data;
+                Data data=Serializer.Deserialize<Data>(message.Data);
+                ((Server)server)._senderIDToClientID[message.SenderID] = data.Payload;
             }
             HandleClientJoined(message);
             return "";
         }
+
+        private string HandleClientDeregister(Message message)
+        {
+            Console.WriteLine("herererer");
+            string clientID = ((Server)server)._senderIDToClientID[message.SenderID];
+            lock (((Server)server)._clientIDToStream)
+            {
+                ((Server)server)._clientIDToStream.Remove(clientID);
+            }
+            Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
+            HandleClientLeft(message);
+            return "";
+        }
     }
 }
+

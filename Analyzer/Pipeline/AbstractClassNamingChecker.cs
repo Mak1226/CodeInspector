@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class AbstractClassNamingChecker : AnalyzerBase
     {
-        
+
         private string errorMessage;
         private int verdict;
         private readonly string analyzerID;
-        
+
         /// <summary>
         /// Initializes a new instance of the AbstractClassNamingChecker analyzer with parsed DLL files.
         /// </summary>
@@ -27,7 +27,7 @@ namespace Analyzer.Pipeline
             // TODO if required
             errorMessage = "";
             verdict = 1;
-            analyzerID = "Custom3";
+            analyzerID = "111";
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace Analyzer.Pipeline
 
             else
             {
-            	verdict = 1; // If all abstract classes meet the criteria, set the score to 1
+                verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
-            
+
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
 
@@ -78,6 +78,8 @@ namespace Analyzer.Pipeline
         /// <returns>True if there is any abstract class not meeting the criteria, false if all meet the criteria.</returns>
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
+            int flag = 0;
+
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
@@ -89,13 +91,19 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
-                        return true; // If any abstract class does not meet the criteria, return true
+                        Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
+                        errorMessage = "INCORRECT ABSTRACT CLASS NAMING : " + className;
+                        flag = 1;// If any abstract class does not meet the criteria, return true
                     }
                 }
+            }
+
+            if(flag == 1)
+            {
+                return true;
             }
 
             return false; // If all abstract classes meet the criteria, return false
         }
     }
 }
-
