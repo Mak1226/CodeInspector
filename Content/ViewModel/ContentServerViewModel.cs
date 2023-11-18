@@ -18,9 +18,9 @@ namespace Content.ViewModel
     /// </summary>
     public class ContentServerViewModel : INotifyPropertyChanged, IContentViewModel
     {
-        private Dictionary<string, List<AnalyzerResult>> analyzerResults;
-        private ContentServer contentServer;
-        private List<AnalyzerConfigOption> configOptionsList;
+        private readonly ContentServer _contentServer;
+        private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
+        private List<AnalyzerConfigOption> _configOptionsList;
         //private Tuple<string, List<Tuple<string, int, string>>> dataList;
 
 
@@ -31,33 +31,33 @@ namespace Content.ViewModel
         /// </summary>
         public ContentServerViewModel(ICommunicator server)
         {
-            contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer());
-            contentServer.AnalyzerResultChanged += (result) =>
+            _contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer());
+            _contentServer.AnalyzerResultChanged += (result) =>
             {
-                analyzerResults = result;
+                _analyzerResults = result;
                 //UpdateDataList(analyzerResults);
-                OnPropertyChanged(nameof(analyzerResults));
+                OnPropertyChanged(nameof(_analyzerResults));
                 OnPropertyChanged(nameof(DataList));
             };
 
             // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
-            configOptionsList = new List<AnalyzerConfigOption>();
-            foreach (var option in AnalyzerFactory.GetAllConfigurationOptions())
+            _configOptionsList = new List<AnalyzerConfigOption>();
+            foreach (Tuple<int , string> option in AnalyzerFactory.GetAllConfigurationOptions())
             {
-                configOptionsList.Add(new AnalyzerConfigOption
+                _configOptionsList.Add(new AnalyzerConfigOption
                 {
                     AnalyzerId = option.Item1,
                     Description = option.Item2,
                     IsSelected = false // Set the default value for IsSelected as needed
                 });
             }
-            analyzerResults = contentServer.analyzerResult;
+            _analyzerResults = _contentServer.analyzerResult;
         }
 
         public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions)
         {
             // Call Analyzer.Configure
-            contentServer.Configure(teacherOptions);
+            _contentServer.Configure(teacherOptions);
         }
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace Content.ViewModel
         {
             get
             {
-                if (analyzerResults == null)
+                if (_analyzerResults == null)
                 {
                     return new();
                 }
 
 
                 List<Tuple<string, List<Tuple<string, int, string>>>> outList = new();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
+                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in _analyzerResults)
                 {
                     List<Tuple<string, int, string>> resultList = new();
                     foreach (AnalyzerResult result in kvp.Value)
@@ -97,8 +97,8 @@ namespace Content.ViewModel
 
         public List<AnalyzerConfigOption> ConfigOptionsList
         {
-            get { return configOptionsList; }
-            set { configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
+            get { return _configOptionsList; }
+            set { _configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -108,7 +108,7 @@ namespace Content.ViewModel
 
         public void SetSessionID(string? sessionID)
         {
-            contentServer.SetSessionID(sessionID);   
+            _contentServer.SetSessionID(sessionID);   
         }
     }
 }

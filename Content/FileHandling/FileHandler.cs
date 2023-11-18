@@ -49,7 +49,7 @@ namespace Content.FileHandling
         /// <param name="sessionID"></param>
         public string HandleUpload(string filepath, string sessionID)
         {
-            List<string> dllFiles = new List<string>();
+            List<string> dllFiles = new();
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string encoding;
@@ -115,8 +115,8 @@ namespace Content.FileHandling
 
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
-            _filesList = new List<String>();
-            foreach (var file in decodedFiles)
+            _filesList = new List<string>();
+            foreach (KeyValuePair<string , string> file in decodedFiles)
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));
             }

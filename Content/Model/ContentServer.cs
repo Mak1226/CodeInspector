@@ -11,19 +11,19 @@ namespace Content.Model
     /// </summary>
     public class ContentServer
     {
-        readonly ICommunicator server;
-        readonly IFileHandler fileHandler;
-        readonly IAnalyzer analyzer;
-        readonly AnalyzerResultSerializer serializer;
+        readonly ICommunicator _server;
+        readonly IFileHandler _fileHandler;
+        readonly IAnalyzer _analyzer;
+        readonly AnalyzerResultSerializer _serializer;
         
-        string? sessionID;
+        string? _sessionID;
 
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
 
-        private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> sessionAnalysisResultDict;
-        private object sessionLock = new object();
+        private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> _sessionAnalysisResultDict;
+        private readonly object _sessionLock = new ();
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
@@ -32,18 +32,18 @@ namespace Content.Model
         /// <param name="_analyzer">Analyzer</param>
         public ContentServer(ICommunicator _server, IAnalyzer _analyzer)
         {
-            server = _server;
-            ServerRecieveHandler recieveHandler = new ServerRecieveHandler(this);
-            server.Subscribe(recieveHandler, "Content-Files");
+            this._server = _server;
+            ServerRecieveHandler recieveHandler = new (this);
+            this._server.Subscribe( recieveHandler , "Content-Files");
 
-            fileHandler = new FileHandler();
+            _fileHandler = new FileHandler();
 
-            analyzer = _analyzer;
+            this._analyzer = _analyzer;
 
-            serializer = new AnalyzerResultSerializer();
+            _serializer = new AnalyzerResultSerializer();
 
             analyzerResult = new();
-            sessionAnalysisResultDict = new();
+            _sessionAnalysisResultDict = new();
         }
 
         /// <summary>
@@ -54,24 +54,24 @@ namespace Content.Model
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
             // Save files to user session directory and collect sessionID
-            string? recievedSessionID = fileHandler.HandleRecieve(encodedFiles);
+            string? recievedSessionID = _fileHandler.HandleRecieve(encodedFiles);
             if (recievedSessionID == null) 
             { 
                 return; // FileHandler failed
             }
 
             // Analyse DLL files
-            analyzer.LoadDLLFileOfStudent(fileHandler.GetFiles());
+            _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
 
             // Send Analysis results to client
 
             // Save analysis results 
-            lock (sessionLock)
+            lock (_sessionLock)
             {
-                var res = analyzer.Run();
-                sessionAnalysisResultDict[recievedSessionID] = res;
-                server.Send(serializer.Serialize(res), "Content-Results", clientID);
-                if (sessionID == recievedSessionID)
+                Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
+                _sessionAnalysisResultDict[recievedSessionID] = res;
+                _server.Send(_serializer.Serialize(res), "Content-Results", clientID);
+                if (_sessionID == recievedSessionID)
                 {
                     analyzerResult = res;
                     // Notification for viewModel
@@ -83,27 +83,27 @@ namespace Content.Model
 
         public void Configure(IDictionary<int, bool> configuration)
         {
-            analyzer.Configure(configuration);
+            _analyzer.Configure(configuration);
         }
 
         public void SetSessionID(string? sessionID)
         {
             if (sessionID == null)
             {
-                this.sessionID = null;
+                _sessionID = null;
                 return;
             }
 
 
-            this.sessionID = sessionID;
-            if (sessionAnalysisResultDict.ContainsKey(sessionID)) 
+            _sessionID = sessionID;
+            if (_sessionAnalysisResultDict.ContainsKey(sessionID)) 
             {
-                analyzerResult = sessionAnalysisResultDict[sessionID];
+                analyzerResult = _sessionAnalysisResultDict[sessionID];
             }
             else
             {
                 analyzerResult = new();
-                sessionAnalysisResultDict[sessionID] = analyzerResult;
+                _sessionAnalysisResultDict[sessionID] = analyzerResult;
             }
             AnalyzerResultChanged?.Invoke(analyzerResult);
         }
