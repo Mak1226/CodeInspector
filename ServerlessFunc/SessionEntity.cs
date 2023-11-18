@@ -1,6 +1,6 @@
-﻿using Azure;
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
+using Azure;
 using ITableEntity = Azure.Data.Tables.ITableEntity;
 using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
@@ -10,7 +10,7 @@ namespace ServerlessFunc
     {
         public const string PartitionKeyName = "SessionEntityPartitionKey";
 
-        public SessionEntity(SessionData sessionData = null)
+        public SessionEntity( SessionData sessionData = null )
         {
             PartitionKey = PartitionKeyName;
             RowKey = Guid.NewGuid().ToString();
@@ -29,13 +29,13 @@ namespace ServerlessFunc
             ETag = new ETag();
         }
 
-        public SessionEntity() : this(null) { }
+        public SessionEntity() : this( null ) { }
 
         /// <summary>
         /// To store session Id.
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("SessionId")]
+        [JsonPropertyName( "SessionId" )]
         public string SessionId { get; set; }
 
 
@@ -43,7 +43,7 @@ namespace ServerlessFunc
         /// To store Unique id for the entry.
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("Id")]
+        [JsonPropertyName( "Id" )]
         public string Id { get; set; }
 
 
@@ -51,40 +51,40 @@ namespace ServerlessFunc
         /// To store the host user name.
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("HostUserName")]
+        [JsonPropertyName( "HostUserName" )]
         public string HostUserName { get; set; }
 
         [JsonInclude]
-        [JsonPropertyName("PartitionKey")]
+        [JsonPropertyName( "PartitionKey" )]
         public string PartitionKey { get; set; }
 
         [JsonInclude]
-        [JsonPropertyName("RowKey")]
+        [JsonPropertyName( "RowKey" )]
         public string RowKey { get; set; }
 
         /// <summary>
         /// To store start Timestamp of the session.
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("Timestamp")]
+        [JsonPropertyName( "Timestamp" )]
         public DateTimeOffset? Timestamp { get; set; }
 
         /// <summary>
         /// To store the tests done in session
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("Tests")]
+        [JsonPropertyName( "Tests" )]
         public byte[] Tests { get; set; }
 
         /// <summary>
         /// To store the list of studnets joined in session
         /// </summary>
         [JsonInclude]
-        [JsonPropertyName("Students")]
+        [JsonPropertyName( "Students" )]
         public byte[] Students { get; set; }
 
         [JsonInclude]
-        [JsonPropertyName("TestNameToID")]
+        [JsonPropertyName( "TestNameToID" )]
         public byte[] TestNameToID { get; set; }
 
         [JsonIgnore]
