@@ -14,9 +14,9 @@ namespace Analyzer.Pipeline
     public class PrefixCheckerAnalyzer : AnalyzerBase
     {
        
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
        
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
@@ -25,9 +25,9 @@ namespace Analyzer.Pipeline
         public PrefixCheckerAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // The constructor can be used for any necessary setup or initialization.
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "115";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "115";
         }
 
 
@@ -38,51 +38,51 @@ namespace Analyzer.Pipeline
         /// <returns>The number of errors found during the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
             int errorCount = 0;
 
-            foreach (var classObj in parsedDLLFile.classObjList)
+            foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
                     Console.WriteLine($"INCORRECT TYPE PREFIX : {classObj.Name}");
-                    errorMessage = "INCORRECT TYPE PREFIX : " + classObj.Name;
+                    _errorMessage = "INCORRECT TYPE PREFIX : " + classObj.Name;
                     errorCount++;
                 }
             }
 
             // To check interfaces
-            foreach (var interfaceObj in parsedDLLFile.interfaceObjList)
+            foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
                     Console.WriteLine($"INCORRECT INTERFACE PREFIX : {interfaceObj.Name}");
-                    errorMessage = "INCORRECT INTERFACE PREFIX : " + interfaceObj.Name;
+                    _errorMessage = "INCORRECT INTERFACE PREFIX : " + interfaceObj.Name;
                     errorCount++;
                 }
             }
 
-            foreach (var structObj in parsedDLLFile.structureObjList)
+            foreach (ParsedStructure structObj in parsedDLLFile.structureObjList)
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {
                         Console.WriteLine($"INCORRECT PARAMETER PREFIX : {structObj.Name}");
-                        errorMessage = "INCORRECT PARAMETER PREFIX : " + structObj.Name;
+                        _errorMessage = "INCORRECT PARAMETER PREFIX : " + structObj.Name;
                         errorCount++;
                     }
             }
 
             if (errorCount == 0)
             {
-                verdict = 1;
+                _verdict = 1;
             }
             else
             {
-                verdict = 0;
+                _verdict = 0;
             }
 
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
 
 
@@ -108,14 +108,24 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-            switch (name [0]) {
-                case 'I':
-                    return Char.IsLower (name [1]) ? true : Char.IsUpper (name [2]);
-                default:
+            if (name[0] == 'I')
+            {
+                if (char.IsLower( name[1] ))
+                {
                     return true;
                 }
+                else
+                {
+                    return char.IsUpper( name[2] );
+                }
             }
-       
+            else
+            {
+                return true;
+            }
+
+        }
+
         /// <summary>
         /// Checks if a type name follows the correct generic parameter prefix.
         /// </summary>
@@ -123,7 +133,7 @@ namespace Analyzer.Pipeline
         /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectGenericParameterName (string name)
         {
-            return (((name.Length > 1) && (name [0] != 'T')) || Char.IsLower (name [0]));
+            return (((name.Length > 1) && (name[0] != 'T')) || char.IsLower(name[0]));
         }
     }
 }
