@@ -140,11 +140,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
-        public async Task<Byte[]> GenerateClassDiagram(List<string> removableNamespaces)
+        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            Byte[] bytes = await classDiag.Run(removableNamespaces);
+            Byte[] bytes = classDiag.Run(removableNamespaces).Result;
             return bytes;
         }
     }

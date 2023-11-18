@@ -81,7 +81,7 @@ namespace Analyzer.UMLDiagram
 
             foreach (ParsedClassMonoCecil classObj in _parsedClassList)
             {
-                if (!isPartOfRemovableNamespace(classObj.TypeObj.FullName, removableNamespaces))
+                if (!isPartOfRemovableNamespace(classObj.TypeObj.FullName.Insert(0,"C"), removableNamespaces))
                 {
                     graphParsedClassObj.Add(classObj);
                     _plantUMLCode.Append($"class {classObj.TypeObj.FullName}{{}}\r\n");
@@ -90,7 +90,7 @@ namespace Analyzer.UMLDiagram
 
             foreach (ParsedInterface interfaceObj in _parsedInterfaceList)
             {
-                if (!isPartOfRemovableNamespace(interfaceObj.TypeObj.FullName, removableNamespaces))
+                if (!isPartOfRemovableNamespace(interfaceObj.TypeObj.FullName.Insert(0,"I"), removableNamespaces))
                 {
                     graphParsedInterfaceObj.Add(interfaceObj);
                     _plantUMLCode.Append($"interface {interfaceObj.TypeObj.FullName}\r\n");
@@ -133,7 +133,8 @@ namespace Analyzer.UMLDiagram
             {
                 foreach (Type parent in interfaceObj.ParentInterfaces)
                 {
-                    if(!isPartOfRemovableNamespace(parent.FullName , removableNamespaces))
+                    
+                    if(!isPartOfRemovableNamespace(parent.FullName.Insert(0, "I") , removableNamespaces))
                     {
                         _plantUMLCode.AppendLine($"interface {interfaceObj.TypeObj.FullName} implements {parent}");
                     }
@@ -203,12 +204,14 @@ namespace Analyzer.UMLDiagram
         {
             String[] splitted_string = objName.Split(".");
 
-            if (removableNamespaces.Contains(splitted_string[0]))
+            if (removableNamespaces != null && removableNamespaces.Contains(splitted_string[0].Remove(0 , 1)))
             {
+                Console.WriteLine(objName);
                 return true;
             }
             else
             {
+                //Console.WriteLine(objName);
                 return false;
             }
         }
