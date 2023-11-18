@@ -32,8 +32,8 @@ namespace ViewModel
 
             //IpAddress = GetPrivateIp();
 
-            var ipPort = server.Start(null, null, "server");
-            server.Subscribe(this, "InstructorViewModel");
+            var ipPort = server.Start(null, null, "server", "Dashboard");
+            server.Subscribe(this, "Dashboard");
             string[] parts = ipPort.Split(':');
             try
             {
@@ -155,12 +155,12 @@ namespace ViewModel
                     if (isConnect == 1)
                     {
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
-                        server.Send("1",EventType.ChatMessage(),$"{rollNo}");
+                        server.Send("1",$"{rollNo}");
                     }
                     else if (isConnect == 0) 
                     {
                         _studentSessionState.RemoveStudent(rollNo);
-                        server.Send("0", EventType.ChatMessage(), $"{rollNo}");
+                        server.Send("0", $"{rollNo}");
                     }     
                     return true;
                 }
@@ -168,40 +168,10 @@ namespace ViewModel
             return false;
         }
 
-        public string HandleAnalyserResult(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleChatMessage(Networking.Models.Message data)
+        public string HandleMessageRecv(Networking.Models.Message data)
         {
             AddStudnet(data.Data);
             return "";
-        }
-
-        public string HandleClientJoined(Networking.Models.Message data)
-        { 
-            return "";
-        }
-
-        public string HandleClientLeft(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleConnectionRequest(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string HandleFile(Networking.Models.Message data)
-        {
-            throw new NotImplementedException();
-        }
-
-        string IEventHandler.HandleClientRegister(Message message, Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Analyzer.Pipeline
         {
             errorMessages = new List<string>();
             verdict = 1;
-            analyzerID = "avoidGoto";
+            analyzerID = "117";
         }
 
         /// <summary>
