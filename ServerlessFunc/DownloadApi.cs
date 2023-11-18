@@ -14,7 +14,7 @@ namespace ServerlessFunc
         private readonly string _submissionRoute;
         private readonly string _analysisRoute;
 
-        public DownloadApi(string sessionRoute, string submissionRoute, string analysisRoute)
+        public DownloadApi( string sessionRoute , string submissionRoute , string analysisRoute )
         {
             _entityClient = new HttpClient();
             _sessionRoute = sessionRoute;
@@ -22,74 +22,74 @@ namespace ServerlessFunc
             _analysisRoute = analysisRoute;
         }
 
-        public async Task<IReadOnlyList<SessionEntity>> GetSessionsByHostNameAsync(string hostUsername)
+        public async Task<IReadOnlyList<SessionEntity>> GetSessionsByHostNameAsync( string hostUsername )
         {
-            var response = await _entityClient.GetAsync(_sessionRoute + $"/{hostUsername}");
+            HttpResponseMessage response = await _entityClient.GetAsync( _sessionRoute + $"/{hostUsername}" );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true ,
 
             };
 
-            IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>(result, options);
+            IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
             return entities;
         }
 
-        public async Task<byte[]> GetSubmissionByUserNameAndSessionIdAsync(string username, string sessionId)
+        public async Task<byte[]> GetSubmissionByUserNameAndSessionIdAsync( string username , string sessionId )
         {
-            var response = await _entityClient.GetAsync(_submissionRoute + $"/{sessionId}/{username}");
+            HttpResponseMessage response = await _entityClient.GetAsync( _submissionRoute + $"/{sessionId}/{username}" );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true ,
 
             };
 
-            byte[] submission = JsonSerializer.Deserialize<byte[]>(result, options);
+            byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
             return submission;
         }
 
-        public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisByUserNameAndSessionIdAsync(string username, string sessionId)
+        public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisByUserNameAndSessionIdAsync( string username , string sessionId )
         {
-            var response = await _entityClient.GetAsync(_analysisRoute + $"/{sessionId}/{username}");
+            HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}/{username}" );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true ,
 
             };
 
-            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>(result, options);
+            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
             return entities;
         }
-        public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisBySessionIdAsync(string sessionId)
+        public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisBySessionIdAsync( string sessionId )
         {
-            var response = await _entityClient.GetAsync(_analysisRoute + $"/{sessionId}");
+            HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}" );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true ,
 
             };
 
-            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>(result, options);
+            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
             return entities;
         }
         public async Task DeleteAllSessionsAsync()
         {
             try
             {
-                using HttpResponseMessage response = await _entityClient.DeleteAsync(_sessionRoute);
+                using HttpResponseMessage response = await _entityClient.DeleteAsync( _sessionRoute );
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("[cloud] Network Error Exception " + ex);
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
             }
         }
 
@@ -97,12 +97,12 @@ namespace ServerlessFunc
         {
             try
             {
-                using HttpResponseMessage response = await _entityClient.DeleteAsync(_submissionRoute);
+                using HttpResponseMessage response = await _entityClient.DeleteAsync( _submissionRoute );
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("[cloud] Network Error Exception " + ex);
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
             }
         }
 
@@ -110,12 +110,12 @@ namespace ServerlessFunc
         {
             try
             {
-                using HttpResponseMessage response = await _entityClient.DeleteAsync(_analysisRoute);
+                using HttpResponseMessage response = await _entityClient.DeleteAsync( _analysisRoute );
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("[cloud] Network Error Exception " + ex);
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
             }
         }
     }

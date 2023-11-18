@@ -11,9 +11,9 @@ namespace ServerlessFunc
         private readonly string _submissionRoute;
         private readonly string _analysisRoute;
 
-        private const string connectionString = "UseDevelopmentStorage=true";
+        private const string ConnectionString = "UseDevelopmentStorage=true";
 
-        public UploadApi(string sessionRoute, string submissionRoute, string analysisRoute)
+        public UploadApi( string sessionRoute , string submissionRoute , string analysisRoute )
         {
             _entityClient = new HttpClient();
             _sessionRoute = sessionRoute;
@@ -25,45 +25,45 @@ namespace ServerlessFunc
         /// </summary>
         /// <param name="sessionData"></param>
         /// <returns>Returns the entity created on cloud</returns>
-        public async Task<SessionEntity> PostSessionAsync(SessionData sessionData)
+        public async Task<SessionEntity> PostSessionAsync( SessionData sessionData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SessionData>(_sessionRoute, sessionData);
+            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SessionData>( _sessionRoute , sessionData );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>(result, options);
+            SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>( result , options );
             return entity;
         }
 
-        public async Task<SubmissionEntity> PostSubmissionAsync(SubmissionData submissionData)
+        public async Task<SubmissionEntity> PostSubmissionAsync( SubmissionData submissionData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SubmissionData>(_submissionRoute, submissionData);
+            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SubmissionData>( _submissionRoute , submissionData );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>(result, options);
+            SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>( result , options );
             return entity;
         }
 
-        public async Task<AnalysisEntity> PostAnalysisAsync(AnalysisData analysisData)
+        public async Task<AnalysisEntity> PostAnalysisAsync( AnalysisData analysisData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<AnalysisData>(_analysisRoute, analysisData);
+            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<AnalysisData>( _analysisRoute , analysisData );
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>(result, options);
+            AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>( result , options );
             return entity;
         }
 
