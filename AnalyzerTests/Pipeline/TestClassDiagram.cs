@@ -35,14 +35,15 @@ namespace AnalyzerTests.Pipeline
 
             ClassDiagram classDiag = new(dllFiles);
 
-            List<string> removableNamespaces = new() {};
+            List<string> removableNamespaces = new() { };
 
             byte[] imageBytes = classDiag.Run(removableNamespaces).Result;
 
             Console.WriteLine(imageBytes);
-            File.WriteAllBytes("C:\\Users\\nikhi\\source\\repos\\out.png", imageBytes);
             Console.WriteLine(imageBytes.Length);
             Assert.AreNotEqual(imageBytes.Length, 0);
+            //File.WriteAllBytes("C:\\Users\\nikhi\\source\\repos\\out.png", imageBytes);
+
 
             //var factory = new RendererFactory();
             //var renderer = factory.CreateRenderer(new PlantUmlSettings());
