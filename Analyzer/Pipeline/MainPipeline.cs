@@ -64,21 +64,22 @@ namespace Analyzer.Pipeline
 
 
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
-            //_allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
+            _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
             _allAnalyzers[104] = new NoEmptyInterface(_parsedDLLFiles);
             _allAnalyzers[105] = new DepthOfInheritance(_parsedDLLFiles);
             _allAnalyzers[106] = new ArrayFieldsShouldNotBeReadOnlyRule(_parsedDLLFiles);
             _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(_parsedDLLFiles);
-            _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
-            _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
+            //_allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
+            //_allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
             //_allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
             //_allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
-            //_allAnalyzers[113] = new AbstractClassNamingChecker(_parsedDLLFiles);
+            _allAnalyzers[113] = new CyclomaticComplexity(_parsedDLLFiles);
             _allAnalyzers[114] = new NewLineLiteralRule(_parsedDLLFiles);
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
+            _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
         }
 
         private void RunAnalyzer(int analyzerID)

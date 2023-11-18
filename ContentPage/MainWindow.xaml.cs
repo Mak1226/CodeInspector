@@ -15,19 +15,30 @@ namespace ContentPage
             InitializeComponent();
         }
 
-        private void FileUploadButton_Click(object sender, RoutedEventArgs e)
+        private void FileUploadButtonClick(object sender, RoutedEventArgs e)
         {
             ICommunicator client = CommunicationFactory.GetClient();
-            client.Start("localhost", 12399, "TestClient");
-            Page uploadPage = new FileUpload(client, "TestClient");
-            MainFrame.Navigate(uploadPage);
+            client.Start("localhost", 12399, "TestClient", "Content");
+            Page clientPage = new ClientPage(client, "TestClient");
+            MainFrame.Navigate(clientPage);
+
+            // Hide the buttons
+            FileUploadButton.Visibility = Visibility.Collapsed;
+            ResultPageButton.Visibility = Visibility.Collapsed;
         }
-        private void ResultPageButton_Click(object sender, RoutedEventArgs e)
+        private void ClientPageButtonClick(object sender, RoutedEventArgs e)
         {
             ICommunicator server = CommunicationFactory.GetServer();
-            server.Start(null, null, ID.GetServerID());
-            Page resultPage = new ResultPage(server);
-            MainFrame.Navigate(resultPage);
+            server.Start(null, null, ID.GetServerID(), "Content");
+            ServerPage serverPage = new ServerPage(server);
+            MainFrame.Navigate(serverPage);
+
+            // TestClient by default
+            serverPage.SetSessionID("TestClient");
+
+            // Hide the buttons
+            ResultPageButton.Visibility = Visibility.Collapsed;
+            FileUploadButton.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -1,0 +1,30 @@
+﻿<Page x:Class="ServerlessFuncUI.InsightPage5"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="InsightPage1" Height="500" Width="800">
+
+    <Grid Background="#2C3E50">
+        <!-- Changed background color to a dark shade -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <!-- Add your UI elements here -->
+        <TextBlock Text="Insights Page 5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Button Content="Get Running Average" Click="OnGetRunningAverageClick"/>
+        <ListView x:Name="AverageListView">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Average Value" DisplayMemberBinding="{Binding}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>
