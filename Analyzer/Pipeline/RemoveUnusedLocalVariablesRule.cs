@@ -61,6 +61,11 @@ namespace Analyzer.Pipeline
             int unusedLocalsCount = 0;
             List<VariableDefinition> unusedLocals = new();
 
+            if(!method.HasBody)
+            {
+                return unusedLocalsCount;
+            }
+
             foreach (VariableDefinition localVar in method.Body.Variables)
             {
                 // Check if the local variable is used within the method
@@ -73,10 +78,6 @@ namespace Analyzer.Pipeline
 
             foreach (VariableDefinition localVar in unusedLocals)
             {
-                // Remove the instructions that load or store the unused local variable
-                //RemoveUnusedLocalVariableInstructions(localVar, method.Body.Instructions);
-                // Remove the local variable definition from the method
-                //method.Body.Variables.Remove(localVar);
                 unusedLocalsCount++;
             }
 

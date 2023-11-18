@@ -1,4 +1,4 @@
-/*using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class AbstractClassNamingChecker : AnalyzerBase
     {
-       
+
         private string errorMessage;
         private int verdict;
         private readonly string analyzerID;
-       
+
         /// <summary>
         /// Initializes a new instance of the AbstractClassNamingChecker analyzer with parsed DLL files.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Analyzer.Pipeline
             {
                 verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
-           
+
             return new AnalyzerResult(analyzerID, verdict, errorMessage);
         }
 
@@ -79,7 +79,7 @@ namespace Analyzer.Pipeline
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
             int flag = 0;
-           
+
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
@@ -103,9 +103,7 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-           return false; // If all abstract classes meet the criteria, return false
+            return false; // If all abstract classes meet the criteria, return false
         }
     }
 }
-
-*/
