@@ -104,7 +104,7 @@ namespace Analyzer.Pipeline
 
         private static bool UsesLocalVariable(Instruction instruction, VariableDefinition localVar)
         {
-            if (instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Ldloca || instruction.OpCode == OpCodes.Stloc)
+            if (instruction.OpCode == OpCodes.Ldloc)
             {
                 if (instruction.Operand == localVar)
                 {
