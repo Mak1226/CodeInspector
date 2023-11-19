@@ -47,20 +47,6 @@ namespace Dashboard.Authentication
         /// </returns>
         public static async Task<AuthenticationResult> Authenticate(int timeOut = 180000)
         {
-            /*
-            var builder = new ConfigurationBuilder()
-           .SetBasePath(AppDomain.CurrentDomain.BaseDirectory) // Set the base path
-           .AddJsonFile("secrets.json", optional: false, reloadOnChange: true); // Add the JSON file
-
-            var Configuration = builder.Build();
-            */
-
-            //ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            //IConfiguration configuration = configurationBuilder.AddUserSecrets("b12955e4-b704-420a-bb39-73fd5dd2266a").Build();
-            //
-            //clientId = configuration.GetSection("Authentication:ClientId").Value;
-            //clientSecret = configuration.GetSection("Authentication:ClientSecret").Value;
-            //Debug.WriteLine(clientId + ":" + clientSecret);
 
             Trace.WriteLine("[Authenticator] Creating State and Redirecting URI on port 8080");
             // Creating state and redirect URI using port 8080 on Loopback address

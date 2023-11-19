@@ -21,10 +21,9 @@ namespace Dashboard
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class AuthenticationPage : Page
     {
-        //readonly AuthenticationViewModel _authViewModel = new AuthenticationViewModel();
-        public Page1()
+        public AuthenticationPage()
         {
             InitializeComponent();
 
@@ -34,9 +33,6 @@ namespace Dashboard
                 AuthenticationViewModel viewModel = new();
                 DataContext = viewModel;
 
-                //var loginPage = new Login("someName","someUniqueId","someImage");
-                //this.NavigationService?.Navigate(loginPage);
-                //Debug.WriteLine("Navigation Service Not present");
             }
             catch (Exception exception)
             {

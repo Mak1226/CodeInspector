@@ -16,44 +16,12 @@ using Dashboard;
 
 namespace Dashboard
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-
-    //private Frame _frame;
-
-    //public AuthenticationViewModel(Frame frame)
-    //{
-    //    _frame = frame;
-    //}
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            //InitializeComponent();
-
-            //try
-            //{
-            //    // Create the main frame
-            //    //Frame mainFrame = new Frame();
-
-            //    //// Set the main window content to the frame
-            //    //Content = mainFrame;
-
-            //    //// Create and set up the navigation service
-            //    //INavigationService navigationService = new NavigationService(mainFrame);
-
-            //    MainFrame.Content = new Page1();
-            //    this.Show();
-            //}
-            //catch (Exception exception)
-            //{
-            //    // If an exception occurs during ViewModel creation or navigation, show an error message and shutdown the application.
-            //    MessageBox.Show(exception.Message);
-            //    Application.Current.Shutdown();
-            //}
             InitializeComponent();
-            Page entryPage = new Page1();
+            Page entryPage = new AuthenticationPage();
             MainFrame.Navigate(entryPage);
         }
     }

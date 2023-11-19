@@ -40,8 +40,7 @@ namespace Dashboard
 
                 ServerPage serverPage = new(viewModel.Communicator);
                 ResultFrame.Content = serverPage;
-                //SessionsPage cloudMainWindow = new("instructor");
-                //CloudFrame.Content = cloudMainWindow;
+
             }
             catch (Exception exception)
             {

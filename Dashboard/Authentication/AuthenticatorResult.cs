@@ -13,7 +13,6 @@ namespace Dashboard.Authentication
         public string? UserEmail { get; set; }
         public string? UserImage { get; set; }
         public AuthenticationResult? AuthResult { get; internal set; }
-        // You can add other properties as needed based on your requirements
     }
 }
 
