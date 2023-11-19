@@ -20,8 +20,12 @@ namespace Dashboard
     /// </summary>
     public partial class Login : Page
     {
-        public Login()
+        public Login(string userName, string userEmail, string userPicture)
         {
+            string name = userName;
+            string userId = userEmail;
+            string picture = userPicture;
+
             InitializeComponent();
         }
 
@@ -29,7 +33,7 @@ namespace Dashboard
         {
             if (this.NavigationService != null)
             {
-                this.NavigationService.Navigate(new Uri("InstructorView.xaml", UriKind.Relative));
+                this.NavigationService.Navigate(new Uri("InstructorPage.xaml", UriKind.Relative));
             }
         }
         private void StudentButton_Click(object sender, RoutedEventArgs e)

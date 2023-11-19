@@ -38,5 +38,10 @@
         {
             return students;
         }
+
+        public int GetStudentsCount()
+        {
+            return students.Count;
+        }
     }
 }

@@ -80,7 +80,15 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
-                <TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035" />
+                <!--<TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035" />-->
+                <ListView ItemsSource="{Binding StudentList}" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
         </Grid>
     </Grid>

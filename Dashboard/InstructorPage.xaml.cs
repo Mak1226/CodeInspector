@@ -1,6 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
+﻿using ContentPage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,33 +14,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
-using ContentPage;
-using ServerlessFuncUI;
 
 namespace Dashboard
 {
     /// <summary>
-    /// Interaction logic for Entry.xaml
+    /// Interaction logic for InstructorPage.xaml
     /// </summary>
-    public partial class Entry : Page
+    public partial class InstructorPage : Page
     {
-        /// <summary>
-        /// Constructor for the Entry page.
-        /// </summary>
-        public Entry()
+        public InstructorPage()
         {
             InitializeComponent();
 
             try
             {
-                // Create the ViewModel and set as data context.
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
 
-                ServerPage serverPage = new(viewModel.Communicator);
-                ResultFrame.Content = serverPage;
-                //SessionsPage cloudMainWindow = new("instructor");
-                //CloudFrame.Content = cloudMainWindow;
+                ServerPage ContentserverPage = new(viewModel.Communicator);
+                ResultFrame.Content = ContentserverPage;
             }
             catch (Exception exception)
             {
@@ -51,10 +42,7 @@ namespace Dashboard
             }
         }
 
-        /// <summary>
-        /// Event handler for the "Logout" button click.
-        /// </summary>
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private void LogoutButtonClick(object sender, RoutedEventArgs e)
         {
             if (this.NavigationService != null)
             {

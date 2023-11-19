@@ -13,12 +13,34 @@
             <SolidColorBrush Color="LightSalmon" />
         </Grid.Background>
         <Grid Height="200" Width="400">
+            
             <Grid.Background>
                 <SolidColorBrush Color="WhiteSmoke" />
             </Grid.Background>
 
-            <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,151,236,29"/>
-            <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,151,75,29"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="Name: " />
+                     <Run Text="{Binding name, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+            </Grid>
+            
+            <Grid Grid.Row="1">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="User Id: " />  
+                     <Run Text="{Binding userId, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,15,236,29"/>
+                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,15,75,29"/>
+            </Grid>
 
         </Grid>
     </Grid>

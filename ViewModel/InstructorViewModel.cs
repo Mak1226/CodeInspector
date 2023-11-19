@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Networking.Utils;
 using Networking.Models;
+using System.Xml.Linq;
 
 namespace ViewModel
 {
-    public class InstructorViewModel : INotifyPropertyChanged , IEventHandler
+    public class InstructorViewModel : INotifyPropertyChanged, IEventHandler
     {
         private readonly ICommunicator server; // Communicator used to send and receive messages.
-        //private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
         private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
 
         /// <summary>
@@ -44,17 +44,24 @@ namespace ViewModel
             }
             catch { }
 
-            // Update the port that the communicator is listening on.
-            //ReceivePort = _communicator.ListenPort.ToString();
-            
+            _studentSessionState.AddStudent(21323, "arkka", "13151", 123);
 
-            // Create an instance of the chat messenger and signup for callback.
-            //_newConnection = new(_communicator);
+        }
 
-            //_newConnection.OnChatMessageReceived += delegate (string message)
-            //{
-            //    AddStudnet(message);
-            //};
+        public List<Student> StudentList 
+        { 
+            get
+            {
+                return _studentSessionState.GetAllStudents();
+            }
+        }
+
+        public int StudentCount
+        {
+            get
+            {
+                return _studentSessionState.GetStudentsCount();
+            }
         }
 
         public ICommunicator Communicator
@@ -140,7 +147,7 @@ namespace ViewModel
         }
 
         private bool AddStudnet(string serializedStudnet)
-            {
+        {
             Debug.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
@@ -161,7 +168,10 @@ namespace ViewModel
                     {
                         _studentSessionState.RemoveStudent(rollNo);
                         server.Send("0", $"{rollNo}");
-                    }     
+                    }
+                    OnPropertyChanged(nameof(StudentList));
+                    OnPropertyChanged(nameof(StudentCount));
+                    Debug.WriteLine($"Joined Students : {_studentSessionState.GetStudentsCount()}");
                     return true;
                 }
             }

@@ -211,7 +211,7 @@ namespace ViewModel
             if (InstructorIp != null && InstructorPort != null)
             {
                 //_newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);
-                client.Send(message, EventType.ChatMessage(), "server");
+                client.Send(message, "server");
             }
         }
 

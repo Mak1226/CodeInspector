@@ -1,0 +1,80 @@
+﻿<Page x:Class="Dashboard.InstructorPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Dashboard"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="InstructorPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="12*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <SolidColorBrush Color="LightBlue" />
+            </Grid.Background>
+            <StackPanel x:Name="InstructorInformation" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="Student Count : " />
+                     <Run Text="{Binding StudentCount, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="  IP : " />
+                     <Run Text="{Binding IpAddress, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="  Port : " />
+                     <Run Text="{Binding ReceivePort, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+                <Button Content="Logout" Width="50" Height="20" Click="LogoutButtonClick" Margin="5,5,5,5"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.Background>
+                <SolidColorBrush Color="White" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0"  Margin="5,5,5,5">
+                <Grid.Background>
+                    <SolidColorBrush Color="LightCyan" />
+                </Grid.Background>
+                <TabControl>
+                    <!-- Tab 1 -->
+                    <TabItem Header="Content">
+                        <Frame x:Name="ResultFrame" />
+                    </TabItem>
+
+                    <!-- Tab 2 -->
+                    <TabItem Header="Cloud">
+                        <Frame x:Name="CloudFrame" />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+            <Grid Grid.Column="1" Margin="5,5,5,5">
+                <Grid.Background>
+                    <SolidColorBrush Color="LightBlue" />
+                </Grid.Background>
+                <ListView ItemsSource="{Binding StudentList}" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
