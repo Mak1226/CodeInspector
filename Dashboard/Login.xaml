@@ -26,14 +26,14 @@
             <Grid Grid.Row="0">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Name: " />
-                     <Run Text="{Binding name, Mode=OneWay}" FontWeight="Bold"/>
+                     <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
             </Grid>
             
             <Grid Grid.Row="1">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="User Id: " />  
-                     <Run Text="{Binding userId, Mode=OneWay}" FontWeight="Bold"/>
+                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
             </Grid>
 
