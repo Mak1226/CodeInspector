@@ -16,7 +16,7 @@ namespace Analyzer.Pipeline.Tests
         public void TestDepthOfInh()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\depthofinh.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);

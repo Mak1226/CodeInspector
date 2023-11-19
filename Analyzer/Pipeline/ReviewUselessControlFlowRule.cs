@@ -29,6 +29,11 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
+                    if(!method.HasBody)
+                    {
+                        continue;
+                    }
+
                     int methodUselessControlFlowCount = ReviewUselessControlFlowInMethod(method);
                     uselessControlFlowCount += methodUselessControlFlowCount;
                 }
