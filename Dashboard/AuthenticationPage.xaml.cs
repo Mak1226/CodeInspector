@@ -51,7 +51,8 @@ namespace Dashboard
             Debug.WriteLine(authenticationResult.UserName);
             Debug.WriteLine(authenticationResult.UserEmail);
             Debug.WriteLine(authenticationResult.UserImage);
-            
+
+            Application.Current.MainWindow.Activate();
 
             var loginPage = new Login(authenticationResult.UserName, authenticationResult.UserEmail, authenticationResult.UserImage);
             this.NavigationService?.Navigate(loginPage);
