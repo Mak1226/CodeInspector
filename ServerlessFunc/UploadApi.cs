@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ServerlessFunc
 {
+    /// <summary>
+    /// Provides methods for interacting with an Upload API.
+    /// </summary>
     public class UploadApi
     {
         private readonly HttpClient _entityClient;
@@ -13,6 +16,12 @@ namespace ServerlessFunc
 
         private const string ConnectionString = "UseDevelopmentStorage=true";
 
+        /// <summary>
+        /// Initializes a new instance of the UploadApi class.
+        /// </summary>
+        /// <param name="sessionRoute">The base URL for the session endpoint.</param>
+        /// <param name="submissionRoute">The base URL for the submission endpoint.</param>
+        /// <param name="analysisRoute">The base URL for the analysis endpoint.</param>
         public UploadApi( string sessionRoute , string submissionRoute , string analysisRoute )
         {
             _entityClient = new HttpClient();
@@ -20,11 +29,12 @@ namespace ServerlessFunc
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
         }
+
         /// <summary>
-        /// 
+        /// Creates a new session and returns the session entity.
         /// </summary>
-        /// <param name="sessionData"></param>
-        /// <returns>Returns the entity created on cloud</returns>
+        /// <param name="sessionData">The session data to create the new session with.</param>
+        /// <returns>The newly created session entity.</returns>
         public async Task<SessionEntity> PostSessionAsync( SessionData sessionData )
         {
             using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SessionData>( _sessionRoute , sessionData );
@@ -39,6 +49,11 @@ namespace ServerlessFunc
             return entity;
         }
 
+        /// <summary>
+        /// Creates a new submission and returns the submission entity.
+        /// </summary>
+        /// <param name="submissionData">The submission data to create the new submission with.</param>
+        /// <returns>The newly created submission entity.</returns>
         public async Task<SubmissionEntity> PostSubmissionAsync( SubmissionData submissionData )
         {
             using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SubmissionData>( _submissionRoute , submissionData );
@@ -53,6 +68,11 @@ namespace ServerlessFunc
             return entity;
         }
 
+        /// <summary>
+        /// Creates a new analysis and returns the analysis entity.
+        /// </summary>
+        /// <param name="analysisData">The analysis data to create the new analysis with.</param>
+        /// <returns>The newly created analysis entity.</returns>
         public async Task<AnalysisEntity> PostAnalysisAsync( AnalysisData analysisData )
         {
             using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<AnalysisData>( _analysisRoute , analysisData );

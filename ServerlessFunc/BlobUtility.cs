@@ -9,6 +9,13 @@ namespace ServerlessFunc
 {
     public class BlobUtility
     {
+        /// <summary>
+        /// Uploads a DLL file to Azure Blob Storage.
+        /// </summary>
+        /// <param name="blobname">The name of the blob to upload.</param>
+        /// <param name="dll">The byte array containing the DLL file.</param>
+        /// <param name="connectionString">The connection string to Azure Blob Storage.</param>
+        /// <param name="DllContainerName">The name of the Azure Blob Storage container to upload the DLL to.</param>
         public static async Task UploadSubmissionToBlob( string blobname , byte[] dll , string connectionString , string DllContainerName )
         {
             try
@@ -30,6 +37,13 @@ namespace ServerlessFunc
             }
         }
 
+        /// <summary>
+        /// Downloads the specified blob from Azure Blob Storage as a byte array.
+        /// </summary>
+        /// <param name="containerName">The name of the Azure Blob Storage container to download the blob from.</param>
+        /// <param name="blobName">The name of the blob to download.</param>
+        /// <param name="connectionString">The connection string to Azure Blob Storage.</param>
+        /// <returns>The content of the downloaded blob as a byte array.</returns>
         public static async Task<byte[]> GetBlobContentAsync( string containerName , string blobName , string connectionString )
         {
             try
@@ -54,12 +68,16 @@ namespace ServerlessFunc
             }
             catch (Exception ex)
             {
-                // TODO : Add logs
                 Console.WriteLine( $"An error occurred: {ex.Message}" );
                 return null; // Or throw an exception
             }
         }
 
+        /// <summary>
+        /// Deletes the specified Azure Blob Storage container.
+        /// </summary>
+        /// <param name="containerName">The name of the Azure Blob Storage container to delete.</param>
+        /// <param name="connectionString">The connection string to Azure Blob Storage.</param>
         public static async Task DeleteContainer( string containerName , string connectionString )
         {
             try
@@ -71,7 +89,6 @@ namespace ServerlessFunc
             }
             catch (Exception ex)
             {
-                // TODO : Add logs
                 Console.WriteLine( $"An error occurred: {ex.Message}" );
             }
         }

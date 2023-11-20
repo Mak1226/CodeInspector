@@ -93,14 +93,10 @@ namespace ServerlessFunc
 
     public class SessionData
     {
-
         public string HostUserName { get; set; }
-
         public string SessionId { get; set; }
-
         public byte[] Tests { get; set; }
         public byte[] Students { get; set; }
-
         public byte[] TestNameToID { get; set; }
     }
 }
