@@ -13,7 +13,7 @@
 using System.Text;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the Session and Analysis APIs.

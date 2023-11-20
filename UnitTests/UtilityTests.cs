@@ -14,7 +14,7 @@ using System.Text;
 using System.Text.Json;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the Utility classes.
