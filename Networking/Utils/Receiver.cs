@@ -125,7 +125,7 @@ namespace Networking.Utils
 
         private void RecvLoop()
         {
-            while (true)
+            while (!_stopThread)
             {
                 if (!_recvQueue.canDequeue())
                 {

@@ -14,10 +14,7 @@ namespace Networking.Utils
             public string HandleConnectionRequest(string data);
             public string HandleClientJoined(string data);
             public string HandleClientLeft(string data);*/
-        public static string AnalyseFile()
-        {
-            return "HandleFile";
-        }
+
         public static string ChatMessage()
         {
             return "HandleChatMessage";

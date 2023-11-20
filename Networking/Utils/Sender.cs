@@ -13,10 +13,12 @@ namespace Networking.Utils
         private bool _isClient;
         private Dictionary<string, NetworkStream> clientIDToStream;
         Dictionary<string, string> senderIDToClientID;
+        private bool _stopThread;
 
 
         public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
         {
+            _stopThread = false;
             this.senderIDToClientID=senderIDToClientID;
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
@@ -27,7 +29,9 @@ namespace Networking.Utils
 
         public void Stop()
         {
+
             Console.WriteLine("[Sender] Stop");
+            _stopThread = true;
             //_sendQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
             _sendThread.Join();
         }
@@ -40,7 +44,7 @@ namespace Networking.Utils
 
         public void SendLoop()
         {
-            while (true)
+            while (!_stopThread)
             {
                 if (!_sendQueue.canDequeue())
                 {
