@@ -23,7 +23,10 @@ namespace Networking.Utils
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
             this.clientIDToStream = clientIDToStream;
-            _sendThread = new Thread(SendLoop);
+            _sendThread = new Thread(SendLoop)
+            {
+                IsBackground = true
+            };
             _sendThread.Start();
         }
 

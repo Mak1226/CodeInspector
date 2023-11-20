@@ -15,6 +15,8 @@ namespace Analyzer.Tests
         public void AnalyzerTest()
         {
 
+            //AppDomain domain = AppDomain.CurrentDomain;
+
             Analyzer analyzer = new();
 
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>();
@@ -22,23 +24,46 @@ namespace Analyzer.Tests
             teacherOptions[102] = true;
             teacherOptions[103] = true;
             teacherOptions[104] = true;
+            teacherOptions[105] = true;
+            teacherOptions[106] = true;
+            teacherOptions[107] = true;
+            teacherOptions[108] = true;
+            //teacherOptions[109] = true;
+            //teacherOptions[110] = true;
+            //teacherOptions[111] = true;
+            //teacherOptions[112] = true;
+            teacherOptions[113] = true;
+            teacherOptions[114] = true;
+            teacherOptions[115] = true;
+            teacherOptions[116] = true;
 
-            analyzer.Configure(teacherOptions, false);
+            analyzer.Configure(teacherOptions);
 
             List<string> paths = new();
+
             paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
+
             paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
 
-            analyzer.LoadDLLFile(paths, string.Empty);
+            //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
 
-            var result = analyzer.Run();
+            //paths.Add(path);
 
-            foreach (var item in result)
-            {
-                Console.WriteLine(item.AnalyserID);
-                Console.WriteLine(item.Verdict);
-                Console.WriteLine(item.ErrorMessage);
-            }
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
+
+           foreach(var dll in result)
+           {
+                Console.WriteLine(dll.Key);
+
+                foreach(var res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+           }
+
+           // AppDomain.Unload(domain);
 
             Assert.Fail();
         }

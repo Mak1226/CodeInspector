@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -32,15 +34,16 @@ namespace Analyzer.Parsing
 
 
         // To store class relationship
-        private readonly List<string> _compositionList;
-        private readonly List<string> _aggregationList;
-        private readonly List<string> _usingList;
-        private readonly List<string> _inheritanceList;
+        private readonly HashSet<string> _compositionList;
+        private readonly HashSet<string> _aggregationList;
+        private readonly HashSet<string> _usingList;
+        private readonly HashSet<string> _inheritanceList;
 
         public ParsedClassMonoCecil(TypeDefinition type)
         {
             _typeObj = type;
             _name = type.Name;
+
             _constructors = new List<MethodDefinition>();
             _methods = new List<MethodDefinition>();
             _interfaces = new List<InterfaceImplementation>();
@@ -113,52 +116,14 @@ namespace Analyzer.Parsing
             _properties = _typeObj.Properties.ToList();
 
 
-            _usingList = new List<string>();
-            _compositionList = new List<string>();
-            _aggregationList = new List<string>();
+            _usingList = new HashSet<string>();
+            _compositionList = new HashSet<string>();
+            _aggregationList = new HashSet<string>();
 
-            // Using Class Relationship 
-            // Cases considering: 1. if any method (other than constructors) contain other class as parameter
-            // 2.If its a parameter for a constructor, and is not assigned to any field inside the constructor, then it is considered as using relationship. 
-
-            //Get all the methods and its parameters into a dictionary, which can be iterated over to check its types.
-            Dictionary<MethodDefinition, List<ParameterDefinition>> dict = GetFunctionParameters();
-            foreach (KeyValuePair<MethodDefinition, List<ParameterDefinition>> pair in dict)
-            {
-                foreach (ParameterDefinition argument in pair.Value)
-                {
-                    var objType = argument.ParameterType.Resolve();
-
-                    //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
-                    if (objType != _typeObj && !objType.GetType().IsGenericType)
-                    {
-                        if (pair.Key.IsConstructor)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            //ignoring the classes those start with "System"
-                            if (!argument.ParameterType.FullName.StartsWith("System"))
-                            {
-                                if(objType.IsClass)
-                                {
-                                    _usingList.Add("C"+argument.ParameterType.FullName);
-                                }
-                                else if(objType.IsInterface)
-                                {
-                                    _usingList.Add("I"+argument.ParameterType.FullName);
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 
             //Inheritance List
             //Adding the parent class (if exist) in the inheritance list
-            _inheritanceList = new List<string>();
+            _inheritanceList = new HashSet<string>();
             if (_parentClass != null)
             {
                 if (!_parentClass.FullName.StartsWith("System"))
@@ -176,32 +141,6 @@ namespace Analyzer.Parsing
                 }
             }
             
-            
-            // Aggregation List
-            // Cases: 1. If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
-            // 2. If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
-            // check if new opcode is present in method body and get its type
-            foreach (MethodDefinition method in _methods)
-            {
-                if (method.HasBody)
-                {
-                    foreach (var inst in method.Body.Instructions)
-                    {
-                        if (inst != null && inst.OpCode == OpCodes.Newobj)
-                        {
-                            var constructorReference = (MethodReference)inst.Operand;
-                            var objectType = constructorReference.DeclaringType;
-
-                            // adding to aggrgation list, if object is not of generic type
-                            if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System"))
-                            {
-                                _aggregationList.Add("C" + objectType.FullName);
-                            }
-                        }
-                    }
-                }
-            }
-
             //Composition List
             //Cases: 1. If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
             //2. If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
@@ -223,14 +162,13 @@ namespace Analyzer.Parsing
                             // Check if the field type is of reference type (not a value type), not a Generic type, and does not start with "System"
                             if (!fieldType.IsValueType && !objType.IsGenericInstance && !objType.FullName.StartsWith("System"))
                             {
-                                if (objType.IsClass)
+                                if (objType.IsClass && !SetsContainElement("C"+ objType.FullName, _inheritanceList))
                                 {
                                     _compositionList.Add("C" + objType.FullName);
                                 }
-                                else if(objType.IsInterface)
+                                else if(objType.IsInterface && !SetsContainElement("I" + objType.FullName, _inheritanceList))
                                 {
                                     _compositionList.Add("I" + objType.FullName);
-
                                 }
                             }
                         }
@@ -242,17 +180,23 @@ namespace Analyzer.Parsing
                 // If between 2 classes composition and using relation exist, giving priority to composition relation.
                 foreach (ParameterDefinition parameter in parameterList)
                 {
-                    Type parameterType = parameter.ParameterType.Resolve().GetType();
+                    var parameterType = parameter.ParameterType.Resolve();
                     string parameterTypeName = parameter.ParameterType.FullName;
 
-                    if (!parameterTypeName.StartsWith("System") && !parameterType.IsGenericType)
+                    if (!parameterTypeName.StartsWith("System") && !parameterType.GetType().IsGenericType)
                     {
-                        if (parameterType.IsClass && !_compositionList.Contains("C"+parameterType.Name))
+                        Console.WriteLine(parameterType);
+
+                        Console.WriteLine(parameterType.IsClass);
+                        if (parameterType.IsClass && !SetsContainElement("C" + parameter.ParameterType.FullName, _inheritanceList, _compositionList))
                         {
+                            Console.WriteLine("2: C"+ parameter.ParameterType.FullName);
                             _usingList.Add("C"+parameter.ParameterType.FullName);
                         }
-                        else if (parameterType.IsInterface && !_compositionList.Contains("I"+parameterType.Name))
+                        else if (parameterType.IsInterface && !SetsContainElement("I" + parameter.ParameterType.FullName, _inheritanceList, _compositionList))
                         {
+                            Console.WriteLine("2: I" + parameter.ParameterType.FullName);
+
                             _usingList.Add("I" + parameter.ParameterType.FullName);
                         }
                     }
@@ -275,13 +219,16 @@ namespace Analyzer.Parsing
                                 // or if not, since we have decided on the priority of composition over aggreagation, we can check if the composition list has that particular class object or not).
                                 if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System"))
                                 {
-                                    if (objectType.IsClass && !_compositionList.Contains("C" + objectType.FullName))
+                                    if (objectType.IsClass && !SetsContainElement("C" + objectType.FullName, _inheritanceList, _compositionList))
                                     {
                                         _aggregationList.Add("C" + objectType.FullName);
+                                        _usingList.Remove("C" + objectType.FullName);
+
                                     }
-                                    else if(objectType.IsInterface && !_compositionList.Contains("I" + objectType.FullName))
+                                    else if(objectType.IsInterface && !SetsContainElement("I" + objectType.FullName, _inheritanceList, _compositionList))
                                     {
                                         _aggregationList.Add("I" + objectType.FullName);
+                                        _usingList.Remove("I" + objectType.FullName);
                                     }
                                 }
                             }
@@ -289,6 +236,77 @@ namespace Analyzer.Parsing
                     }
                 }
             }
+
+            // Aggregation List
+            // Cases: 1. If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
+            // 2. If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
+            // check if new opcode is present in method body and get its type
+            foreach (MethodDefinition method in _methods)
+            {
+                if (method.HasBody)
+                {
+                    foreach (var inst in method.Body.Instructions)
+                    {
+                        if (inst != null && inst.OpCode == OpCodes.Newobj)
+                        {
+                            var constructorReference = (MethodReference)inst.Operand;
+                            var objectType = constructorReference.DeclaringType;
+
+                            // adding to aggrgation list, if object is not of generic type
+                            if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith("System") && !SetsContainElement("C" + objectType.FullName, _inheritanceList, _compositionList))
+                            {
+                                _aggregationList.Add("C" + objectType.FullName);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Using Class Relationship 
+            // Cases considering: 1. if any method (other than constructors) contain other class as parameter
+            // 2.If its a parameter for a constructor, and is not assigned to any field inside the constructor, then it is considered as using relationship. 
+
+            //Get all the methods and its parameters into a dictionary, which can be iterated over to check its types.
+            Dictionary<MethodDefinition, List<ParameterDefinition>> dict = GetFunctionParameters();
+            foreach (KeyValuePair<MethodDefinition, List<ParameterDefinition>> pair in dict)
+            {
+                foreach (ParameterDefinition argument in pair.Value)
+                {
+                    var objType = argument.ParameterType.Resolve();
+
+                    //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
+                    if (objType != _typeObj && objType!= null && !(objType.GetType().IsGenericType))
+                    {
+                        if (pair.Key.IsConstructor)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            //ignoring the classes those start with "System"
+                            if (!argument.ParameterType.FullName.StartsWith("System"))
+                            {
+                                if (objType.IsClass && !SetsContainElement("C" + argument.ParameterType.FullName, _inheritanceList, _compositionList, _aggregationList))
+                                {
+                                    Console.WriteLine("1: " + argument.ParameterType.FullName);
+
+                                    _usingList.Add("C" + argument.ParameterType.FullName);
+                                }
+                                else if (objType.IsInterface && !SetsContainElement("I" + argument.ParameterType.FullName, _inheritanceList, _compositionList, _aggregationList))
+                                {
+                                    Console.WriteLine("1: " + argument.ParameterType.FullName);
+                                    _usingList.Add("I" + argument.ParameterType.FullName);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool SetsContainElement<T>(T element, params HashSet<T>[] sets)
+        {
+            return sets.Any(set => set.Contains(element));
         }
 
         public Dictionary<MethodDefinition, List<ParameterDefinition>> GetFunctionParameters()
@@ -308,22 +326,22 @@ namespace Analyzer.Parsing
 
         public List<string> CompositionList
         {
-            get { return _compositionList; }
+            get { return new List<string>(_compositionList); }
         }
 
         public List<string> AggregationList
         {
-            get { return _aggregationList; }
+            get { return new List<string>(_aggregationList); }
         }
 
         public List<string> InheritanceList
         {
-            get { return _inheritanceList; }
+            get { return new List<string>(_inheritanceList); }
         }
 
         public List<string> UsingList
         {
-            get { return _usingList; }
+            get { return new List<string>(_usingList); }
         }
 
         public List<FieldDefinition> FieldsList
@@ -375,6 +393,5 @@ namespace Analyzer.Parsing
         {
             get { return _parentClass; }
         }
-
     }
 }

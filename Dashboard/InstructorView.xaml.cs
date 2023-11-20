@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
 using ContentPage;
+using ServerlessFuncUI;
 
 namespace Dashboard
 {
@@ -37,8 +38,10 @@ namespace Dashboard
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
 
-                ResultPage resultPage = new(viewModel.Communicator);
-                ResultFrame.Content = resultPage;
+                ServerPage serverPage = new(viewModel.Communicator);
+                ResultFrame.Content = serverPage;
+                SessionsPage cloudMainWindow = new ("instructor");
+                CloudFrame.Content = cloudMainWindow;
             }
             catch (Exception exception)
             {

@@ -12,13 +12,13 @@ namespace Analyzer.UMLDiagram
         /// <summary>
         /// The parsed DLL files to be used for analysis.
         /// </summary>
-        public ParsedDLLFiles parsedDLLFiles;
+        public List<ParsedDLLFile> parsedDLLFiles;
 
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
-        public DiagramBase(ParsedDLLFiles dllFiles)
+        public DiagramBase(List<ParsedDLLFile> dllFiles)
         {
             // Set the parsedDLLFiles field with the provided DLL files
             parsedDLLFiles = dllFiles;

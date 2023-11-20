@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
@@ -13,21 +11,21 @@ namespace Analyzer.Pipeline
     /// <summary>
     /// This class represents an analyzer for reviewing and detecting useless control flow in IL code.
     /// </summary>
-    internal class ReviewUselessControlFlowRule : AnalyzerBase
+    public class ReviewUselessControlFlowRule : AnalyzerBase
     {
-        public ReviewUselessControlFlowRule(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public ReviewUselessControlFlowRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
         }
 
         /// <summary>
-        /// 
+        /// Gets the result of the analysis, which includes the count of useless control flow occurrences.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        public override AnalyzerResult Run()
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int uselessControlFlowCount = 0;
 
-            foreach (ParsedClassMonoCecil classObj in parsedDLLFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
@@ -36,10 +34,18 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            return new AnalyzerResult("ReviewUselessControlFlowRule", uselessControlFlowCount, null);
+            string errorString = uselessControlFlowCount > 0
+                ? $"Detected {uselessControlFlowCount} occurrences of useless control flow."
+                : "No occurrences of useless control flow found.";
+
+            return new AnalyzerResult("110", uselessControlFlowCount, errorString);
         }
 
-
+        /// <summary>
+        /// Reviews and detects useless control flow in a method.
+        /// </summary>
+        /// <param name="method">The method to analyze.</param>
+        /// <returns>The count of useless control flow occurrences in the method.</returns>
         private static int ReviewUselessControlFlowInMethod(MethodDefinition method)
         {
             int methodUselessControlFlowCount = 0;
@@ -62,6 +68,11 @@ namespace Analyzer.Pipeline
             return methodUselessControlFlowCount;
         }
 
+        /// <summary>
+        /// Checks if an instruction is a jump to the next instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction to check.</param>
+        /// <returns>True if the instruction is a jump to the next instruction; otherwise, false.</returns>
         private static bool IsJumpToNextInstruction(Instruction instruction)
         {
             return instruction.OpCode.FlowControl == FlowControl.Cond_Branch || instruction.OpCode.FlowControl == FlowControl.Branch;

@@ -17,7 +17,7 @@ namespace ServerApp
             Console.ReadKey();
             //Console.ReadKey();
             Data data= new Data("omg",EventType.ChatMessage());
-            //server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
+            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
             /*ICommunicator client = CommunicationFactory.GetClient();
             string[] address = addr.Split(':');
             client.Start(address[0], int.Parse(address[1]), "clientA");

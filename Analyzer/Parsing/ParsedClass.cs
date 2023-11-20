@@ -40,6 +40,7 @@ namespace Analyzer.Parsing
         {
             _typeObj = type;
             _name = type.Name;
+
             _constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             _fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
@@ -63,6 +64,10 @@ namespace Analyzer.Parsing
             if (_parentClass != null && _parentClass.GetInterfaces() != null)
             {
                 _interfaces = type.GetInterfaces().Except(_parentClass.GetInterfaces()).ToArray();
+            }
+            else
+            {
+                _interfaces = type.GetInterfaces();
             }
 
             if(_interfaces?.Length > 0)
@@ -150,6 +155,7 @@ namespace Analyzer.Parsing
         {
             get { return _parentClass; }
         }
+
 
 
         /// <summary>

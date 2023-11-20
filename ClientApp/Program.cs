@@ -13,13 +13,13 @@ namespace ClientApp
         {
 
             ICommunicator client = CommunicationFactory.GetClient();
-            string addr = client.Start("127.0.0.1", 12399, "hee",ID.GetNetworkingID());
-            client.Subscribe(new ExampleEventHandler(), ID.GetNetworkingID());
+            string addr = client.Start("127.0.0.1", 12399, "hee","client1");
+            client.Subscribe(new ExampleEventHandler(), "client1");
             Console.ReadKey();
-            //Data data = new Data("omg1", EventType.ChatMessage());
-            //client.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
-            //Data data1 = new Data("omg2", EventType.ChatMessage());
-            //client.Send(Serializer.Serialize<Data>(data1), ID.GetNetworkingID(), ID.GetServerID());
+            Data data = new Data("omg1", EventType.ChatMessage());
+            client.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
+            Data data1 = new Data("omg2", EventType.ChatMessage());
+            client.Send(Serializer.Serialize<Data>(data1), ID.GetNetworkingID(), ID.GetServerID());
 
             //client.Send("omg2", EventType.ChatMessage(), "hee");
             //client.Send("omg3", EventType.ChatMessage(), "hee");

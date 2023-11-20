@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ServerlessFunc": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7074",
+      "launchBrowser": false
+    }
+  }
+}

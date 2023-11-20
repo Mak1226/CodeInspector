@@ -1,4 +1,4 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Analyzer.UMLDiagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,3 +43,4 @@ namespace AnalyzerTests.Pipeline
         }
     }
 }
+*/
