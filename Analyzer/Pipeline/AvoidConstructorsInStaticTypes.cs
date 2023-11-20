@@ -15,7 +15,7 @@ namespace Analyzer.Pipeline
     public class AvoidConstructorsInStaticTypes : AnalyzerBase
     {
         // Unique identifier for the analyzer
-        private string _analyzerID;
+        private readonly string _analyzerID;
         private string _errorMessage;
         private int _verdict;
 
@@ -46,7 +46,7 @@ namespace Analyzer.Pipeline
             }
 
             // Get all methods in the class
-            var methods = cls.TypeObj.GetMethods();
+            MethodInfo[] methods = cls.TypeObj.GetMethods();
 
             //if any method or any parameterized constructor is not declared as static, return false immediately.
             if (methods.Length != 0)
@@ -72,7 +72,7 @@ namespace Analyzer.Pipeline
             }
 
             // Get all fields in the class
-            var fields = cls.TypeObj.GetFields();
+            FieldInfo[] fields = cls.TypeObj.GetFields();
 
             if (fields.Length != 0)
             {
@@ -96,7 +96,9 @@ namespace Analyzer.Pipeline
             foreach (ParsedClass cls in parsedDLLFile.classObjList)
             {
                 if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf(typeof(Delegate)))
+                {
                     continue;
+                }
 
                 if (cls.TypeObj.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 {
@@ -135,7 +137,7 @@ namespace Analyzer.Pipeline
 
             //adding error message
             _errorMessage = "Classes ";
-            foreach(var cls in violatingClasses)
+            foreach(ParsedClass cls in violatingClasses)
             {
 
                 _errorMessage += cls.GetType().FullName;
@@ -148,7 +150,7 @@ namespace Analyzer.Pipeline
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
-            AnalyzerResult resultObj = new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            AnalyzerResult resultObj = new(_analyzerID, _verdict, _errorMessage);
             return resultObj;
         }
     }

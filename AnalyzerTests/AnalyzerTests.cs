@@ -19,31 +19,34 @@ namespace Analyzer.Tests
 
             Analyzer analyzer = new();
 
-            IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>();
-            teacherOptions[101] = true;
-            teacherOptions[102] = true;
-            teacherOptions[103] = true;
-            teacherOptions[104] = true;
-            teacherOptions[105] = true;
-            teacherOptions[106] = true;
-            teacherOptions[107] = true;
-            teacherOptions[108] = true;
-            teacherOptions[109] = true;
-            teacherOptions[110] = true;
-            teacherOptions[111] = true;
-            teacherOptions[112] = true;            
-            teacherOptions[113] = true;
-            teacherOptions[114] = true;
-            teacherOptions[115] = true;
-            teacherOptions[116] = true;
+            IDictionary<int , bool> teacherOptions = new Dictionary<int , bool>
+            {
+                [101] = true ,
+                [102] = true ,
+                [103] = true ,
+                [104] = true ,
+                [105] = true ,
+                [106] = true ,
+                [107] = true ,
+                [108] = true ,
+                [109] = true ,
+                [110] = true ,
+                [111] = true ,
+                [112] = true ,
+                [113] = true ,
+                [114] = true ,
+                [115] = true ,
+                [116] = true
+            };
 
             analyzer.Configure(teacherOptions);
 
-            List<string> paths = new();
+            List<string> paths = new()
+            {
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll" ,
 
-            paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
-
-            paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+            };
 
             //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
 
@@ -53,11 +56,11 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-           foreach(var dll in result)
+           foreach(KeyValuePair<string , List<AnalyzerResult>> dll in result)
            {
                 Console.WriteLine(dll.Key);
 
-                foreach(var res in dll.Value)
+                foreach(AnalyzerResult res in dll.Value)
                 {
                     Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
                 }
