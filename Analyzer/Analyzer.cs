@@ -37,13 +37,13 @@ namespace Analyzer
 
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            Trace.Write("Analyzers MainPipeline is starting");
+            Trace.Write("Analyzers MainPipeline is starting\n");
 
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
 
-            Trace.Write("Analyzers MainPipeline is over");
+            Trace.Write("Analyzers MainPipeline is over\n");
 
             return _customAnalyzerPipeline.Start();
         }
