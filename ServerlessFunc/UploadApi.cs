@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -37,16 +38,24 @@ namespace ServerlessFunc
         /// <returns>The newly created session entity.</returns>
         public async Task<SessionEntity> PostSessionAsync( SessionData sessionData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SessionData>( _sessionRoute , sessionData );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
+                using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SessionData>( _sessionRoute , sessionData );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
 
-            SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>( result , options );
-            return entity;
+                SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>( result , options );
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine( "[UploadApi.PostSessionAsync] Exception: " + ex );
+                return default;
+            }
         }
 
         /// <summary>
@@ -56,16 +65,24 @@ namespace ServerlessFunc
         /// <returns>The newly created submission entity.</returns>
         public async Task<SubmissionEntity> PostSubmissionAsync( SubmissionData submissionData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SubmissionData>( _submissionRoute , submissionData );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
+                using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<SubmissionData>( _submissionRoute , submissionData );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
 
-            SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>( result , options );
-            return entity;
+                SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>( result , options );
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine( "[UploadApi.PostSubmissionAsync] Exception: " + ex );
+                return default;
+            }
         }
 
         /// <summary>
@@ -75,17 +92,24 @@ namespace ServerlessFunc
         /// <returns>The newly created analysis entity.</returns>
         public async Task<AnalysisEntity> PostAnalysisAsync( AnalysisData analysisData )
         {
-            using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<AnalysisData>( _analysisRoute , analysisData );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
+                using HttpResponseMessage response = await _entityClient.PostAsJsonAsync<AnalysisData>( _analysisRoute , analysisData );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
 
-            AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>( result , options );
-            return entity;
+                AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>( result , options );
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
+                return default;
+            }
         }
-
     }
 }

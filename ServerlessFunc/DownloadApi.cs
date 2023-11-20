@@ -38,17 +38,24 @@ namespace ServerlessFunc
         /// <returns>A collection of session entities.</returns>
         public async Task<IReadOnlyList<SessionEntity>> GetSessionsByHostNameAsync( string hostUsername )
         {
-            HttpResponseMessage response = await _entityClient.GetAsync( _sessionRoute + $"/{hostUsername}" );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true ,
+                HttpResponseMessage response = await _entityClient.GetAsync( _sessionRoute + $"/{hostUsername}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
 
-            };
-
-            IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
-            return entities;
+                IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                return default; // or throw a custom exception, return a default value, or handle it as needed
+            }
         }
 
         /// <summary>
@@ -59,17 +66,24 @@ namespace ServerlessFunc
         /// <returns>The byte array representing the submission content.</returns>
         public async Task<byte[]> GetSubmissionByUserNameAndSessionIdAsync( string username , string sessionId )
         {
-            HttpResponseMessage response = await _entityClient.GetAsync( _submissionRoute + $"/{sessionId}/{username}" );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true ,
+                HttpResponseMessage response = await _entityClient.GetAsync( _submissionRoute + $"/{sessionId}/{username}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
 
-            };
-
-            byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
-            return submission;
+                byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
+                return submission;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                return default; // or throw a custom exception, return a default value, or handle it as needed
+            }
         }
 
         /// <summary>
@@ -80,17 +94,24 @@ namespace ServerlessFunc
         /// <returns>A collection of AnalysisEntity objects representing the analysis results.</returns>
         public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisByUserNameAndSessionIdAsync( string username , string sessionId )
         {
-            HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}/{username}" );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true ,
+                HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}/{username}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
 
-            };
-
-            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
-            return entities;
+                IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                return default; // or throw a custom exception, return a default value, or handle it as needed
+            }
         }
 
         /// <summary>
@@ -100,17 +121,24 @@ namespace ServerlessFunc
         /// <returns>A collection of AnalysisEntity objects representing the analysis results.</returns>
         public async Task<IReadOnlyList<AnalysisEntity>> GetAnalysisBySessionIdAsync( string sessionId )
         {
-            HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}" );
-            response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true ,
+                HttpResponseMessage response = await _entityClient.GetAsync( _analysisRoute + $"/{sessionId}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
 
-            };
-
-            IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
-            return entities;
+                IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                return default; // or throw a custom exception, return a default value, or handle it as needed
+            }
         }
 
         /// <summary>
