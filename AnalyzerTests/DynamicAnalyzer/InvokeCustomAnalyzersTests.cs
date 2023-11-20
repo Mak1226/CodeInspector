@@ -21,9 +21,11 @@ namespace Analyzer.DynamicAnalyzer.Tests
             var analyzer = new Analyzer();
 
             // Load student's dll files
-            List<string> paths = new();
-            paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll");
-            paths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
+            List<string> paths = new()
+            {
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll" ,
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+            };
             analyzer.LoadDLLFileOfStudent(paths);
 
             // Load the custom analyzer dll
@@ -36,9 +38,11 @@ namespace Analyzer.DynamicAnalyzer.Tests
             Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
 
             // Defining the expected result
-            Dictionary<string, List<AnalyzerResult>> expected = new();
-            expected["ClassLibrary1.dll"] = new List<AnalyzerResult>();
-            expected["BridgePattern.dll"] = new List<AnalyzerResult>();
+            Dictionary<string , List<AnalyzerResult>> expected = new()
+            {
+                ["ClassLibrary1.dll"] = new List<AnalyzerResult>() ,
+                ["BridgePattern.dll"] = new List<AnalyzerResult>()
+            };
 
             expected["ClassLibrary1.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
             expected["BridgePattern.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
