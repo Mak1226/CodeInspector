@@ -35,11 +35,11 @@ namespace Analyzer.DynamicAnalyzer
         public Dictionary<string, List<AnalyzerResult>> Start()
         {
             //Parses and stores all the student dll files in a list
-            List<ParsedDLLFile> studentParsedDlls = new List<ParsedDLLFile>();
+            List<ParsedDLLFile> studentParsedDlls = new();
 
             foreach (string studentDll in _pathOfDLLFilesOfStudent)
             {
-                ParsedDLLFile studentParsedDll = new ParsedDLLFile(studentDll);
+                ParsedDLLFile studentParsedDll = new(studentDll);
                 studentParsedDlls.Add(studentParsedDll);
             }
 
@@ -60,11 +60,11 @@ namespace Analyzer.DynamicAnalyzer
                 Type type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
 
                 // Create an instance of the custom analyzer, passing the studentParsedDlls as parameter
-                var teacher = Activator.CreateInstance(type, new Object[] {studentParsedDlls});
+                object? teacher = Activator.CreateInstance(type, new Object[] {studentParsedDlls});
 
                 // Invoke the "AnalyzeAllDLLs" method of custom analyzer to run the analyzer logic for each of the students dll and get the result
                 MethodInfo method = type.GetMethod("AnalyzeAllDLLs");
-                var currentAnalyzerResult = method.Invoke(teacher, null);
+                object? currentAnalyzerResult = method.Invoke(teacher, null);
 
                 //res -> Dictionary<string, AnalyzerResult>
                 //foreach (var item in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
