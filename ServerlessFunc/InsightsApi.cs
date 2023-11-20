@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 * Filename    = InsightsApi.cs
 *
-* Author      = Sahil
+* Author      = Sahil, Nideesh N
 *
 * Product     = Analyzer
 * 
@@ -40,6 +40,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Compares two sessions and returns a list of dictionaries containing the comparison results.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="sessionId1">The ID of the first session.</param>
         /// <param name="sessionId2">The ID of the second session.</param>
         /// <returns>A list of dictionaries containing the comparison results.</returns>
@@ -67,6 +68,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a list of students who failed a given test.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="hostname">The hostname of the students.</param>
         /// <param name="testName">The name of the test.</param>
         /// <returns>A list of student usernames.</returns>
@@ -94,6 +96,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the running average score for a given test across all sessions for a specified hostname.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="hostname">The hostname of the students.</param>
         /// <param name="testName">The name of the test.</param>
         /// <returns>A list of average scores for each session.</returns>
@@ -121,6 +124,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the running average score for all tests across all sessions for a specified hostname and student.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="hostname">The hostname of the student.</param>
         /// <param name="studentName">The name of the student.</param>
         /// <returns>A list of average scores for each session.</returns>
@@ -148,6 +152,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the average score for each session across all tests for a specified hostname.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="hostname">The hostname of the students.</param>
         /// <returns>A list of average scores for each session.</returns>
         public async Task<List<double>> RunningAverageAcrossSessoins( string hostname )
@@ -174,6 +179,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a list of students who do not have an analysis report for a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session to evaluate.</param>
         /// <returns>A list of student usernames.</returns>
         public async Task<List<string>> UsersWithoutAnalysisGivenSession( string sessionId )
@@ -200,6 +206,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a dictionary mapping student names to their corresponding scores for a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session to evaluate.</param>
         /// <returns>A dictionary mapping student names to their scores.</returns>
         public async Task<Dictionary<string , int>> GetStudentScoreGivenSession( string sessionId )
@@ -226,6 +233,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a dictionary mapping test IDs to their corresponding average scores for a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session to evaluate.</param>
         /// <returns>A dictionary mapping test IDs to their average scores.</returns>
         public async Task<Dictionary<string , int>> GetTestScoreGivenSession( string sessionId )
@@ -252,6 +260,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a list of usernames and test IDs representing the best and worst performers in a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session to evaluate.</param>
         /// <returns>A list of usernames and test IDs.</returns>
         public async Task<List<string>> GetBestWorstGivenSession( string sessionId )
