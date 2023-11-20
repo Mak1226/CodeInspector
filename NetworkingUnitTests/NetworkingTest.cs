@@ -28,27 +28,21 @@ public class NetworkingTest
             cnt++;
             if(cnt == 10)
             {
-                Assert.Fail( "Did not received message" );
+                Assert.Fail( "Did not receive message" );
             }
         }
         Message receivedMessage = messages.Dequeue();
+        client.Stop();
+        server.Stop();
         Assert.IsTrue( CompareMessages(receivedMessage,message));
     }
+
     private bool CompareMessages(Message message1, Message message2)
     {
-        if(message1.Data != message2.Data)
-        {
-            return false;
-        }
-        if(message1.DestID != message2.DestID)
-        {
-            return false;
-        }
-        if (message1.ModuleName != message2.ModuleName)
-        {
-            return false;
-        }
-        if (message1.SenderID != message2.SenderID)
+        if( (message1.Data != message2.Data) ||
+            (message1.DestID != message2.DestID) ||
+            (message1.SenderID != message2.SenderID) ||
+            (message1.ModuleName != message2.ModuleName))
         {
             return false;
         }
