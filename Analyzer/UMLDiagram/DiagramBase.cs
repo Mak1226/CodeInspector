@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Analyzer.UMLDiagram
 {
-    abstract public class DiagramBase
+    public abstract class DiagramBase
     {
         /// <summary>
         /// The parsed DLL files to be used for analysis.

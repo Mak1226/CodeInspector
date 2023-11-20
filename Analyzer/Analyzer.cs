@@ -48,7 +48,7 @@ namespace Analyzer
             return _customAnalyzerPipeline.Start();
         }
 
-        public Byte[] GetRelationshipGraph(List<string> removableNamespaces)
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
 
             MainPipeline _customAnalyzerPipeline = new();
