@@ -4,6 +4,9 @@ using ServerlessFunc;
 
 namespace UnitTests
 {
+    /// <summary>
+    /// This class contains unit tests for the InsightsApi class.
+    /// </summary>
     [TestClass()]
     public class InsightsTests
     {
@@ -23,7 +26,13 @@ namespace UnitTests
             _insightsClient = new InsightsApi( _insightsUrl );
         }
 
-        public AnalysisData GetDummyAnalysisData( string sessionId , string studentName , Dictionary<string , List<AnalyzerResult>> map )
+        /// <summary>
+        /// Creates dummy analysis data for a specific session and student.
+        /// </summary>
+        /// <param name="sessionId">The ID of the session.</param>
+        /// <param name="studentName">The name of the student.</param>
+        /// <param name="map">A dictionary of test names to analyzer results.</param>
+        public static AnalysisData GetDummyAnalysisData( string sessionId , string studentName , Dictionary<string , List<AnalyzerResult>> map )
         {
             AnalysisData analysisData = new()
             {
@@ -36,7 +45,16 @@ namespace UnitTests
             return analysisData;
         }
 
-        public SessionData GetDummySessionData( string hostName , string sessionId , List<string> tests , List<string> students , List<Tuple<string , string>> NameToID )
+        /// <summary>
+        /// Creates dummy session data for a specific host, session ID, tests, students, and test name to ID mapping.
+        /// </summary>
+        /// <param name="hostName">The name of the host.</param>
+        /// <param name="sessionId">The ID of the session.</param>
+        /// <param name="tests">A list of test names.</param>
+        /// <param name="students">A list of student names.</param>
+        /// <param name="nameToID">A mapping of test names to test IDs.</param>
+        /// <returns>The dummy session data.</returns>
+        public static SessionData GetDummySessionData( string hostName , string sessionId , List<string> tests , List<string> students , List<Tuple<string , string>> NameToID )
         {
             SessionData sessionData = new()
             {
@@ -49,6 +67,12 @@ namespace UnitTests
             return sessionData;
         }
 
+        /// <summary>
+        /// Creates dummy analysis results for two tests.
+        /// </summary>
+        /// <param name="test1Verdict">The verdict for test 1.</param>
+        /// <param name="test2Verdict">The verdict for test 2.</param>
+        /// <returns>A dictionary of test names to analyzer results.</returns>
         public static Dictionary<string , List<AnalyzerResult>> GetAnalysisResult( int test1Verdict , int test2Verdict )
         {
             List<AnalyzerResult> result = new()
@@ -63,6 +87,9 @@ namespace UnitTests
             return dictionary;
         }
 
+        /// <summary>
+        /// Fills the test data for the unit tests.
+        /// </summary>
         public async Task FillTestData()
         {
             List<Tuple<string , string>> NameToID = new()
@@ -90,9 +117,11 @@ namespace UnitTests
             await _uploadClient.PostAnalysisAsync( analysisData4 );
             await _uploadClient.PostAnalysisAsync( analysisData5 );
             await _uploadClient.PostAnalysisAsync( analysisData6 );
-
-
         }
+
+        /// <summary>
+        /// Tests the CompareTwoSessions method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task CompareTwoSessionsTest()
         {
@@ -114,6 +143,9 @@ namespace UnitTests
             await _downloadClient.DeleteAllAnalysisAsync();
         }
 
+        /// <summary>
+        /// Tests the GetFailedStudentsGivenTest method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task GetFailedStudentsGivenTestTest()
         {
@@ -130,6 +162,9 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the RunningAverageOnGivenTest method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task RunningAverageOnGivenTestTest()
         {
@@ -142,6 +177,9 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task RunningAverageOnGivenStudentTest()
         {
@@ -154,6 +192,9 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task RunningAverageAcrossSessoinsTest()
         {
@@ -169,6 +210,9 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the UsersWithoutAnalysisGivenSession method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task StudentsWithoutAnalysisTest()
         {
@@ -190,6 +234,9 @@ namespace UnitTests
             Assert.AreEqual( studentsList[0] , "Student2" );
         }
 
+        /// <summary>
+        /// Tests the GetBestWorstGivenSession method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task BestWorstAnalysisTest()
         {
@@ -206,10 +253,12 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the GetStudentScoreGivenSession method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task StudentScoreTest()
         {
-
             await FillTestData();
             Dictionary<string , int> StudentScore = await _insightsClient.GetStudentScoreGivenSession( "1" );
             Assert.AreEqual( 2 , StudentScore.Count );
@@ -219,10 +268,12 @@ namespace UnitTests
             await _downloadClient.DeleteAllSessionsAsync();
         }
 
+        /// <summary>
+        /// Tests the GetTestScoreGivenSession method of the InsightsApi class.
+        /// </summary>
         [TestMethod()]
         public async Task TestScoreTest()
         {
-
             await FillTestData();
             Dictionary<string , int> TestScore = await _insightsClient.GetTestScoreGivenSession( "1" );
             Assert.AreEqual( 2 , TestScore.Count );

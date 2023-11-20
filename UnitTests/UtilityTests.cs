@@ -4,9 +4,15 @@ using ServerlessFunc;
 
 namespace UnitTests
 {
+    /// <summary>
+    /// This class contains unit tests for the Utility classes.
+    /// </summary>
     [TestClass()]
     public class UtilityTests
     {
+        /// <summary>
+        /// Tests the BlobUtility class.
+        /// </summary>
         [TestMethod()]
         public async Task BlobUtilityTest()
         {
@@ -20,8 +26,10 @@ namespace UnitTests
             CollectionAssert.AreEqual( blobcontent , getBlobContent );
         }
 
+        /// <summary>
+        /// Tests the AnalyzerResult class.
+        /// </summary>
         [TestMethod()]
-
         public void AnalysisResultEncodeDecodeTest()
         {
             AnalyzerResult result1 = new( "100" , 1 , "Successful" );
@@ -35,6 +43,9 @@ namespace UnitTests
             Assert.AreEqual( result1.ErrorMessage , result2.ErrorMessage );
         }
 
+        /// <summary>
+        /// Tests the InsightsUtility class.
+        /// </summary>
         [TestMethod()]
         public void InsightsUtilityTest1()
         {
@@ -53,6 +64,9 @@ namespace UnitTests
             }
         }
 
+        /// <summary>
+        /// Tests the InsightsUtility class.
+        /// </summary>
         [TestMethod()]
         public void InsightsUtilityTest2()
         {

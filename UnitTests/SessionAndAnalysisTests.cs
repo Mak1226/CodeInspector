@@ -3,6 +3,9 @@ using ServerlessFunc;
 
 namespace UnitTests
 {
+    /// <summary>
+    /// This class contains unit tests for the Session and Analysis APIs.
+    /// </summary>
     [TestClass()]
     public class SessionAndAnalysisTests
     {
@@ -18,6 +21,10 @@ namespace UnitTests
             _uploadClient = new UploadApi( _sessionUrl , _submissionUrl , _analysisUrl );
         }
 
+        /// <summary>
+        /// Creates dummy session data with the provided parameters.
+        /// </summary>
+        /// <returns>A SessionData object.</returns>
         public SessionData GetDummySessionData()
         {
             SessionData sessionData = new()
@@ -46,8 +53,10 @@ namespace UnitTests
             return sessionData;
         }
 
+        /// <summary>
+        /// Tests the PostSessionAsync and GetSessionsByHostNameAsync methods.
+        /// </summary>
         [TestMethod()]
-
         public async Task PostAndGetTestSession()
         {
             await _downloadClient.DeleteAllSessionsAsync();
@@ -60,6 +69,10 @@ namespace UnitTests
             CollectionAssert.AreEqual( sessionData.Tests , sessionEntity[0].Tests , "Tests list mismatch" );
 
         }
+
+        /// <summary>
+        /// Tests the PostSubmissionAsync and GetSubmissionByUserNameAndSessionIdAsync methods.
+        /// </summary>
         [TestMethod()]
         public async Task PostAndGetTestSubmission()
         {
@@ -78,6 +91,10 @@ namespace UnitTests
             Assert.AreEqual( text , "demotext" );
 
         }
+
+        /// <summary>
+        /// Tests the PostAnalysisAsync and GetAnalysisByUserNameAndSessionIdAsync methods.
+        /// </summary>
         [TestMethod()]
         public async Task PostAndGetTestAnalysis()
         {
@@ -96,7 +113,6 @@ namespace UnitTests
             Assert.AreEqual( entities[0].UserName , postEntity.UserName );
             string text = Encoding.ASCII.GetString( entities[0].AnalysisFile );
             Assert.AreEqual( "demotext" , text );
-
         }
     }
 }
