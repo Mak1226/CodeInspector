@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = SubmissionEntity.cs
+*
+* Author      = Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Model for the entity which stores the structure of submission file.
+*****************************************************************************/
+
+using System;
 using System.Text.Json.Serialization;
 using Azure;
 using ITableEntity = Azure.Data.Tables.ITableEntity;

@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = SessionEntity.cs
+*
+* Author      = Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Model for the entity which stores the structure of session file.
+*****************************************************************************/
+
+using System;
 using System.Text.Json.Serialization;
 using Azure;
 using ITableEntity = Azure.Data.Tables.ITableEntity;

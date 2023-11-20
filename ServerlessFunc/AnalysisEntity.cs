@@ -1,4 +1,17 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = AnalysisEntity.cs
+*
+* Author      = Sahil
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Model for the entity which stores the structure of analysis file.
+*****************************************************************************/
+
+
+using System;
 using System.Text.Json.Serialization;
 using Azure;
 using ITableEntity = Azure.Data.Tables.ITableEntity;

@@ -1,4 +1,14 @@
-﻿
+﻿/******************************************************************************
+* Filename    = EntityApiFunctions.cs
+*
+* Author      = Sahil, Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Consists of function app for all the functionalities
+*****************************************************************************/
 
 using System;
 using System.Collections.Generic;

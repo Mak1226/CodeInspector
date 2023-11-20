@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = InsightsApi.cs
+*
+* Author      = Sahil
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Provides Api functionality for the user to get analysis from cloud
+*****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
