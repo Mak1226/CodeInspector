@@ -60,14 +60,14 @@ namespace Analyzer.Pipeline
         /// <returns>True if the string is in Pascal case, false otherwise.</returns>
         private bool IsPascalCase(string s)
         {
-            if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
+            if (string.IsNullOrEmpty( s ) || !char.IsUpper( s[0] ))
             {
                 return false;
             }
 
             for (int i = 1; i < s.Length; i++)
             {
-                if (!char.IsLetter(s[i]) || char.IsLower(s[i]))
+                if (!char.IsLetter( s[i] ) || char.IsLower( s[i] ))
                 {
                     return false;
                 }
