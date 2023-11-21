@@ -25,7 +25,7 @@ namespace Dashboard
     /// </summary>
     public partial class InstructorPage : Page
     {
-        private ServerPage contentServerPage;
+        private readonly ServerPage _contentServerPage;
         public InstructorPage()
         {
             InitializeComponent();
@@ -35,8 +35,8 @@ namespace Dashboard
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
 
-                contentServerPage = new ServerPage ( viewModel.Communicator);
-                ResultFrame.Content = contentServerPage;
+                _contentServerPage = new ServerPage ( viewModel.Communicator);
+                ResultFrame.Content = _contentServerPage;
             }
             catch (Exception exception)
             {
@@ -61,7 +61,7 @@ namespace Dashboard
                     Debug.WriteLine( $"Clicked {clickedStudent.Id}" );
                     if (clickedStudent.Id != null)
                     {
-                        contentServerPage.SetSessionID( clickedStudent.Id );
+                        _contentServerPage.SetSessionID( clickedStudent.Id );
                     }
                 }
             }

@@ -54,7 +54,7 @@ namespace Dashboard.Authentication
             string codeVerifier = CryptRandomInt(32);
             string codeChallenge = EncodeInputBuffer(Sha256(codeVerifier));
             const string codeChallengeMethod = "S256";
-            string redirectURI = string.Format("http://{0}:{1}/", IPAddress.Loopback, "8080");
+            string redirectURI = string.Format( "http://{0}:{1}/" , IPAddress.Loopback , "8080" );
             AuthenticationResult result = new();
 
             Trace.WriteLine("[Authenticator] Creating HTTP Listener");
@@ -273,7 +273,7 @@ namespace Dashboard.Authentication
             string userInfoRequestURI = "https://www.googleapis.com/oauth2/v3/userinfo";
 
             // Sending the request
-            HttpWebRequest userInfoRequest = (HttpWebRequest)WebRequest.Create(userInfoRequestURI);
+            HttpWebRequest userInfoRequest = (HttpWebRequest)WebRequest.Create( userInfoRequestURI );
             userInfoRequest.Method = "GET";
             userInfoRequest.Headers.Add(string.Format("Authorization: Bearer {0}", access_token));
             userInfoRequest.ContentType = "application/x-www-form-urlencoded";

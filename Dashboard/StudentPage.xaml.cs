@@ -25,8 +25,7 @@ namespace Dashboard
         public StudentPage(string name, string id)
         {
             InitializeComponent();
-            //StudentName = name;
-            //StudentId = id;
+
             try
             {
                 // Create the ViewModel and set as data context.
@@ -63,7 +62,6 @@ namespace Dashboard
         private void ConnectButton_Click( object sender , RoutedEventArgs e )
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
-            //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.ConnectInstructor();
             if (viewModel != null)
@@ -81,9 +79,6 @@ namespace Dashboard
             viewModel?.DisconnectInstructor();
         }
 
-        private void InstructorIpTextBox_TextChanged_1( object sender , TextChangedEventArgs e )
-        {
 
-        }
     }
 }

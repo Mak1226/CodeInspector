@@ -38,10 +38,12 @@ namespace Dashboard
             InstructorPage instructorPage = new( );
             NavigationService?.Navigate( instructorPage );
         }
-        private void StudentButton_Click(object sender, RoutedEventArgs e)
-        {
+            }
+        }
             StudentPage studentPage = new(UserName,UserId);
             NavigationService?.Navigate( studentPage );
+                this.NavigationService.Navigate(new Uri("StudentView.xaml", UriKind.Relative));
+            }
         }
     }
 }
