@@ -5,10 +5,10 @@ using Networking.Utils;
 
 namespace NetworkingUnitTests
 {
-	public class ServerEventHandler : IEventHandler
+	public class GenericEventHandler : IEventHandler
     {
         private readonly Queue _messageQueue;
-        public ServerEventHandler(Queue messageQueue )
+        public GenericEventHandler(Queue messageQueue )
         {
             _messageQueue = messageQueue;
         }

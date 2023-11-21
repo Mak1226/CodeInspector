@@ -25,6 +25,7 @@ namespace Networking.Communicator
         private Dictionary<string, IEventHandler> _eventHandlersMap = new();
         private string _senderId;
         private bool _isStarted = false;
+        private string _ipPort = "";
 
 
         private string GetLocalIPAddress()
@@ -77,7 +78,7 @@ namespace Networking.Communicator
         public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
-                return "already started";
+                return _ipPort;
 
             _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
@@ -124,7 +125,8 @@ namespace Networking.Communicator
             //Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
             //Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
             Subscribe(new NetworkingEventHandler(), ID.GetNetworkingID());
-            return GetLocalIPAddress() + ":" + localEndPoint.Port;
+            _ipPort = GetLocalIPAddress() + ":" + localEndPoint.Port;
+            return _ipPort;
         }
 
         public void Stop()
