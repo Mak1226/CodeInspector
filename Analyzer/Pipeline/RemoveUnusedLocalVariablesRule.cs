@@ -103,6 +103,12 @@ namespace Analyzer.Pipeline
             return false;
         }
 
+        /// <summary>
+        /// Checks if an instruction uses a specific local variable.
+        /// </summary>
+        /// <param name="instruction">The instruction to check.</param>
+        /// <param name="localVar">The local variable to compare with.</param>
+        /// <returns>True if the instruction uses the local variable; otherwise, false.</returns>
         private static bool UsesLocalVariable(Instruction instruction, VariableDefinition localVar)
         {
             if (instruction.OpCode == OpCodes.Ldloc)
@@ -114,28 +120,6 @@ namespace Analyzer.Pipeline
             }
 
             return false;
-        }
-
-
-        /// <summary>
-        /// Removes instructions that reference a specific unused local variable from a collection of instructions.
-        /// </summary>
-        /// <param name="localVar">The unused local variable to remove instructions for.</param>
-        /// <param name="instructions">The collection of instructions to modify.</param>
-        private static void RemoveUnusedLocalVariableInstructions(VariableDefinition localVar, Collection<Instruction> instructions)
-        {
-            for (int i = instructions.Count - 1; i >= 0; i--)
-            {
-                Instruction instruction = instructions[i];
-                if (instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Stloc)
-                {
-                    VariableReference localVariableReference = (VariableReference)instruction.Operand;
-                    if (localVariableReference == localVar)
-                    {
-                        instructions.RemoveAt(i);
-                    }
-                }
-            }
         }
     }
 }
