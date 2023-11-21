@@ -202,16 +202,16 @@ namespace AnalyzerTests.Pipeline
         [TestMethod]
         public void checkIfElseComplexity()
         {
-            var dllFile = Assembly.GetExecutingAssembly().Location;
+            string dllFile = Assembly.GetExecutingAssembly().Location;
             //var dllFile = "C:\\Users\\nikhi\\source\\repos\\nikhi9603\\Analyzer\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll";
 
-            ParsedDLLFile parsedDLL = new ParsedDLLFile(dllFile);
+            ParsedDLLFile parsedDLL = new(dllFile);
 
             List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
             CyclomaticComplexity cyclomaticComplexityRule = new(parseddllFiles);
 
-            var result = cyclomaticComplexityRule.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> result = cyclomaticComplexityRule.AnalyzeAllDLLs();
 
             ModuleDefinition module = ModuleDefinition.ReadModule(dllFile);
 

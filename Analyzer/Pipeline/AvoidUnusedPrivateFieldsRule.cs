@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                     UnusedFields.Add(field.Name.ToString()); 
                 }
 
-                if (cls._fields.Count == 0)
+                if (cls.FieldsList.Count == 0)
                 {
                     continue;
                 }

@@ -15,19 +15,20 @@ namespace AnalyzerTests.Pipeline
     public class TestClassDiagram
     {
         [TestMethod]
-        public async Task VerifyImages()
+        public void VerifyImages()
         {
-            var factory = new RendererFactory();
-            var renderer = factory.CreateRenderer(new PlantUmlSettings());
+            //var factory = new RendererFactory();
+            //IPlantUmlRenderer renderer = factory.CreateRenderer(new PlantUmlSettings());
 
             //string plantUmlCode = "@startuml\r\nclass Car {}\r\n\r\nclass Engine\r\n\r\nCar *-- Engine : contains\r\nEngine <-- Car2\r\n@enduml";
 
             //ClassDiagram classDig = new ClassDiagram(plantUmlCode);
 
 
-            List<string> DllFilePaths = new List<string>();
-
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll");
+            List<string> DllFilePaths = new()
+            {
+                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+            };
             //DllFilePaths.Add("C:\\Users\\nikhi\\source\\repos\\BridgePatternDemo\\UnitTests\\bin\\Debug\\UnitTests.dll");
             //DllFilePaths.Add("C:\\Users\\nikhi\\source\\repos\\dotnet-reflection-demo-master\\MonoCecilExecution\\bin\\Debug\\MonoCecilExecution.dll");
 
