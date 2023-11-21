@@ -26,17 +26,18 @@ namespace Dashboard
     public partial class InstructorPage : Page
     {
         private ServerPage contentServerPage;
-        public InstructorPage()
+        public InstructorPage( string userName , string userId )
         {
             InitializeComponent();
-
             try
             {
-                InstructorViewModel viewModel = new();
+
+                InstructorViewModel viewModel = new(null,userName,userId);
                 DataContext = viewModel;
 
                 contentServerPage = new ServerPage ( viewModel.Communicator);
                 ResultFrame.Content = contentServerPage;
+
             }
             catch (Exception exception)
             {
