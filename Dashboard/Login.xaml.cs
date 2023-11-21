@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,52 +18,15 @@ namespace Dashboard
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Login : Page, INotifyPropertyChanged
+    public partial class Login : Page
     {
         public Login(string userName, string userEmail, string userPicture)
         {
-            InitializeComponent();
-            _name = userName;
-            UserName = userName;
-            _userId = userEmail;
-            UserId = userEmail;
+            string name = userName;
+            string userId = userEmail;
             string picture = userPicture;
-            DataContext = this; // Set the DataContext to this instance
-        }
 
-        private string _name;
-        public string UserName
-        {
-            get { return _name; }
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(UserName));
-                }
-            }
-        }
-
-        private string _userId;
-        public string UserId
-        {
-            get { return _userId; }
-            set
-            {
-                if (_userId != value)
-                {
-                    _userId = value;
-                    OnPropertyChanged(nameof(UserId));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            InitializeComponent();
         }
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)

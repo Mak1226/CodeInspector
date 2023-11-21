@@ -20,7 +20,7 @@ namespace ViewModel
 {
     public class InstructorViewModel : INotifyPropertyChanged, IEventHandler
     {
-        private readonly ICommunicator server; // Communicator used to send and receive messages.
+        private readonly ICommunicator _server; // Communicator used to send and receive messages.
         private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
 
         /// <summary>
@@ -29,12 +29,12 @@ namespace ViewModel
         public InstructorViewModel(ICommunicator? communicator = null)
         {
             _studentSessionState = new();
-            server = communicator ?? CommunicationFactory.GetServer();
+            _server = communicator ?? CommunicationFactory.GetServer();
 
             //IpAddress = GetPrivateIp();
 
-            var ipPort = server.Start(null, null, "server", "Dashboard");
-            server.Subscribe(this, "Dashboard");
+            var ipPort = _server.Start(null, null, "server", "Dashboard");
+            _server.Subscribe(this, "Dashboard");
             string[] parts = ipPort.Split(':');
             try
             {
@@ -44,9 +44,6 @@ namespace ViewModel
                 OnPropertyChanged(nameof(ReceivePort));
             }
             catch { }
-
-            _studentSessionState.AddStudent("21323", "arkka", "13151", 123);
-
         }
 
         //public List<Student> StudentList 
@@ -57,13 +54,7 @@ namespace ViewModel
         //    }
         //}
 
-        public ObservableCollection<Student> StudentList
-        {
-            get
-            {
-                return new ObservableCollection<Student>(_studentSessionState.GetAllStudents());
-            }
-        }
+        public ObservableCollection<Student> StudentList => new( _studentSessionState.GetAllStudents() );
 
         public int StudentCount
         {
@@ -77,7 +68,7 @@ namespace ViewModel
         {
             get
             {
-                return server;
+                return _server;
             }
         }
 
@@ -167,12 +158,12 @@ namespace ViewModel
                     if (isConnect == 1)
                     {
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
-                        server.Send("1",$"{rollNo}");
+                        _server.Send("1",$"{rollNo}");
                     }
                     else if (isConnect == 0) 
                     {
                         _studentSessionState.RemoveStudent(rollNo);
-                        server.Send("0", $"{rollNo}");
+                        _server.Send("0", $"{rollNo}");
                     }
                     //Dispatcher.Invoke((string property) =>
                     //{

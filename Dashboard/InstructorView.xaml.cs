@@ -58,7 +58,7 @@ namespace Dashboard
             if (this.NavigationService != null)
             {
                 // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-                this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
+                this.NavigationService.Navigate(new Uri( "AuthenticationPage.xaml" , UriKind.Relative));
             }
         }
     }

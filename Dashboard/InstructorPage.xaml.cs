@@ -49,7 +49,7 @@ namespace Dashboard
         private void LogoutButtonClick(object sender, RoutedEventArgs e)
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-            NavigationService?.Navigate( new Uri( "Login.xaml" , UriKind.Relative ) );
+            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
         }
 
         private void Student_Selected(object sender, MouseButtonEventArgs e)
