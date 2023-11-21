@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>The number of errors found during the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
+            _errorMessage = "No Violation Found";
             _verdict = 1;
             int errorCount = 0;
 
@@ -46,8 +46,8 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
-                    Console.WriteLine($"INCORRECT TYPE PREFIX : {classObj.Name}");
-                    _errorMessage = "INCORRECT TYPE PREFIX : " + classObj.Name;
+                    Console.WriteLine($"Incorrect Type Prefix : {classObj.Name}");
+                    _errorMessage = "Incorrect Type Prefix : " + classObj.Name;
                     errorCount++;
                 }
             }
@@ -57,8 +57,8 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
-                    Console.WriteLine($"INCORRECT INTERFACE PREFIX : {interfaceObj.Name}");
-                    _errorMessage = "INCORRECT INTERFACE PREFIX : " + interfaceObj.Name;
+                    Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
+                    _errorMessage = "Incorrect Interface Prefix : " + interfaceObj.Name;
                     errorCount++;
                 }
             }
@@ -67,8 +67,8 @@ namespace Analyzer.Pipeline
             {
                     if (!IsCorrectGenericParameterName(structObj.Name))
                     {
-                        Console.WriteLine($"INCORRECT PARAMETER PREFIX : {structObj.Name}");
-                        _errorMessage = "INCORRECT PARAMETER PREFIX : " + structObj.Name;
+                        Console.WriteLine($"Incorrect Parameter Prefix : {structObj.Name}");
+                        _errorMessage = "Incorrect Parameter Prefix : " + structObj.Name;
                         errorCount++;
                     }
             }
