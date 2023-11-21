@@ -1,8 +1,6 @@
 ﻿using Networking.Communicator;
 using Networking.Events;
 using SessionState;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +11,10 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Networking.Utils;
 using Networking.Models;
-using System.Xml.Linq;
+using System.Collections.ObjectModel;
+using System.Windows.Threading;
+using System.Windows;
+
 
 namespace ViewModel
 {
@@ -48,11 +49,19 @@ namespace ViewModel
 
         }
 
-        public List<Student> StudentList 
-        { 
+        //public List<Student> StudentList 
+        //{ 
+        //    get
+        //    {
+        //        return _studentSessionState.GetAllStudents();
+        //    }
+        //}
+
+        public ObservableCollection<Student> StudentList
+        {
             get
             {
-                return _studentSessionState.GetAllStudents();
+                return new ObservableCollection<Student>(_studentSessionState.GetAllStudents());
             }
         }
 
@@ -69,11 +78,6 @@ namespace ViewModel
             get
             {
                 return server;
-            }
-
-            private set
-            {
-
             }
         }
 
@@ -101,6 +105,7 @@ namespace ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
+        private static Dispatcher Dispatcher => Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
         private string? GetPrivateIp()
         {
             string hostName = Dns.GetHostName();
@@ -169,18 +174,27 @@ namespace ViewModel
                         _studentSessionState.RemoveStudent(rollNo);
                         server.Send("0", $"{rollNo}");
                     }
+                    //Dispatcher.Invoke((string property) =>
+                    //{
+                    //    OnPropertyChanged(property);
+                    //}, nameof(StudentList));
                     OnPropertyChanged(nameof(StudentList));
+                    //Dispatcher.Invoke((string property) =>
+                    //{
+                    //    OnPropertyChanged(property);
+                    //}, nameof(StudentCount));
                     OnPropertyChanged(nameof(StudentCount));
-                    Debug.WriteLine($"Joined Students : {_studentSessionState.GetStudentsCount()}");
                     return true;
                 }
             }
             return false;
         }
-
         public string HandleMessageRecv(Networking.Models.Message data)
         {
-            AddStudnet(data.Data);
+            Dispatcher.Invoke((string data) =>
+            {
+                AddStudnet(data);
+            }, data.Data);
             return "";
         }
     }

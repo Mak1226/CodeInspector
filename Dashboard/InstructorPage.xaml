@@ -73,6 +73,12 @@
                             <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                         </GridView>
                     </ListView.View>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="MouseLeftButtonUp" Handler="Student_Selected" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </Grid>
         </Grid>

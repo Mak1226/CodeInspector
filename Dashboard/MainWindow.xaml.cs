@@ -23,7 +23,7 @@ namespace Dashboard
         public MainWindow()
         {
             InitializeComponent();
-            Page entryPage = new Login();
+            Page entryPage = new Login("g","a","f");
             MainFrame.Navigate(entryPage);
         }
     }

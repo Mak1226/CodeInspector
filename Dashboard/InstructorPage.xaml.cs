@@ -1,6 +1,8 @@
 ﻿using ContentPage;
+using SessionState;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+//using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -48,6 +51,21 @@ namespace Dashboard
             {
                 // If a valid NavigationService exists, navigate to the "Login.xaml" page.
                 this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
+            }
+        }
+
+        private void Student_Selected(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (item != null && item.IsSelected)
+            {
+                //Do your stuff
+                var clickedStudent = item.DataContext as Student;
+
+                if (clickedStudent != null)
+                {
+                    Debug.WriteLine($"Clicked {clickedStudent.Id}");
+                }
             }
         }
     }
