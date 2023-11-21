@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +21,16 @@ namespace Dashboard
     /// </summary>
     public partial class Login : Page
     {
-        public Login(string userName, string userEmail, string userPicture)
+        public Login( string userName , string userEmail , string userPicture )
         {
-            string name = userName;
-            string userId = userEmail;
-            string picture = userPicture;
-
             InitializeComponent();
+            UserName = userName;
+            UserId = userEmail;
+            DataContext = this; // Set the DataContext to this instance
         }
+
+        public string UserName { get; init; }
+        public string UserId { get; init; }
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
