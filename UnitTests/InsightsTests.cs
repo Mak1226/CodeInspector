@@ -1,8 +1,21 @@
-﻿using System.Text;
+﻿/******************************************************************************
+* Filename    = InsightsTests.cs
+*
+* Author      = Sahil, Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud Unit Test
+*
+* Description = Testing the Insights API
+*****************************************************************************/
+
+
+using System.Text;
 using System.Text.Json;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the InsightsApi class.
@@ -29,6 +42,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy analysis data for a specific session and student.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="studentName">The name of the student.</param>
         /// <param name="map">A dictionary of test names to analyzer results.</param>
@@ -48,6 +62,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy session data for a specific host, session ID, tests, students, and test name to ID mapping.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="hostName">The name of the host.</param>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="tests">A list of test names.</param>
@@ -70,6 +85,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy analysis results for two tests.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="test1Verdict">The verdict for test 1.</param>
         /// <param name="test2Verdict">The verdict for test 2.</param>
         /// <returns>A dictionary of test names to analyzer results.</returns>
@@ -90,6 +106,7 @@ namespace UnitTests
         /// <summary>
         /// Fills the test data for the unit tests.
         /// </summary>
+        /// <author> Sahil </author>
         public async Task FillTestData()
         {
             List<Tuple<string , string>> NameToID = new()
@@ -122,6 +139,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the CompareTwoSessions method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task CompareTwoSessionsTest()
         {
@@ -146,6 +164,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetFailedStudentsGivenTest method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task GetFailedStudentsGivenTestTest()
         {
@@ -165,6 +184,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageOnGivenTest method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenTestTest()
         {
@@ -180,6 +200,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenStudentTest()
         {
@@ -195,6 +216,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageAcrossSessoinsTest()
         {
@@ -213,6 +235,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the UsersWithoutAnalysisGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentsWithoutAnalysisTest()
         {
@@ -237,6 +260,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetBestWorstGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task BestWorstAnalysisTest()
         {
@@ -256,6 +280,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetStudentScoreGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentScoreTest()
         {
@@ -271,6 +296,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetTestScoreGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task TestScoreTest()
         {

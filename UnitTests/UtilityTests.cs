@@ -1,8 +1,20 @@
-﻿using System.Text;
+﻿/******************************************************************************
+* Filename    = UtilityTests.cs
+*
+* Author      = Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud Unit Test
+*
+* Description = Testing the utility functions
+*****************************************************************************/
+
+using System.Text;
 using System.Text.Json;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the Utility classes.
