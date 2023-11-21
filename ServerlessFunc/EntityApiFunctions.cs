@@ -1,4 +1,14 @@
-﻿
+﻿/******************************************************************************
+* Filename    = EntityApiFunctions.cs
+*
+* Author      = Sahil, Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Consists of function app for all the functionalities
+*****************************************************************************/
 
 using System;
 using System.Collections.Generic;
@@ -33,6 +43,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Creates a new session entity in the Azure Table storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityTable">The Azure Table storage table for storing session entities.</param>
         /// <param name="log">The logger instance.</param>
@@ -53,6 +64,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Creates a new analysis entity in the Azure Table storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityTable">The Azure Table storage table for storing analysis entities.</param>
         /// <param name="log">The logger instance.</param>
@@ -73,6 +85,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Creates a new submission entity in the Azure Table storage and uploads the corresponding DLL files to Azure Blob Storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityTable">The Azure Table storage table for storing submission entities.</param>
         /// <param name="log">The logger instance.</param>
@@ -102,6 +115,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves a list of session entities for the specified host username.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient">The Azure Table storage client for accessing the session table.</param>
         /// <param name="hostname">The host username to filter sessions by.</param>
@@ -127,6 +141,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves the ZIP file containing the submitted DLL files for the specified session ID and username.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="username">The username associated with the submission.</param>
         /// <param name="sessionId">The session ID associated with the submission.</param>
@@ -143,6 +158,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves the analysis file for the specified session ID and username.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="username">The username associated with the analysis.</param>
@@ -161,6 +177,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves the analysis file for the specified session ID.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="sessionId">The session ID associated with the analysis.</param>
@@ -178,6 +195,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Removes all session entities from the Azure Table storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityClient">The Azure Table storage client for accessing the session table.</param>
         /// <returns>An HTTP response indicating the status of the session deletion.</returns>
@@ -201,6 +219,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Removes all submission entities from the Azure Table storage and deletes the corresponding DLL files from Azure Blob Storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityClient">The Azure Table storage client for accessing the submission table.</param>
         /// <returns>An HTTP response indicating the status of the submission deletion.</returns>
@@ -225,6 +244,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Removes all analysis entities from the Azure Table storage.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="entityClient">The Azure Table storage client for accessing the analysis table.</param>
         /// <returns>An HTTP response indicating the status of the analysis deletion.</returns>
@@ -248,6 +268,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Compares two sessions based on their analysis results.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="sessionId1">The first session ID for comparison.</param>
@@ -312,6 +333,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Identifies students who failed a specific test based on their analysis results.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the session table.</param>
         /// <param name="tableClient2">The Azure Table storage client for accessing the analysis table.</param>
@@ -367,6 +389,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the running average score for a specific test across multiple sessions for a given hostname.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the session table.</param>
         /// <param name="tableClient2">The Azure Table storage client for accessing the analysis table.</param>
@@ -430,6 +453,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the running average score across multiple sessions for a given student on a specific hostname.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the session table.</param>
         /// <param name="tableClient2">The Azure Table storage client for accessing the analysis table.</param>
@@ -481,6 +505,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Calculates the running average score across all sessions for a given hostname.
         /// </summary>
+        /// <author> Sahil </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the session table.</param>
         /// <param name="tableClient2">The Azure Table storage client for accessing the analysis table.</param>
@@ -531,6 +556,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Identifies students who do not have an analysis report for a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the session table.</param>
         /// <param name="tableClient2">The Azure Table storage client for accessing the analysis table.</param>
@@ -563,6 +589,7 @@ namespace ServerlessFunc
         /// Identifies the student with the highest and lowest overall score, 
         /// and the test with the highest and lowest average score for a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="sessionid">The ID of the session to evaluate.</param>
@@ -615,6 +642,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves the score for each student in a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="sessionid">The ID of the session to evaluate.</param>
@@ -654,6 +682,7 @@ namespace ServerlessFunc
         /// <summary>
         /// Retrieves the average score for each test in a given session.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="req">The HTTP request object.</param>
         /// <param name="tableClient1">The Azure Table storage client for accessing the analysis table.</param>
         /// <param name="sessionid">The ID of the session to evaluate.</param>

@@ -1,7 +1,19 @@
-﻿using System.Text;
+﻿/******************************************************************************
+* Filename    = SessionAndAnalysisTests.cs
+*
+* Author      = Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud Unit Test
+*
+* Description = Testing the upload and download API by pushing and pulling from cloud
+*****************************************************************************/
+
+using System.Text;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the Session and Analysis APIs.
@@ -96,7 +108,7 @@ namespace UnitTests
         /// Tests the PostAnalysisAsync and GetAnalysisByUserNameAndSessionIdAsync methods.
         /// </summary>
         [TestMethod()]
-        public async Task PostAndGetTestAnalysis()
+        public async Task PostAndGetTestAnalysis1()
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             AnalysisData analysis = new()
@@ -113,6 +125,40 @@ namespace UnitTests
             Assert.AreEqual( entities[0].UserName , postEntity.UserName );
             string text = Encoding.ASCII.GetString( entities[0].AnalysisFile );
             Assert.AreEqual( "demotext" , text );
+        }
+
+        /// <summary>
+        /// Tests the PostAnalysisAsync and GetAnalysisBySessionIdAsync methods.
+        /// </summary>
+        [TestMethod()]
+        public async Task PostAndGetTestAnalysis2()
+        {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            AnalysisData analysis1 = new()
+            {
+                SessionId = "2" ,
+                UserName = "Student1" ,
+                AnalysisFile = Encoding.ASCII.GetBytes( "demotext" )
+            };
+            AnalysisData analysis2 = new()
+            {
+                SessionId = "2" ,
+                UserName = "Student2" ,
+                AnalysisFile = Encoding.ASCII.GetBytes( "demotext" )
+            };
+            AnalysisEntity postEntity1 = await _uploadClient.PostAnalysisAsync( analysis1 );
+            AnalysisEntity postEntity2 = await _uploadClient.PostAnalysisAsync( analysis2 );
+            IReadOnlyList<AnalysisEntity> entities = await _downloadClient.GetAnalysisBySessionIdAsync("2");
+            await _downloadClient.DeleteAllAnalysisAsync();
+            Assert.AreEqual( 2 , entities.Count );
+            Assert.AreEqual( entities[0].SessionId , postEntity1.SessionId );
+            Assert.AreEqual( entities[0].UserName , postEntity1.UserName );
+            Assert.AreEqual( entities[1].SessionId , postEntity2.SessionId );
+            Assert.AreEqual( entities[1].UserName , postEntity2.UserName );
+            string text1 = Encoding.ASCII.GetString( entities[0].AnalysisFile );
+            string text2 = Encoding.ASCII.GetString( entities[1].AnalysisFile );
+            Assert.AreEqual( "demotext" , text1 );
+            Assert.AreEqual( "demotext" , text2 );
         }
     }
 }
