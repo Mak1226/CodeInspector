@@ -16,9 +16,9 @@ namespace Analyzer.Pipeline
     public class AvoidUnusedPrivateFieldsRule : AnalyzerBase
     {
 
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
 
         /// <summary>
@@ -27,9 +27,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
         public AvoidUnusedPrivateFieldsRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "103";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "103";
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                     UnusedFields.Add(field.Name.ToString()); 
                 }
 
-                if (cls._fields.Count == 0)
+                if (cls.FieldsList.Count == 0)
                 {
                     continue;
                 }
@@ -60,14 +60,14 @@ namespace Analyzer.Pipeline
                         continue;
                     }
 
-                    foreach (var ins in method.Body.Instructions)
+                    foreach (Instruction? ins in method.Body.Instructions)
                     {
                         if (ins.OpCode == OpCodes.Ldfld)
                         {
 
                             FieldReference fieldReference = (FieldReference) ins.Operand;
 
-                            var fieldName = fieldReference.Name.ToString();
+                            string fieldName = fieldReference.Name.ToString();
 
                             if (UnusedFields.Contains(fieldName))
                             {
@@ -85,13 +85,13 @@ namespace Analyzer.Pipeline
                         continue;
                     }
 
-                    foreach (var ins in method.Body.Instructions)
+                    foreach (Instruction? ins in method.Body.Instructions)
                     {
                         if (ins.OpCode == OpCodes.Ldfld)
                         {
                             FieldReference fieldReference = (FieldReference) ins.Operand;
 
-                            var fieldName = fieldReference.Name.ToString();
+                            string fieldName = fieldReference.Name.ToString();
 
                             if (UnusedFields.Contains(fieldName))
                             {
@@ -104,35 +104,35 @@ namespace Analyzer.Pipeline
                 if (UnusedFields.Count > 0)
                 {
 
-                    errorMessage += cls.Name.ToString() + " -> ";
+                    _errorMessage += cls.Name.ToString() + " -> ";
 
-                    foreach (var filedName in UnusedFields)
+                    foreach (string filedName in UnusedFields)
                     {
-                        errorMessage += filedName + " ";
+                        _errorMessage += filedName + " ";
                     }
-                    errorMessage += ", ";
+                    _errorMessage += ", ";
 
-                    verdict = 0;
+                    _verdict = 0;
                 }
 
             }
 
-            if(verdict == 0)
+            if(_verdict == 0)
             {
-                errorMessage += "these are unused private field";
+                _errorMessage += "these are unused private field";
                 return;
             }
 
-            verdict = 1;
+            _verdict = 1;
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage == "" ? "No violations found." : errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage == "" ? "No violations found." : _errorMessage);
         }
     }
 }

@@ -13,9 +13,9 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class NoEmptyInterface : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         /// <summary>
         ///
@@ -23,9 +23,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public NoEmptyInterface(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "104";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "104";
         }
 
         /// <summary>
@@ -77,16 +77,16 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             List<Type> emptyInterfaces = FindEmptyInterfaces(parsedDLLFile);
             if (emptyInterfaces.Count > 0)
             {
-                verdict = 1;
-                errorMessage = ErrorMessage(emptyInterfaces);
+                _verdict = 1;
+                _errorMessage = ErrorMessage(emptyInterfaces);
             }
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }

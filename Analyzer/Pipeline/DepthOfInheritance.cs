@@ -91,7 +91,7 @@ namespace Analyzer.Pipeline
                 var errorMessageBuilder = new StringBuilder();
                 errorMessageBuilder.AppendLine("Classes violating depth of inheritance rule:");
 
-                foreach (var (classType, depth) in violatingClasses)
+                foreach ((Type classType, int depth) in violatingClasses)
                 {
                     errorMessageBuilder.AppendLine($"{classType.FullName}: Depth - {depth}");
                 }

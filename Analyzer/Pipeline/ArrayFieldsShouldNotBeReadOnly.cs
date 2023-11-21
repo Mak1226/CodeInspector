@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System;
@@ -10,15 +10,15 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class ArrayFieldsShouldNotBeReadOnlyRule : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         public ArrayFieldsShouldNotBeReadOnlyRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "106";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "106";
         }
 
         /// <summary>
@@ -27,18 +27,18 @@ namespace Analyzer.Pipeline
         /// <returns>An <see cref="AnalyzerResult"/> based on the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             CheckForReadOnlyArrayFields(parsedDLLFile);
 
             // If no errors, add a message indicating everything looks fine
-            if (string.IsNullOrEmpty(errorMessage))
+            if (string.IsNullOrEmpty(_errorMessage))
             {
-                errorMessage = "Everything looks fine. No readonly array fields found.";
+                _errorMessage = "Everything looks fine. No readonly array fields found.";
             }
 
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
 
         /// <summary>
@@ -54,15 +54,15 @@ namespace Analyzer.Pipeline
                     if (field.IsInitOnly && field.IsPublic && field.FieldType.IsArray)
                     {
                         // Modify the errorMessage to include information about the read-only array field
-                        errorMessage += $"Readonly array field found in class {field.DeclaringType.FullName}, field {field.Name}.{Environment.NewLine}";
+                        _errorMessage += $"Readonly array field found in class {field.DeclaringType.FullName}, field {field.Name}.{Environment.NewLine}";
                     }
                 }
             }
 
             // After checking all classes and fields, if any read-only array fields were found, set verdict to 0.
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (!string.IsNullOrEmpty(_errorMessage))
             {
-                verdict = 0;
+                _verdict = 0;
             }
         }
     }

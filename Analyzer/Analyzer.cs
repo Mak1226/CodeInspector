@@ -2,6 +2,7 @@
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Analyzer
 {
@@ -17,7 +18,6 @@ namespace Analyzer
             _pathOfDLLFilesOfStudent = new List<string>();
             _teacherOptions = new Dictionary<int, bool>();
             _pathOfDLLFilesOfCustomAnalyzers = new List<string>();
-            
         }
 
         public void Configure(IDictionary<int, bool> TeacherOptions)
@@ -37,14 +37,18 @@ namespace Analyzer
 
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
+            Trace.Write("Analyzers MainPipeline is starting\n");
+
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
 
+            Trace.Write("Analyzers MainPipeline is over\n");
+
             return _customAnalyzerPipeline.Start();
         }
 
-        public Byte[] GetRelationshipGraph(List<string> removableNamespaces)
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
 
             MainPipeline _customAnalyzerPipeline = new();

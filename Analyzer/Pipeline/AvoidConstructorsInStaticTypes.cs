@@ -15,13 +15,13 @@ namespace Analyzer.Pipeline
     public class AvoidConstructorsInStaticTypes : AnalyzerBase
     {
         // Unique identifier for the analyzer
-        private string _analyzerID;
+        private readonly string _analyzerID;
         private string _errorMessage;
         private int _verdict;
 
-        // List to store classes violating the rule
-        public List<ParsedClass> violatingClasses = new();
-
+        // Set to store classes violating the rule
+        public HashSet<ParsedClass> violatingClasses = new();
+        
         /// <summary>
         /// Initializes a new instance of the AvoidConstructorsWithStaticTypes analyzer with parsed DLL files.
         /// </summary>
@@ -45,16 +45,17 @@ namespace Analyzer.Pipeline
                 return false;
             }
 
-            // Check Methods in the class
-            var methods = cls.TypeObj.GetMethods();
+            // Get all methods in the class
+            MethodInfo[] methods = cls.TypeObj.GetMethods();
 
+            //if any method or any parameterized constructor is not declared as static, return false immediately.
             if (methods.Length != 0)
             {
                 foreach (MethodInfo method in cls.Methods)
                 {
                     if (method.IsConstructor)
                     {
-                        //parameterized constructor not declared as static do not violate the rule
+                        //checking if any parameterized constructor is not declared static
                         if (!method.IsStatic && method.GetParameters().Length > 0)
                         {
                             return false;
@@ -70,8 +71,9 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            // Check fields in the class
-            var fields = cls.TypeObj.GetFields();
+            // Get all fields in the class
+            FieldInfo[] fields = cls.TypeObj.GetFields();
+
             if (fields.Length != 0)
             {
                 foreach (FieldInfo field in fields)
@@ -88,13 +90,16 @@ namespace Analyzer.Pipeline
         /// <summary>
         /// Constructs the AnalyzerResult object based on the analysis.
         /// </summary>
-        /// <param name="dllFiles"></param>
+        /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             foreach (ParsedClass cls in parsedDLLFile.classObjList)
             {
-                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsValueType || cls.TypeObj.IsSubclassOf(typeof(Delegate)))
+                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf(typeof(Delegate)))
+                {
                     continue;
+                }
+
                 if (cls.TypeObj.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 {
                     continue;
@@ -112,11 +117,9 @@ namespace Analyzer.Pipeline
                         if (!constructor.IsStatic && !constructor.IsPrivate)
                         {
                             violatingClasses.Add(cls);
-                            //Console.WriteLine("CTOR NOT STATIC, NOT PRIVATE");
                         }
                     }
                 }
-
             }
 
             //If any class violates the rule, return verdict as 0 (Failed), else 1 (Passed)
@@ -134,21 +137,20 @@ namespace Analyzer.Pipeline
 
             //adding error message
             _errorMessage = "Classes ";
-
-            for (var i = 0; i < violations; i++)
+            foreach(ParsedClass cls in violatingClasses)
             {
-                var cls = violatingClasses[i];
+
                 _errorMessage += cls.GetType().FullName;
-                if (i != violations - 1)
+                violations--;
+                if (violations != 0)
                 {
                     _errorMessage += ", ";
                 }
             }
-
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
-            AnalyzerResult resultObj = new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            AnalyzerResult resultObj = new(_analyzerID, _verdict, _errorMessage);
             return resultObj;
         }
     }

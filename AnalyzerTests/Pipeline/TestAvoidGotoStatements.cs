@@ -31,10 +31,10 @@ namespace Analyzer.Pipeline.Tests
         [TestMethod]
         public void GotoStatementsPresent_ShouldFail()
         {
-            List<string> dllFilePaths = new List<string> { "..\\..\\..\\..\\Analyzer\\TestDLLs\\Goto.dll" };
+            List<string> dllFilePaths = new() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\Goto.dll" };
 
             List<ParsedDLLFile> dllFiles = dllFilePaths.Select(path => new ParsedDLLFile(path)).ToList();
-            AvoidGotoStatementsAnalyzer analyzer = new AvoidGotoStatementsAnalyzer(dllFiles);
+            AvoidGotoStatementsAnalyzer analyzer = new(dllFiles);
 
             var result = analyzer.AnalyzeAllDLLs();
 
