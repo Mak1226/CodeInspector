@@ -45,9 +45,9 @@ namespace Networking.Communicator
         public void Send(string serializedData, string destId)
         {
             if (!_isStarted)
-                throw new Exception("Start server first");
+                throw new Exception("Start client first");
 
-            Console.WriteLine("[Server] Send" + serializedData + " " + _moduleName + " " + destId);
+            Console.WriteLine("[Client] Send" + serializedData + " " + _moduleName + " " + destId);
             Message message = new Message(
                 serializedData, _moduleName, destId, _senderId
             );
@@ -91,7 +91,7 @@ namespace Networking.Communicator
         public void Stop()
         {
             if (!_isStarted)
-                throw new Exception("Start the client first");
+                throw new Exception("Start client first");
 
             Console.WriteLine("[Client] Stop");
             Data data = new Data(EventType.ClientDeregister());
@@ -106,7 +106,7 @@ namespace Networking.Communicator
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             if (!_isStarted)
-                throw new Exception("Start the client first");
+                throw new Exception("Start client first");
 
             Console.WriteLine("[Client] Subscribe "+ moduleName);
             //List<IEventHandler> eventHandlers = new();
