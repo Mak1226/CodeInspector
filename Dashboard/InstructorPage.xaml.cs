@@ -25,14 +25,14 @@ namespace Dashboard
     /// </summary>
     public partial class InstructorPage : Page
     {
-        private readonly ServerPage _contentServerPage;
-        public InstructorPage()
+        private ServerPage contentServerPage;
+        public InstructorPage( string userName , string userId )
         {
             InitializeComponent();
-
             try
             {
-                InstructorViewModel viewModel = new();
+
+                InstructorViewModel viewModel = new(null,userName,userId);
                 DataContext = viewModel;
 
                 _contentServerPage = new ServerPage ( viewModel.Communicator);

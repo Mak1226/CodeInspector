@@ -28,6 +28,8 @@ namespace Dashboard
             UserName = userName;
             UserId = userEmail;
             DataContext = this; // Set the DataContext to this instance
+
+
         }
 
         public string UserName { get; init; }
@@ -35,7 +37,7 @@ namespace Dashboard
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            InstructorPage instructorPage = new( );
+            InstructorPage instructorPage = new( UserName,UserId );
             NavigationService?.Navigate( instructorPage );
         }
             

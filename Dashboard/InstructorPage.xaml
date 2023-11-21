@@ -17,6 +17,18 @@
             <Grid.Background>
                 <SolidColorBrush Color="LightBlue" />
             </Grid.Background>
+
+            <StackPanel x:Name="InstructorName" Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                     <Run Text="Name : " />
+                     <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="  Id : " />
+                    <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+            </StackPanel>
             <StackPanel x:Name="InstructorInformation" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Student Count : " />
@@ -66,11 +78,11 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
-                <ListView ItemsSource="{Binding StudentList}" >
+                <ListView ItemsSource="{Binding StudentList}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
-                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="60"/>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="130"/>
                         </GridView>
                     </ListView.View>
 

@@ -25,8 +25,10 @@ namespace ViewModel
         /// <summary>
         /// Constructor for the DashboardViewModel.
         /// </summary>
-        public InstructorViewModel(ICommunicator? communicator = null)
+        public InstructorViewModel(ICommunicator? communicator = null, string userName = "", string userId = "")
         {
+            UserName = userName;
+            UserId = userId;
             _studentSessionState = new();
             Communicator = communicator ?? CommunicationFactory.GetServer();
 
@@ -48,6 +50,16 @@ namespace ViewModel
         public int StudentCount => _studentSessionState.GetStudentsCount();
 
         public ICommunicator Communicator { get; }
+
+        /// <summary>
+        /// Gets the instructor's Name
+        /// </summary>
+        public string UserName { get; init; }
+
+        /// <summary>
+        /// Gets the instructor's Email
+        /// </summary>
+        public string UserId { get; init; }
 
         /// <summary>
         /// Gets the receive port.
