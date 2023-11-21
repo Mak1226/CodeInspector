@@ -9,7 +9,7 @@
 * 
 * Project     = Analyzer
 *
-* Description = Represents a gate that acts as a proxy for a server with authentication.
+* Description = Represents the main Analyzer class responsible for orchestrating the analysis process.
 ******************************************************************************/
 
 using Analyzer.DynamicAnalyzer;

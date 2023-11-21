@@ -32,6 +32,72 @@ namespace Analyzer.Pipeline
             _analyzerID = "103";
         }
 
+        public List<string> HandleClass(ParsedClassMonoCecil cls)
+        {
+            List<string> unusedFields = new();
+
+            foreach (FieldDefinition field in cls.FieldsList)
+            {
+                unusedFields.Add( field.Name.ToString() );
+            }
+
+            if (cls.FieldsList.Count == 0)
+            {
+                return unusedFields;
+            }
+
+            foreach (MethodDefinition method in cls.MethodsList)
+            {
+
+                if (!method.HasBody)
+                {
+                    continue;
+                }
+
+                foreach (Instruction? ins in method.Body.Instructions)
+                {
+                    if (ins.OpCode == OpCodes.Ldfld)
+                    {
+
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains( fieldName ))
+                        {
+                            unusedFields.Remove( fieldName );
+                        }
+
+                    }
+                }
+            }
+
+            foreach (MethodDefinition method in cls.Constructors)
+            {
+                if (!method.HasBody)
+                {
+                    continue;
+                }
+
+                foreach (Instruction? ins in method.Body.Instructions)
+                {
+                    if (ins.OpCode == OpCodes.Ldfld)
+                    {
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains(fieldName))
+                        {
+                            unusedFields.Remove(fieldName);
+                        }
+                    }
+                }
+            }
+
+            return unusedFields;
+        }
+
         /// <summary>
         /// Checks for unused private fields in the parsed DLL.
         /// </summary>
@@ -40,90 +106,25 @@ namespace Analyzer.Pipeline
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                List<string> UnusedFields = new();
+                List<string> unusedFields = HandleClass(cls);
 
-                foreach (FieldDefinition field in cls.FieldsList)
+                if(unusedFields.Count > 0)
                 {
-                    UnusedFields.Add(field.Name.ToString()); 
-                }
-
-                if (cls.FieldsList.Count == 0)
-                {
-                    continue;
-                }
-
-                foreach (MethodDefinition method in cls.MethodsList)
-                {
-
-                    if (!method.HasBody)
-                    {
-                        continue;
-                    }
-
-                    foreach (Instruction? ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            string fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-
-                        }
-                    }
-                }
-
-                foreach (MethodDefinition method in cls.Constructors)
-                {
-                    if (!method.HasBody)
-                    {
-                        continue;
-                    }
-
-                    foreach (Instruction? ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            string fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-                        }
-                    }
-                }
-
-                if (UnusedFields.Count > 0)
-                {
-
-                    _errorMessage += cls.Name.ToString() + " -> ";
-
-                    foreach (string filedName in UnusedFields)
-                    {
-                        _errorMessage += filedName + " ";
-                    }
-                    _errorMessage += ", ";
-
                     _verdict = 0;
+
+                    _errorMessage += cls.Name + " : ";
+
+                    foreach(string field in unusedFields)
+                    {
+                        _errorMessage += field + " ";
+                    }
+
+                    _errorMessage += ",";  
                 }
 
             }
 
-            if(_verdict == 0)
-            {
-                _errorMessage += "these are unused private field";
-                return;
-            }
-
-            _verdict = 1;
+            _ = _verdict == 0 ? _errorMessage += " these are unused private field." : _errorMessage = "No voilation found.";
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
