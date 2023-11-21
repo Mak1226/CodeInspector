@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,13 +108,24 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-            return name[0] switch
+            if (name[0] == 'I')
             {
-                'I' => char.IsLower( name[1] ) || char.IsUpper( name[2] ),
-                _ => true,
-            };
+                if (char.IsLower( name[1] ))
+                {
+                    return true;
+                }
+                else
+                {
+                    return char.IsUpper( name[2] );
+                }
+            }
+            else
+            {
+                return true;
+            }
+
         }
-       
+
         /// <summary>
         /// Checks if a type name follows the correct generic parameter prefix.
         /// </summary>
@@ -122,7 +133,7 @@ namespace Analyzer.Pipeline
         /// <returns>True if the type name has the correct type prefix, otherwise false.</returns>
         private bool IsCorrectGenericParameterName (string name)
         {
-            return (((name.Length > 1) && (name [0] != 'T')) || char.IsLower (name [0]));
+            return (((name.Length > 1) && (name[0] != 'T')) || char.IsLower(name[0]));
         }
     }
 }

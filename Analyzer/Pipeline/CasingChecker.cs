@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,17 +96,17 @@ namespace Analyzer.Pipeline
         }
 
         // check if name is PascalCased
-        private static bool IsPascalCase(string name)
+        private static bool IsPascalCase( string name )
         {
             if (string.IsNullOrEmpty( name ))
-            {
+            {  
                 return true;
             }
 
             return char.IsUpper (name [0]);
         }
 
-           // check if name is camelCased
+        // check if name is camelCased
         private static bool IsCamelCase (string name)
         {
             if (string.IsNullOrEmpty( name ))
@@ -121,13 +121,26 @@ namespace Analyzer.Pipeline
         {
                 int flag = 0;
                    
-                foreach (ParameterDefinition? param in method.Parameters)
+                foreach (ParameterDefinition param in method.Parameters)
                 {
-                    if (!IsCamelCase(param.Name))
+                    if (param.Name[0] != '_')
                     {
-                        Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");
-                        _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
-                        flag = 1;
+                        if (!IsCamelCase( param.Name ))
+                        {
+                            Console.WriteLine( $"INCORRECT PARAMETER NAMING : {param.Name}" );
+                            _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
+                            flag = 1;
+                        }
+                    }
+
+                    else
+                    {
+                        if (!char.IsLower(param.Name[1]))
+                        {
+                            Console.WriteLine( $"INCORRECT PARAMETER NAMING : {param.Name}" );
+                            _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
+                            flag = 1;
+                        }
                     }
                 }
 
