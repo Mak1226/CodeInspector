@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Networking.Utils;
 
 namespace Dashboard
 {
@@ -34,17 +35,13 @@ namespace Dashboard
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("InstructorPage.xaml", UriKind.Relative));
-            }
+            InstructorPage instructorPage = new( );
+            NavigationService?.Navigate( instructorPage );
         }
         private void StudentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("StudentView.xaml", UriKind.Relative));
-            }
+            StudentPage studentPage = new(UserName,UserId);
+            NavigationService?.Navigate( studentPage );
         }
     }
 }

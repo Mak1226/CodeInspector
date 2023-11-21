@@ -31,10 +31,11 @@ namespace ViewModel
         private readonly ICommunicator _client; // Communicator used to send and receive messages.
         //private readonly ChatMessenger _newConnection; // To communicate between instructor and student.
 
-        public StudentViewModel( ICommunicator? communicator = null)
+        public StudentViewModel( string name , string id, ICommunicator? communicator = null)
         {
             _client = communicator ?? CommunicationFactory.GetClient();
-
+            StudentName = name;
+            StudentRoll = id;
             IpAddress = GetPrivateIp();
 
             // Update the port that the communicator is listening on.
@@ -129,12 +130,12 @@ namespace ViewModel
         /// <summary>
         /// Handles the property changed event raised on a component.
         /// </summary>
-        public string? StudentName { get; private set; }
+        public string StudentName { get; private set; }
 
         /// <summary>
         /// Gets the instructor's port.
         /// </summary>
-        public string? StudentRoll { get; private set; }
+        public string StudentRoll { get; private set; }
 
         /// <summary>
         /// Gets the private IP address of the host machine.

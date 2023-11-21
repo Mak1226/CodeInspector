@@ -12,79 +12,78 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ViewModel;
 using ContentPage;
+using ViewModel;
 
 namespace Dashboard
 {
     /// <summary>
-    /// Interaction logic for StudentView.xaml
+    /// Interaction logic for StudentPage.xaml
     /// </summary>
-    public partial class StudentView : Page
+    public partial class StudentPage : Page
     {
-        /// <summary>
-        /// Constructor for the StudentView page.
-        /// </summary>
-        public StudentView()
+        public StudentPage(string name, string id)
         {
             InitializeComponent();
-
+            //StudentName = name;
+            //StudentId = id;
             try
             {
                 // Create the ViewModel and set as data context.
-                StudentViewModel viewModel = new();
+                StudentViewModel viewModel = new(name, id);
                 DataContext = viewModel;
-
-                
+                //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
             catch (Exception exception)
             {
                 // If an exception occurs during ViewModel creation, show an error message and shutdown the application.
-                _ = MessageBox.Show(exception.Message);
+                _ = MessageBox.Show( exception.Message );
                 Application.Current.Shutdown();
             }
         }
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+
+        private void LogoutButton_Click( object sender , RoutedEventArgs e )
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-            NavigationService?.Navigate(new Uri("AuthenticationPage.xaml", UriKind.Relative));
+            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
         }
 
         /// <summary>
         /// Event handler for the "IstructorIpTextBox" text changed event.
         /// </summary>
-        //private void IstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
-
-        private void InstructorIpTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void InstructorIpTextBox_TextChanged( object sender , TextChangedEventArgs e )
         {
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
-            viewModel?.SetStudentInfo(StudentNameTextBox.Text, StudentRollTextBox.Text);
+            viewModel?.SetInstructorAddress( InstructorIpTextBox.Text , InstructorPortTextBox.Text );
         }
 
         /// <summary>
         /// Event handler for the "Connect" button click.
         /// </summary>
-        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        private void ConnectButton_Click( object sender , RoutedEventArgs e )
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
             //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.ConnectInstructor();
-            if(viewModel != null)
+            if (viewModel != null)
             {
-                ClientPage clientPage = new(viewModel.Communicator, StudentRollTextBox.Text);
+                ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
                 ContentFrame.Content = clientPage;
             }
 
         }
 
-        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        private void DisconnectButton_Click( object sender , RoutedEventArgs e )
         {
             //Attempting to disconnect from the instructor
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.DisconnectInstructor();
         }
 
+        private void InstructorIpTextBox_TextChanged_1( object sender , TextChangedEventArgs e )
+        {
+
+        }
     }
 }
