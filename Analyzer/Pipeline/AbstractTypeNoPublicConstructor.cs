@@ -37,7 +37,7 @@ namespace Analyzer.Pipeline
         /// <returns>List of all abstract types that have public constructors.</returns>
         private List<Type> FindAbstractTypeWithPublicConstructor(ParsedDLLFile parsedDLLFile) 
         {
-            List<Type> abstractTypesWithPublicConstructors = new List<Type>();  // List which stores all abstract types that have public constructors
+            List<Type> abstractTypesWithPublicConstructors = new();  // List which stores all abstract types that have public constructors
             // Loop over all classes in the provided DLLs
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {

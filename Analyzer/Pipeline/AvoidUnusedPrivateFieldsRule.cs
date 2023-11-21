@@ -16,9 +16,9 @@ namespace Analyzer.Pipeline
     public class AvoidUnusedPrivateFieldsRule : AnalyzerBase
     {
 
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
 
         /// <summary>
@@ -27,9 +27,75 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
         public AvoidUnusedPrivateFieldsRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "103";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "103";
+        }
+
+        public List<string> HandleClass(ParsedClassMonoCecil cls)
+        {
+            List<string> unusedFields = new();
+
+            foreach (FieldDefinition field in cls.FieldsList)
+            {
+                unusedFields.Add( field.Name.ToString() );
+            }
+
+            if (cls.FieldsList.Count == 0)
+            {
+                return unusedFields;
+            }
+
+            foreach (MethodDefinition method in cls.MethodsList)
+            {
+
+                if (!method.HasBody)
+                {
+                    continue;
+                }
+
+                foreach (Instruction? ins in method.Body.Instructions)
+                {
+                    if (ins.OpCode == OpCodes.Ldfld)
+                    {
+
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains( fieldName ))
+                        {
+                            unusedFields.Remove( fieldName );
+                        }
+
+                    }
+                }
+            }
+
+            foreach (MethodDefinition method in cls.Constructors)
+            {
+                if (!method.HasBody)
+                {
+                    continue;
+                }
+
+                foreach (Instruction? ins in method.Body.Instructions)
+                {
+                    if (ins.OpCode == OpCodes.Ldfld)
+                    {
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains(fieldName))
+                        {
+                            unusedFields.Remove(fieldName);
+                        }
+                    }
+                }
+            }
+
+            return unusedFields;
         }
 
         /// <summary>
@@ -40,99 +106,34 @@ namespace Analyzer.Pipeline
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                List<string> UnusedFields = new();
+                List<string> unusedFields = HandleClass(cls);
 
-                foreach (FieldDefinition field in cls.FieldsList)
+                if(unusedFields.Count > 0)
                 {
-                    UnusedFields.Add(field.Name.ToString()); 
-                }
+                    _verdict = 0;
 
-                if (cls._fields.Count == 0)
-                {
-                    continue;
-                }
+                    _errorMessage += cls.Name + " : ";
 
-                foreach (MethodDefinition method in cls.MethodsList)
-                {
-
-                    if (!method.HasBody)
+                    foreach(string field in unusedFields)
                     {
-                        continue;
+                        _errorMessage += field + " ";
                     }
 
-                    foreach (var ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            var fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-
-                        }
-                    }
-                }
-
-                foreach (MethodDefinition method in cls.Constructors)
-                {
-                    if (!method.HasBody)
-                    {
-                        continue;
-                    }
-
-                    foreach (var ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            var fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-                        }
-                    }
-                }
-
-                if (UnusedFields.Count > 0)
-                {
-
-                    errorMessage += cls.Name.ToString() + " -> ";
-
-                    foreach (var filedName in UnusedFields)
-                    {
-                        errorMessage += filedName + " ";
-                    }
-                    errorMessage += ", ";
-
-                    verdict = 0;
+                    _errorMessage += ",";  
                 }
 
             }
 
-            if(verdict == 0)
-            {
-                errorMessage += "these are unused private field";
-                return;
-            }
-
-            verdict = 1;
+            _ = _verdict == 0 ? _errorMessage += " these are unused private field." : _errorMessage = "No violation found.";
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage == "" ? "No violations found." : errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage == "" ? "No violations found." : _errorMessage);
         }
     }
 }

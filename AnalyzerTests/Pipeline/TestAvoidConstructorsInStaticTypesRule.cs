@@ -23,18 +23,18 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void TestGoodExample()
         {
-            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
+            List<ParsedDLLFile> DllFileObjs = new();
 
-            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST.dll";
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST.dll";
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj); 
 
             AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
 
-            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
+            Dictionary<string , Analyzer.AnalyzerResult> resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            var result = resultObj["ACIST.dll"];
+            Analyzer.AnalyzerResult result = resultObj["ACIST.dll"];
             Assert.AreEqual(1, result.Verdict);
         }
 
@@ -44,18 +44,18 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void TestBadExample()
         {
-            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
+            List<ParsedDLLFile> DllFileObjs = new();
 
-            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST1.dll";
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST1.dll";
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
 
             AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
 
-            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
+            Dictionary<string , Analyzer.AnalyzerResult> resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            var result = resultObj["ACIST1.dll"];
+            Analyzer.AnalyzerResult result = resultObj["ACIST1.dll"];
             Assert.AreEqual(0, result.Verdict);
         }
 
