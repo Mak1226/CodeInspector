@@ -124,7 +124,7 @@ namespace Analyzer.Pipeline
 
             }
 
-            _ = _verdict == 0 ? _errorMessage += " these are unused private field." : _errorMessage = "No voilation found.";
+            _ = _verdict == 0 ? _errorMessage += " these are unused private field." : _errorMessage = "No violation found.";
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)

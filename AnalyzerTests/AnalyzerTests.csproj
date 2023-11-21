@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Analyzer\Analyzer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestDLLs\" />
+  </ItemGroup>
+
 </Project>
