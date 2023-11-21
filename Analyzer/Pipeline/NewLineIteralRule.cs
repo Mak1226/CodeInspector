@@ -15,9 +15,9 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class NewLineLiteralRule : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NewLineLiteralRule"/> class.
@@ -25,9 +25,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
         public NewLineLiteralRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "114";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "114";
         }
 
         /// <summary>
@@ -66,23 +66,29 @@ namespace Analyzer.Pipeline
         {
             // methods can be empty (e.g., p/invoke declarations)
             if (!method.HasBody)
+            {
                 return;
+            }
 
             foreach (Instruction ins in method.Body.Instructions)
             {
                 // look for a string load
                 if (ins.OpCode.Code != Code.Ldstr)
+                {
                     continue;
+                }
 
                 // check the string being referenced by the instruction
-                string s = (ins.Operand as string);
+                string? s = (ins.Operand as string);
                 if (string.IsNullOrEmpty(s))
+                {
                     continue;
+                }
 
                 if (s.IndexOfAny(new[] { '\r', '\n' }) >= 0)
                 {
-                    errorMessage += method.Name.ToString() + " ";
-                    verdict = 0;
+                    _errorMessage += method.Name.ToString() + " ";
+                    _verdict = 0;
                     return;
                 }
             }
@@ -90,11 +96,11 @@ namespace Analyzer.Pipeline
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }

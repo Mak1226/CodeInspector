@@ -1,4 +1,5 @@
 ﻿using Analyzer.Parsing;
+using Analyzer.UMLDiagram;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Analyzer.Pipeline
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _studentDLLFiles;
         private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
-        private List<ParsedDLLFile> _parsedDLLFiles;
+        private readonly List<ParsedDLLFile> _parsedDLLFiles;
         private readonly Dictionary<string, List<AnalyzerResult>> _results;
         private readonly object _lock;
 
@@ -63,7 +64,7 @@ namespace Analyzer.Pipeline
 
 
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
-            //_allAnalyzers[102] = new AvoidConstructorsInStaticTypes(parsedDLLFiles);
+            _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
             _allAnalyzers[104] = new NoEmptyInterface(_parsedDLLFiles);
             _allAnalyzers[105] = new DepthOfInheritance(_parsedDLLFiles);
@@ -74,10 +75,11 @@ namespace Analyzer.Pipeline
             _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
             _allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
             _allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
-            //_allAnalyzers[113] = new AbstractClassNamingChecker(_parsedDLLFiles);
+            _allAnalyzers[113] = new CyclomaticComplexity(_parsedDLLFiles);
             _allAnalyzers[114] = new NewLineLiteralRule(_parsedDLLFiles);
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
+            _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
         }
 
         private void RunAnalyzer(int analyzerID)
@@ -124,7 +126,7 @@ namespace Analyzer.Pipeline
             {
                 if(option.Value == true)
                 {
-                    Thread WorkerThread = new Thread(() => RunAnalyzer(option.Key));
+                    Thread WorkerThread = new(() => RunAnalyzer(option.Key));
                     WorkerThread.Start();
                     threads.Add(WorkerThread);
                 }
@@ -138,10 +140,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
-        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
+        public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications
-            Byte[] bytes = null;
+            ClassDiagram classDiag = new(_parsedDLLFiles);
+            byte[] bytes = classDiag.Run(removableNamespaces).Result;
             return bytes;
         }
     }
