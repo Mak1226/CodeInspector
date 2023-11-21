@@ -2,16 +2,16 @@
 {
     public class StudentSessionState
     {
-        private List<Student> students;
+        private readonly List<Student> _students;
 
         public StudentSessionState()
         {
-            students = new List<Student>();
+            _students = new List<Student>();
         }
 
-        public void AddStudent(int id, string name, string ip, int port)
+        public void AddStudent(string id, string name, string ip, int port)
         {
-            var check = students.Find(s => s.Id == id);
+            var check = _students.Find(s => s.Id == id);
             if (check == null)
             {
                 var student = new Student
@@ -21,27 +21,27 @@
                     IP = ip,
                     Port = port
                 };
-                students.Add(student);
+                _students.Add(student);
             }
         }
 
-        public void RemoveStudent(int id)
+        public void RemoveStudent(string id)
         {
-            var studentToRemove = students.Find(s => s.Id == id);
+            var studentToRemove = _students.Find(s => s.Id == id);
             if (studentToRemove != null)
             {
-                students.Remove(studentToRemove);
+                _students.Remove(studentToRemove);
             }
         }
 
         public List<Student> GetAllStudents()
         {
-            return students;
+            return _students;
         }
 
         public int GetStudentsCount()
         {
-            return students.Count;
+            return _students.Count;
         }
     }
 }

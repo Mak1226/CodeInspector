@@ -45,7 +45,7 @@ namespace ViewModel
             }
             catch { }
 
-            _studentSessionState.AddStudent(21323, "arkka", "13151", 123);
+            _studentSessionState.AddStudent("21323", "arkka", "13151", 123);
 
         }
 
@@ -129,7 +129,7 @@ namespace ViewModel
             return $"{rollNo}|{name}|{ip}|{port}";
         }
 
-        private static (int, string?, string?, int, int) DeserializeStudnetInfo(string data)
+        private static (string?, string?, string?, int, int) DeserializeStudnetInfo(string data)
         {
             string[] parts = data.Split('|');
             if (parts.Length == 5)
@@ -138,7 +138,7 @@ namespace ViewModel
                 {
                     return
                     (
-                        int.Parse(parts[0]),
+                        parts[0],
                         parts[1],
                         parts[2],
                         int.Parse(parts[3]),
@@ -148,7 +148,7 @@ namespace ViewModel
                 catch { }
 
             }
-            return (0, null, null, 0, 0);
+            return (null, null, null, 0, 0);
         }
 
         private bool AddStudnet(string serializedStudnet)
@@ -156,13 +156,13 @@ namespace ViewModel
             Debug.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
-                var result = DeserializeStudnetInfo(serializedStudnet);
-                var rollNo = result.Item1;
-                var name = result.Item2;
-                var ip = result.Item3;
-                var port = result.Item4;
-                var isConnect = result.Item5;
-                if (name != null && ip != null)
+                (string?, string?, string?, int, int) result = DeserializeStudnetInfo(serializedStudnet);
+                string? rollNo = result.Item1;
+                string? name = result.Item2;
+                string? ip = result.Item3;
+                int port = result.Item4;
+                int isConnect = result.Item5;
+                if (rollNo != null && name != null && ip != null)
                 {
                     if (isConnect == 1)
                     {

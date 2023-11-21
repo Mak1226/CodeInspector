@@ -25,6 +25,7 @@ namespace Dashboard
     /// </summary>
     public partial class InstructorPage : Page
     {
+        private ServerPage contentServerPage;
         public InstructorPage()
         {
             InitializeComponent();
@@ -34,8 +35,8 @@ namespace Dashboard
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
 
-                ServerPage ContentserverPage = new(viewModel.Communicator);
-                ResultFrame.Content = ContentserverPage;
+                contentServerPage = new ServerPage ( viewModel.Communicator);
+                ResultFrame.Content = contentServerPage;
             }
             catch (Exception exception)
             {
@@ -47,24 +48,21 @@ namespace Dashboard
 
         private void LogoutButtonClick(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-                this.NavigationService.Navigate(new Uri("Login.xaml", UriKind.Relative));
-            }
+            // If a valid NavigationService exists, navigate to the "Login.xaml" page.
+            NavigationService?.Navigate( new Uri( "Login.xaml" , UriKind.Relative ) );
         }
 
         private void Student_Selected(object sender, MouseButtonEventArgs e)
         {
-            var item = sender as ListViewItem;
-            if (item != null && item.IsSelected)
+            if (sender is ListViewItem item && item.IsSelected)
             {
-                //Do your stuff
-                var clickedStudent = item.DataContext as Student;
-
-                if (clickedStudent != null)
+                if (item.DataContext is Student clickedStudent)
                 {
-                    Debug.WriteLine($"Clicked {clickedStudent.Id}");
+                    Debug.WriteLine( $"Clicked {clickedStudent.Id}" );
+                    if (clickedStudent.Id != null)
+                    {
+                        contentServerPage.SetSessionID( clickedStudent.Id );
+                    }
                 }
             }
         }
