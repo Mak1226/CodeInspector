@@ -14,14 +14,14 @@
             Student? check = _students.Find(s => s.Id == id);
             if (check == null)
             {
-                var student = new Student
+                Student student = new()
                 {
                     Id = id,
                     Name = name,
                     IP = ip,
                     Port = port
                 };
-                _students.Add(student);
+                _students.Add( student );
             }
         }
 

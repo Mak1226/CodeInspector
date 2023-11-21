@@ -25,7 +25,7 @@ namespace Dashboard
     /// </summary>
     public partial class InstructorPage : Page
     {
-        private ServerPage contentServerPage;
+        private readonly ServerPage _contentServerPage;
         public InstructorPage( string userName , string userId )
         {
             InitializeComponent();
