@@ -66,11 +66,11 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
-                <ListView ItemsSource="{Binding StudentList}" >
+                <ListView ItemsSource="{Binding StudentList}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
-                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="60"/>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="130"/>
                         </GridView>
                     </ListView.View>
 
