@@ -59,7 +59,7 @@ namespace Dashboard
         {
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.SetInstructorAddress(InstructorIpTextBox.Text, InstructorPortTextBox.Text);
-            viewModel?.SetStudentInfo(StudentNameTextBox.Text, StudentRollTextBox.Text);
+            viewModel?.SetStudentInfo( StudentNameTextBox.Text , StudentRollTextBox.Text );
         }
 
         /// <summary>
@@ -68,7 +68,6 @@ namespace Dashboard
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
-            //MessageBox.Show("Trying to connect to " + InstructorIpTextBox.Text + " : " + InstructorPortTextBox.Text);
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.ConnectInstructor();
             if(viewModel != null)

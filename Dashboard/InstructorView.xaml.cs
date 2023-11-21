@@ -55,11 +55,8 @@ namespace Dashboard
         /// </summary>
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                // If a valid NavigationService exists, navigate to the "Login.xaml" page.
-                this.NavigationService.Navigate(new Uri( "AuthenticationPage.xaml" , UriKind.Relative));
-            }
+            // If a valid NavigationService exists, navigate to the "Login.xaml" page.
+            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
         }
     }
 }

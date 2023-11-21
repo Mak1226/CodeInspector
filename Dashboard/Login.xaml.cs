@@ -34,17 +34,12 @@ namespace Dashboard
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("InstructorPage.xaml", UriKind.Relative));
-            }
+            NavigationService?.Navigate(new Uri("InstructorPage.xaml", UriKind.Relative));
         }
         private void StudentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("StudentView.xaml", UriKind.Relative));
-            }
+            NavigationService?.Navigate( new Uri( "StudentView.xaml" , UriKind.Relative ));
+
         }
     }
 }
