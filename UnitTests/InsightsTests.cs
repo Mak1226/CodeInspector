@@ -23,10 +23,10 @@ namespace CloudUnitTests
     [TestClass()]
     public class InsightsTests
     {
-        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
-        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
-        private readonly string _sessionUrl = "http://localhost:7074/api/session";
-        private readonly string _insightsUrl = "http://localhost:7074/api/insights";
+        private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
+        private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
+        private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        private readonly string _insightsUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/insights";
 
         private readonly DownloadApi _downloadClient;
         private readonly UploadApi _uploadClient;
@@ -168,6 +168,9 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task GetFailedStudentsGivenTestTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<string> students = await _insightsClient.GetFailedStudentsGivenTest( "name1" , "102" );
             students.Sort();
@@ -188,6 +191,9 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task RunningAverageOnGivenTestTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenTest( "name1" , "101" );
             Assert.AreEqual( averageList[0] , 50 );
@@ -204,6 +210,9 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task RunningAverageOnGivenStudentTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenStudent( "name1" , "Student1" );
             Assert.AreEqual( averageList[0] , 50 );
@@ -264,6 +273,9 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task BestWorstAnalysisTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
 
             List<string> result = await _insightsClient.GetBestWorstGivenSession( "2" );
@@ -284,6 +296,8 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task StudentScoreTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
             await FillTestData();
             Dictionary<string , int> StudentScore = await _insightsClient.GetStudentScoreGivenSession( "1" );
             Assert.AreEqual( 2 , StudentScore.Count );
@@ -300,6 +314,8 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task TestScoreTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
             await FillTestData();
             Dictionary<string , int> TestScore = await _insightsClient.GetTestScoreGivenSession( "1" );
             Assert.AreEqual( 2 , TestScore.Count );

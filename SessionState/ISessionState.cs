@@ -9,7 +9,9 @@ namespace SessionState
     public interface ISessionState
     {
         List<Student> GetAllStudents();
-        void AddNewStudent(int id, string name, string ip, int port);
-        void RemoveStudent(int id);
+        void AddStudent( string id , string name , string ip , int port );
+        void RemoveStudent( string id );
+
+        public int GetStudentsCount();
     }
 }
