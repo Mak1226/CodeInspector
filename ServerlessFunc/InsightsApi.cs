@@ -1,134 +1,287 @@
-﻿using System.Collections.Generic;
+﻿/******************************************************************************
+* Filename    = InsightsApi.cs
+*
+* Author      = Sahil, Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Provides Api functionality for the user to get analysis from cloud
+*****************************************************************************/
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ServerlessFunc
 {
+    /// <summary>
+    /// This class provides methods for interacting with an Insights API.
+    /// </summary>
     public class InsightsApi
     {
         private readonly HttpClient _entityClient;
         private readonly string _insightsRoute;
-        public InsightsApi(string insightsRoute)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InsightsApi"/> class.
+        /// </summary>
+        /// <param name="insightsRoute">The base URL for the Insights API route.</param>
+        public InsightsApi( string insightsRoute )
         {
             _entityClient = new HttpClient();
             _insightsRoute = insightsRoute;
         }
 
-        public async Task<List<Dictionary<string, int>>> CompareTwoSessions(string sessionId1, string sessionId2)
+        /// <summary>
+        /// Compares two sessions and returns a list of dictionaries containing the comparison results.
+        /// </summary>
+        /// <author> Sahil </author>
+        /// <param name="sessionId1">The ID of the first session.</param>
+        /// <param name="sessionId2">The ID of the second session.</param>
+        /// <returns>A list of dictionaries containing the comparison results.</returns>
+        public async Task<List<Dictionary<string , int>>> CompareTwoSessions( string sessionId1 , string sessionId2 )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/compare/{sessionId1}/{sessionId2}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<Dictionary<string, int>> dictionary = JsonSerializer.Deserialize<List<Dictionary<string, int>>>(result, options);
-            return dictionary;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/compare/{sessionId1}/{sessionId2}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<Dictionary<string , int>> dictionary = JsonSerializer.Deserialize<List<Dictionary<string , int>>>( result , options );
+                return dictionary;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<List<string>> GetFailedStudentsGivenTest(string hostname, string testName)
+        /// <summary>
+        /// Retrieves a list of students who failed a given test.
+        /// </summary>
+        /// <author> Sahil </author>
+        /// <param name="hostname">The hostname of the students.</param>
+        /// <param name="testName">The name of the test.</param>
+        /// <returns>A list of student usernames.</returns>
+        public async Task<List<string>> GetFailedStudentsGivenTest( string hostname , string testName )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/failed/{hostname}/{testName}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<string> studentList = JsonSerializer.Deserialize<List<string>>(result, options);
-            return studentList;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/failed/{hostname}/{testName}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<string> studentList = JsonSerializer.Deserialize<List<string>>( result , options );
+                return studentList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<List<double>> RunningAverageOnGivenTest(string hostname, string testName)
+        /// <summary>
+        /// Calculates the running average score for a given test across all sessions for a specified hostname.
+        /// </summary>
+        /// <author> Sahil </author>
+        /// <param name="hostname">The hostname of the students.</param>
+        /// <param name="testName">The name of the test.</param>
+        /// <returns>A list of average scores for each session.</returns>
+        public async Task<List<double>> RunningAverageOnGivenTest( string hostname , string testName )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/testaverage/{hostname}/{testName}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<double> averageList = JsonSerializer.Deserialize<List<double>>(result, options);
-            return averageList;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/testaverage/{hostname}/{testName}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                return averageList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<List<double>> RunningAverageOnGivenStudent(string hostname, string studentName)
+        /// <summary>
+        /// Calculates the running average score for all tests across all sessions for a specified hostname and student.
+        /// </summary>
+        /// <author> Sahil </author>
+        /// <param name="hostname">The hostname of the student.</param>
+        /// <param name="studentName">The name of the student.</param>
+        /// <returns>A list of average scores for each session.</returns>
+        public async Task<List<double>> RunningAverageOnGivenStudent( string hostname , string studentName )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/studentaverage/{hostname}/{studentName}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<double> averageList = JsonSerializer.Deserialize<List<double>>(result, options);
-            return averageList;
-        }
-        public async Task<List<double>> RunningAverageAcrossSessoins(string hostname)
-        {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/sessionsaverage/{hostname}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/studentaverage/{hostname}/{studentName}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                return averageList;
+            }
+            catch (Exception ex)
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<double> averageList = JsonSerializer.Deserialize<List<double>>(result, options);
-            return averageList;
-        }
-
-        public async Task<List<string>> UsersWithoutAnalysisGivenSession(string sessionId)
-        {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/StudentsWithoutAnalysis/{sessionId}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<string> studentsList = JsonSerializer.Deserialize<List<string>>(result, options);
-            return studentsList;
+                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<Dictionary<string, int>> GetStudentScoreGivenSession(string sessionId)
+        /// <summary>
+        /// Calculates the average score for each session across all tests for a specified hostname.
+        /// </summary>
+        /// <author> Sahil </author>
+        /// <param name="hostname">The hostname of the students.</param>
+        /// <returns>A list of average scores for each session.</returns>
+        public async Task<List<double>> RunningAverageAcrossSessoins( string hostname )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/StudentScore/{sessionId}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            Dictionary<string,int> StudentScore = JsonSerializer.Deserialize<Dictionary<string,int>>(result, options);
-            return StudentScore;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/sessionsaverage/{hostname}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                return averageList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<Dictionary<string, int>> GetTestScoreGivenSession(string sessionId)
+        /// <summary>
+        /// Retrieves a list of students who do not have an analysis report for a given session.
+        /// </summary>
+        /// <author> Nideesh N </author>
+        /// <param name="sessionId">The ID of the session to evaluate.</param>
+        /// <returns>A list of student usernames.</returns>
+        public async Task<List<string>> UsersWithoutAnalysisGivenSession( string sessionId )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/TestScore/{sessionId}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            Dictionary<string, int> TestScore = JsonSerializer.Deserialize<Dictionary<string, int>>(result, options);
-            return TestScore;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/StudentsWithoutAnalysis/{sessionId}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<string> studentsList = JsonSerializer.Deserialize<List<string>>( result , options );
+                return studentsList;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi.UsersWithoutAnalysisGivenSession] Exception: " + ex );
+                return default;
+            }
         }
 
-        public async Task<List<string>> GetBestWorstGivenSession(string sessionId)
+        /// <summary>
+        /// Retrieves a dictionary mapping student names to their corresponding scores for a given session.
+        /// </summary>
+        /// <author> Nideesh N </author>
+        /// <param name="sessionId">The ID of the session to evaluate.</param>
+        /// <returns>A dictionary mapping student names to their scores.</returns>
+        public async Task<Dictionary<string , int>> GetStudentScoreGivenSession( string sessionId )
         {
-            var response = await _entityClient.GetAsync(_insightsRoute + $"/BestWorst/{sessionId}");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            };
-            List<string> bestworstresult = JsonSerializer.Deserialize<List<string>>(result, options);
-            return bestworstresult;
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/StudentScore/{sessionId}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                Dictionary<string , int> studentScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
+                return studentScore;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi.GetStudentScoreGivenSession] Exception: " + ex );
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a dictionary mapping test IDs to their corresponding average scores for a given session.
+        /// </summary>
+        /// <author> Nideesh N </author>
+        /// <param name="sessionId">The ID of the session to evaluate.</param>
+        /// <returns>A dictionary mapping test IDs to their average scores.</returns>
+        public async Task<Dictionary<string , int>> GetTestScoreGivenSession( string sessionId )
+        {
+            try
+            {
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/TestScore/{sessionId}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                Dictionary<string , int> testScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
+                return testScore;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi.GetTestScoreGivenSession] Exception: " + ex );
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of usernames and test IDs representing the best and worst performers in a given session.
+        /// </summary>
+        /// <author> Nideesh N </author>
+        /// <param name="sessionId">The ID of the session to evaluate.</param>
+        /// <returns>A list of usernames and test IDs.</returns>
+        public async Task<List<string>> GetBestWorstGivenSession( string sessionId )
+        {
+            try
+            {
+                HttpResponseMessage response = await _entityClient.GetAsync( _insightsRoute + $"/BestWorst/{sessionId}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+                List<string> bestWorstResult = JsonSerializer.Deserialize<List<string>>( result , options );
+                return bestWorstResult;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[InsightsApi.GetBestWorstGivenSession] Exception: " + ex );
+                return default;
+            }
         }
     }
 }
