@@ -189,11 +189,15 @@ namespace ViewModel
             }
         }
 
-        public void ConnectInstructor()
+        public bool ConnectInstructor()
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
             {
                 string ipPort = _client.Start( InstructorIp , int.Parse( InstructorPort ) , StudentRoll , "Dashboard" );
+                if(ipPort == "failed")
+                {
+                    return false;
+                }
                 _client.Subscribe(this, "Dashboard");
                 Debug.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
@@ -206,9 +210,11 @@ namespace ViewModel
 
                     string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
                     _client.Send(message, "server");
+                    return true;
                 }
                 catch { }
             }
+            return false;
         }
 
         /// <summary>

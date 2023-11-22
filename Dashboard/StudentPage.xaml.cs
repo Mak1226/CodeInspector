@@ -63,13 +63,16 @@ namespace Dashboard
         {
             // Show a message box indicating an attempt to connect to the specified IP address and port.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.ConnectInstructor();
-            if (viewModel != null)
-            {
-                ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
-                ContentFrame.Content = clientPage;
-            }
 
+            bool? isConnected = viewModel?.ConnectInstructor();
+            if(isConnected != null && viewModel != null)
+            {
+                if ( isConnected.Value )
+                {
+                    ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
+                    ContentFrame.Content = clientPage;
+                }
+            }
         }
 
         private void DisconnectButton_Click( object sender , RoutedEventArgs e )
