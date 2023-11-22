@@ -1,16 +1,17 @@
 ﻿using Mono.Cecil;
+using System.IO;
 using System.Reflection;
 
 namespace Analyzer.Parsing
 {
     public class ParsedDLLFile
     {
+        private string _dllPath { get; }
         public string DLLFileName { get; }
 
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
-
-
+                    
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
 
@@ -20,11 +21,16 @@ namespace Analyzer.Parsing
         /// <param name="path"></param>
         public ParsedDLLFile(string path) // path of dll files
         {
-            // it merge the all the ParsedNamespace
+            _dllPath = path;
             DLLFileName = Path.GetFileName(path);
+            
+            ReflectionParsingDLL();
+            MonoCecilParsingDLL();
+        }
 
-            // REFLECTION PARSING
-            Assembly assembly = Assembly.Load(File.ReadAllBytes(path));
+        private void ReflectionParsingDLL()
+        {
+            Assembly assembly = Assembly.Load( File.ReadAllBytes(_dllPath) );
 
             if (assembly != null)
             {
@@ -33,39 +39,34 @@ namespace Analyzer.Parsing
                 foreach (Type type in types)
                 {
                     if (type.Namespace != null)
-                    { 
-
-                        if (type.Namespace.StartsWith("System.") || type.Namespace.StartsWith("Microsoft.") || type.Namespace.StartsWith("Mono."))
+                    {
+                        if (type.Namespace.StartsWith( "System." ) || type.Namespace.StartsWith( "Microsoft." ))
                         {
                             continue;
                         }
-
-                        if (type.IsClass)
+                    }
+                    
+                    if (type.IsClass)
+                    {
+                        // To avoid structures and delegates
+                        if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
                         {
-                            // To avoid structures and delegates
-                            if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
-                            {
-                                ParsedClass classObj = new(type);
-                                classObjList.Add(classObj);
-                            }
-                        }
-                        else if (type.IsInterface)
-                        {
-                            ParsedInterface interfaceObj = new(type);
-                            interfaceObjList.Add(interfaceObj);
+                            ParsedClass classObj = new(type);
+                            classObjList.Add( classObj );
                         }
                     }
-                    else
+                    else if (type.IsInterface)
                     {
-                        // code written outside all namespaces may have namespace as null
-                        // TODO : Handle outside namespace types later
+                        ParsedInterface interfaceObj = new(type);
+                        interfaceObjList.Add( interfaceObj );
                     }
                 }
             }
+        }
 
-
-            // MONO.CECIL PARSING
-            AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(path);
+        private void MonoCecilParsingDLL()
+        {
+            AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(_dllPath);
 
             if (assemblyDef != null)
             {
@@ -74,32 +75,25 @@ namespace Analyzer.Parsing
 
                 if (mainModule != null)
                 {
-                    foreach(TypeDefinition type in mainModule.Types)
+                    foreach (TypeDefinition type in mainModule.Types)
                     {
-                        if (type.Namespace != "")
+                        if (type.Namespace != null)
                         {
-                            if(type.Namespace.StartsWith("System") || type.Namespace.StartsWith("Microsoft"))
+                            if (type.Namespace.StartsWith( "System" ) || type.Namespace.StartsWith( "Microsoft" ))
                             {
                                 continue;
                             }
+                        }
 
-                            if(type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate")
-                            {
-                                ParsedClassMonoCecil classObj = new(type);
-                                classObjListMC.Add(classObj);
-                            }
+                        if (type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate")
+                        {
+                            ParsedClassMonoCecil classObj = new( type );
+                            classObjListMC.Add( classObj );
                         }
                     }
                 }
                 assemblyDef.Dispose();
             }
-
-            //assembly = null;
-            //assemblyDef = null;
         }
-
     }
 }
-
-
-// it will call the constructor of the ParsedNamespace for each dll file

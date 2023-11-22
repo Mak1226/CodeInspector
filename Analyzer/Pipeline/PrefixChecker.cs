@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,15 +63,15 @@ namespace Analyzer.Pipeline
                 }
             }
 
-            foreach (ParsedStructure structObj in parsedDLLFile.structureObjList)
-            {
-                    if (!IsCorrectGenericParameterName(structObj.Name))
-                    {
-                        Console.WriteLine($"Incorrect Parameter Prefix : {structObj.Name}");
-                        _errorMessage = "Incorrect Parameter Prefix : " + structObj.Name;
-                        errorCount++;
-                    }
-            }
+            //foreach (ParsedStructure structObj in parsedDLLFile.structureObjList)
+            //{
+            //        if (!IsCorrectGenericParameterName(structObj.Name))
+            //        {
+            //            Console.WriteLine($"Incorrect Parameter Prefix : {structObj.Name}");
+            //            _errorMessage = "Incorrect Parameter Prefix : " + structObj.Name;
+            //            errorCount++;
+            //        }
+            //}
 
             if (errorCount == 0)
             {

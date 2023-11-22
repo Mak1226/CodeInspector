@@ -65,7 +65,7 @@ namespace Analyzer.Parsing
 
 
             // Finding parent class declared in the project - does not contain classes starting with System/Microsoft
-            if (type.BaseType.Namespace != null)
+            if (type.BaseType?.Namespace != null)
             {
                 if (!(type.BaseType.Namespace.StartsWith("System") || type.BaseType.Namespace.StartsWith("Microsoft")))
                 {
@@ -74,7 +74,7 @@ namespace Analyzer.Parsing
             }
             else
             {
-                ParentClass = TypeObj.BaseType.Resolve();
+                ParentClass = TypeObj.BaseType?.Resolve();
             }
 
 

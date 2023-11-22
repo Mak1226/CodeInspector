@@ -3,7 +3,8 @@ using Analyzer.Parsing;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer.Parsing.Tests
+
+namespace AnalyzerTests.Parsing
 {
     [TestClass] 
     public class TestParsingDLL
@@ -13,7 +14,7 @@ namespace Analyzer.Parsing.Tests
         /// While Parsing DLL, currently only these two types are considered. Remaining types like structures, delegates etc.. are ignored
         /// </summary>
         [TestMethod]
-        public void TestValidTypes()
+        public void TestValidParsingTypes()
         {
             string currentDLLPath = Assembly.GetExecutingAssembly().Location;   
             ParsedDLLFile parsedDLL = new(currentDLLPath);
@@ -21,25 +22,6 @@ namespace Analyzer.Parsing.Tests
             parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
             parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
             parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
-
-            //foreach(ParsedClass cls in  parsedDLL.classObjList)
-            //{
-            //    Console.WriteLine( cls.Name );
-            //}
-
-            //foreach (ParsedInterface cls in parsedDLL.interfaceObjList)
-            //{
-            //    Console.WriteLine( cls.Name );
-            //}
-
-
-            //foreach (ParsedClassMonoCecil cls in parsedDLL.classObjListMC)
-            //{
-            //    Console.WriteLine( cls.Name );
-            //}
-
-            Assert.AreEqual(parsedDLL.classObjList.Count, 5);
-            Assert.AreEqual(parsedDLL.interfaceObjList.Count, 1);
 
             List<string> expectedClassNames = new() { "Shapes" , "Square" , "BriefView" , "DetailedView" , "Circle" };
             List<string> retrievedClassNames = new();
@@ -64,6 +46,8 @@ namespace Analyzer.Parsing.Tests
             expectedInterfaceNames.Sort();
             retrievedInterfaceNames.Sort();
             CollectionAssert.AreEqual(expectedInterfaceNames , retrievedInterfaceNames);
+
+            Assert.AreEqual(parsedDLL.DLLFileName, "AnalyzerTests.dll");
         }
     }
 }

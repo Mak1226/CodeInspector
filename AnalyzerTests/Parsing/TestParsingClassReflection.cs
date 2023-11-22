@@ -8,16 +8,15 @@
 
 //namespace AnalyzerTests.Parsing
 //{
-//    internal class TestParsingClassReflection
+//    [TestClass]
+//    public class TestParsingClassReflection
 //    {
-//        public class TestParsingDLL
-//        {
-//            static readonly List<string> dllFilesList1 = new List<string>() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll" };
-//            static readonly ParsedDLLFile parsedDLLs1 = new( dllFilesList1 );
+//        static readonly List<string> dllFilesList1 = new List<string>() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll" };
+//        static readonly ParsedDLLFile parsedDLLs1 = new( dllFilesList1 );
 
-//            // Other dlls to check interfaces of parent class are coming under interfaces list or not
-//            static readonly List<string> dllFilesList2 = new List<string>() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\demo.dll" };
-//            static readonly ParsedDLLFile parsedDLLs2 = new( dllFilesList2 );
+//        // Other dlls to check interfaces of parent class are coming under interfaces list or not
+//        static readonly List<string> dllFilesList2 = new List<string>() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\demo.dll" };
+//        static readonly ParsedDLLFile parsedDLLs2 = new( dllFilesList2 );
 
 //            /// <summary>
 //            /// Checking whether all the classes were identified and parsed or not 

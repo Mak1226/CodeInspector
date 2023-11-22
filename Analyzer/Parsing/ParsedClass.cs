@@ -28,9 +28,6 @@ namespace Analyzer.Parsing
         public PropertyInfo[]? Properties { get; }   // Properties declared only by the class
         public Type? ParentClass { get; }        // ParentClass - does not contain classes starting with System/Microsoft
 
-        // Storing information related to methods and can be used to get local variables rather methodinfo
-        public List<MethodBase> MethodBaseList { get; }
-
         /// <summary>
         /// Parses the most used information from the class object
         /// </summary>
@@ -44,10 +41,9 @@ namespace Analyzer.Parsing
             Methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             Fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             Properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-            MethodBaseList = new List<MethodBase>();
 
             // Finding parent class declared in the project - does not contain classes starting with System/Microsoft
-            if (type.BaseType.Namespace != null) 
+            if (type.BaseType?.Namespace != null) 
             {
                 if (!(type.BaseType.Namespace.StartsWith("System") || type.BaseType.Namespace.StartsWith("Microsoft")))
                 {
@@ -93,19 +89,6 @@ namespace Analyzer.Parsing
 
                 Interfaces = ifaceList.ToArray();
             }
-
-
-            //Finding method bases for methods of the class found earlier
-            foreach (MethodInfo methodinfo in Methods)
-            {
-                MethodBase methodBase = TypeObj.GetMethod( methodinfo.Name );
-
-                if (methodBase != null)
-                {
-                    MethodBaseList.Add(methodBase);
-                    //methodBase
-                }
-}
         }
 
         /// <summary>
