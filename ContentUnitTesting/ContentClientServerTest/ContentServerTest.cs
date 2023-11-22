@@ -97,10 +97,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             Assert.AreEqual(configuration, _analyzer.GetTeacherOptions());
         }
         [TestMethod]
-        public void EmptySessionIDTest()
+        public void NullSessionIDTest()
         {
             ContentServer contentServer = new ContentServer(_communicator, _analyzer);
-            contentServer.SetSessionID("");
+            contentServer.SetSessionID(null);
             Assert.IsTrue(contentServer.analyzerResult.Count() == 0);
         }
 
