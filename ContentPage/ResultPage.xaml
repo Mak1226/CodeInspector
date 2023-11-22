@@ -14,10 +14,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView ItemsSource="{Binding DataList}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+
+        <ListView ItemsSource="{Binding DataList}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Width="150">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="File Name" DisplayMemberBinding="{Binding Item1}" Width="60"/>
+                    <GridViewColumn Header="File Name" DisplayMemberBinding="{Binding Item1}" Width="150"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -32,6 +33,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
     </Grid>
 
 
