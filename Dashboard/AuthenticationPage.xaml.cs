@@ -42,20 +42,36 @@ namespace Dashboard
             }
         }
 
+        private void ShowErrorWindow(string errorMessage)
+{
+    var errorWindow = new ErrorWindow(errorMessage);
+    errorWindow.ShowDialog();
+}
+
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
             AuthenticationViewModel viewModel = (AuthenticationViewModel)DataContext;
-            AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
+            try
+            {
 
-            Debug.WriteLine("Printing from page");
-            Debug.WriteLine(authenticationResult.UserName);
-            Debug.WriteLine(authenticationResult.UserEmail);
-            Debug.WriteLine( authenticationResult.UserImage);
+                AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
 
-            Application.Current.MainWindow.Activate();
+                Debug.WriteLine("Printing from page");
+                Debug.WriteLine(authenticationResult.UserName);
+                Debug.WriteLine(authenticationResult.UserEmail);
+                Debug.WriteLine(authenticationResult.UserImage);
 
-            var loginPage = new Login(authenticationResult.UserName, authenticationResult.UserEmail, authenticationResult.UserImage);
-            NavigationService?.Navigate(loginPage);
+                Application.Current.MainWindow.Activate();
+
+                var loginPage = new Login(authenticationResult.UserName, authenticationResult.UserEmail, authenticationResult.UserImage);
+                NavigationService?.Navigate(loginPage);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorWindow("Login request using OAuth cancelled before completion, try again!");
+                Application.Current.Shutdown();
+            }
+
         }
     }
 }
