@@ -20,11 +20,8 @@ namespace ViewModel
 {
     public class InstructorViewModel : INotifyPropertyChanged, IEventHandler
     {
-        private readonly StudentSessionState _studentSessionState; // To manage the connected students
+        private readonly StudentSessionState _studentSessionState; 
 
-        /// <summary>
-        /// Constructor for the DashboardViewModel.
-        /// </summary>
         public InstructorViewModel(ICommunicator? communicator = null, string userName = "", string userId = "")
         {
             UserName = userName;
@@ -51,35 +48,16 @@ namespace ViewModel
 
         public ICommunicator Communicator { get; }
 
-        /// <summary>
-        /// Gets the instructor's Name
-        /// </summary>
         public string UserName { get; init; }
 
-        /// <summary>
-        /// Gets the instructor's Email
-        /// </summary>
         public string UserId { get; init; }
 
-        /// <summary>
-        /// Gets the receive port.
-        /// </summary>
         public string? ReceivePort { get; private set; }
 
-        /// <summary>
-        /// Gets the IP address.
-        /// </summary>
         public string? IpAddress { get; private set; }
 
-        /// <summary>
-        /// Property changed event raised when a property is changed on a component.
-        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Gets the private IP address of the host machine.
-        /// </summary>
-        /// <param name="property">The name of the property</param>
         private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));

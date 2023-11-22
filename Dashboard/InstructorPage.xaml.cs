@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-//using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -46,7 +45,12 @@ namespace Dashboard
             }
         }
 
-        private void LogoutButtonClick(object sender, RoutedEventArgs e)
+        private void InstructorPage_Unloaded( object sender , RoutedEventArgs e )
+        {
+            
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
             NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
@@ -58,7 +62,6 @@ namespace Dashboard
             {
                 if (item.DataContext is Student clickedStudent)
                 {
-                    Debug.WriteLine( $"Clicked {clickedStudent.Id}" );
                     if (clickedStudent.Id != null)
                     {
                         _contentServerPage.SetSessionID( clickedStudent.Id );

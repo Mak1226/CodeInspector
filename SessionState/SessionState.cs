@@ -43,5 +43,10 @@
         {
             return _students.Count;
         }
+
+        public void RemoveAllStudents()
+        {
+            _students?.Clear();
+        }
     }
 }
