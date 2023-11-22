@@ -153,6 +153,7 @@ namespace Networking.Communicator
             _receiver.Stop();
 
             _networkStream.Close();
+            _isStarted = false;
             Console.WriteLine("[Client] Stopped");
         }
 

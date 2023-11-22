@@ -157,6 +157,7 @@ namespace Networking.Communicator
             _listenThread.Interrupt();
             _serverListener.Stop();
             //_listenThread.Join();
+            _isStarted = false;
             Console.WriteLine("[Server] Stopped");
         }
 
