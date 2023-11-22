@@ -48,7 +48,7 @@ namespace Analyzer.Pipeline.Tests
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
             Dictionary<string , AnalyzerResult> result = avoidUnusedPrivateFieldsRule.AnalyzeAllDLLs();
 
-            AnalyzerResult expected = new ( "103" , 0 , "TeacherAnalyzer : _something _some , are unused private field." );
+            AnalyzerResult expected = new ("103" , 0 , "TeacherAnalyzer : _something _some , are unused private field.");
            
             Assert.AreEqual( expected.AnalyserID, result["UnusedPrivateFields.dll"].AnalyserID);
             Assert.AreEqual( expected.Verdict , result["UnusedPrivateFields.dll"].Verdict );

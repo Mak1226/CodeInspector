@@ -45,7 +45,7 @@ namespace Analyzer.Pipeline
 
                 foreach (Instruction? ins in method.Body.Instructions)
                 {
-                    if (ins.OpCode == OpCodes.Ldfld || ins.OpCode == OpCodes.Ldsfld || ins.OpCode == OpCodes.Ldflda || ins.OpCode == OpCodes.Ldsflda)
+                    if (ins.OpCode == OpCodes.Ldfld || ins.OpCode == OpCodes.Ldsfld || ins.OpCode == OpCodes.Ldflda || ins.OpCode == OpCodes.Ldsflda || ins.OpCode == OpCodes.Ldloc || ins.OpCode == OpCodes.Ldloca)
                     {
                         FieldReference fieldReference = (FieldReference)ins.Operand;
 
@@ -56,19 +56,6 @@ namespace Analyzer.Pipeline
                             unusedFields.Remove( fieldName );
                         }
                     }
-
-                    else if ((ins.OpCode == OpCodes.Ldloc || ins.OpCode == OpCodes.Ldloca))
-                    {
-                        FieldReference fieldReference = (FieldReference)ins.Operand;
-
-                        string fieldName = fieldReference.Name.ToString();
-
-                        if (unusedFields.Contains( fieldName ))
-                        {
-                            unusedFields.Remove( fieldName );
-                        }
-                    }
-
                 }
             }
 

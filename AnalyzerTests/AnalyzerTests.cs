@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.Tests
 {
@@ -40,9 +34,7 @@ namespace Analyzer.Tests
 
             List<string> paths = new()
             {
-                "..\\..\\..\\TestDLLs\\Analyzer.dll",
-
-                "..\\..\\..\\TestDLLs\\BridgePattern.dll",
+                "..\\..\\..\\TestDLLs\\CasingChecker.dll",
             };
 
             analyzer.LoadDLLFileOfStudent(paths);
