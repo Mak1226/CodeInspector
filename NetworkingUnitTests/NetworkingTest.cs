@@ -75,6 +75,15 @@ public class NetworkingTest
         {
             Assert.AreEqual("Start client first", exception.Message);
         }
+
+        try
+        {
+            client.Send("123", "456","789");
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual("Start client first", exception.Message);
+        }
     }
 
     [TestMethod]
@@ -106,6 +115,42 @@ public class NetworkingTest
     }
 
     [TestMethod]
+    public void ClientStartStopWithoutServer()
+    {
+        ICommunicator client = new Client();
+        string ret = client.Start("127.0.0.1", 99, "Client1", "UnitTestClient");
+        Assert.AreEqual(ret, "failed");
+
+        // verify if client has not started
+        try
+        {
+            client.Stop();
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual("Start client first", exception.Message);
+        }
+    }
+
+    [TestMethod]
+    public void ClientDoubleSubscribe()
+    {
+        Queue messages = new();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
+        string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
+        string ip = ipPort[0];
+        int port = int.Parse(ipPort[1]);
+        client.Start(ip, port, "testClient1", "unitTestClient");
+        client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
+        //TODO: Verify dict
+        client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
+        //TODO: Verify dict
+        client.Stop();
+        server.Stop();
+    }
+
+    [TestMethod]
     public void OneClientToServer()
     {
         int cnt = 0;
@@ -118,7 +163,7 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
         Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
-        client.Send(message.Data, message.ModuleName, message.DestID);
+        client.Send(message.Data, "unitTestServer", message.DestID);
         while (!messages.canDequeue())
         {
             Thread.Sleep(300);
@@ -217,7 +262,7 @@ public class NetworkingTest
         client.Start(ip, port, "testClient1", "unitTestClient");
         Message message = new("testMessage", "unitTestClient", "testClient1", "testClient1");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
-        client.Send(message.Data, message.ModuleName, message.DestID);
+        client.Send(message.Data, message.DestID);
         while (!messages.canDequeue())
         {
             Thread.Sleep(300);
@@ -238,8 +283,8 @@ public class NetworkingTest
     {
         int cnt = 0;
         Queue messages = new();
-        ICommunicator server = CommunicationFactory.GetServer();
-        ICommunicator client = CommunicationFactory.GetClient();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
         string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
