@@ -17,7 +17,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the ReviewUselessControlFlowRule with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public ReviewUselessControlFlowRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+        public ReviewUselessControlFlowRule( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
         }
 
@@ -25,7 +25,7 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the count of useless control flow occurrences.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+        protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
             int uselessControlFlowCount = 0;
 
@@ -33,12 +33,12 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
-                    if(!method.HasBody)
+                    if (!method.HasBody)
                     {
                         continue;
                     }
 
-                    int methodUselessControlFlowCount = ReviewUselessControlFlowInMethod(method);
+                    int methodUselessControlFlowCount = ReviewUselessControlFlowInMethod( method );
                     uselessControlFlowCount += methodUselessControlFlowCount;
                 }
             }
@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {uselessControlFlowCount} occurrences of useless control flow."
                 : "No occurrences of useless control flow found.";
 
-            return new AnalyzerResult("110", uselessControlFlowCount, errorString);
+            return new AnalyzerResult( "110" , uselessControlFlowCount , errorString );
         }
 
         /// <summary>
@@ -55,22 +55,29 @@ namespace Analyzer.Pipeline
         /// </summary>
         /// <param name="method">The method to analyze.</param>
         /// <returns>The count of useless control flow occurrences in the method.</returns>
-        private static int ReviewUselessControlFlowInMethod(MethodDefinition method)
+        private static int ReviewUselessControlFlowInMethod( MethodDefinition method )
         {
             int methodUselessControlFlowCount = 0;
             Collection<Instruction> instructions = method.Body.Instructions;
 
             for (int i = 0; i < instructions.Count; i++)
             {
+                Console.WriteLine(i);
                 Instruction instruction = instructions[i];
-                if (IsJumpToNextInstruction(instruction))
+                if (IsJumpToNextInstruction( instruction ))
                 {
                     // Check if the next instruction is a no-op (useless control flow)
                     if (i + 1 < instructions.Count && instructions[i + 1].OpCode == OpCodes.Nop)
                     {
                         methodUselessControlFlowCount++;
+                        Console.WriteLine(instruction.ToString());
                         i++; // Skip the next instruction
                     }
+                }
+                else if (IsEmptyBlock( instruction ))
+                {
+                    Console.WriteLine( "hello" );
+                    methodUselessControlFlowCount++;
                 }
             }
 
@@ -82,9 +89,20 @@ namespace Analyzer.Pipeline
         /// </summary>
         /// <param name="instruction">The instruction to check.</param>
         /// <returns>True if the instruction is a jump to the next instruction; otherwise, false.</returns>
-        private static bool IsJumpToNextInstruction(Instruction instruction)
+        private static bool IsJumpToNextInstruction( Instruction instruction )
         {
             return instruction.OpCode.FlowControl == FlowControl.Cond_Branch || instruction.OpCode.FlowControl == FlowControl.Branch;
+        }
+
+        /// <summary>
+        /// Checks if an instruction represents an empty block.
+        /// </summary>
+        /// <param name="instruction">The instruction to check.</param>
+        /// <returns>True if the instruction represents an empty block; otherwise, false.</returns>
+        private static bool IsEmptyBlock( Instruction instruction )
+        {
+            // Check if the instruction is a jump to itself (empty block)
+            return instruction.OpCode == OpCodes.Br || instruction.OpCode == OpCodes.Br_S;
         }
     }
 }
