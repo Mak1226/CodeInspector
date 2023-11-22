@@ -9,6 +9,7 @@ using Networking.Models;
 using Networking.Events;
 using System.Diagnostics;
 using System;
+using Networking.Serialization;
 
 namespace Networking.Communicator
 {
@@ -25,6 +26,7 @@ namespace Networking.Communicator
         private Dictionary<string, IEventHandler> _eventHandlersMap = new();
         private string _senderId;
         private bool _isStarted = false;
+        private string _ipPort = "";
 
 
         private string GetLocalIPAddress()
@@ -77,7 +79,7 @@ namespace Networking.Communicator
         public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
-                return "already started";
+                return _ipPort;
 
             _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
@@ -105,7 +107,6 @@ namespace Networking.Communicator
                     else
                     {
                         Console.WriteLine("Socket error: " + ex.SocketErrorCode);
-                        throw ex;
                     }
                 }
             }
@@ -118,13 +119,9 @@ namespace Networking.Communicator
                 IsBackground = true
             };
             _listenThread.Start();
-            //Subscribe(new NetworkingEventHandler(), EventType.ChatMessage());
-            //Subscribe(new NetworkingEventHandler(), EventType.NewClientJoined());
-            //Subscribe(new NetworkingEventHandler(), EventType.ClientLeft());
-            //Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
-            //Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
-            Subscribe(new NetworkingEventHandler(), ID.GetNetworkingID());
-            return GetLocalIPAddress() + ":" + localEndPoint.Port;
+            Subscribe(new NetworkingEventHandler(this), ID.GetNetworkingID());
+            _ipPort = GetLocalIPAddress() + ":" + localEndPoint.Port;
+            return _ipPort;
         }
 
         public void Stop()
@@ -134,6 +131,9 @@ namespace Networking.Communicator
 
             Console.WriteLine("[Server] Stop");
             _stopThread = true;
+            Data data = new Data(EventType.ServerLeft());
+            this.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
+            this.Send(Serializer.Serialize<Data>(data),ID.GetNetworkingID(),ID.GetBroadcastID());
             _sender.Stop();
             _receiver.Stop();
             foreach (var stream in _clientIDToStream.Values)
@@ -155,15 +155,11 @@ namespace Networking.Communicator
 
             Console.WriteLine("[Server] Subscribe " + moduleName);
 
-            //List<IEventHandler> eventHandlers = new();
             if (_eventHandlersMap.ContainsKey(moduleName))
-                Console.WriteLine("");// already subs
+                Console.WriteLine("[Server] "+moduleName+" already subscribed!");// already subs
             else
                 _eventHandlersMap[moduleName] = eventHandler;
 
-                //eventHandlers = _eventHandlersMap[theEvent];
-                //eventHandlers.Add(eventHandler);
-                //_eventHandlersMap[theEvent] = eventHandlers;
         }
 
         void AcceptConnection()
@@ -185,21 +181,25 @@ namespace Networking.Communicator
                         Console.WriteLine("[Server] Listener stopped");
                         break;
                     }
+                    //handle other exceptions
+                        
                 }
-                NetworkStream stream = client.GetStream();
-                lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
+                }
+                catch (Exception e) {
+                    Console.WriteLine("[Server] Failed to get stream!");
+                    continue;
+                }
                 clientID += 'A';
-                Console.WriteLine("client connected");
+                Console.WriteLine("New client connected");
             }
         }
 
         public void HandleMessage(Message message)
         {
-            //foreach (IEventHandler eventHandler in _eventHandlersMap[message.EventType])
-            //{
-            //    eventHandler.HandleMessageRecv(message);
-            //}
-            //eventHandler.HandleMessageRecv(message);
             if (message.DestID == ID.GetServerID())
                 _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
             else

@@ -20,13 +20,16 @@ namespace ViewModel
 {
     public class InstructorViewModel : INotifyPropertyChanged, IEventHandler
     {
-        private readonly StudentSessionState _studentSessionState; 
+        private readonly ISessionState _studentSessionState; // To manage the connected students
 
-        public InstructorViewModel(ICommunicator? communicator = null, string userName = "", string userId = "")
+        /// <summary>
+        /// Constructor for the DashboardViewModel.
+        /// </summary>
+        public InstructorViewModel( string userName, string userId, ICommunicator? communicator = null )
         {
             UserName = userName;
             UserId = userId;
-            _studentSessionState = new();
+            _studentSessionState = new StudentSessionState();
             Communicator = communicator ?? CommunicationFactory.GetServer();
 
             string ipPort = Communicator.Start(null, null, "server", "Dashboard");
@@ -41,7 +44,9 @@ namespace ViewModel
             }
             catch { }
         }
-
+        /// <summary>
+        /// Converting student list from <typeparamref name="List"/> to <typeparamref name="ObservableCollection"/>
+        /// </summary>
         public ObservableCollection<Student> StudentList => new( _studentSessionState.GetAllStudents() );
 
         public int StudentCount => _studentSessionState.GetStudentsCount();
