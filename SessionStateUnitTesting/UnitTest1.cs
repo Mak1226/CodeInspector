@@ -101,6 +101,123 @@ namespace SessionStateUnitTesting
             var students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
+
+        [TestMethod]
+        public void RemoveAllStudents_DoesNothingIfListIsEmpty()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+
+            // Act
+            sessionState.RemoveAllStudents();
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(0, students.Count);
+        }
+
+        [TestMethod]
+        public void AddStudent_WithInvalidData_DoesNotAddStudent()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+
+            // Act
+            sessionState.AddStudent(null, "John", "192.168.0.1", 8080); // Invalid ID
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(0, students.Count);
+        }
+
+        [TestMethod]
+        public void RemoveStudent_WithInvalidId_DoesNothing()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+            sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
+
+            // Act
+            sessionState.RemoveStudent(null); // Invalid ID
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(1, students.Count);
+        }
+
+        [TestMethod]
+        public void AddStudent_WithEmptyId_DoesNotAddStudent()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+
+            // Act
+            sessionState.AddStudent("", "John", "192.168.0.1", 8080); // Empty ID
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(0, students.Count);
+        }
+
+        [TestMethod]
+        public void AddStudent_WithNegativePort_DoesNotAddStudent()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+
+            // Act
+            sessionState.AddStudent("1", "John", "192.168.0.1", -8080); // Negative port
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(0, students.Count);
+        }
+
+        [TestMethod]
+        public void RemoveStudent_WithNonexistentId_DoesNothing()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+            sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
+
+            // Act
+            sessionState.RemoveStudent("2"); // Nonexistent ID
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(1, students.Count);
+        }
+
+        [TestMethod]
+        public void RemoveStudent_WithNullId_DoesNothing()
+        {
+            // Arrange
+            ISessionState sessionState = new StudentSessionState();
+            sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
+
+            // Act
+            sessionState.RemoveStudent(null); // Null ID
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(1, students.Count);
+        }
+
+        [TestMethod]
+        public void RemoveAllStudents_WithNullList_DoesNothing()
+        {
+            // Arrange
+            StudentSessionState sessionState = new StudentSessionState();
+            sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
+
+            // Act
+            sessionState.RemoveAllStudents();
+            sessionState.RemoveAllStudents(); // Call again with null list
+
+            // Assert
+            var students = sessionState.GetAllStudents();
+            Assert.AreEqual(0, students.Count);
+        }
     }
 
 }
