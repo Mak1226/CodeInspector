@@ -10,52 +10,33 @@ using System.Reflection;
 
 namespace Analyzer.Pipeline.Tests
 {
+    public class TestClassForControl
+    {
+        public void MethodWithUselessControlFlow()
+        {
+            int x = 10;
+            int y = 20;
+
+            if (x == 0)
+            {
+                // TODO - ever seen such a thing ? ;-)
+            }
+            if (y == 0) ;
+            {
+                Console.WriteLine( "always printed" );
+            }
+        }
+    }
+
     [TestClass()]
     public class TestControl
     {
-        public class TestClassForControl
-        {
-            public void MethodWithUselessControlFlow()
-            {
-                int x = 10;
-                int y = 20;
-
-                if (x > y)
-                {
-                    Console.WriteLine( "x is greater than y" );
-                }
-                else
-                {
-                    Console.WriteLine( "x is not greater than y" );
-                }
-
-                // This is a useless jump followed by a no-op
-                if (x < y)
-                {
-                    Console.WriteLine( "x is less than y" );
-                }
-                else
-                {
-                    Console.WriteLine( "x is not less than y" );
-                    // No-op
-                    Nop();
-                }
-
-                Console.WriteLine( "Method completed" );
-            }
-
-            private static void Nop()
-            {
-                // No-op
-            }
-        }
-
         [TestMethod()]
         public void Test1()
         {
             // Specify the path to the DLL file
-            //string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\controlflow.dll";
-            string path = Assembly.GetExecutingAssembly().Location;
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\ClassLibrary1.dll";
+            //string path = Assembly.GetExecutingAssembly().Location;
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
 
@@ -71,7 +52,7 @@ namespace Analyzer.Pipeline.Tests
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                Console.WriteLine(dll.Key);
+                //Console.WriteLine(dll.Key);
 
                 AnalyzerResult res = dll.Value;
 
