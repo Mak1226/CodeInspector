@@ -120,5 +120,25 @@ namespace ContentUnitTesting.ContentClientServerTest
             Assert.IsFalse(contentServer.analyzerResult.Count == 0);
             Directory.Delete(tempDirectory, true);
         }
+        /// <summary>
+        /// Test when event AnalyzerResultChanged is null
+        /// </summary>
+        [TestMethod]
+        public void AnalyzerResultChangeEventTest()
+        {
+            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            contentServer.AnalyzerResultChanged = null;
+            contentServer.SetSessionID("TestSessionID");
+            IFileHandler fileHandler = new FileHandler();
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
+            string encoding = fileHandler.HandleUpload(tempDirectory, "testSessionID");
+
+            contentServer.HandleRecieve(encoding, "testClientID");
+            // No assertions needed, we are testing that the event is not invoked when null
+            Directory.Delete(tempDirectory, true);
+        }
     }
 }
