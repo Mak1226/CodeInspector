@@ -48,12 +48,11 @@ namespace Analyzer.Pipeline.Tests
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
             Dictionary<string , AnalyzerResult> result = avoidUnusedPrivateFieldsRule.AnalyzeAllDLLs();
 
-            Dictionary<string , AnalyzerResult> original = new()
-            {
-                ["103"] = new AnalyzerResult("103", 0, "TeacherAnalyzer: _something _some, are unused private field." )
-            };
-
-            Assert.AreEqual(original.ToString() ,result.ToString());
+            AnalyzerResult expected = new ( "103" , 0 , "TeacherAnalyzer : _something _some , are unused private field." );
+           
+            Assert.AreEqual( expected.AnalyserID, result["UnusedPrivateFields.dll"].AnalyserID);
+            Assert.AreEqual( expected.Verdict , result["UnusedPrivateFields.dll"].Verdict );
+            Assert.AreEqual( expected.ErrorMessage , result["UnusedPrivateFields.dll"].ErrorMessage );
 
         }
 
@@ -74,29 +73,6 @@ namespace Analyzer.Pipeline.Tests
 
             Assert.AreEqual(unusedFields.ToString() ,originalUnusedFields.ToString());
         }
-
-
-        /*        [TestMethod()]
-                public void Test2()
-                {
-
-                    List<string> DllFilePaths = new List<string>();
-
-                    DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\UnusedPrivateFields.dll");
-
-                    ParsedDLLFiles dllFiles = new(DllFilePaths);
-
-                    AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
-
-                    var result = avoidUnusedPrivateFieldsRule.Run();
-
-                    Console.WriteLine(result.ErrorMessage);
-
-                    Assert.AreEqual(0, result.Verdict);
-
-                }*/
-
-        //Mono.Collections.Generic.Collection<FieldDefinition> fields = typeDefinition.Fields;
 
     }
 }
