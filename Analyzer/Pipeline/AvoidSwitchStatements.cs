@@ -40,7 +40,7 @@ namespace Analyzer.Pipeline
             // If no errors, add a message indicating everything looks fine
             if (string.IsNullOrEmpty(errorMessageString))
             {
-                errorMessageString = "Everything looks fine. No switch statements found.";
+                errorMessageString = "No switch statements found.";
             }
             else
             {

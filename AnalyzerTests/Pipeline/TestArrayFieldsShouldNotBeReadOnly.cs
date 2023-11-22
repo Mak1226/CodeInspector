@@ -13,7 +13,26 @@ namespace AnalyzerTests.Pipeline
     public class TestArrayFieldsShouldNotBeReadOnly
     {
         [TestMethod()]
-        public void MainPipelineTest()
+        public void GoodTest()
+        {
+            List<ParsedDLLFile> DllFileObjs = new();
+
+            string path = "..\\..\\..\\TestDLLs\\demo.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
+
+            DllFileObjs.Add(parsedDllObj);
+
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
+
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["demo.dll"];
+            Assert.AreEqual(0, result.Verdict);
+        }
+
+
+        [TestMethod()]
+        public void BadTest()
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
