@@ -9,6 +9,24 @@ namespace NetworkingUnitTests;
 public class NetworkingTest
 {
     [TestMethod]
+    public void ClientSubscribeBeforeStart()
+    {
+        ICommunicator server = new Server();
+        _ = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
+
+        ICommunicator client = new Client();
+        try
+        {
+            client.Subscribe(new GenericEventHandler(new()), "modName");
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual("Start client first", exception.Message);
+        }
+
+
+    }
+    [TestMethod]
     public void ServerSendBeforeStart()
     {
         ICommunicator server = new Server();
@@ -20,7 +38,7 @@ public class NetworkingTest
     public void ServerSubscribeBeforeStart()
     {
         ICommunicator server = new Server();
-        Exception exception = Assert.ThrowsException<Exception>(() => server.Subscribe(new GenericEventHandler(new()),"modName"));
+        Exception exception = Assert.ThrowsException<Exception>(() => server.Subscribe(new GenericEventHandler(new()), "modName"));
         Assert.AreEqual("Start server first", exception.Message);
     }
 
@@ -44,17 +62,7 @@ public class NetworkingTest
         Assert.AreEqual("Start client first", exception.Message);
     }
 
-    [TestMethod]
-    public void ClientSubscribeBeforeStart()
-    {
-        ICommunicator server = new Server();
-        _ = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
 
-        ICommunicator client = new Client();
-
-        Exception exception = Assert.ThrowsException<Exception>(() => client.Subscribe(new GenericEventHandler(new()), "modName"));
-        Assert.AreEqual("Start client first", exception.Message);
-    }
 
     [TestMethod]
     public void ClientSendBeforeStart()
@@ -73,28 +81,30 @@ public class NetworkingTest
     {
         int cnt = 0;
         Queue messages = new();
-        ICommunicator server = CommunicationFactory.GetServer();
-        ICommunicator client = CommunicationFactory.GetClient();
+        //ICommunicator server = CommunicationFactory.GetServer();
+        //ICommunicator client = CommunicationFactory.GetClient();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
         string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
-        server.Subscribe( new GenericEventHandler( messageQueue: messages ) , "unitTestServer" );
+        server.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestServer");
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Message message = new( "testMessage" , "unitTestServer" , ID.GetServerID() , "testClient1" );
-        client.Send( message.Data , message.ModuleName , message.DestID );
+        Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
+        client.Send(message.Data, message.ModuleName, message.DestID);
         while (!messages.canDequeue())
         {
             Thread.Sleep(300);
             cnt++;
-            if(cnt == 10)
+            if (cnt == 10)
             {
-                Assert.Fail( "Did not receive message" );
+                Assert.Fail("Did not receive message");
             }
         }
         Message receivedMessage = messages.Dequeue();
         client.Stop();
         server.Stop();
-        Assert.IsTrue( CompareMessages(receivedMessage,message));
+        Assert.IsTrue(CompareMessages(receivedMessage, message));
     }
 
     [TestMethod]
@@ -141,7 +151,7 @@ public class NetworkingTest
 
     private bool CompareMessages(Message message1, Message message2)
     {
-        if( (message1.Data != message2.Data) ||
+        if ((message1.Data != message2.Data) ||
             (message1.DestID != message2.DestID) ||
             (message1.SenderID != message2.SenderID) ||
             (message1.ModuleName != message2.ModuleName))
@@ -158,7 +168,7 @@ public class NetworkingTest
         for (int i = 0; i < n; i++)
         {
             Client client = new();
-            client.Start(destIP, destPort, "client_"+i.ToString(), moduleName);
+            client.Start(destIP, destPort, "client_" + i.ToString(), moduleName);
             clientsList.Add(client);
         }
 

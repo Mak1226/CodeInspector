@@ -8,7 +8,10 @@ namespace Networking.Events
     public class NetworkingEventHandler : IEventHandler
     {
 
-        ICommunicator server = CommunicationFactory.GetServer();
+        ICommunicator server ;
+        public NetworkingEventHandler(ICommunicator server) { 
+            this.server = server;
+        }
         public string HandleMessageRecv(Message message)
         {
             Data data=Serializer.Deserialize<Data>(message.Data);

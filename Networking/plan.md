@@ -1,5 +1,7 @@
 ﻿# TODO:
 > Change all instances of *ID to *Id
+> ensure message is sent bfr stop in client
+> send message to all clients in server bft quitting
 
 
 

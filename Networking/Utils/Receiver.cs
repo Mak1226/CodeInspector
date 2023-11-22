@@ -74,11 +74,11 @@ namespace Networking.Utils
                         while (totalBytesRead < messageSize)
                         {
                             sizeBytesRead = item.Value.Read(receiveData, totalBytesRead, messageSize - totalBytesRead);
-                            if (sizeBytesRead == 0)
-                            { 
-                                // Handle the case where the stream is closed or no more data is available
-                                break;
-                            }
+                            //if (sizeBytesRead == 0)
+                            //{ 
+                            //    // Handle the case where the stream is closed or no more data is available
+                            //    break;
+                            //}
                             totalBytesRead += sizeBytesRead;
                         }
 

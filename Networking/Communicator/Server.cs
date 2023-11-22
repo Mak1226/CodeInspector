@@ -124,7 +124,7 @@ namespace Networking.Communicator
             //Subscribe(new NetworkingEventHandler(), EventType.ClientLeft());
             //Subscribe(new NetworkingEventHandler(), EventType.ClientRegister());
             //Subscribe(new NetworkingEventHandler(), EventType.ClientDeregister());
-            Subscribe(new NetworkingEventHandler(), ID.GetNetworkingID());
+            Subscribe(new NetworkingEventHandler(this), ID.GetNetworkingID());
             _ipPort = GetLocalIPAddress() + ":" + localEndPoint.Port;
             return _ipPort;
         }
