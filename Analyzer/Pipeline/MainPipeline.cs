@@ -19,7 +19,7 @@ namespace Analyzer.Pipeline
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _studentDLLFiles;
         private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
-        private List<ParsedDLLFile> _parsedDLLFiles;
+        private readonly List<ParsedDLLFile> _parsedDLLFiles;
         private readonly Dictionary<string, List<AnalyzerResult>> _results;
         private readonly object _lock;
 
@@ -126,7 +126,7 @@ namespace Analyzer.Pipeline
             {
                 if(option.Value == true)
                 {
-                    Thread WorkerThread = new Thread(() => RunAnalyzer(option.Key));
+                    Thread WorkerThread = new(() => RunAnalyzer(option.Key));
                     WorkerThread.Start();
                     threads.Add(WorkerThread);
                 }
@@ -140,11 +140,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
-        public Byte[] GenerateClassDiagram(List<string> removableNamespaces)
+        public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            Byte[] bytes = classDiag.Run(removableNamespaces).Result;
+            byte[] bytes = classDiag.Run(removableNamespaces).Result;
             return bytes;
         }
     }

@@ -13,10 +13,10 @@ namespace Analyzer.UMLDiagram
     /// </summary>
     public class ClassDiagram : DiagramBase
     {
-        private StringBuilder _plantUMLCode;
-        private Byte[] _plantUMLImage;
-        List<ParsedClassMonoCecil> _parsedClassList;
-        List<ParsedInterface> _parsedInterfaceList;
+        private readonly StringBuilder _plantUMLCode;
+        private byte[] _plantUMLImage;
+        private readonly List<ParsedClassMonoCecil> _parsedClassList;
+        private readonly List<ParsedInterface> _parsedInterfaceList;
 
         /// <summary>
         /// 
@@ -25,7 +25,7 @@ namespace Analyzer.UMLDiagram
         public ClassDiagram(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _plantUMLCode = new StringBuilder();
-            _plantUMLImage = new Byte[1];
+            _plantUMLImage = new byte[1];
 
             _parsedClassList = new List<ParsedClassMonoCecil>(); 
             _parsedInterfaceList = new List<ParsedInterface>();
@@ -41,11 +41,11 @@ namespace Analyzer.UMLDiagram
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<Byte[]> Run(List<string> removableNamespaces)
+        public async Task<byte[]> Run(List<string> removableNamespaces)
         {
             CodeStr(removableNamespaces);
             var factory = new RendererFactory();
-            var renderer = factory.CreateRenderer(new PlantUmlSettings());
+            IPlantUmlRenderer renderer = factory.CreateRenderer(new PlantUmlSettings());
 
             // Create the PlantUML diagram code
             // string plantUmlCode = "@startuml\r\nclass Car {}\r\n\r\nclass Engine\r\n\r\nCar *-- Engine : contains\r\nEngine <-- Car2\r\n@enduml";
@@ -103,10 +103,10 @@ namespace Analyzer.UMLDiagram
 
             foreach (ParsedClassMonoCecil classObj in graphParsedClassObj)
             {
-                List<string> compositionList = classObj.CompositionList;
-                List<string> aggregationList = classObj.AggregationList;
-                List<string> inheritanceList = classObj.InheritanceList;
-                List<string> usingList = classObj.UsingList;
+                HashSet<string> compositionList = classObj.CompositionList;
+                HashSet<string> aggregationList = classObj.AggregationList;
+                HashSet<string> inheritanceList = classObj.InheritanceList;
+                HashSet<string> usingList = classObj.UsingList;
 
 
                 AddElement("-->", usingList, classObj.TypeObj.FullName , removableNamespaces);
@@ -157,7 +157,7 @@ namespace Analyzer.UMLDiagram
         /// <param name="relationSymbol"></param>
         /// <param name="relationshipList"></param>
         /// <param name="typeFullName"></param>
-        private void AddElement(string relationSymbol, List<string> relationshipList, string typeFullName , List<string> removableNamespaces)
+        private void AddElement(string relationSymbol, HashSet<string> relationshipList, string typeFullName , List<string> removableNamespaces)
         {
             string relationStatement = string.Empty;
 
@@ -202,7 +202,7 @@ namespace Analyzer.UMLDiagram
 
         private bool isPartOfRemovableNamespace(string objName , List<string> removableNamespaces)
         {
-            String[] splitted_string = objName.Split(".");
+            string[] splitted_string = objName.Split(".");
 
             if (removableNamespaces != null && removableNamespaces.Contains(splitted_string[0].Remove(0 , 1)))
             {

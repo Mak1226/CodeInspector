@@ -41,7 +41,7 @@ namespace Analyzer
         /// <summary>
         /// Generates a relationship graph based on the loaded files.
         /// </summary>
-        public Byte[] GetRelationshipGraph(List<string> removableNamespaces);
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces);
 
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers();
     }

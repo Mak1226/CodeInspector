@@ -16,12 +16,10 @@ namespace Analyzer.Pipeline.Tests
         public void Test1()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\disposetest.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestviolated.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
-
-            //DllFilePaths.Add(path);
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
@@ -29,15 +27,47 @@ namespace Analyzer.Pipeline.Tests
             DisposableFieldsShouldBeDisposedRule analyzer = new(dllFiles);
 
             // Run the analyzer
-            var result = analyzer.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
-            foreach (var dll in result)
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
                 Console.WriteLine(dll.Key);
 
-                var res = dll.Value;
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 1 );
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+            }
+
+        }
+
+        [TestMethod()]
+        public void Test2()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                Console.WriteLine( dll.Key );
+
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 0 );
+
+                Console.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
             }
 
         }

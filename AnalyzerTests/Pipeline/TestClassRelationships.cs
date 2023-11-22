@@ -19,17 +19,20 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void CheckRelationshipsList()
         {
-            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
+            List<ParsedDLLFile> DllFileObjs = new();
 
-            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TypeRelationships.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
+
+        //C: \Users\HP\Desktop\software\SoftwareGroupProject\Analyzer\AnalyzerTests\TestDLLs\TypeRelationships.dll
+
+        var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
 
-            var classes = 0;
-            foreach (var dllFileObj in DllFileObjs)
+            int classes = 0;
+            foreach (ParsedDLLFile dllFileObj in DllFileObjs)
             {
-                foreach (var cls in dllFileObj.classObjListMC)
+                foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
                     classes++;
                 }
@@ -43,14 +46,14 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, List<string>> AggregationRel = new();
             Dictionary<string, List<string>> UsingRel = new();
 
-            foreach (var dllFileObj in DllFileObjs)
+            foreach (ParsedDLLFile dllFileObj in DllFileObjs)
             {
-                foreach (var cls in dllFileObj.classObjListMC)
+                foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
                     Debug.WriteLine("\n\n\n\n");
                     Console.WriteLine("Class: " + cls.Name);
                     Console.WriteLine("Inheritance: ");
-                    foreach (var inhCls in cls.InheritanceList)
+                    foreach (string inhCls in cls.InheritanceList)
                     {
                         Console.WriteLine(inhCls);
                         if (!InheritanceRel.ContainsKey(cls.Name))
@@ -61,7 +64,7 @@ namespace AnalyzerTests.Pipeline
                     }
                     Console.WriteLine("------------------------------------");
                     Console.WriteLine("Composiition: ");
-                    foreach (var compCls in cls.CompositionList)
+                    foreach (string compCls in cls.CompositionList)
                     {
                         Console.WriteLine(compCls);
                         if (!CompositionRel.ContainsKey(cls.Name))
@@ -73,7 +76,7 @@ namespace AnalyzerTests.Pipeline
                     Console.WriteLine("------------------------------------");
 
                     Console.WriteLine("Aggregation: ");
-                    foreach (var aggCls in cls.AggregationList)
+                    foreach (string aggCls in cls.AggregationList)
                     {
                         Console.WriteLine(aggCls);
                         if (!AggregationRel.ContainsKey(cls.Name))
@@ -86,7 +89,7 @@ namespace AnalyzerTests.Pipeline
                     Console.WriteLine("------------------------------------");
 
                     Console.WriteLine("Using: ");
-                    foreach (var useCls in cls.UsingList)
+                    foreach (string useCls in cls.UsingList)
                     {
                         Console.WriteLine(useCls);
                         if (!UsingRel.ContainsKey(cls.Name))
@@ -111,19 +114,19 @@ namespace AnalyzerTests.Pipeline
             AggregationExp["StudentCar"] = new List<string> { "CTypeRelationships.Car" };
             UsingExp["StudentCar"] = new List<string> { "CTypeRelationships.Student" };
 
-            foreach (var key in InheritanceRel.Keys)
+            foreach (string key in InheritanceRel.Keys)
             {
                 CollectionAssert.AreEqual(InheritanceExp[key], InheritanceRel[key]);
             }
-            foreach (var key in CompositionRel.Keys)
+            foreach (string key in CompositionRel.Keys)
             {
                 CollectionAssert.AreEqual(CompositionExp[key], CompositionRel[key]);
             }
-            foreach (var key in AggregationRel.Keys)
+            foreach (string key in AggregationRel.Keys)
             {
                 CollectionAssert.AreEqual(AggregationExp[key], AggregationRel[key]);
             }
-            foreach (var key in UsingRel.Keys)
+            foreach (string key in UsingRel.Keys)
             {
                 CollectionAssert.AreEqual(UsingExp[key], UsingRel[key]);
             }

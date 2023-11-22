@@ -44,5 +44,10 @@ namespace Analyzer
             AnalyzerResult other = (AnalyzerResult)obj;
             return AnalyserID == other.AnalyserID && Verdict == other.Verdict && ErrorMessage == other.ErrorMessage;
         }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

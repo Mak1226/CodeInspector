@@ -10,9 +10,9 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class SwitchStatementDefaultCaseChecker : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SwitchStatementRule"/> class.
@@ -20,9 +20,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The ParsedDLLFiles object containing the parsed DLL information.</param>
         public SwitchStatementDefaultCaseChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "116";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "116";
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace Analyzer.Pipeline
                     // No default case found
                     if (defaultcaseflag)
                     {
-                        errorMessage += $"{cls.Name}.{method.Name} ";
-                        verdict = 0;
+                        _errorMessage += $"{cls.Name}.{method.Name} ";
+                        _verdict = 0;
                         return;
                     }
                 }
@@ -81,11 +81,11 @@ namespace Analyzer.Pipeline
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             CheckSwitchStatements(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }
