@@ -41,10 +41,11 @@ namespace Analyzer.Pipeline
             _errorMessage = "";
             _verdict = 1;
             int errorCount = 0;
+            int flag = 0;
+            int flag1 = 0;
 
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
-                int flag = 0;
                 if (!IsCorrectTypeName(classObj.Name))
                 {
                     flag++;
@@ -64,12 +65,11 @@ namespace Analyzer.Pipeline
             // To check interfaces
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                int flag = 0;
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
-                    flag++;
+                    flag1++;
                     Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
-                    if(flag == 1)
+                    if(flag1 == 1)
                     {
                         _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name + " ";
                     }
