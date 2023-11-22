@@ -16,12 +16,9 @@ namespace Analyzer.Pipeline.Tests
         public void TestDepthOfInh()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TestUnused.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
 
-            // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
-
-            //DllFilePaths.Add(path);
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
@@ -29,13 +26,24 @@ namespace Analyzer.Pipeline.Tests
             DepthOfInheritance analyzer = new(dllFiles);
 
             // Run the analyzer
-            var result = analyzer.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
-            foreach (var dll in result)
+            Dictionary<Type , int> depthMap = analyzer.CalculateDepthOfInheritance( dllFile );
+
+            Assert.IsNotNull( depthMap, "DepthMap is NULL!");
+
+            foreach (KeyValuePair<Type , int> pair in depthMap)
+            {
+                Console.WriteLine( $"Key: {pair.Key}, Value: {pair.Value}" );
+            }
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
                 Console.WriteLine(dll.Key);
 
-                var res = dll.Value;
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual(res.Verdict, 1 );
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }

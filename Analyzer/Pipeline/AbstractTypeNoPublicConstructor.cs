@@ -37,7 +37,7 @@ namespace Analyzer.Pipeline
         /// <returns>List of all abstract types that have public constructors.</returns>
         private List<Type> FindAbstractTypeWithPublicConstructor(ParsedDLLFile parsedDLLFile) 
         {
-            List<Type> abstractTypesWithPublicConstructors = new List<Type>();  // List which stores all abstract types that have public constructors
+            List<Type> abstractTypesWithPublicConstructors = new();  // List which stores all abstract types that have public constructors
             // Loop over all classes in the provided DLLs
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
@@ -67,7 +67,7 @@ namespace Analyzer.Pipeline
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private string ErrorMessage(List<Type> abstractTypesWithPublicConstructor)
         {
-            var errorLog = new System.Text.StringBuilder("The following abstract classes have public constructors:");
+            var errorLog = new System.Text.StringBuilder("The following abstract classes have public constructors:\r\n");
                         
             foreach (Type type in abstractTypesWithPublicConstructor)
             {
@@ -91,9 +91,6 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
-            _verdict = 1;
-
             List<Type> abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor(parsedDLLFile);
             if (abstractTypesWithPublicConstructor.Count > 0)
             {

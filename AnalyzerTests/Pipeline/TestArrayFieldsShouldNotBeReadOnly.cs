@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,18 +15,19 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void MainPipelineTest()
         {
-            List<string> dllFilePaths = new List<string>
-            {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\Rules.dll"
-            };
+            List<ParsedDLLFile> DllFileObjs = new();
 
-            List<ParsedDLLFile> dllFiles = dllFilePaths.Select(path => new ParsedDLLFile(path)).ToList();
+            string path = "..\\..\\..\\TestDLLs\\Rules.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
 
-            ArrayFieldsShouldNotBeReadOnlyRule arrayFields = new(dllFiles);
+            DllFileObjs.Add(parsedDllObj);
 
-            var result = arrayFields.AnalyzeAllDLLs();
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
 
-            Assert.AreEqual(1, result[dllFiles[0].DLLFileName].Verdict);
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["Rules.dll"];
+            Assert.AreEqual(1, result.Verdict);
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Networking.Communicator;
 using Networking.Events;
 using SessionState;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -13,27 +11,29 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Networking.Utils;
 using Networking.Models;
+using System.Collections.ObjectModel;
+using System.Windows.Threading;
+using System.Windows;
+
 
 namespace ViewModel
 {
-    public class InstructorViewModel : INotifyPropertyChanged , IEventHandler
+    public class InstructorViewModel : INotifyPropertyChanged, IEventHandler
     {
-        private readonly ICommunicator server; // Communicator used to send and receive messages.
-        //private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
-        private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
+        private readonly ISessionState _studentSessionState; // To manage the connected students
 
         /// <summary>
         /// Constructor for the DashboardViewModel.
         /// </summary>
-        public InstructorViewModel(ICommunicator? communicator = null)
+        public InstructorViewModel( string userName, string userId, ICommunicator? communicator = null )
         {
-            _studentSessionState = new();
-            server = communicator ?? CommunicationFactory.GetServer();
+            UserName = userName;
+            UserId = userId;
+            _studentSessionState = new StudentSessionState();
+            Communicator = communicator ?? CommunicationFactory.GetServer();
 
-            //IpAddress = GetPrivateIp();
-
-            var ipPort = server.Start(null, null, "server", "Dashboard");
-            server.Subscribe(this, "Dashboard");
+            string ipPort = Communicator.Start(null, null, "server", "Dashboard");
+            Communicator.Subscribe(this, "Dashboard");
             string[] parts = ipPort.Split(':');
             try
             {
@@ -43,32 +43,25 @@ namespace ViewModel
                 OnPropertyChanged(nameof(ReceivePort));
             }
             catch { }
-
-            // Update the port that the communicator is listening on.
-            //ReceivePort = _communicator.ListenPort.ToString();
-            
-
-            // Create an instance of the chat messenger and signup for callback.
-            //_newConnection = new(_communicator);
-
-            //_newConnection.OnChatMessageReceived += delegate (string message)
-            //{
-            //    AddStudnet(message);
-            //};
         }
+        /// <summary>
+        /// Converting student list from <typeparamref name="List"/> to <typeparamref name="ObservableCollection"/>
+        /// </summary>
+        public ObservableCollection<Student> StudentList => new( _studentSessionState.GetAllStudents() );
 
-        public ICommunicator Communicator
-        {
-            get
-            {
-                return server;
-            }
+        public int StudentCount => _studentSessionState.GetStudentsCount();
 
-            private set
-            {
+        public ICommunicator Communicator { get; }
 
-            }
-        }
+        /// <summary>
+        /// Gets the instructor's Name
+        /// </summary>
+        public string UserName { get; init; }
+
+        /// <summary>
+        /// Gets the instructor's Email
+        /// </summary>
+        public string UserId { get; init; }
 
         /// <summary>
         /// Gets the receive port.
@@ -94,6 +87,7 @@ namespace ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
+        private static Dispatcher Dispatcher => Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
         private string? GetPrivateIp()
         {
             string hostName = Dns.GetHostName();
@@ -117,7 +111,7 @@ namespace ViewModel
             return $"{rollNo}|{name}|{ip}|{port}";
         }
 
-        private static (int, string?, string?, int, int) DeserializeStudnetInfo(string data)
+        private static (string?, string?, string?, int, int) DeserializeStudnetInfo(string data)
         {
             string[] parts = data.Split('|');
             if (parts.Length == 5)
@@ -126,7 +120,7 @@ namespace ViewModel
                 {
                     return
                     (
-                        int.Parse(parts[0]),
+                        parts[0],
                         parts[1],
                         parts[2],
                         int.Parse(parts[3]),
@@ -136,41 +130,47 @@ namespace ViewModel
                 catch { }
 
             }
-            return (0, null, null, 0, 0);
+            return (null, null, null, 0, 0);
         }
 
         private bool AddStudnet(string serializedStudnet)
-            {
+        {
             Debug.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
-                var result = DeserializeStudnetInfo(serializedStudnet);
-                var rollNo = result.Item1;
-                var name = result.Item2;
-                var ip = result.Item3;
-                var port = result.Item4;
-                var isConnect = result.Item5;
-                if (name != null && ip != null)
+                (string?, string?, string?, int, int) result = DeserializeStudnetInfo(serializedStudnet);
+                string? rollNo = result.Item1;
+                string? name = result.Item2;
+                string? ip = result.Item3;
+                int port = result.Item4;
+                int isConnect = result.Item5;
+                if (rollNo != null && name != null && ip != null)
                 {
                     if (isConnect == 1)
                     {
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
-                        server.Send("1",$"{rollNo}");
+                        Communicator.Send("1",$"{rollNo}");
                     }
                     else if (isConnect == 0) 
                     {
                         _studentSessionState.RemoveStudent(rollNo);
-                        server.Send("0", $"{rollNo}");
-                    }     
+                        Communicator.Send("0", $"{rollNo}");
+                    }
+                    
+                    OnPropertyChanged(nameof(StudentList));
+                   
+                    OnPropertyChanged(nameof(StudentCount));
                     return true;
                 }
             }
             return false;
         }
-
         public string HandleMessageRecv(Networking.Models.Message data)
         {
-            AddStudnet(data.Data);
+            Dispatcher.Invoke((string data) =>
+            {
+                AddStudnet(data);
+            }, data.Data);
             return "";
         }
     }

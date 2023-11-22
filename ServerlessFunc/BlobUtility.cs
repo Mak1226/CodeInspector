@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = BlobUtility.cs
+*
+* Author      = Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Contains the utility functions for creating and deleting blobs.
+*****************************************************************************/
+
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Azure;

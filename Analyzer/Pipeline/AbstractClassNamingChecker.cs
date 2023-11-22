@@ -1,4 +1,4 @@
-/*using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class AbstractClassNamingChecker : AnalyzerBase
     {
-        
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
-        
+
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
+
         /// <summary>
         /// Initializes a new instance of the AbstractClassNamingChecker analyzer with parsed DLL files.
         /// </summary>
@@ -25,9 +25,9 @@ namespace Analyzer.Pipeline
         public AbstractClassNamingChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             // TODO if required
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "111";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "111";
         }
 
         /// <summary>
@@ -36,21 +36,21 @@ namespace Analyzer.Pipeline
         /// <returns>The score for the analyzer.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "No Violation Found";
+            _verdict = 1;
 
             // Check if there is at least one abstract class that does not meet the criteria
             if (IncorrectAbstractClassName(parsedDLLFile))
             {
-                verdict = 0; // If there is any abstract class not meeting the criteria, set the score to 0
+                _verdict = 0; // If there is any abstract class not meeting the criteria, set the score to 0
             }
 
             else
             {
-            	verdict = 1; // If all abstract classes meet the criteria, set the score to 1
+                _verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
-            
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
 
         /// <summary>
@@ -60,16 +60,12 @@ namespace Analyzer.Pipeline
         /// <returns>True if the string is in Pascal case, false otherwise.</returns>
         private bool IsPascalCase(string s)
         {
-            if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
-                return false;
-
-            for (int i = 1; i < s.Length; i++)
+            if (string.IsNullOrEmpty( s ))
             {
-                if (!char.IsLetter(s[i]) || char.IsLower(s[i]))
-                    return false;
+                return false;
             }
 
-            return true;
+            return char.IsLower( s[0]);
         }
 
         /// <summary>
@@ -78,8 +74,8 @@ namespace Analyzer.Pipeline
         /// <returns>True if there is any abstract class not meeting the criteria, false if all meet the criteria.</returns>
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
-            private int flag = 0;
-            
+            int flag = 0;
+
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
@@ -91,8 +87,9 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
-                        Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
-                        flag = 1 // If any abstract class does not meet the criteria, return true
+                        Console.WriteLine($"Incorrect Abstract Class Naming : {className}");
+                        _errorMessage = "Incorrect Abstract Class Naming : " + className;
+                        flag = 1;// If any abstract class does not meet the criteria, return true
                     }
                 }
             }
@@ -102,9 +99,7 @@ namespace Analyzer.Pipeline
                 return true;
             }
 
-           return false; // If all abstract classes meet the criteria, return false
+            return false; // If all abstract classes meet the criteria, return false
         }
     }
 }
-
-*/

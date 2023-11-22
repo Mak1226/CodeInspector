@@ -1,8 +1,21 @@
-﻿using System.Text;
+﻿/******************************************************************************
+* Filename    = InsightsTests.cs
+*
+* Author      = Sahil, Nideesh N
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud Unit Test
+*
+* Description = Testing the Insights API
+*****************************************************************************/
+
+
+using System.Text;
 using System.Text.Json;
 using ServerlessFunc;
 
-namespace UnitTests
+namespace CloudUnitTests
 {
     /// <summary>
     /// This class contains unit tests for the InsightsApi class.
@@ -10,10 +23,10 @@ namespace UnitTests
     [TestClass()]
     public class InsightsTests
     {
-        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
-        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
-        private readonly string _sessionUrl = "http://localhost:7074/api/session";
-        private readonly string _insightsUrl = "http://localhost:7074/api/insights";
+        private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
+        private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
+        private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        private readonly string _insightsUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/insights";
 
         private readonly DownloadApi _downloadClient;
         private readonly UploadApi _uploadClient;
@@ -29,6 +42,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy analysis data for a specific session and student.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="studentName">The name of the student.</param>
         /// <param name="map">A dictionary of test names to analyzer results.</param>
@@ -48,6 +62,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy session data for a specific host, session ID, tests, students, and test name to ID mapping.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="hostName">The name of the host.</param>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="tests">A list of test names.</param>
@@ -70,6 +85,7 @@ namespace UnitTests
         /// <summary>
         /// Creates dummy analysis results for two tests.
         /// </summary>
+        /// <author> Nideesh N </author>
         /// <param name="test1Verdict">The verdict for test 1.</param>
         /// <param name="test2Verdict">The verdict for test 2.</param>
         /// <returns>A dictionary of test names to analyzer results.</returns>
@@ -90,6 +106,7 @@ namespace UnitTests
         /// <summary>
         /// Fills the test data for the unit tests.
         /// </summary>
+        /// <author> Sahil </author>
         public async Task FillTestData()
         {
             List<Tuple<string , string>> NameToID = new()
@@ -122,6 +139,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the CompareTwoSessions method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task CompareTwoSessionsTest()
         {
@@ -146,9 +164,13 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetFailedStudentsGivenTest method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task GetFailedStudentsGivenTestTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<string> students = await _insightsClient.GetFailedStudentsGivenTest( "name1" , "102" );
             students.Sort();
@@ -165,9 +187,13 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageOnGivenTest method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenTestTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenTest( "name1" , "101" );
             Assert.AreEqual( averageList[0] , 50 );
@@ -180,9 +206,13 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenStudentTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenStudent( "name1" , "Student1" );
             Assert.AreEqual( averageList[0] , 50 );
@@ -195,6 +225,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
+        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageAcrossSessoinsTest()
         {
@@ -213,6 +244,7 @@ namespace UnitTests
         /// <summary>
         /// Tests the UsersWithoutAnalysisGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentsWithoutAnalysisTest()
         {
@@ -237,9 +269,13 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetBestWorstGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task BestWorstAnalysisTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+
             await FillTestData();
 
             List<string> result = await _insightsClient.GetBestWorstGivenSession( "2" );
@@ -256,9 +292,12 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetStudentScoreGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentScoreTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
             await FillTestData();
             Dictionary<string , int> StudentScore = await _insightsClient.GetStudentScoreGivenSession( "1" );
             Assert.AreEqual( 2 , StudentScore.Count );
@@ -271,9 +310,12 @@ namespace UnitTests
         /// <summary>
         /// Tests the GetTestScoreGivenSession method of the InsightsApi class.
         /// </summary>
+        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task TestScoreTest()
         {
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
             await FillTestData();
             Dictionary<string , int> TestScore = await _insightsClient.GetTestScoreGivenSession( "1" );
             Assert.AreEqual( 2 , TestScore.Count );

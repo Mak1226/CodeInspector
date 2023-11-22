@@ -12,15 +12,15 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class AvoidGotoStatementsAnalyzer : AnalyzerBase
     {
-        private List<string> errorMessages;
-        private int verdict;
-        private readonly string analyzerID;
+        private readonly List<string> _errorMessages;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         public AvoidGotoStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessages = new List<string>();
-            verdict = 1;
-            analyzerID = "117";
+            _errorMessages = new List<string>();
+            _verdict = 1;
+            _analyzerID = "117";
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Analyzer.Pipeline
             CheckForGotoStatements(parsedDLLFile);
 
             // Concatenate all error messages into a single string
-            string errorMessageString = string.Join(", ", errorMessages);
+            string errorMessageString = string.Join(", ", _errorMessages);
 
             // If no errors, add a message indicating everything looks fine
             if (string.IsNullOrEmpty(errorMessageString))
@@ -42,10 +42,10 @@ namespace Analyzer.Pipeline
             else
             {
                 errorMessageString = $"Goto statements found in functions: {errorMessageString}.";
-                verdict = 0;
+                _verdict = 0;
             }
 
-            return new AnalyzerResult(analyzerID, verdict, errorMessageString);
+            return new AnalyzerResult(_analyzerID, _verdict, errorMessageString);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Analyzer.Pipeline
                         if (MethodContainsGotoStatement(method.Body.Instructions))
                         {
                             // Collect the method name if a goto statement is found
-                            errorMessages.Add(method.FullName);
+                            _errorMessages.Add(method.FullName);
                         }
                     }
                 }

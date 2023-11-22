@@ -1,11 +1,16 @@
 ﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;
+using Analyzer;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 
 namespace AnalyzerTests.Pipeline
@@ -23,19 +28,18 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void TestGoodExample()
         {
-            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "TestCase1" );
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            DllFileObjs.Add(parsedDllObj); 
+            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new( parseddllFiles );
+            Dictionary<string , AnalyzerResult> resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
-
-            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
-
-            var result = resultObj["ACIST.dll"];
-            Assert.AreEqual(1, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual( 1 , result.Verdict );
+            Assert.AreEqual( "No violation found" , result.ErrorMessage );
         }
 
         /// <summary>
@@ -44,20 +48,89 @@ namespace AnalyzerTests.Pipeline
         [TestMethod()]
         public void TestBadExample()
         {
-            List<ParsedDLLFile> DllFileObjs = new List<ParsedDLLFile>();
+            string dllFile = Assembly.GetExecutingAssembly().Location;
 
-            var path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\ACIST1.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            DllFileObjs.Add(parsedDllObj);
+            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "TestCase2" );
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(DllFileObjs);
+            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new( parseddllFiles );
+            Dictionary<string , AnalyzerResult> resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
 
-            var resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
-
-            var result = resultObj["ACIST1.dll"];
-            Assert.AreEqual(0, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual( 0 , result.Verdict );
+            Console.WriteLine( result.ErrorMessage );
+            string expectedErrorMsg = "Classes TestCase2.BadExample contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
+            Assert.AreEqual( expectedErrorMsg , result.ErrorMessage );
         }
 
     }
+}
+
+
+namespace TestCase1
+{
+    public class GoodExample
+    {
+        public static int counter = 0;
+        private GoodExample() { }
+        public void Calculate()
+        {
+            Console.WriteLine( "Static Method" );
+        }
+    }
+
+    public class GoodExample2
+    {
+        public int counter = 0;
+        public GoodExample2() { }
+        public static void Calculate()
+        {
+            Console.WriteLine( "Static Method" );
+        }
+    }
+}
+
+namespace TestCase2
+{
+    public class BadExampleBase
+    {
+        public static int val = 14;
+        private BadExampleBase()
+        {
+            // Private constructor logic
+        }
+
+        protected BadExampleBase( int parameter )
+        {
+            // Public constructor logic
+        }
+    }
+
+    public class BadExample : BadExampleBase
+    {
+        public BadExample() : base( 0 )
+        {
+            // Child class constructor logic
+        }
+
+        public static int counter = 0;
+
+        public static void Calculate()
+        {
+            Console.WriteLine( "Static Method" );
+        }
+    }
+    public class GoodExample
+    {
+        public static int counter = 0;
+        public int counter2 = 0;
+        private GoodExample() { }
+        public static void Calculate()
+        {
+            Console.WriteLine( "Static Method" );
+        }
+    }
+
 }

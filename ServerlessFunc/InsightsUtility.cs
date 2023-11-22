@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = InsightsUtility.cs
+*
+* Author      = Sahil
+*
+* Product     = Analyzer
+* 
+* Project     = Cloud
+*
+* Description = Contains serialization and deserialization for some data structures
+*****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;

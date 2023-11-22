@@ -13,6 +13,10 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class ReviewUselessControlFlowRule : AnalyzerBase
     {
+        /// <summary>
+        /// Initializes a new instance of the ReviewUselessControlFlowRule with parsed DLL files.
+        /// </summary>
+        /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public ReviewUselessControlFlowRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
         }
@@ -29,6 +33,11 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
+                    if(!method.HasBody)
+                    {
+                        continue;
+                    }
+
                     int methodUselessControlFlowCount = ReviewUselessControlFlowInMethod(method);
                     uselessControlFlowCount += methodUselessControlFlowCount;
                 }

@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerlessFunc", "ServerlessFunc\ServerlessFunc.csproj", "{7BDFB42E-7D4E-444A-B1A2-373A01FABD4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C1081456-4DB3-4362-84C4-8B684900C8EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudUnitTests", "UnitTests\CloudUnitTests.csproj", "{C1081456-4DB3-4362-84C4-8B684900C8EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerlessFuncUI", "ServerlessFuncUI\ServerlessFuncUI.csproj", "{E6134BD2-471C-4103-95BB-F93023266D16}"
 EndProject
