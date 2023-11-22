@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Networking.Utils;
 
 namespace Dashboard
 {
@@ -20,24 +22,28 @@ namespace Dashboard
     /// </summary>
     public partial class Login : Page
     {
-        public Login()
+        public Login( string userName , string userEmail , string userPicture )
         {
             InitializeComponent();
+            UserName = userName;
+            UserId = userEmail;
+            DataContext = this; // Set the DataContext to this instance
         }
+
+        public string UserName { get; init; }
+        public string UserId { get; init; }
 
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("InstructorView.xaml", UriKind.Relative));
-            }
+            InstructorPage instructorPage = new( UserName,UserId );
+            NavigationService?.Navigate( instructorPage );
         }
-        private void StudentButton_Click(object sender, RoutedEventArgs e)
+            
+        
+        private void StudentButton_Click( object sender , RoutedEventArgs e )
         {
-            if (this.NavigationService != null)
-            {
-                this.NavigationService.Navigate(new Uri("StudentView.xaml", UriKind.Relative));
-            }
+            StudentPage studentPage = new(UserName,UserId);
+            NavigationService?.Navigate( studentPage );
         }
     }
 }
