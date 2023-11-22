@@ -1,6 +1,6 @@
 ﻿namespace SessionState
 {
-    public class StudentSessionState
+    public class StudentSessionState : ISessionState
     {
         private readonly List<Student> _students;
 
