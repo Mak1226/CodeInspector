@@ -47,7 +47,7 @@ namespace Analyzer.Pipeline
                 if (!IsCorrectTypeName(classObj.Name))
                 {
                     Console.WriteLine($"Incorrect Class Prefix : {classObj.Name}");
-                    _errorMessage = "Incorrect Class Prefix : " + classObj.Name;
+                    _errorMessage += "Incorrect Class Prefix : " + classObj.Name;
                     errorCount++;
                 }
             }
@@ -58,7 +58,7 @@ namespace Analyzer.Pipeline
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
                     Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
-                    _errorMessage = "Incorrect Interface Prefix : " + interfaceObj.Name;
+                    _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name;
                     errorCount++;
                 }
             }

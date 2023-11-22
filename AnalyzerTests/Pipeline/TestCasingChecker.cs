@@ -37,6 +37,24 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(0, result.Verdict);
         }
 
+        [TestMethod()]
+        public void TestGoodExample()
+        {
+            List<ParsedDLLFile> DllFileObjs = new();
+
+            string path = "..\\..\\..\\TestDLLs\\CasingChecker1.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
+
+            DllFileObjs.Add(parsedDllObj);
+
+            CasingChecker casingChecker = new(DllFileObjs);
+
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["CasingChecker1.dll"];
+            Assert.AreEqual(1, result.Verdict);
+        }
+
     }
 }
 
