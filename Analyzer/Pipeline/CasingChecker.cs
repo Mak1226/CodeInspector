@@ -68,7 +68,7 @@ namespace Analyzer.Pipeline
                 {
                     hasMistake = true;
                     Console.WriteLine($"Incorrect Namespace Naming : {s}");
-                    _errorMessage = "Incorrect Namespace Naming : " + s;
+                    _errorMessage += "Incorrect Namespace Naming : " + s;
                 }
             }
 
@@ -78,7 +78,7 @@ namespace Analyzer.Pipeline
                 {
                     hasMistake = true;
                     Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
-                    _errorMessage = "Incorrect Class Naming : " + cls.Name;
+                    _errorMessage += "Incorrect Class Naming : " + cls.Name;
                 }                    
                 
                 // Check method names for PascalCasing and parameter names for camelCasing
@@ -88,7 +88,7 @@ namespace Analyzer.Pipeline
                     {
                         hasMistake = true;
                         Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                        _errorMessage = "Incorrect Method Naming : " + method.Name;
+                        _errorMessage += "Incorrect Method Naming : " + method.Name;
                     }
 
                     if (!AreParametersCamelCased(method))
@@ -133,7 +133,7 @@ namespace Analyzer.Pipeline
                         if (!IsCamelCase( param.Name ))
                         {
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            _errorMessage += "Incorrect Parameter Naming : " + param.Name;
                             flag = 1;
                         }
                     }
@@ -143,7 +143,7 @@ namespace Analyzer.Pipeline
                         if (!char.IsLower(param.Name[1]))
                         {
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            _errorMessage += "Incorrect Parameter Naming : " + param.Name;
                             flag = 1;
                         }
                     }
