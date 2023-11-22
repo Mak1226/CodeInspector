@@ -61,34 +61,39 @@ namespace Analyzer.Pipeline
             bool hasMistake = false;
 
             // Check namespace names for PascalCasing
-            foreach(ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
+            foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
+                string? s = interfaceObj.TypeObj.Namespace
+                if (!IsPascalCase(s))
                 {
                     hasMistake = true;
-                    Console.WriteLine($"Incorrect Namespace Naming : {classObj.TypeObj.BaseType.Namespace}");
-                    _errorMessage = "Incorrect Namespace Naming : " + classObj.TypeObj.BaseType.Namespace;
+                    Console.WriteLine($"Incorrect Namespace Naming : {s}");
+                    _errorMessage = "Incorrect Namespace Naming : " + s;
                 }
             }
 
-            if (!hasMistake)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
+                if(!IsPascalCase(cls.Name))
                 {
-                    // Check method names for PascalCasing and parameter names for camelCasing
-                    foreach (MethodDefinition method in cls.MethodsList)
+                    hasMistake = true;
+                    Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
+                    _errorMessage = "Incorrect Class Naming : " + cls.Name;
+                }                    
+                
+                // Check method names for PascalCasing and parameter names for camelCasing
+                foreach (MethodDefinition method in cls.MethodsList)
+                {
+                    if (!IsPascalCase(method.Name))
                     {
-                        if (!IsPascalCase(method.Name))
-                        {
-                            hasMistake = true;
-                            Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                            _errorMessage = "Incorrect Method Naming : " + method.Name;
-                        }
+                        hasMistake = true;
+                        Console.WriteLine($"Incorrect Method Naming : {method.Name}");
+                        _errorMessage = "Incorrect Method Naming : " + method.Name;
+                    }
 
-                        if (!AreParametersCamelCased(method))
-                        {
-                            hasMistake = true;
-                        }
+                    if (!AreParametersCamelCased(method))
+                    {
+                        hasMistake = true;
                     }
                 }
             }
