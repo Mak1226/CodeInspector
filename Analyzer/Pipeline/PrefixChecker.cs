@@ -38,16 +38,25 @@ namespace Analyzer.Pipeline
         /// <returns>The number of errors found during the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
             int errorCount = 0;
 
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
+                int flag = 0;
                 if (!IsCorrectTypeName(classObj.Name))
                 {
+                    flag++;
                     Console.WriteLine($"Incorrect Class Prefix : {classObj.Name}");
-                    _errorMessage += "Incorrect Class Prefix : " + classObj.Name;
+                    if(flag == 1)
+                    {
+                        _errorMessage += "Incorrect Class Prefix : " + classObj.Name + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + classObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
@@ -55,16 +64,26 @@ namespace Analyzer.Pipeline
             // To check interfaces
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
+                int flag = 0;
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
+                    flag++;
                     Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
-                    _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name;
+                    if(flag == 1)
+                    {
+                        _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + interfaceObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
 
             if (errorCount == 0)
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1;
             }
             else
