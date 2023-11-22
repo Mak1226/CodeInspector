@@ -1,6 +1,15 @@
-﻿/////
-/// Author:
-/////
+﻿/******************************************************************************
+ * Filename    = Communicator/Server.cs
+ *
+ * Author      = 
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = 
+ *****************************************************************************/
+
 
 using System.Net.Sockets;
 using System.Net;

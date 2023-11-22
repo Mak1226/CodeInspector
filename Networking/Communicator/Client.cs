@@ -1,14 +1,19 @@
-﻿/////
-/// Author: 
-/////
+﻿/******************************************************************************
+ * Filename    = Communicator/Client.cs
+ *
+ * Author      = VM Sreeram
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = The functionality of the client (student) side of the Analyzer
+ *               is implemented here.
+ *****************************************************************************/
 
-
-using System;
 using System.Diagnostics;
 using System.Net;
-
 using System.Net.Sockets;
-using Networking.Communicator;
 using Networking.Events;
 using Networking.Models;
 using Networking.Serialization;
@@ -34,7 +39,7 @@ namespace Networking.Communicator
         public void Send(string serializedData, string moduleName, string destId) 
         {
             if (!_isStarted)
-                throw new Exception("Start the client first");
+                throw new Exception("Start client first");
 
             // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
             Console.WriteLine("[Client] Send" + serializedData + " " + moduleName + " " + destId);
@@ -121,11 +126,7 @@ namespace Networking.Communicator
                 throw new Exception("Start client first");
 
             Console.WriteLine("[Client] Subscribe "+ moduleName);
-            //List<IEventHandler> eventHandlers = new();
-            //if (_eventHandlersMap.ContainsKey(theEvent))
-            //    eventHandlers = _eventHandlersMap[theEvent];
-            //eventHandlers.Add(eventHandler);
-            //_eventHandlersMap[theEvent] = eventHandlers;
+
             if (_eventHandlersMap.ContainsKey(moduleName))
                 Console.WriteLine("[Client] "+moduleName+" already subscribed");// already subs
             else
@@ -142,7 +143,6 @@ namespace Networking.Communicator
                  Console.WriteLine("[Client] " + message.ModuleName + " not subscribed");
             }
         }
-
 
     }
 }
