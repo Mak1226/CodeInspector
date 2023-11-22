@@ -6,9 +6,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
+using System.Reflection;
 
 namespace Analyzer.Pipeline.Tests
 {
+    public class BaseClass
+    {
+        // Base class logic
+    }
+
+    public class DerivedClass : BaseClass
+    {
+        // Derived class logic
+    }
+
+    public class DerivedClass2 : DerivedClass
+    {
+        // DerivedClass2 class logic
+    }
+
+    public class ViolatingClass : DerivedClass2
+    {
+        // ViolatingClass class logic
+    }
+
     [TestClass()]
     public class TestDepth
     {
@@ -16,8 +37,8 @@ namespace Analyzer.Pipeline.Tests
         public void TestDepthOfInh()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
-
+            //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
+            string path = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile dllFile = new(path);
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
@@ -32,10 +53,10 @@ namespace Analyzer.Pipeline.Tests
 
             Assert.IsNotNull( depthMap, "DepthMap is NULL!");
 
-            foreach (KeyValuePair<Type , int> pair in depthMap)
-            {
-                Console.WriteLine( $"Key: {pair.Key}, Value: {pair.Value}" );
-            }
+            //foreach (KeyValuePair<Type , int> pair in depthMap)
+            //{
+            //    Console.WriteLine( $"Key: {pair.Key}, Value: {pair.Value}" );
+            //}
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
