@@ -61,9 +61,14 @@ namespace Networking.Communicator
         }
         public string Start(string? destIP, int? destPort, string senderId,string moduleName)
         {
-            Trace.Assert((destIP != "" && destPort != null), "Illegal arguments");
+            if (destIP == null || destPort == null)
+            {
+                throw new Exception("Illegal arguments");
+            }
             if (_isStarted)
+            {
                 return "already started";
+            }
             
             _moduleName = moduleName;
             _senderId = senderId;

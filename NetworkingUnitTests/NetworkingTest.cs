@@ -1,4 +1,5 @@
-﻿using Networking.Communicator;
+﻿using System;
+using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Utils;
@@ -129,6 +130,20 @@ public class NetworkingTest
         catch (Exception exception)
         {
             Assert.AreEqual("Start client first", exception.Message);
+        }
+    }
+
+    [TestMethod]
+    public void ClientIllegalStart()
+    {
+        ICommunicator client = new Client();
+        try
+        {
+            client.Start(null, null, "testClient1", "unitTestClient");
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual("Illegal arguments", exception.Message);
         }
     }
 
