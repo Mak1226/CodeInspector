@@ -35,6 +35,11 @@ namespace Analyzer.Pipeline.Tests
 
     }
 
+    public class ClassWithNoFields
+    {
+
+    }
+
     [TestClass()]
     public class TestAvoidUnusedPrivateFieldsRuleTests
     {
@@ -48,12 +53,11 @@ namespace Analyzer.Pipeline.Tests
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
             Dictionary<string , AnalyzerResult> result = avoidUnusedPrivateFieldsRule.AnalyzeAllDLLs();
 
-            Dictionary<string , AnalyzerResult> original = new()
-            {
-                ["103"] = new AnalyzerResult("103", 0, "TeacherAnalyzer: _something _some, are unused private field." )
-            };
-
-            Assert.AreEqual(original.ToString() ,result.ToString());
+            AnalyzerResult expected = new ("103" , 0 , "TeacherAnalyzer : _something _some , are unused private field.");
+           
+            Assert.AreEqual( expected.AnalyserID, result["UnusedPrivateFields.dll"].AnalyserID);
+            Assert.AreEqual( expected.Verdict , result["UnusedPrivateFields.dll"].Verdict );
+            Assert.AreEqual( expected.ErrorMessage , result["UnusedPrivateFields.dll"].ErrorMessage );
 
         }
 
@@ -75,28 +79,23 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(unusedFields.ToString() ,originalUnusedFields.ToString());
         }
 
+        [TestMethod()]
+        public void TestClassWithNoFields()
+        {
 
-        /*        [TestMethod()]
-                public void Test2()
-                {
+            string dllFile = Assembly.GetExecutingAssembly().Location;
 
-                    List<string> DllFilePaths = new List<string>();
+            AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(new List<ParsedDLLFile> { });
 
-                    DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\UnusedPrivateFields.dll");
+            ModuleDefinition module = ModuleDefinition.ReadModule(dllFile);
+            TypeReference typeReference = module.ImportReference(typeof(ClassWithNoFields));
+            TypeDefinition typeDefinition = typeReference.Resolve();
 
-                    ParsedDLLFiles dllFiles = new(DllFilePaths);
+            List<string> unusedFields = avoidUnusedPrivateFieldsRule.HandleClass(new ParsedClassMonoCecil(typeDefinition));
+            List<string> originalUnusedFields = new() {};
 
-                    AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
-
-                    var result = avoidUnusedPrivateFieldsRule.Run();
-
-                    Console.WriteLine(result.ErrorMessage);
-
-                    Assert.AreEqual(0, result.Verdict);
-
-                }*/
-
-        //Mono.Collections.Generic.Collection<FieldDefinition> fields = typeDefinition.Fields;
+            Assert.AreEqual(unusedFields.ToString(), originalUnusedFields.ToString());
+        }
 
     }
 }

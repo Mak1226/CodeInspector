@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer
+namespace Analyzer.Tests
 {
-    public static class AnalyzerFactory
+    [TestClass()]
+    public class AnalyzerFactoryTests
     {
-        public static List<Tuple<int, string>> GetAllConfigurationOptions()
+
+        [TestMethod]
+        public void TestGetAllConfigurationOptions()
         {
-            List<Tuple<int, string>> analyzers = new()
+            // Arrange
+            var expectedOptions = new List<Tuple<int, string>>
             {
                 Tuple.Create(101, "Abstract type no public constructor"),
                 Tuple.Create(102, "Avoid constructor in static types"),
@@ -28,20 +28,28 @@ namespace Analyzer
                 Tuple.Create(114, "New Linelteral Rule"),
                 Tuple.Create(115, "Prefix checker"),
                 Tuple.Create(116, "Switch Statement default case checker"),
-                Tuple.Create(117, "Avoid goto statements"),
-                Tuple.Create(118, "Native fields should not be visible")
+                Tuple.Create(117, "Avoid goto statements")
             };
 
-            return analyzers;
+            // Act
+            var actualOptions = AnalyzerFactory.GetAllConfigurationOptions();
+
+            // Assert
+            CollectionAssert.AreEqual(expectedOptions, actualOptions);
         }
 
-        public static IAnalyzer GetAnalyzer()
+        [TestMethod]
+        public void TestGetAnalyzer()
         {
+            // Arrange
+            // You may need to use a mocking framework to mock IAnalyzer if it has complex behavior.
 
-            IAnalyzer Analyzer = new Analyzer();
+            // Act
+            var analyzer = AnalyzerFactory.GetAnalyzer();
 
-            return Analyzer;
+            // Assert
+            Assert.IsNotNull(analyzer);
+            Assert.IsInstanceOfType(analyzer, typeof(IAnalyzer));
         }
-
     }
 }

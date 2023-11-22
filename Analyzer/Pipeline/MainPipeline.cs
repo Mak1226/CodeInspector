@@ -62,7 +62,6 @@ namespace Analyzer.Pipeline
                 _parsedDLLFiles.Add(new ParsedDLLFile(file));
             }
 
-
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -80,6 +79,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
+            _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
         }
 
         private void RunAnalyzer(int analyzerID)

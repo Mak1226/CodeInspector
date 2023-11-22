@@ -96,11 +96,10 @@ namespace Analyzer.Pipeline
                     errorMessageBuilder.AppendLine($"{classType.FullName}: Depth - {depth}");
                 }
 
-                return new AnalyzerResult("105", violatingClasses.Count , errorMessageBuilder.ToString());
+                return new AnalyzerResult("105", 0 , errorMessageBuilder.ToString());
             }
-
             // No violations, return a success result
-            return new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes.");
+            return new AnalyzerResult("105", 1 , "Depth of inheritance rule followed by all classes.");
         }
     }
 }
