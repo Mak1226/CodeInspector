@@ -89,7 +89,7 @@ namespace Analyzer.Pipeline
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
                         Console.WriteLine($"Incorrect Abstract Class Naming : {className}");
-                        _errorMessage += "Incorrect Abstract Class Naming : " + className;
+                        _errorMessage += "Incorrect Abstract Class Naming : " + className + ", ";
                         flag = 1;// If any abstract class does not meet the criteria, return true
                     }
                 }
