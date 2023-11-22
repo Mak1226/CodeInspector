@@ -16,12 +16,20 @@ namespace ClientApp
             }
             if(data.EventType==EventType.ChatMessage())
                 return HandleChatMessage(message);
+            if (data.EventType == EventType.ServerLeft())
+                return HandleServerLeft(message);
             return "";
         }
         private string HandleClientJoined(Message message)
         {
             Data data = Serializer.Deserialize<Data>(message.Data);
             Console.WriteLine("[HandleClientJoined, cl] new client joinded: " + data.Payload);
+            return "";
+        }
+        private string HandleServerLeft(Message message)
+        {
+            Data data = Serializer.Deserialize<Data>(message.Data);
+            Console.WriteLine("[HandleServerLeft, cl] server left: " + data.Payload);
             return "";
         }
         private string HandleChatMessage(Message message)

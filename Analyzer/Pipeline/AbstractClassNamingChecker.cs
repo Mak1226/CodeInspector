@@ -47,6 +47,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
 
@@ -60,20 +61,12 @@ namespace Analyzer.Pipeline
         /// <returns>True if the string is in Pascal case, false otherwise.</returns>
         private bool IsPascalCase(string s)
         {
-            if (string.IsNullOrEmpty( s ) || !char.IsUpper( s[0] ))
+            if (string.IsNullOrEmpty( s ))
             {
                 return false;
             }
 
-            for (int i = 1; i < s.Length; i++)
-            {
-                if (!char.IsLetter( s[i] ) || char.IsLower( s[i] ))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return char.IsLower( s[0]);
         }
 
         /// <summary>
@@ -83,11 +76,10 @@ namespace Analyzer.Pipeline
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
             int flag = 0;
-
+            int flag1 = 0;
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
-
                 if (classType.GetTypeInfo().IsAbstract)
                 {
                     string className = classType.Name;
@@ -95,8 +87,17 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
-                        Console.WriteLine($"INCORRECT ABSTRACT CLASS NAMING : {className}");
-                        _errorMessage = "INCORRECT ABSTRACT CLASS NAMING : " + className;
+                        flag1++;
+                        Console.WriteLine($"Incorrect Abstract Class Naming : {className}");
+                        if(flag1 == 1)
+                        {
+                            _errorMessage += "Incorrect Abstract Class Naming : " + className + " ";
+                        }
+
+                        else
+                        {
+                            _errorMessage += ", " + className + " ";
+                        }
                         flag = 1;// If any abstract class does not meet the criteria, return true
                     }
                 }
