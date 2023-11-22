@@ -23,7 +23,7 @@ namespace ContentUnitTesting.ContentTest
         /// Test if all files in the directory are found properly
         /// </summary>
         [TestMethod]
-        public void FileFindingTest()
+        public void FolderFindingTest()
         {
             string tempDirectory = Path.Combine( Path.GetTempPath() , Path.GetRandomFileName() );
             Directory.CreateDirectory( tempDirectory );
@@ -43,6 +43,44 @@ namespace ContentUnitTesting.ContentTest
             Directory.Delete( tempDirectory , true );
         }
 
+        [TestMethod]
+        public void FileFindingTest()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
+            
+
+            IFileHandler fileHandler = new FileHandler();
+            fileHandler.HandleUpload(Path.Combine(tempDirectory, "TestDll1.dll"), "TestSessionId");
+            List<string> filesList = fileHandler.GetFiles();
+            Assert.AreEqual(filesList[0], tempDirectory + "\\TestDll1.dll");
+            // Console.WriteLine(filesList[1] );
+            // Clean up the temporary directory and files
+            Directory.Delete(tempDirectory, true);
+        }
+        [TestMethod]
+        public void WrongFileTypeTest()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestTxt.txt"), "TXT Content 1");
+            IFileHandler fileHandler = new FileHandler();
+            fileHandler.HandleUpload(Path.Combine(tempDirectory, "TestTxt.txt"), "TestSessionId");
+            List<string> filesList = fileHandler.GetFiles();
+            Assert.IsTrue((filesList).Count == 0);
+        }
+
+        [TestMethod]
+        public void EmptyDirectoryTest()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            IFileHandler fileHandler = new FileHandler();
+            fileHandler.HandleUpload(tempDirectory, "TestSessionId");
+            List<string> filesList = fileHandler.GetFiles();
+            Assert.IsTrue((filesList).Count == 0);
+        }
         /// <summary>
         /// Test the file sending functionality by uploading files from a temporary directory
         /// and ensuring that the correct messages are sent using a file sender component.
