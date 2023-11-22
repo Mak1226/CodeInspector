@@ -36,7 +36,7 @@ namespace Analyzer.Pipeline
         /// <returns>The score for the analyzer.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
 
             // Check if there is at least one abstract class that does not meet the criteria
@@ -47,6 +47,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
 
