@@ -17,7 +17,7 @@ namespace ClientApp
             client.Subscribe(new ExampleEventHandler(), "client1");
             Console.ReadKey();
             Data data = new Data("omg1", EventType.ChatMessage());
-            client.Send(Serializer.Serialize<Data>(data), "client1", "hee");
+            client.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), "hee");
             Data data1 = new Data("omg2", EventType.ChatMessage());
             client.Send(Serializer.Serialize<Data>(data1), ID.GetNetworkingID(), ID.GetServerID());
 
