@@ -4,9 +4,21 @@ namespace ContentUnitTesting.ContentClientServerTest
 {
     internal class MockAnalyzer : IAnalyzer
     {
+        private IDictionary<int, bool> teacherOptions;
+        private List<string> dllFilePath;
+        public MockAnalyzer()
+        {
+            teacherOptions = new Dictionary<int, bool>();
+            dllFilePath = new List<string>();
+        }
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
-            throw new NotImplementedException();
+            teacherOptions = TeacherOptions;
+        }
+
+        public IDictionary<int, bool> GetTeacherOptions()
+        {
+            return teacherOptions;
         }
 
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
@@ -16,7 +28,12 @@ namespace ContentUnitTesting.ContentClientServerTest
 
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
-            throw new NotImplementedException();
+            dllFilePath = PathOfDLLFilesOfStudent;
+        }
+
+        public List<string> GetDllFilePath()
+        {
+            return dllFilePath;
         }
 
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
@@ -31,7 +48,11 @@ namespace ContentUnitTesting.ContentClientServerTest
 
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            throw new NotImplementedException();
+            return new Dictionary<string, List<AnalyzerResult>>
+            {
+                { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
+                // Add more initial values as needed
+            }; ;
         }
     }
 }
