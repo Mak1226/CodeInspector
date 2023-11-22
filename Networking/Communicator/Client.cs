@@ -56,17 +56,28 @@ namespace Networking.Communicator
         }
         public string Start(string? destIP, int? destPort, string senderId,string moduleName)
         {
+            Trace.Assert((destIP != "" && destPort != null), "Illegal arguments");
             if (_isStarted)
                 return "already started";
-            _isStarted = true;
+            
             _moduleName = moduleName;
             _senderId = senderId;
 
             Console.WriteLine("[Client] Start" + destIP + " " + destPort);
             TcpClient tcpClient = new();
 
-            if (destIP != null && destPort != null)
+
+            try
+            {
                 tcpClient.Connect(destIP, destPort.Value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[Client] Cannot connect to server at "+ destIP + ":"+ destPort.ToString());
+                Console.WriteLine(e.Message);
+                return "failed";
+            }
+            _isStarted = true;
 
 
             IPEndPoint localEndPoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
@@ -84,7 +95,7 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] Starting receiver");
             _receiver = new(_IDToStream, this);
             _sender.Send(message);
-
+            Subscribe(new NetworkingEventHandler(this), ID.GetNetworkingID());
             Console.WriteLine("[Client] Started");
             return localEndPoint.Address.MapToIPv4()+":"+localEndPoint.Port;
         }
@@ -130,8 +141,6 @@ namespace Networking.Communicator
             {
                  Console.WriteLine("[Client] " + message.ModuleName + " not subscribed");
             }
-                
-
         }
 
 

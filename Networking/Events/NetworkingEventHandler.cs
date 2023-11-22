@@ -82,6 +82,10 @@ namespace Networking.Events
             {
                 ((Server)communicator)._clientIDToStream.Remove(clientID);
             }
+            lock (((Server)communicator)._senderIDToClientID)
+            {
+                ((Server)communicator)._senderIDToClientID.Remove(message.SenderID);
+            }
             Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
             HandleClientLeft(message);
             return "";
