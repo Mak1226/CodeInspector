@@ -14,9 +14,6 @@ namespace Analyzer.Tests
         [TestMethod()]
         public void AnalyzerTest()
         {
-
-            //AppDomain domain = AppDomain.CurrentDomain;
-
             Analyzer analyzer = new();
 
             IDictionary<int , bool> teacherOptions = new Dictionary<int , bool>
@@ -43,14 +40,10 @@ namespace Analyzer.Tests
 
             List<string> paths = new()
             {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll" ,
+                "..\\..\\..\\TestDLLs\\Analyzer.dll",
 
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+                "..\\..\\..\\TestDLLs\\BridgePattern.dll",
             };
-
-            //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
-
-            //paths.Add(path);
 
             analyzer.LoadDLLFileOfStudent(paths);
 
@@ -65,8 +58,6 @@ namespace Analyzer.Tests
                     Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
                 }
            }
-
-           // AppDomain.Unload(domain);
 
             Assert.Fail();
         }

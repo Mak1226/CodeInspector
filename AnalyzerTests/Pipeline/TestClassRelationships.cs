@@ -21,8 +21,11 @@ namespace AnalyzerTests.Pipeline
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TypeRelationships.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
+
+        //C: \Users\HP\Desktop\software\SoftwareGroupProject\Analyzer\AnalyzerTests\TestDLLs\TypeRelationships.dll
+
+        var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
 
