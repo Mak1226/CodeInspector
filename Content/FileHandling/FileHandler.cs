@@ -24,14 +24,12 @@ namespace Content.FileHandling
     public class FileHandler : IFileHandler
     {
         private List<string> _filesList;
-        private readonly Dictionary<string, string> _files;
         private readonly IFileEncoder _fileEncoder;
         /// <summary>
         /// saves files in //data/
         /// </summary>
         public FileHandler()
         {
-            _files = new Dictionary<string, string>();
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
         }
@@ -51,7 +49,7 @@ namespace Content.FileHandling
         /// <param name="sessionID"></param>
         public string HandleUpload(string filepath, string sessionID)
         {
-            List<string> dllFiles = new List<string>();
+            List<string> dllFiles = new();
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string encoding;
@@ -71,7 +69,7 @@ namespace Content.FileHandling
             else if (File.Exists(filepath) && string.Equals(Path.GetExtension(filepath), ".dll", StringComparison.OrdinalIgnoreCase))
             {
                 dllFiles = new List<string> { filepath };
-                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
+                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
                 // Do something specific for files
             }
             else
@@ -98,7 +96,7 @@ namespace Content.FileHandling
         /// </summary>
         /// <param name="sessionID"></param>
         /// <returns></returns>
-        public void HandleRecieve(string encoding)
+        public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
             _filesList = new List<String>();
@@ -108,12 +106,12 @@ namespace Content.FileHandling
             }
             catch (JsonException) 
             {
-                return;
+                return null;
             }
             if (recvData["EventType"] != "File")
             {
                 // Packet not meant for this module
-                return;
+                return null;
             }
 
             encoding = recvData["Data"];
@@ -123,10 +121,13 @@ namespace Content.FileHandling
 
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
-           foreach (var file in decodedFiles)
+            _filesList = new List<string>();
+            foreach (KeyValuePair<string , string> file in decodedFiles)
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));
             }
+
+            return sessionID;
         }
     }
 }

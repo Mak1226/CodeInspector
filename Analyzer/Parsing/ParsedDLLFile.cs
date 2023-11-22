@@ -10,26 +10,15 @@ namespace Analyzer.Parsing
 {
     public class ParsedDLLFile
     {
-        private readonly string _DLLFileName;
+        public string DLLFileName { get; }
 
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
 
         public List<ParsedStructure> structureObjList = new();
-        //public List<ParsedEnum> enumObjList = new();
 
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
-
-        // TODO: Map objects
-        public Dictionary<Type, ParsedClass> mapTypeToParsedClass = new();
-        public Dictionary<Type, ParsedClassMonoCecil> mapTypeDefinitionToParsedClass = new();
-
-
-        public string DLLFileName
-        {
-            get { return _DLLFileName; }
-        }
 
         /// <summary>
         /// function to parse the dll files
@@ -38,7 +27,7 @@ namespace Analyzer.Parsing
         public ParsedDLLFile(string path) // path of dll files
         {
             // it merge the all the ParsedNamespace
-            _DLLFileName = Path.GetFileName(path);
+            DLLFileName = Path.GetFileName(path);
 
             // REFLECTION PARSING
             Assembly assembly = Assembly.Load(File.ReadAllBytes(path));
@@ -52,34 +41,22 @@ namespace Analyzer.Parsing
                     if (type.Namespace != null)
                     { 
 
-                        if (type.Namespace.StartsWith("System.") || type.Namespace.StartsWith("Microsoft."))
+                        if (type.Namespace.StartsWith("System.") || type.Namespace.StartsWith("Microsoft.") || type.Namespace.StartsWith("Mono."))
                         {
                             continue;
                         }
 
-                        if (type.IsValueType && !type.IsPrimitive && !type.IsEnum)
-                        {
-                            ParsedStructure structObj = new ParsedStructure(type);
-                            structureObjList.Add(structObj);
-                        }
-
                         if (type.IsClass)
                         {
-                            if (type.IsValueType)
+                            if (!type.IsValueType)
                             {
-                                ParsedStructure structObj = new ParsedStructure(type);
-                                structureObjList.Add(structObj);
-                            }
-                            else
-                            {
-                                ParsedClass classObj = new ParsedClass(type);
+                                ParsedClass classObj = new(type);
                                 classObjList.Add(classObj);
-                                mapTypeToParsedClass[type] = classObj;
                             }
                         }
                         else if (type.IsInterface)
                         {
-                            ParsedInterface interfaceObj = new ParsedInterface(type);
+                            ParsedInterface interfaceObj = new(type);
                             interfaceObjList.Add(interfaceObj);
                         }
                         else if (type.IsEnum)
@@ -121,9 +98,8 @@ namespace Analyzer.Parsing
 
                             if(type.IsClass && !type.IsValueType)
                             {
-                                ParsedClassMonoCecil classObj = new ParsedClassMonoCecil(type);
+                                ParsedClassMonoCecil classObj = new(type);
                                 classObjListMC.Add(classObj);
-                                mapTypeDefinitionToParsedClass[type.Resolve().GetType()] = classObj;
                             }
                             else if (type.IsInterface)
                             {

@@ -60,7 +60,7 @@ namespace Analyzer.Pipeline
             List<FieldDefinition> disposableFields = new();
 
             // Iterate through the fields in the class
-            foreach (var field in type.Fields)
+            foreach (FieldDefinition? field in type.Fields)
             {
                 TypeReference fieldType = field.FieldType;
                 TypeDefinition fieldTypeDefinition = fieldType.Resolve();
@@ -85,7 +85,7 @@ namespace Analyzer.Pipeline
             // Check if the class directly implements IDisposable through interfaces
             if (type.Interfaces != null)
             {
-                foreach (var iface in type.Interfaces)
+                foreach (InterfaceImplementation? iface in type.Interfaces)
                 {
                     if (iface.InterfaceType.FullName == "System.IDisposable")
                     {

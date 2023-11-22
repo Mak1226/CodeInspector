@@ -21,7 +21,6 @@ namespace ContentPage
     public partial class ResultPage : Page
     {
         private readonly IContentViewModel _viewModel;
-        /*private IDictionary<int, bool> accumulatedOptions = new Dictionary<int, bool>()*/
 
         /// <summary>
         /// Initializes content Server ViewModel

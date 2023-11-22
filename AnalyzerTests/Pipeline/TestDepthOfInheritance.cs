@@ -1,72 +1,45 @@
-﻿/*using Analyzer.Parsing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyzer.Parsing;
 
-namespace AnalyzerTests.Pipeline
+namespace Analyzer.Pipeline.Tests
 {
     [TestClass()]
-    public class TestDepthOfInheritance
+    public class TestDepth
     {
-        [TestMethod]
-        public void CalculateDepthOfInheritance_WithSampleData_ReturnsCorrectDepths()
+        [TestMethod()]
+        public void TestDepthOfInh()
         {
-            // Arrange
-            var typeA = typeof(ClassA);
-            var typeB = typeof(ClassB);
-            var typeC = typeof(ClassC);
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\depthofinh.dll";
 
-            List<string> DllFilePaths = new List<string>();
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new(path);
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\DemoDLL.dll");
+            //DllFilePaths.Add(path);
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            DepthOfInheritance analyzer = new(dllFiles);
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                classObjList = new List<ParsedClass>
-                {
-                    new ParsedClass { TypeObj = typeA },
-                    new ParsedClass { TypeObj = typeB },
-                    new ParsedClass { TypeObj = typeC }
-                }
-            };
+                Console.WriteLine(dll.Key);
 
-            DepthOfInheritance depthOfInheritance = new DepthOfInheritance(dllFiles);
+                AnalyzerResult res = dll.Value;
 
-            // Act
-            var result = depthOfInheritance.CalculateDepthOfInheritance();
+                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+            }
 
-            // Assert
-            Assert.AreEqual(0, result[typeA]);
-            Assert.AreEqual(1, result[typeB]);
-            Assert.AreEqual(0, result[typeC]);
-        }
-
-        [TestMethod]
-        public void CalculateDepthOfInheritance_WithEmptyData_ReturnsEmptyDictionary()
-        {
-            // Arrange
-            ParsedDLLFiles dllFiles = new ParsedDLLFiles
-            {
-                classObjList = new List<ParsedClass>()
-            };
-
-            DepthOfInheritance depthOfInheritance = new DepthOfInheritance(dllFiles);
-
-            // Act
-            var result = depthOfInheritance.CalculateDepthOfInheritance();
-
-            // Assert
-            CollectionAssert.IsEmpty(result);
         }
     }
-
-    // Sample classes for testing
-    public class ClassA { }
-    public class ClassB : ClassA { }
-    public class ClassC { }
-
 }
-*/

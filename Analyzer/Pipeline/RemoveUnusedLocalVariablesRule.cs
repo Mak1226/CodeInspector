@@ -32,7 +32,7 @@ namespace Analyzer.Pipeline
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             int totalUnusedLocals = 0;
-            List<string> unusedVariableNames = new List<string>();
+            List<string> unusedVariableNames = new();
 
             foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
@@ -59,8 +59,12 @@ namespace Analyzer.Pipeline
         private static int RemoveUnusedLocalVariables(MethodDefinition method, List<string> unusedVariableNames)
         {
             int unusedLocalsCount = 0;
-            _ = method.Body.GetILProcessor();
             List<VariableDefinition> unusedLocals = new();
+
+            if(!method.HasBody)
+            {
+                return unusedLocalsCount;
+            }
 
             foreach (VariableDefinition localVar in method.Body.Variables)
             {
@@ -68,16 +72,12 @@ namespace Analyzer.Pipeline
                 if (!IsLocalVariableUsed(localVar, method.Body.Instructions))
                 {
                     unusedLocals.Add(localVar);
-                    unusedVariableNames.Add(localVar.ToString()); 
+                    unusedVariableNames.Add(localVar.ToString()); // Add the name to the list
                 }
             }
 
             foreach (VariableDefinition localVar in unusedLocals)
             {
-                // Remove the instructions that load or store the unused local variable
-                RemoveUnusedLocalVariableInstructions(localVar, method.Body.Instructions);
-                // Remove the local variable definition from the method
-                method.Body.Variables.Remove(localVar);
                 unusedLocalsCount++;
             }
 
@@ -94,19 +94,28 @@ namespace Analyzer.Pipeline
         {
             foreach (Instruction instruction in instructions)
             {
-                // Check if the current instruction is a load (Ldloc) or store (Stloc) operation for a local variable
-                if (instruction.OpCode == OpCodes.Ldloc || instruction.OpCode == OpCodes.Stloc)
+                if (UsesLocalVariable(instruction, localVar))
                 {
-                    VariableDefinition localVariableReference = (VariableDefinition)instruction.Operand;
-                    if (localVariableReference == localVar)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
             return false;
         }
+
+        private static bool UsesLocalVariable(Instruction instruction, VariableDefinition localVar)
+        {
+            if (instruction.OpCode == OpCodes.Ldloc)
+            {
+                if (instruction.Operand == localVar)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         /// <summary>
         /// Removes instructions that reference a specific unused local variable from a collection of instructions.

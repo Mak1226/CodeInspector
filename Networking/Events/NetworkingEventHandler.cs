@@ -8,7 +8,10 @@ namespace Networking.Events
     public class NetworkingEventHandler : IEventHandler
     {
 
-        ICommunicator server = CommunicationFactory.GetServer();
+        ICommunicator communicator ;
+        public NetworkingEventHandler(ICommunicator server) { 
+            this.communicator = server;
+        }
         public string HandleMessageRecv(Message message)
         {
             Data data=Serializer.Deserialize<Data>(message.Data);
@@ -32,19 +35,16 @@ namespace Networking.Events
             {
                 return HandleClientDeregister(message);
             }
+            else if (data.EventType == EventType.ServerLeft())
+            {
+                return HandleServerLeft(message);
+            }
             return "";
         }
 
         private string HandleChatMessage(Message message)
         {
-            if (message.DestID != ID.GetServerID())
-            {
-                ((Server)server).Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
-            }
-            else
-            {
-                Console.WriteLine("message received in server:" + message.Data);
-            }
+            Console.WriteLine("message received in server:" + message.Data);
             return "";
         }
 
@@ -52,23 +52,23 @@ namespace Networking.Events
         {
             //TODO: add respective module name
             Data data = new Data(message.SenderID, EventType.NewClientJoined());
-            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
+            communicator.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
             return "";
         }
 
         private string HandleClientLeft(Message message)
         {
             Data data = new Data(message.SenderID, EventType.ClientLeft());
-            server.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetBroadcastID());
+            communicator.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
             return "";
         }
 
         private string HandleClientRegister(Message message)
         {
-            lock(((Server)server)._senderIDToClientID)
+            lock(((Server)communicator)._senderIDToClientID)
             {
                 Data data=Serializer.Deserialize<Data>(message.Data);
-                ((Server)server)._senderIDToClientID[message.SenderID] = data.Payload;
+                ((Server)communicator)._senderIDToClientID[message.SenderID] = data.Payload;
             }
             HandleClientJoined(message);
             return "";
@@ -77,13 +77,23 @@ namespace Networking.Events
         private string HandleClientDeregister(Message message)
         {
             Console.WriteLine("herererer");
-            string clientID = ((Server)server)._senderIDToClientID[message.SenderID];
-            lock (((Server)server)._clientIDToStream)
+            string clientID = ((Server)communicator)._senderIDToClientID[message.SenderID];
+            lock (((Server)communicator)._clientIDToStream)
             {
-                ((Server)server)._clientIDToStream.Remove(clientID);
+                ((Server)communicator)._clientIDToStream.Remove(clientID);
             }
             Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
             HandleClientLeft(message);
+            return "";
+        }
+        private string HandleServerLeft(Message message)
+        {
+            string serverID = message.SenderID;
+            lock (((Client)communicator)._IDToStream)
+            {
+                ((Client)communicator)._IDToStream.Remove(serverID);
+            }
+            Console.WriteLine("[client] removed server with: " + serverID + " " + message.SenderID);
             return "";
         }
     }
