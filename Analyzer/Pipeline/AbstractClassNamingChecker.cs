@@ -76,11 +76,10 @@ namespace Analyzer.Pipeline
         private bool IncorrectAbstractClassName(ParsedDLLFile parsedDLLFile)
         {
             int flag = 0;
-
+            int flag1 = 0;
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
-                int flag1 = 0;
                 if (classType.GetTypeInfo().IsAbstract)
                 {
                     string className = classType.Name;
