@@ -101,6 +101,7 @@ namespace Content.FileHandling
         public void HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
+            _filesList = new List<String>();
             try
             {
                 recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
@@ -122,7 +123,6 @@ namespace Content.FileHandling
 
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
-            _filesList = new List<String>();
            foreach (var file in decodedFiles)
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));

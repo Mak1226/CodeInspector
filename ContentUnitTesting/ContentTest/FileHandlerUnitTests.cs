@@ -10,6 +10,7 @@
  * Description  = Unit tests for IFileHandler
 *****************************************************************************/
 using Content.FileHandling;
+using System.Text.Json;
 
 namespace ContentUnitTesting.ContentTest
 {
@@ -80,6 +81,25 @@ namespace ContentUnitTesting.ContentTest
             fileHandler.HandleUpload(tempDirectory, "TestSessionId");
             List<string> filesList = fileHandler.GetFiles();
             Assert.IsTrue((filesList).Count == 0);
+        }
+
+        [TestMethod]
+        public void NotFileReceiveTest()
+        {
+            Dictionary<string, string> fileInfo = new Dictionary<string, string>();
+            fileInfo["EventType"] = "NotFile";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
+            File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
+            Directory.CreateDirectory(tempDirectory + "\\subdir1");
+            File.WriteAllText(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"), "DLL Content 3");
+
+            IFileHandler fileHandler = new FileHandler();
+            fileHandler.HandleUpload(tempDirectory, "TestSessionId");
+            fileHandler.HandleRecieve(JsonSerializer.Serialize(fileInfo));
+            Assert.IsTrue(fileHandler.GetFiles().Count() == 0);
+            Directory.Delete(tempDirectory,true);
         }
         /// <summary>
         /// Test the file sending functionality by uploading files from a temporary directory
