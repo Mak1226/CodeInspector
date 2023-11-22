@@ -65,7 +65,6 @@ namespace Analyzer.Pipeline
             // To check interfaces
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                int flag1 = 0;
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
                     flag1++;
