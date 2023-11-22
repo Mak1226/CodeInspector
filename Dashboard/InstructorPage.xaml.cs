@@ -31,8 +31,7 @@ namespace Dashboard
             InitializeComponent();
             try
             {
-
-                InstructorViewModel viewModel = new(null,userName,userId);
+                InstructorViewModel viewModel = new(userName,userId);
                 DataContext = viewModel;
 
                 _contentServerPage = new ServerPage ( viewModel.Communicator);
