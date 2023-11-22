@@ -57,13 +57,13 @@ namespace Analyzer.DynamicAnalyzer
             {
                 // Load the custom analyzer assembly
                 Assembly customAnalyzerAssembly = Assembly.Load(File.ReadAllBytes(customAnalyzer));
-                Type type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
+                Type? type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
 
                 // Create an instance of the custom analyzer, passing the studentParsedDlls as parameter
-                object? teacher = Activator.CreateInstance(type, new Object[] {studentParsedDlls});
+                object? teacher = Activator.CreateInstance(type, new object[] {studentParsedDlls});
 
                 // Invoke the "AnalyzeAllDLLs" method of custom analyzer to run the analyzer logic for each of the students dll and get the result
-                MethodInfo method = type.GetMethod("AnalyzeAllDLLs");
+                MethodInfo? method = type.GetMethod("AnalyzeAllDLLs");
                 object? currentAnalyzerResult = method.Invoke(teacher, null);
 
                 //res -> Dictionary<string, AnalyzerResult>

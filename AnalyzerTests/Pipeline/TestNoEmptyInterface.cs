@@ -1,4 +1,4 @@
-﻿/*using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -7,27 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnalyzerTests.Pipeline
+namespace Analyzer.Pipeline.Tests
 {
+    public interface IInterfaceEmpty
+    {
+
+    }
+    public class SampleTestsNoEmptyInterface
+    {
+
+    }
+
     [TestClass()]
     public class TestNoEmptyInterface
     {
         [TestMethod()]
-        public void MainPipelineTest()
+        public void TestEmptyInterfacePresent()
         {
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NoEmptyInterfaces1.dll";
 
-            List<string> DllFilePaths = new List<string>();
+            ParsedDLLFile dllFile = new( path );
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\DemoDLL.dll");
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+            NoEmptyInterface noEmptyInterfaces = new( dllFiles );
 
-            ParsedDLLFiles dllFiles = new(DllFilePaths);
-
-            NoEmptyInterface iFace = new(dllFiles);
-
-            var result = iFace.Run();
-
-            Assert.AreEqual(1, result.Verdict);
+            Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
+            Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
+            Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
         }
     }
 }
-*/
