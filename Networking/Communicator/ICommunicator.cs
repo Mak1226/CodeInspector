@@ -44,7 +44,7 @@ namespace Networking.Communicator
 
         /// <summary>
         /// Server: Stops listening and stops all threads
-        /// Client: Stops listening to the server and stops all threads, also sends message to server that the client is stopping
+        /// Client: Stops listening to the server and stops all threads
         /// </summary>
         public void Stop();
 
@@ -64,7 +64,7 @@ namespace Networking.Communicator
         public void Send(string serializedData, string destId);
 
         /// <summary>
-        /// Subscribe a handler to an event
+        /// Subscribe a handler to a module
         /// </summary>
         /// <param name="eventHandler">The implemented class of the event handler </param>
         /// <param name="moduleName">The name of module to subscribe</param>
