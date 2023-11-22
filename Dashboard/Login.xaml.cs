@@ -28,8 +28,6 @@ namespace Dashboard
             UserName = userName;
             UserId = userEmail;
             DataContext = this; // Set the DataContext to this instance
-
-
         }
 
         public string UserName { get; init; }
