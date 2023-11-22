@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
+using System.Collections;
+using System.Globalization;
 
 namespace Analyzer.Pipeline
 {
@@ -20,7 +22,7 @@ namespace Analyzer.Pipeline
         /// Initializes a new instance of the RemoveUnusedLocalVariablesRule with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public RemoveUnusedLocalVariablesRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+        public RemoveUnusedLocalVariablesRule( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
             // The constructor sets the parsedDLLFiles field with the provided DLL files.
         }
@@ -29,7 +31,7 @@ namespace Analyzer.Pipeline
         /// Gets the result of the analysis, which includes the number of unused local variables removed.
         /// </summary>
         /// <returns>An AnalyzerResult containing the analysis results.</returns>
-        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+        protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
             int totalUnusedLocals = 0;
             List<string> unusedVariableNames = new();
@@ -38,16 +40,74 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
-                    int unusedLocalsCount = RemoveUnusedLocalVariables(method, unusedVariableNames);
+                    int unusedLocalsCount = RemoveUnusedLocalVariables( method , unusedVariableNames );
+                    //Console.WriteLine( "Unused" );
                     totalUnusedLocals += unusedLocalsCount;
                 }
             }
 
             string errorString = totalUnusedLocals > 0
-                ? $"Removed {totalUnusedLocals} unused local variables: {string.Join(", ", unusedVariableNames)}"
+                ? $"There are {totalUnusedLocals} unused local variables"
                 : "No unused local variables found.";
 
-            return new AnalyzerResult("109", totalUnusedLocals, errorString);
+            return new AnalyzerResult( "109" , totalUnusedLocals , errorString );
+        }
+
+        /// <summary>
+        /// Gets the VariableDefinition associated with an Instruction in a MethodDefinition.
+        /// </summary>
+        /// <param name="self">The Instruction for which to retrieve the VariableDefinition.</param>
+        /// <param name="method">The MethodDefinition containing the Instruction.</param>
+        /// <returns>The VariableDefinition associated with the Instruction, or null if not found.</returns>
+        public static VariableDefinition? GetVariable( Instruction self , MethodDefinition method )
+        {
+            if ((self == null) || (method == null) || !method.HasBody)
+            {
+                return null;
+            }
+
+            int index;
+            switch (self.OpCode.Code)
+            {
+                case Code.Ldloc_0:
+                case Code.Ldloc_1:
+                case Code.Ldloc_2:
+                case Code.Ldloc_3:
+                    index = self.OpCode.Code - Code.Ldloc_0;
+                    break;
+                case Code.Stloc_0:
+                case Code.Stloc_1:
+                case Code.Stloc_2:
+                case Code.Stloc_3:
+                    index = self.OpCode.Code - Code.Stloc_0;
+                    break;
+                case Code.Ldloc:
+                case Code.Ldloc_S:
+                case Code.Ldloca:
+                case Code.Ldloca_S:
+                case Code.Stloc:
+                case Code.Stloc_S:
+                    return (self.Operand as VariableDefinition);
+                default:
+                    return null;
+            }
+            return method.Body.Variables[index];
+        }
+
+        public static bool IsGeneratedName( VariableReference self )
+        {
+            if (self == null)
+            {
+                return false;
+            }
+
+            string name = string.Empty; 
+            if (string.IsNullOrEmpty( name ))
+            {
+                return true;
+            }
+
+            return (name[0] == '<') || (name.IndexOf( '$' ) != -1);
         }
 
         /// <summary>
@@ -56,70 +116,45 @@ namespace Analyzer.Pipeline
         /// <param name="method">The method to analyze and remove unused local variables from.</param>
         /// <param name="unusedVariableNames">A list to store the names of unused variables.</param>
         /// <returns>The count of unused local variables removed from the method.</returns>
-        private static int RemoveUnusedLocalVariables(MethodDefinition method, List<string> unusedVariableNames)
+        private static int RemoveUnusedLocalVariables( MethodDefinition method , List<string> unusedVariableNames )
         {
+            const int DefaultLength = (16 << 3);
+
+            if (!method.HasBody)
+            {
+                return 0;
+            }
+
+            MethodBody body = method.Body;
+            Collection<VariableDefinition> variables = body.Variables;
+            int count = variables.Count;
+            BitArray used = new( Math.Max( DefaultLength , count ) );
+            used.SetAll( false );
+
+            foreach (Instruction ins in body.Instructions)
+            {
+                VariableDefinition? vd = GetVariable( ins , method );
+                if (vd != null)
+                {
+                    used[vd.Index] = true;
+                }
+            }
             int unusedLocalsCount = 0;
-            List<VariableDefinition> unusedLocals = new();
-
-            if(!method.HasBody)
+            //List<VariableDefinition> unusedLocals = new();
+            for (int i = 0; i < count; i++)
             {
-                return unusedLocalsCount;
-            }
-
-            foreach (VariableDefinition localVar in method.Body.Variables)
-            {
-                // Check if the local variable is used within the method
-                if (!IsLocalVariableUsed(localVar, method.Body.Instructions))
+                if (!used[i])
                 {
-                    unusedLocals.Add(localVar);
-                    unusedVariableNames.Add(localVar.ToString()); // Add the name to the list
+                    VariableDefinition variable = variables[i];
+                    if (IsGeneratedName(variable))
+                    {
+                        //Console.WriteLine( "hi" );
+                        //continue;
+                    }
+                    unusedLocalsCount += 1;
                 }
             }
-
-            foreach (VariableDefinition localVar in unusedLocals)
-            {
-                unusedLocalsCount++;
-            }
-
             return unusedLocalsCount;
-        }
-
-        /// <summary>
-        /// Checks if a local variable is used within a collection of instructions.
-        /// </summary>
-        /// <param name="localVar">The local variable to check for usage.</param>
-        /// <param name="instructions">The collection of instructions to analyze.</param>
-        /// <returns>True if the local variable is used; otherwise, false.</returns>
-        private static bool IsLocalVariableUsed(VariableDefinition localVar, Collection<Instruction> instructions)
-        {
-            foreach (Instruction instruction in instructions)
-            {
-                if (UsesLocalVariable(instruction, localVar))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if an instruction uses a specific local variable.
-        /// </summary>
-        /// <param name="instruction">The instruction to check.</param>
-        /// <param name="localVar">The local variable to compare with.</param>
-        /// <returns>True if the instruction uses the local variable; otherwise, false.</returns>
-        private static bool UsesLocalVariable(Instruction instruction, VariableDefinition localVar)
-        {
-            if (instruction.OpCode == OpCodes.Ldloc)
-            {
-                if (instruction.Operand == localVar)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

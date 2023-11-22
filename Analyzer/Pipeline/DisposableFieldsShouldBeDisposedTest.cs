@@ -55,25 +55,26 @@ namespace Analyzer.Pipeline
         /// </summary>
         /// <param name="type">The class to analyze.</param>
         /// <returns>A list of disposable fields in the class.</returns>
-        private List<FieldDefinition> GetDisposableFields(TypeDefinition type)
+        private List<FieldDefinition> GetDisposableFields( TypeDefinition type )
         {
             List<FieldDefinition> disposableFields = new();
 
             // Iterate through the fields in the class
-            foreach (FieldDefinition? field in type.Fields)
+            foreach (FieldDefinition field in type.Fields)
             {
                 TypeReference fieldType = field.FieldType;
                 TypeDefinition fieldTypeDefinition = fieldType.Resolve();
 
                 // Check if the field's type is "System.IDisposable" or its resolved type definition implements IDisposable
-                if (fieldType.FullName == "System.IDisposable" || (fieldTypeDefinition != null && ImplementsIDisposable(fieldTypeDefinition)))
+                if (fieldType.FullName == "System.IDisposable" || (fieldTypeDefinition != null && ImplementsIDisposable( fieldTypeDefinition )))
                 {
-                    disposableFields.Add(field);
+                    disposableFields.Add( field );
                 }
             }
 
             return disposableFields;
         }
+
 
         /// <summary>
         /// Checks if a class implements IDisposable by checking its interfaces and base types.
@@ -166,10 +167,10 @@ namespace Analyzer.Pipeline
                         methodReference.Name == "Dispose")
                     {
                         // Check if the Dispose method is called on the field
-                        if (instruction.Previous is Instruction ldloc &&
-                            ldloc.OpCode == OpCodes.Ldloc &&
-                            ldloc.Operand is VariableDefinition localVar &&
-                            localVar.VariableType?.Resolve() == field.FieldType.Resolve())
+                        if (instruction.Previous is Instruction ldFld &&
+                        ldFld.OpCode == OpCodes.Ldfld &&
+                        ldFld.Operand is FieldReference fieldRef &&
+                        fieldRef.Resolve() == field)
                         {
                             return true;
                         }
