@@ -41,25 +41,19 @@ namespace Analyzer.Pipeline.Tests
         [TestMethod()]
         public void Test1()
         {
+            string path = "..\\..\\..\\TestDLLs\\UnusedPrivateFields.dll";
 
-            //List<string> DllFilePaths = new List<string>();
-
-            //string path = "C:\\Users\\HP\\source\\repos\\Demo1\\ClassLibrary1\\bin\\Debug\\net6.0\\ClassLibrary1.dll";
-
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\UnusedPrivateFields.dll";
             ParsedDLLFile dllFile = new(path);
-
-            //DllFilePaths.Add(path);
-
             List<ParsedDLLFile> dllFiles = new() { dllFile };
-
             AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(dllFiles);
-
             Dictionary<string , AnalyzerResult> result = avoidUnusedPrivateFieldsRule.AnalyzeAllDLLs();
 
-            Console.WriteLine(result[dllFile.DLLFileName].ErrorMessage);
+            Dictionary<string , AnalyzerResult> original = new()
+            {
+                ["103"] = new AnalyzerResult("103", 0, "TeacherAnalyzer: _something _some, are unused private field." )
+            };
 
-            Assert.AreEqual(1, result[dllFile.DLLFileName].Verdict);
+            Assert.AreEqual(original.ToString() ,result.ToString());
 
         }
 

@@ -32,23 +32,12 @@ namespace Analyzer.Pipeline
             _analyzerID = "103";
         }
 
-        public List<string> HandleClass(ParsedClassMonoCecil cls)
+        public List<string> HandleClass( ParsedClassMonoCecil cls )
         {
-            List<string> unusedFields = new();
+            List<string> unusedFields = new(cls.FieldsList.Select( field => field.Name.ToString()));
 
-            foreach (FieldDefinition field in cls.FieldsList)
+            foreach (MethodDefinition method in cls.MethodsList.Concat( cls.Constructors ))
             {
-                unusedFields.Add( field.Name.ToString() );
-            }
-
-            if (cls.FieldsList.Count == 0)
-            {
-                return unusedFields;
-            }
-
-            foreach (MethodDefinition method in cls.MethodsList)
-            {
-
                 if (!method.HasBody)
                 {
                     continue;
@@ -56,9 +45,8 @@ namespace Analyzer.Pipeline
 
                 foreach (Instruction? ins in method.Body.Instructions)
                 {
-                    if (ins.OpCode == OpCodes.Ldfld)
+                    if (ins.OpCode == OpCodes.Ldfld || ins.OpCode == OpCodes.Ldsfld || ins.OpCode == OpCodes.Ldflda || ins.OpCode == OpCodes.Ldsflda)
                     {
-
                         FieldReference fieldReference = (FieldReference)ins.Operand;
 
                         string fieldName = fieldReference.Name.ToString();
@@ -67,31 +55,20 @@ namespace Analyzer.Pipeline
                         {
                             unusedFields.Remove( fieldName );
                         }
-
                     }
-                }
-            }
 
-            foreach (MethodDefinition method in cls.Constructors)
-            {
-                if (!method.HasBody)
-                {
-                    continue;
-                }
-
-                foreach (Instruction? ins in method.Body.Instructions)
-                {
-                    if (ins.OpCode == OpCodes.Ldfld)
+                    else if ((ins.OpCode == OpCodes.Ldloc || ins.OpCode == OpCodes.Ldloca))
                     {
                         FieldReference fieldReference = (FieldReference)ins.Operand;
 
                         string fieldName = fieldReference.Name.ToString();
 
-                        if (unusedFields.Contains(fieldName))
+                        if (unusedFields.Contains( fieldName ))
                         {
-                            unusedFields.Remove(fieldName);
+                            unusedFields.Remove( fieldName );
                         }
                     }
+
                 }
             }
 
@@ -124,7 +101,7 @@ namespace Analyzer.Pipeline
 
             }
 
-            _ = _verdict == 0 ? _errorMessage += " these are unused private field." : _errorMessage = "No violation found.";
+            _ = _verdict == 0 ? _errorMessage += " are unused private field." : _errorMessage = "No violation found.";
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
@@ -133,7 +110,7 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage == "" ? "No violations found." : _errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }
