@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SessionState
 {
+    /// <summary>
+    /// Class to represent a student
+    /// </summary>
     public class Student
     {
         public string? Id { get; set; }
