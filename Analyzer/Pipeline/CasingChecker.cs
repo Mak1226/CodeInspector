@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
@@ -49,6 +49,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violations Found";
                 _verdict = 1;
             }
 
