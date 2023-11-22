@@ -135,7 +135,7 @@ namespace Analyzer.Parsing
             return sets.Any( set => set.Contains( element ) );
         }
 
-        public void UpdateInheritanceList()
+        private void UpdateInheritanceList()
         {
             //Inheritance List
             //Adding the parent class (if exist) in the inheritance list
@@ -157,7 +157,7 @@ namespace Analyzer.Parsing
             }
         }
 
-        public void UpdateRelationshipsListFromCtors()
+        private void UpdateRelationshipsListFromCtors()
         {
             //Composition List
             //Cases: 1. If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
@@ -243,11 +243,6 @@ namespace Analyzer.Parsing
                                         UsingList.Remove( "C" + objectType.FullName );
 
                                     }
-                                    else if (objectType.IsInterface && !SetsContainElement( "I" + objectType.FullName , InheritanceList , CompositionList ))
-                                    {
-                                        AggregationList.Add( "I" + objectType.FullName );
-                                        UsingList.Remove( "I" + objectType.FullName );
-                                    }
                                 }
                             }
                         }
@@ -255,7 +250,7 @@ namespace Analyzer.Parsing
                 }
             }
         }
-        public void UpdateAggregationList()
+        private void UpdateAggregationList()
         {
             // Aggregation List
             // Cases: 1. If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
@@ -283,7 +278,7 @@ namespace Analyzer.Parsing
             }
         }
 
-        public void UpdateUsingList()
+        private     void UpdateUsingList()
         {
             // Using Class Relationship 
             // Cases considering: 1. if any method (other than constructors) contain other class as parameter
