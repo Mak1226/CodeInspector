@@ -23,7 +23,7 @@ namespace Analyzer.Pipeline.Tests
 
             Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
             Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
-            Assert.AreEqual(  , result[dllFile.DLLFileName].Verdict );
+            Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
         }
     }
 }
