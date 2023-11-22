@@ -1,28 +1,18 @@
-﻿using Analyzer.Parsing;
-using Analyzer.Pipeline;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline.Tests
 {
-    public interface IInterfaceEmpty
-    {
-
-    }
-    public class SampleTestsNoEmptyInterface
-    {
-
-    }
-
     [TestClass()]
-    public class TestNoEmptyInterface
+    public class TestNativeFieldsShouldNotBeVisible
     {
         [TestMethod()]
-        public void TestEmptyInterfacePresent()
+        public void TestHasPublicNativeField()
         {
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NoEmptyInterfaces1.dll";
 

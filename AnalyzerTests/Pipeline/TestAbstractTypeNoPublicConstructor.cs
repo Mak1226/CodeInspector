@@ -1,4 +1,4 @@
-﻿/*using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -6,27 +6,94 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
+using System.IO;
 
 namespace Analyzer.Pipeline.Tests
 {
+    public class SampleTestsAbstractClassNoPublicConstructor
+    {
+        public abstract class AbstractClassWithPublicConstructor
+        {
+            private readonly int _sampleVar;
+            private int _sampleVar2;
+            public AbstractClassWithPublicConstructor()
+            {
+                _sampleVar = 100;
+            }
+
+            private void SampleFunction( int sampleVar )
+            {
+                _sampleVar2 = sampleVar + _sampleVar;
+            }
+        }
+
+        public abstract class AbstractClassWithProtectedConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+            protected AbstractClassWithProtectedConstructor()
+            {
+                _sampleVar = 100;
+            }
+        }
+
+        public abstract class AbstractClassWithInternalConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+            internal AbstractClassWithInternalConstructor()
+            {
+                _sampleVar = 100;
+                _sampleVar2 = 2 * _sampleVar;
+            }
+        }
+
+        private abstract class PrivateAbstractClassWithPublicConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+            public PrivateAbstractClassWithPublicConstructor()
+            {
+                _sampleVar = 100;
+                _sampleVar2 = 2 * _sampleVar;
+            }
+        }
+
+        public abstract class AbstractClassWithNoDefaultConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+        }
+
+        private abstract class PrivateAbstractClassWithNoDefaultConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+        }
+
+        public class PublicClassWithNoDefaultConstructor
+        {
+            private readonly int _sampleVar;
+            private readonly int _sampleVar2;
+        }
+    }
+
     [TestClass()]
     public class TestAbstractTypeNoPublicConstructor
     {
         [TestMethod()]
-        public void MainPipelineTest()
+        public void TestAbstractConstructorPresent()
         {
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\AbstractTypeNoPublicConstructor1.dll";
 
-            List<string> DllFilePaths = new List<string>();
+            ParsedDLLFile dllFile = new (path);
 
-            DllFilePaths.Add("..\\..\\..\\..\\Analyzer\\TestDLLs\\DemoDLL.dll");
-
-            ParsedDLLFiles dllFiles = new (DllFilePaths);
-
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
             AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new(dllFiles);
 
-            var result = abstractTypeNoPublicConstructor.Run();
-
-            Assert.AreEqual(1, result.Verdict);
+            Dictionary<string, AnalyzerResult> result = abstractTypeNoPublicConstructor.AnalyzeAllDLLs();
+            Console.WriteLine(result[dllFile.DLLFileName].ErrorMessage);
+            Assert.AreEqual(0, result[dllFile.DLLFileName].Verdict);
         }
     }
-}*/
+}

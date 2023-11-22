@@ -32,6 +32,49 @@ namespace Analyzer.Pipeline
             _analyzerID = "103";
         }
 
+        public List<string> HandleClass( ParsedClassMonoCecil cls )
+        {
+            List<string> unusedFields = new(cls.FieldsList.Select( field => field.Name.ToString()));
+
+            foreach (MethodDefinition method in cls.MethodsList.Concat( cls.Constructors ))
+            {
+                if (!method.HasBody)
+                {
+                    continue;
+                }
+
+                foreach (Instruction? ins in method.Body.Instructions)
+                {
+                    if (ins.OpCode == OpCodes.Ldfld || ins.OpCode == OpCodes.Ldsfld || ins.OpCode == OpCodes.Ldflda || ins.OpCode == OpCodes.Ldsflda)
+                    {
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains( fieldName ))
+                        {
+                            unusedFields.Remove( fieldName );
+                        }
+                    }
+
+                    else if ((ins.OpCode == OpCodes.Ldloc || ins.OpCode == OpCodes.Ldloca))
+                    {
+                        FieldReference fieldReference = (FieldReference)ins.Operand;
+
+                        string fieldName = fieldReference.Name.ToString();
+
+                        if (unusedFields.Contains( fieldName ))
+                        {
+                            unusedFields.Remove( fieldName );
+                        }
+                    }
+
+                }
+            }
+
+            return unusedFields;
+        }
+
         /// <summary>
         /// Checks for unused private fields in the parsed DLL.
         /// </summary>
@@ -40,90 +83,25 @@ namespace Analyzer.Pipeline
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                List<string> UnusedFields = new();
+                List<string> unusedFields = HandleClass(cls);
 
-                foreach (FieldDefinition field in cls.FieldsList)
+                if(unusedFields.Count > 0)
                 {
-                    UnusedFields.Add(field.Name.ToString()); 
-                }
-
-                if (cls.FieldsList.Count == 0)
-                {
-                    continue;
-                }
-
-                foreach (MethodDefinition method in cls.MethodsList)
-                {
-
-                    if (!method.HasBody)
-                    {
-                        continue;
-                    }
-
-                    foreach (Instruction? ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            string fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-
-                        }
-                    }
-                }
-
-                foreach (MethodDefinition method in cls.Constructors)
-                {
-                    if (!method.HasBody)
-                    {
-                        continue;
-                    }
-
-                    foreach (Instruction? ins in method.Body.Instructions)
-                    {
-                        if (ins.OpCode == OpCodes.Ldfld)
-                        {
-                            FieldReference fieldReference = (FieldReference) ins.Operand;
-
-                            string fieldName = fieldReference.Name.ToString();
-
-                            if (UnusedFields.Contains(fieldName))
-                            {
-                                UnusedFields.Remove(fieldName);
-                            }
-                        }
-                    }
-                }
-
-                if (UnusedFields.Count > 0)
-                {
-
-                    _errorMessage += cls.Name.ToString() + " -> ";
-
-                    foreach (string filedName in UnusedFields)
-                    {
-                        _errorMessage += filedName + " ";
-                    }
-                    _errorMessage += ", ";
-
                     _verdict = 0;
+
+                    _errorMessage += cls.Name + " : ";
+
+                    foreach(string field in unusedFields)
+                    {
+                        _errorMessage += field + " ";
+                    }
+
+                    _errorMessage += ",";  
                 }
 
             }
 
-            if(_verdict == 0)
-            {
-                _errorMessage += "these are unused private field";
-                return;
-            }
-
-            _verdict = 1;
+            _ = _verdict == 0 ? _errorMessage += " are unused private field." : _errorMessage = "No violation found.";
         }
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
@@ -132,7 +110,7 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage == "" ? "No violations found." : _errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }

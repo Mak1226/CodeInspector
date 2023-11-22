@@ -21,12 +21,12 @@ namespace Analyzer.Pipeline
 
         // Set to store classes violating the rule
         public HashSet<ParsedClass> violatingClasses = new();
-        
+
         /// <summary>
         /// Initializes a new instance of the AvoidConstructorsWithStaticTypes analyzer with parsed DLL files.
         /// </summary>
         /// <param name="dllFiles"></param>
-        public AvoidConstructorsInStaticTypes(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+        public AvoidConstructorsInStaticTypes( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
             _errorMessage = "";
             _verdict = 1;
@@ -38,36 +38,27 @@ namespace Analyzer.Pipeline
         /// </summary>
         /// <param name="cls"></param>
         /// <returns>True if all methods and fields in the class are static, else returns False</returns>
-        public bool CheckAllStatic(ParsedClass cls)
+        public bool CheckAllStatic( ParsedClass cls )
         {
-            if (cls == null)
-            {
-                return false;
-            }
-
             // Get all methods in the class
             MethodInfo[] methods = cls.TypeObj.GetMethods();
 
             //if any method or any parameterized constructor is not declared as static, return false immediately.
             if (methods.Length != 0)
             {
-                foreach (MethodInfo method in cls.Methods)
+                foreach (MethodInfo method in methods)
                 {
-                    if (method.IsConstructor)
+                    Type? declaringType = method.DeclaringType;
+                    if ((declaringType != null) && (declaringType.ToString().StartsWith( "System.Object" )))
                     {
-                        //checking if any parameterized constructor is not declared static
-                        if (!method.IsStatic && method.GetParameters().Length > 0)
-                        {
-                            return false;
-                        }
+                        continue;
                     }
-                    else
+
+                    if (!method.IsStatic)
                     {
-                        if (!method.IsStatic)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
+
                 }
             }
 
@@ -91,32 +82,37 @@ namespace Analyzer.Pipeline
         /// Constructs the AnalyzerResult object based on the analysis.
         /// </summary>
         /// <param name="parsedDLLFile"></param>
-        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+        protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
             foreach (ParsedClass cls in parsedDLLFile.classObjList)
             {
-                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf(typeof(Delegate)))
+                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf( typeof( Delegate ) ))
                 {
                     continue;
                 }
 
-                if (cls.TypeObj.IsDefined(typeof(CompilerGeneratedAttribute), false))
+                if (cls.TypeObj.IsDefined( typeof( CompilerGeneratedAttribute ) , false ))
                 {
                     continue;
                 }
 
                 // Check if all methods and fields in the class are static
-                bool isAllStatic = CheckAllStatic(cls);
+                bool isAllStatic = CheckAllStatic( cls );
 
                 // If all methods and fields are static, check constructors
                 if (isAllStatic)
                 {
                     foreach (ConstructorInfo constructor in cls.Constructors)
                     {
+                        //checking if any parameterized constructor is not declared static
+                        if (constructor.GetParameters().Length > 0)
+                        {
+                            continue;
+                        }
                         //default constructor should be declared static or private to avoid violations
                         if (!constructor.IsStatic && !constructor.IsPrivate)
                         {
-                            violatingClasses.Add(cls);
+                            violatingClasses.Add( cls );
                         }
                     }
                 }
@@ -132,25 +128,27 @@ namespace Analyzer.Pipeline
             if (_verdict != 0)
             {
                 _verdict = 1;
-                return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+                _errorMessage = "No violation found";
+                return new AnalyzerResult( _analyzerID , _verdict , _errorMessage );
             }
 
             //adding error message
             _errorMessage = "Classes ";
-            foreach(ParsedClass cls in violatingClasses)
+            foreach (ParsedClass cls in violatingClasses)
             {
 
-                _errorMessage += cls.GetType().FullName;
+                _errorMessage += cls.TypeObj.FullName;
                 violations--;
                 if (violations != 0)
                 {
                     _errorMessage += ", ";
                 }
+
             }
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
-            AnalyzerResult resultObj = new(_analyzerID, _verdict, _errorMessage);
+            AnalyzerResult resultObj = new( _analyzerID , _verdict , _errorMessage );
             return resultObj;
         }
     }

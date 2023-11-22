@@ -96,7 +96,7 @@ namespace Analyzer.Pipeline
                     errorMessageBuilder.AppendLine($"{classType.FullName}: Depth - {depth}");
                 }
 
-                return new AnalyzerResult("105", 0, errorMessageBuilder.ToString());
+                return new AnalyzerResult("105", violatingClasses.Count , errorMessageBuilder.ToString());
             }
 
             // No violations, return a success result

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
+            _errorMessage = "No Violation Found";
             _verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
@@ -61,34 +61,39 @@ namespace Analyzer.Pipeline
             bool hasMistake = false;
 
             // Check namespace names for PascalCasing
-            foreach(ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
+            foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
+                string? s = interfaceObj.TypeObj.Namespace;
+                if (!IsPascalCase(s))
                 {
                     hasMistake = true;
-                    Console.WriteLine($"INCORRECT NAMESPACE NAMING : {classObj.TypeObj.BaseType.Namespace}");
-                    _errorMessage = "INCORRECT NAMESPACE NAMING : " + classObj.TypeObj.BaseType.Namespace;
+                    Console.WriteLine($"Incorrect Namespace Naming : {s}");
+                    _errorMessage = "Incorrect Namespace Naming : " + s;
                 }
             }
 
-            if (!hasMistake)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
+                if(!IsPascalCase(cls.Name))
                 {
-                    // Check method names for PascalCasing and parameter names for camelCasing
-                    foreach (MethodDefinition method in cls.MethodsList)
+                    hasMistake = true;
+                    Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
+                    _errorMessage = "Incorrect Class Naming : " + cls.Name;
+                }                    
+                
+                // Check method names for PascalCasing and parameter names for camelCasing
+                foreach (MethodDefinition method in cls.MethodsList)
+                {
+                    if (!IsPascalCase(method.Name))
                     {
-                        if (!IsPascalCase(method.Name))
-                        {
-                            hasMistake = true;
-                            Console.WriteLine($"INCORRECT METHOD NAMING : {method.Name}");
-                            _errorMessage = "INCORRECT METHOD NAMING : " + method.Name;
-                        }
+                        hasMistake = true;
+                        Console.WriteLine($"Incorrect Method Naming : {method.Name}");
+                        _errorMessage = "Incorrect Method Naming : " + method.Name;
+                    }
 
-                        if (!AreParametersCamelCased(method))
-                        {
-                            hasMistake = true;
-                        }
+                    if (!AreParametersCamelCased(method))
+                    {
+                        hasMistake = true;
                     }
                 }
             }
@@ -96,17 +101,17 @@ namespace Analyzer.Pipeline
         }
 
         // check if name is PascalCased
-        private static bool IsPascalCase(string name)
+        private static bool IsPascalCase( string name )
         {
             if (string.IsNullOrEmpty( name ))
-            {
+            {  
                 return true;
             }
 
             return char.IsUpper (name [0]);
         }
 
-           // check if name is camelCased
+        // check if name is camelCased
         private static bool IsCamelCase (string name)
         {
             if (string.IsNullOrEmpty( name ))
@@ -121,13 +126,26 @@ namespace Analyzer.Pipeline
         {
                 int flag = 0;
                    
-                foreach (ParameterDefinition? param in method.Parameters)
+                foreach (ParameterDefinition param in method.Parameters)
                 {
-                    if (!IsCamelCase(param.Name))
+                    if (param.Name[0] != '_')
                     {
-                        Console.WriteLine($"INCORRECT PARAMETER NAMING : {param.Name}");
-                        _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
-                        flag = 1;
+                        if (!IsCamelCase( param.Name ))
+                        {
+                            Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
+                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            flag = 1;
+                        }
+                    }
+
+                    else
+                    {
+                        if (!char.IsLower(param.Name[1]))
+                        {
+                            Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
+                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            flag = 1;
+                        }
                     }
                 }
 
