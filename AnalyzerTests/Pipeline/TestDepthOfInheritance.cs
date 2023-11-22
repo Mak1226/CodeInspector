@@ -18,10 +18,7 @@ namespace Analyzer.Pipeline.Tests
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
 
-            // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
-
-            //DllFilePaths.Add(path);
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
