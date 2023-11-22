@@ -20,7 +20,7 @@ namespace Analyzer.Pipeline
         private int _verdict;
 
         // Set to store classes violating the rule
-        public HashSet<ParsedClass> violatingClasses = new();
+        public HashSet<ParsedClass> violatingClasses;
 
         /// <summary>
         /// Initializes a new instance of the AvoidConstructorsWithStaticTypes analyzer with parsed DLL files.
@@ -28,8 +28,6 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public AvoidConstructorsInStaticTypes( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
-            _errorMessage = "";
-            _verdict = 1;
             _analyzerID = "102";
         }
 
@@ -84,13 +82,11 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
+            _errorMessage = "";
+            _verdict = 1;
+            violatingClasses = new HashSet<ParsedClass>();
             foreach (ParsedClass cls in parsedDLLFile.classObjList)
             {
-                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf( typeof( Delegate ) ))
-                {
-                    continue;
-                }
-
                 if (cls.TypeObj.IsDefined( typeof( CompilerGeneratedAttribute ) , false ))
                 {
                     continue;
@@ -136,14 +132,12 @@ namespace Analyzer.Pipeline
             _errorMessage = "Classes ";
             foreach (ParsedClass cls in violatingClasses)
             {
-
                 _errorMessage += cls.TypeObj.FullName;
                 violations--;
                 if (violations != 0)
                 {
                     _errorMessage += ", ";
                 }
-
             }
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
