@@ -90,13 +90,21 @@ namespace Analyzer.Pipeline
             {
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
             }
-            catch (Exception _)
+            catch (Exception e)
             {
                 currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
 
+                string errorMsg = "Internal error, analyzer failed to execute";
+
+                // check analyzerID is present in _allAnalyzers as key
+                if (!_allAnalyzers.ContainsKey(analyzerID))
+                {
+                    errorMsg = "Analyser does not exists";
+                }
+
                 foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
                 {
-                    currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(analyzerID.ToString(), 1, "Internal error, analyzer failed to execute");
+                    currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(analyzerID.ToString(), 1, errorMsg);
                 }
             }
 
