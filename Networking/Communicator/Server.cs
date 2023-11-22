@@ -1,6 +1,15 @@
-﻿/////
-/// Author:
-/////
+﻿/******************************************************************************
+ * Filename    = Communicator/Server.cs
+ *
+ * Author      = 
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = 
+ *****************************************************************************/
+
 
 using System.Net.Sockets;
 using System.Net;
@@ -79,9 +88,11 @@ namespace Networking.Communicator
         public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
+            {
+                Console.WriteLine("[Server] Already started, returning same IP:Port");
                 return _ipPort;
+            }
 
-            _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _moduleName = moduleName;
             _senderId = senderId;
@@ -119,6 +130,7 @@ namespace Networking.Communicator
                 IsBackground = true
             };
             _listenThread.Start();
+            _isStarted = true;
             Subscribe(new NetworkingEventHandler(this), ID.GetNetworkingID());
             _ipPort = GetLocalIPAddress() + ":" + localEndPoint.Port;
             return _ipPort;
@@ -201,7 +213,16 @@ namespace Networking.Communicator
         public void HandleMessage(Message message)
         {
             if (message.DestID == ID.GetServerID())
-                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            {
+                try
+                {
+                    _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+                }
+                catch
+                {
+                    Console.WriteLine("[Server] " + message.ModuleName + " not subscribed");
+                }
+            }
             else
                 Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
 
