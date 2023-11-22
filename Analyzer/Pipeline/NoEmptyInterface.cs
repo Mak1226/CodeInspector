@@ -13,9 +13,9 @@ namespace Analyzer.Pipeline
     /// </summary>
     public class NoEmptyInterface : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         /// <summary>
         ///
@@ -23,9 +23,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public NoEmptyInterface(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "104";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "104";
         }
 
         /// <summary>
@@ -34,14 +34,15 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         public List<Type> FindEmptyInterfaces(ParsedDLLFile parsedDLLFile)
         {
-            List<Type> emptyInterfaceList = new List<Type>();
+            List<Type> emptyInterfaceList = new();
 
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
+                Console.WriteLine(interfaceObj.Name);
                 Type interfaceType = interfaceObj.TypeObj;
 
                 //
-                if (interfaceObj.Methods == null)
+                if (interfaceObj.Methods.Length == 0)
                 {
                     emptyInterfaceList.Add(interfaceType);
                 }
@@ -50,23 +51,21 @@ namespace Analyzer.Pipeline
             return emptyInterfaceList;
         }
 
-
         private string ErrorMessage(List<Type> emptyInterfaceList)
         {
-            var errorLog = new System.Text.StringBuilder("The following Interfaces are empty:");
+            var errorLog = new System.Text.StringBuilder("The following Interfaces are empty:\r\n");
 
             foreach (Type type in emptyInterfaceList)
             {
                 try
                 {
                     // sanity check
-                    errorLog.AppendLine(type.FullName.ToString());
+                    errorLog.AppendLine(type.FullName);
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
                     throw new ArgumentOutOfRangeException("Invalid Argument ", ex);
                 }
-
             }
             return errorLog.ToString();
         }
@@ -77,16 +76,13 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
-
             List<Type> emptyInterfaces = FindEmptyInterfaces(parsedDLLFile);
             if (emptyInterfaces.Count > 0)
             {
-                verdict = 1;
-                errorMessage = ErrorMessage(emptyInterfaces);
+                _verdict = 0;
+                _errorMessage = ErrorMessage(emptyInterfaces);
             }
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }
