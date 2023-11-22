@@ -9,6 +9,7 @@ namespace Content.ViewModel
     {
         private readonly ContentClient _contentClient;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
+        private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -61,6 +62,16 @@ namespace Content.ViewModel
             }
             set { throw new FieldAccessException(); }
 
+        }
+
+        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
         }
 
         private void OnPropertyChanged(string propertyName)

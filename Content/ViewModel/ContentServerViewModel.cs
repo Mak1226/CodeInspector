@@ -21,6 +21,7 @@ namespace Content.ViewModel
         private readonly ContentServer _contentServer;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
+        private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
         //private Tuple<string, List<Tuple<string, int, string>>> dataList;
 
 
@@ -93,6 +94,16 @@ namespace Content.ViewModel
                 return outList;
             }
 
+        }
+
+        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
         }
 
         public List<AnalyzerConfigOption> ConfigOptionsList
