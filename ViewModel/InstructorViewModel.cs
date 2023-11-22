@@ -44,7 +44,9 @@ namespace ViewModel
             }
             catch { }
         }
-
+        /// <summary>
+        /// Converting student list from <typeparamref name="List"/> to <typeparamref name="ObservableCollection"/>
+        /// </summary>
         public ObservableCollection<Student> StudentList => new( _studentSessionState.GetAllStudents() );
 
         public int StudentCount => _studentSessionState.GetStudentsCount();

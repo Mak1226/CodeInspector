@@ -10,7 +10,7 @@ namespace SessionState
     {
         List<Student> GetAllStudents();
         void AddStudent( string id , string name , string ip , int port );
-        void RemoveStudent(string id);
+        void RemoveStudent( string id );
 
         public int GetStudentsCount();
     }
