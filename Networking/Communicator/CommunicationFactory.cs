@@ -1,6 +1,15 @@
-﻿/////
-/// Author:
-/////
+﻿/******************************************************************************
+ * Filename    = Communicator/CommunicatorFactory.cs
+ *
+ * Author      = 
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = Factory for creating a communicator.
+ *****************************************************************************/
+
 
 namespace Networking.Communicator
 {
