@@ -75,21 +75,27 @@ namespace Analyzer.Pipeline
 
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                if(!IsPascalCase(cls.Name))
+                if(cls.Name[0] != '.')
                 {
-                    hasMistake = true;
-                    Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
-                    _errorMessage += "Incorrect Class Naming : " + cls.Name;
-                }                    
+                    if(!IsPascalCase(cls.Name))
+                    {
+                        hasMistake = true;
+                        Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
+                        _errorMessage += "Incorrect Class Naming : " + cls.Name;
+                    }
+                }
                 
                 // Check method names for PascalCasing and parameter names for camelCasing
                 foreach (MethodDefinition method in cls.MethodsList)
                 {
-                    if (!IsPascalCase(method.Name))
+                    if(method.Name[0] != '.')
                     {
-                        hasMistake = true;
-                        Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                        _errorMessage += "Incorrect Method Naming : " + method.Name;
+                        if (!IsPascalCase(method.Name))
+                        {
+                            hasMistake = true;
+                            Console.WriteLine($"Incorrect Method Naming : {method.Name}");
+                            _errorMessage += "Incorrect Method Naming : " + method.Name;
+                        }
                     }
 
                     if (!AreParametersCamelCased(method))
