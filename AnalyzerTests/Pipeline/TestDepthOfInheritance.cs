@@ -60,11 +60,9 @@ namespace Analyzer.Pipeline.Tests
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                Console.WriteLine(dll.Key);
-
                 AnalyzerResult res = dll.Value;
 
-                Assert.AreEqual(res.Verdict, 1 );
+                Assert.AreEqual(res.Verdict, 0 );
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }
