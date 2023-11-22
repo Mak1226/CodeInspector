@@ -23,11 +23,16 @@ namespace CloudUnitTests
     [TestClass()]
     public class InsightsTests
     {
+        /*
         private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
         private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
         private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
         private readonly string _insightsUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/insights";
-
+        */
+        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
+        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
+        private readonly string _sessionUrl = "http://localhost:7074/api/session";
+        private readonly string _insightsUrl = "http://localhost:7074/api/insights";
         private readonly DownloadApi _downloadClient;
         private readonly UploadApi _uploadClient;
         private readonly InsightsApi _insightsClient;
@@ -314,8 +319,7 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task TestScoreTest()
         {
-            await _downloadClient.DeleteAllAnalysisAsync();
-            await _downloadClient.DeleteAllSessionsAsync();
+            
             await FillTestData();
             Dictionary<string , int> TestScore = await _insightsClient.GetTestScoreGivenSession( "1" );
             Assert.AreEqual( 2 , TestScore.Count );
