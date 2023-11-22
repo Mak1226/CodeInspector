@@ -43,8 +43,6 @@ namespace Networking.Utils
         {
             Console.WriteLine("[Receiver] Stop");
             _stopThread = true;
-            //_recvQueue.Enqueue(new Message(Serializer.Serialize<Data>(
-            //    new Data(EventType.StopThread())),, 10 /* TODO */);
             _recvThread.Join();
             _recvQueueThread.Join();
         }
@@ -57,46 +55,48 @@ namespace Networking.Utils
                 bool ifAval = false;
                 foreach (var item in _clientIDToStream)
                 {
-                    if (item.Value.DataAvailable == true)
+                    try
                     {
-                        ifAval = true;
-                        // Read the size of the incoming message
-                        byte[] sizeBytes = new byte[sizeof(int)];
-                        int sizeBytesRead = item.Value.Read(sizeBytes, 0, sizeof(int));
-                        System.Diagnostics.Trace.Assert((sizeBytesRead == sizeof(int)));
 
-                        int messageSize = BitConverter.ToInt32(sizeBytes, 0);
-
-                        // Now read the actual message
-                        byte[] receiveData = new byte[messageSize];
-                        int totalBytesRead = 0;
-
-                        while (totalBytesRead < messageSize)
+                        if (item.Value.DataAvailable == true)
                         {
-                            sizeBytesRead = item.Value.Read(receiveData, totalBytesRead, messageSize - totalBytesRead);
-                            if (sizeBytesRead == 0)
-                            { 
-                                // Handle the case where the stream is closed or no more data is available
-                                break;
-                            }
-                            totalBytesRead += sizeBytesRead;
-                        }
+                            ifAval = true;
+                            // Read the size of the incoming message
+                            byte[] sizeBytes = new byte[sizeof(int)];
+                            int sizeBytesRead = item.Value.Read(sizeBytes, 0, sizeof(int));
+                            System.Diagnostics.Trace.Assert((sizeBytesRead == sizeof(int)));
 
-                        System.Diagnostics.Trace.Assert((totalBytesRead == messageSize));
+                            int messageSize = BitConverter.ToInt32(sizeBytes, 0);
 
-                        string receivedMessage = Encoding.ASCII.GetString(receiveData);
-                        Message message = Serializer.Deserialize<Message>(receivedMessage);
-                        if (message.ModuleName == ID.GetNetworkingID())
-                        {
-                            Data data=Serializer.Deserialize<Data>(message.Data);    
-                            if (data.EventType == EventType.ClientRegister())
+                            // Now read the actual message
+                            byte[] receiveData = new byte[messageSize];
+                            int totalBytesRead = 0;
+
+                            while (totalBytesRead < messageSize)
                             {
-                                data.Payload = item.Key;
-                                message.Data=Serializer.Serialize<Data>(data);
-                                //message.Data = item.Key;
+                                sizeBytesRead = item.Value.Read(receiveData, totalBytesRead, messageSize - totalBytesRead);
+                                totalBytesRead += sizeBytesRead;
                             }
+
+                            System.Diagnostics.Trace.Assert((totalBytesRead == messageSize));
+
+                            string receivedMessage = Encoding.ASCII.GetString(receiveData);
+                            Message message = Serializer.Deserialize<Message>(receivedMessage);
+                            if (message.ModuleName == ID.GetNetworkingID())
+                            {
+                                Data data = Serializer.Deserialize<Data>(message.Data);
+                                if (data.EventType == EventType.ClientRegister())
+                                {
+                                    data.Payload = item.Key;
+                                    message.Data = Serializer.Serialize<Data>(data);
+                                }
+                            }
+                            _recvQueue.Enqueue(message, Priority.GetPriority(message.ModuleName) /* fix it */);
                         }
-                        _recvQueue.Enqueue(message, Priority.GetPriority(message.ModuleName) /* fix it */);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Exception in reciever :"+ex.Message);
                     }
                 }
                 if (ifAval == false)
@@ -105,33 +105,9 @@ namespace Networking.Utils
             Console.WriteLine("[Receiver] Receive stops");
         }
 
-        /*private void handleMessage(Message message)
-        {
-            foreach (KeyValuePair<string, IEventHandler> pair in _moduleEventMap)
-            {
-                MethodInfo method = typeof(IEventHandler).GetMethod(message.EventType);
-                if (method != null)
-                {
-
-                    object[] parameters = new object[] { message };
-                    if (message.EventType==EventType.ClientRegister()|| message.EventType == EventType.ClientDeregister())
-                    {
-                        parameters = new object[] { message ,_clientIDToStream, senderIDToClientID };
-                    }
-                    try
-                    {
-                        method.Invoke(pair.Value, parameters);
-                    }
-                    catch (Exception) { }
-                }
-                else
-                    Console.WriteLine("Method not found");
-            }
-        }*/
-
         private void RecvLoop()
         {
-            while (true)
+            while (!_stopThread)
             {
                 if (!_recvQueue.canDequeue())
                 {

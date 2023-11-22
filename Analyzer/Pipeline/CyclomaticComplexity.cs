@@ -13,8 +13,8 @@ namespace Analyzer.Pipeline
 {
     public class CyclomaticComplexity : AnalyzerBase
     {
-        private int _maxAllowedComplexity;
-        private string _analyzerID ;
+        private readonly int _maxAllowedComplexity;
+        private readonly string _analyzerID ;
         public CyclomaticComplexity(List<ParsedDLLFile> dllFiles , int maxAllowedComplexity=10) : base(dllFiles)
         {
             _maxAllowedComplexity = maxAllowedComplexity;
@@ -24,14 +24,14 @@ namespace Analyzer.Pipeline
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            StringBuilder errorMessageBuilder = new StringBuilder();
+            StringBuilder errorMessageBuilder = new();
             int verdict = 1;    // no error
 
             List<ParsedClassMonoCecil> parsedClasses = parsedDLLFile.classObjListMC;
 
             foreach (ParsedClassMonoCecil parsedClass in parsedClasses)
             {
-                List<MethodDefinition> methods_constructors = parsedClass.Methods;
+                List<MethodDefinition> methods_constructors = parsedClass.MethodsList;
                 methods_constructors.AddRange(parsedClass.Constructors);
 
                 foreach(MethodDefinition method in methods_constructors)
