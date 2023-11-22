@@ -1,44 +1,52 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using Analyzer.Parsing;
-using System.Linq;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     [TestClass]
-    public class AvoidGotoStatementsAnalyzerTests
+    public class TestAvoidGotoStatements
     {
-        /*[TestMethod]
-        public void NoGotoStatements_ShouldPass()
+        [TestMethod]
+        public void TestWithGotoStatements()
         {
-            // Arrange
-            List<string> dllFilePaths = new List<string>
-            {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\Goto.dll"
-            };
+            // Create a list to hold parsed DLL files
+            List<ParsedDLLFile> DllFileObjs = new();
+            string path = "..\\..\\..\\TestDLLs\\Goto.dll";
 
-            ParsedDLLFiles dllFiles = new ParsedDLLFiles(dllFilePaths);
-            AvoidGotoStatementsAnalyzer analyzer = new AvoidGotoStatementsAnalyzer(dllFiles);
+            // Create a ParsedDLLFile object for the specified DLL
+            var parsedDllObj = new ParsedDLLFile(path);
+            DllFileObjs.Add(parsedDllObj);
 
-            // Act
-            var result = analyzer.Run();
+            AvoidGotoStatementsAnalyzer avoidGotoStatements = new(DllFileObjs);
 
-            // Assert
-            Assert.AreEqual(1, result.Verdict); // Verdict should be 1 for passing
-        }*/
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["Goto.dll"];
+            Assert.AreEqual(0, result.Verdict);
+        }
 
         [TestMethod]
-        public void GotoStatementsPresent_ShouldFail()
+        public void TestWithoutGotoStatements()
         {
-            List<string> dllFilePaths = new() { "..\\..\\..\\..\\Analyzer\\TestDLLs\\Goto.dll" };
+            // Create a list to hold parsed DLL files
+            List<ParsedDLLFile> DllFileObjs = new();
+            string path = "..\\..\\..\\TestDLLs\\NoGoto.dll";
 
-            List<ParsedDLLFile> dllFiles = dllFilePaths.Select(path => new ParsedDLLFile(path)).ToList();
-            AvoidGotoStatementsAnalyzer analyzer = new(dllFiles);
+            // Create a ParsedDLLFile object for the specified DLL
+            var parsedDllObj = new ParsedDLLFile(path);
 
-            var result = analyzer.AnalyzeAllDLLs();
+            // Add the parsed DLL object to the list
+            DllFileObjs.Add(parsedDllObj);
+            AvoidGotoStatementsAnalyzer avoidGotoStatements = new(DllFileObjs);
 
-            Assert.AreEqual(0, result[dllFiles[0].DLLFileName].Verdict); // Verdict should be 0 for failing
+            // Run the analysis
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
+
+            // Assert that the analyzer verdict is 1 (indicating no goto statements were found)
+            Analyzer.AnalyzerResult result = resultObj["NoGoto.dll"];
+            Assert.AreEqual(1, result.Verdict);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
@@ -49,6 +49,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violations Found";
                 _verdict = 1;
             }
 
@@ -61,34 +62,73 @@ namespace Analyzer.Pipeline
             bool hasMistake = false;
 
             // Check namespace names for PascalCasing
-            foreach(ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
+            foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
+                int flag = 0;
+                string? s = interfaceObj.TypeObj.Namespace;
+                if (!IsPascalCase(s))
                 {
+                    flag++;
                     hasMistake = true;
-                    Console.WriteLine($"Incorrect Namespace Naming : {classObj.TypeObj.BaseType.Namespace}");
-                    _errorMessage = "Incorrect Namespace Naming : " + classObj.TypeObj.BaseType.Namespace;
+                    Console.WriteLine($"Incorrect Namespace Naming : {s}");
+                    if(flag==1)
+                    {
+                        _errorMessage += "Incorrect Namespace Naming : " + s + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + s + " ";
+                    }
                 }
             }
 
-            if (!hasMistake)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
+                int flag = 0;
+                if(cls.Name[0] != '.')
                 {
-                    // Check method names for PascalCasing and parameter names for camelCasing
-                    foreach (MethodDefinition method in cls.MethodsList)
+                    if(!IsPascalCase(cls.Name))
+                    {
+                        flag++;
+                        hasMistake = true;
+                        Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
+                        if(flag == 1)
+                        {
+                            _errorMessage += "Incorrect Class Naming : " + cls.Name + " ";
+                        }
+
+                        else
+                        {
+                            _errorMessage += ", " + cls.Name + " ";
+                        }
+                    }
+                }
+                
+                // Check method names for PascalCasing and parameter names for camelCasing
+                foreach (MethodDefinition method in cls.MethodsList)
+                {
+                    int flag1 = 0;
+                    if(method.Name[0] != '.')
                     {
                         if (!IsPascalCase(method.Name))
                         {
+                            flag1++;
                             hasMistake = true;
                             Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                            _errorMessage = "Incorrect Method Naming : " + method.Name;
+                            if(flag1 == 1)
+                            {
+                                _errorMessage += "Incorrect Method Naming : " + method.Name + " ";
+                            }
+                            else
+                            {
+                                _errorMessage += ", " + method.Name + " ";
+                            }
                         }
+                    }
 
-                        if (!AreParametersCamelCased(method))
-                        {
-                            hasMistake = true;
-                        }
+                    if (!AreParametersCamelCased(method))
+                    {
+                        hasMistake = true;
                     }
                 }
             }
@@ -120,6 +160,7 @@ namespace Analyzer.Pipeline
         private bool AreParametersCamelCased(MethodDefinition method)
         {
                 int flag = 0;
+                int flag1 = 0;
                    
                 foreach (ParameterDefinition param in method.Parameters)
                 {
@@ -127,8 +168,17 @@ namespace Analyzer.Pipeline
                     {
                         if (!IsCamelCase( param.Name ))
                         {
+                            flag1++;
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            if(flag1 == 1)
+                            {
+                                _errorMessage += "Incorrect Parameter Naming : " + param.Name + " ";
+                            }
+
+                            else
+                            {
+                                _errorMessage += ", " + param.Name + " ";
+                            }
                             flag = 1;
                         }
                     }
@@ -137,8 +187,17 @@ namespace Analyzer.Pipeline
                     {
                         if (!char.IsLower(param.Name[1]))
                         {
+                            flag1++;
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            if(flag1 == 1)
+                            {
+                                _errorMessage += "Incorrect Parameter Naming : " + param.Name + " ";
+                            }
+
+                            else
+                            {
+                                _errorMessage += ", " + param.Name + " ";
+                            }
                             flag = 1;
                         }
                     }
