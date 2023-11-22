@@ -36,7 +36,7 @@ namespace Analyzer.Pipeline
         /// <returns>The score for the analyzer.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
 
             // Check if there is at least one abstract class that does not meet the criteria
@@ -47,6 +47,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
 
@@ -79,7 +80,7 @@ namespace Analyzer.Pipeline
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 Type classType = classObj.TypeObj;
-
+                int flag1 = 0;
                 if (classType.GetTypeInfo().IsAbstract)
                 {
                     string className = classType.Name;
@@ -87,8 +88,17 @@ namespace Analyzer.Pipeline
                     // Check if the class name is not in Pascal case or does not end with 'Base'
                     if (!IsPascalCase(className) || !className.EndsWith("Base"))
                     {
+                        flag1++;
                         Console.WriteLine($"Incorrect Abstract Class Naming : {className}");
-                        _errorMessage += "Incorrect Abstract Class Naming : " + className;
+                        if(flag1 == 1)
+                        {
+                            _errorMessage += "Incorrect Abstract Class Naming : " + className + " ";
+                        }
+
+                        else
+                        {
+                            _errorMessage += ", " + className + " ";
+                        }
                         flag = 1;// If any abstract class does not meet the criteria, return true
                     }
                 }
