@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace SessionStateUnitTesting
 {
-
+    /// <summary>
+    /// Unit Tests for SessionState
+    /// </summary>
     [TestClass]
     public class UnitTest1
     {
+        /// <summary>
+        /// Validates that a student is added to list
+        /// </summary>
         [TestMethod]
         public void AddStudent_AddsStudentToList()
         {
@@ -26,6 +31,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(8080, students.First().Port);
         }
 
+        /// <summary>
+        /// Validates that a student is not added to list if already present
+        /// </summary>
         [TestMethod]
         public void AddStudent_DoesNotAddDuplicateStudent()
         {
@@ -41,6 +49,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(1, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is removed from list
+        /// </summary>
         [TestMethod]
         public void RemoveStudent_RemovesStudentFromList()
         {
@@ -56,6 +67,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(0, students.Count);
         }
 
+        /// <summary>
+        /// Validates that no change to list occurs if student to be removed is not present in the list
+        /// </summary>
         [TestMethod]
         public void RemoveStudent_DoesNothingIfStudentNotFound()
         {
@@ -71,6 +85,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(1, students.Count);
         }
 
+        /// <summary>
+        /// Validates that the correct number of students is returned
+        /// </summary>
         [TestMethod]
         public void GetStudentsCount_ReturnsCorrectCount()
         {
@@ -86,6 +103,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(2, count);
         }
 
+        /// <summary>
+        /// Validates that the list is cleared when <typeparamref name="RemoveAllStudents"></typeparamref> is called
+        /// </summary>
         [TestMethod]
         public void RemoveAllStudents_ClearsStudentList()
         {
@@ -101,7 +121,10 @@ namespace SessionStateUnitTesting
             var students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
-
+        
+        /// <summary>
+        /// Validates that no change to list occurs when <typeparamref name="RemoveAllStudents"></typeparamref> is called on an empty list
+        /// </summary>
         [TestMethod]
         public void RemoveAllStudents_DoesNothingIfListIsEmpty()
         {
@@ -116,6 +139,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(0, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not added to list if no id is passed
+        /// </summary>
         [TestMethod]
         public void AddStudent_WithInvalidData_DoesNotAddStudent()
         {
@@ -130,6 +156,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(0, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not removed from list if invalid data is passed
+        /// </summary>
         [TestMethod]
         public void RemoveStudent_WithInvalidId_DoesNothing()
         {
@@ -145,6 +174,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(1, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not added to list if invalid id is passed
+        /// </summary>
         [TestMethod]
         public void AddStudent_WithEmptyId_DoesNotAddStudent()
         {
@@ -159,6 +191,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(0, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not added to the list if invalid port is passed
+        /// </summary>
         [TestMethod]
         public void AddStudent_WithNegativePort_DoesNotAddStudent()
         {
@@ -173,6 +208,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(0, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not added to the list if invalid id is passed
+        /// </summary>
         [TestMethod]
         public void RemoveStudent_WithNonexistentId_DoesNothing()
         {
@@ -188,6 +226,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(1, students.Count);
         }
 
+        /// <summary>
+        /// Validates that a student is not removed from the list if invalid id is passed
+        /// </summary>
         [TestMethod]
         public void RemoveStudent_WithNullId_DoesNothing()
         {
@@ -203,6 +244,9 @@ namespace SessionStateUnitTesting
             Assert.AreEqual(1, students.Count);
         }
 
+        /// <summary>
+        /// Validates that no change to list if empty list is cleared
+        /// </summary>
         [TestMethod]
         public void RemoveAllStudents_WithNullList_DoesNothing()
         {
