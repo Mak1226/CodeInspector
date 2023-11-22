@@ -57,5 +57,22 @@ namespace ContentUnitTesting.ContentClientServerTest
             contentClient.HandleReceive(encoding);
             Assert.IsTrue(analyzerResultUpdated.ContainsKey("File1"));
         }
+        [TestMethod]
+        public void NullReceiveTest()
+        {
+            ContentClient contentClient = new ContentClient(_communicator, "currSession");
+
+            Dictionary<string, List<AnalyzerResult>> analyzerResult = new Dictionary<string, List<AnalyzerResult>>
+            {
+                { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
+                // Add more initial values as needed
+            };
+            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+            Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new Dictionary<string, List<AnalyzerResult>>();
+            string encoding = serializer.Serialize(analyzerResultUpdated);
+            contentClient.HandleReceive(encoding);
+            // When passed value is empty, analyzerResult is not updated
+            Assert.IsTrue(analyzerResult.ContainsKey("File1"));
+        }
     }
 }
