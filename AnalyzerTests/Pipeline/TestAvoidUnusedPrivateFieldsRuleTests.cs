@@ -35,6 +35,11 @@ namespace Analyzer.Pipeline.Tests
 
     }
 
+    public class ClassWithNoFields
+    {
+
+    }
+
     [TestClass()]
     public class TestAvoidUnusedPrivateFieldsRuleTests
     {
@@ -72,6 +77,24 @@ namespace Analyzer.Pipeline.Tests
             List<string> originalUnusedFields = new() {"_var2"};
 
             Assert.AreEqual(unusedFields.ToString() ,originalUnusedFields.ToString());
+        }
+
+        [TestMethod()]
+        public void TestClassWithNoFields()
+        {
+
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+
+            AvoidUnusedPrivateFieldsRule avoidUnusedPrivateFieldsRule = new(new List<ParsedDLLFile> { });
+
+            ModuleDefinition module = ModuleDefinition.ReadModule(dllFile);
+            TypeReference typeReference = module.ImportReference(typeof(ClassWithNoFields));
+            TypeDefinition typeDefinition = typeReference.Resolve();
+
+            List<string> unusedFields = avoidUnusedPrivateFieldsRule.HandleClass(new ParsedClassMonoCecil(typeDefinition));
+            List<string> originalUnusedFields = new() {};
+
+            Assert.AreEqual(unusedFields.ToString(), originalUnusedFields.ToString());
         }
 
     }

@@ -23,7 +23,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "112";
+            _analyzerID = "118";
         }
 
         private List<FieldDefinition> FindVisibleNativeFields(ParsedDLLFile parsedDLLFile)
