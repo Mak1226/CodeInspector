@@ -1,13 +1,7 @@
 ﻿using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using System.Net;
-using System.Formats.Asn1;
 
 namespace Analyzer.Pipeline
 {

@@ -95,16 +95,17 @@ namespace Analyzer.Parsing
             }
 
 
-            // Finding method bases for methods of the class found earlier
+            //Finding method bases for methods of the class found earlier
             foreach (MethodInfo methodinfo in Methods)
             {
-                MethodBase methodBase = TypeObj.GetMethod(methodinfo.Name);
+                MethodBase methodBase = TypeObj.GetMethod( methodinfo.Name );
 
                 if (methodBase != null)
                 {
                     MethodBaseList.Add(methodBase);
+                    //methodBase
                 }
-            }
+}
         }
 
         /// <summary>

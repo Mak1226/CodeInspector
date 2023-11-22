@@ -1,10 +1,5 @@
 ﻿using Mono.Cecil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.Parsing
 {
@@ -15,7 +10,6 @@ namespace Analyzer.Parsing
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
 
-        public List<ParsedStructure> structureObjList = new();
 
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
@@ -48,7 +42,8 @@ namespace Analyzer.Parsing
 
                         if (type.IsClass)
                         {
-                            if (!type.IsValueType)
+                            // To avoid structures and delegates
+                            if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
                             {
                                 ParsedClass classObj = new(type);
                                 classObjList.Add(classObj);
@@ -58,14 +53,6 @@ namespace Analyzer.Parsing
                         {
                             ParsedInterface interfaceObj = new(type);
                             interfaceObjList.Add(interfaceObj);
-                        }
-                        else if (type.IsEnum)
-                        {
-                            // IGNORE
-                        }
-                        else
-                        {
-
                         }
                     }
                     else
@@ -87,7 +74,7 @@ namespace Analyzer.Parsing
 
                 if (mainModule != null)
                 {
-                        foreach(TypeDefinition type in mainModule.Types)
+                    foreach(TypeDefinition type in mainModule.Types)
                     {
                         if (type.Namespace != "")
                         {
@@ -96,18 +83,10 @@ namespace Analyzer.Parsing
                                 continue;
                             }
 
-                            if(type.IsClass && !type.IsValueType)
+                            if(type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate")
                             {
                                 ParsedClassMonoCecil classObj = new(type);
                                 classObjListMC.Add(classObj);
-                            }
-                            else if (type.IsInterface)
-                            {
-                                    
-                            }
-                            else
-                            {
-
                             }
                         }
                     }
@@ -115,9 +94,8 @@ namespace Analyzer.Parsing
                 assemblyDef.Dispose();
             }
 
-            assembly = null;
-            assemblyDef = null;
-
+            //assembly = null;
+            //assemblyDef = null;
         }
 
     }
