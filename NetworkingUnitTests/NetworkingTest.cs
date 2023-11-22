@@ -106,7 +106,14 @@ public class NetworkingTest
         server.Stop();
         Assert.IsTrue(CompareMessages(receivedMessage, message));
     }
-
+    //[TestMethod]
+    //public void ServerStopped()
+    //{
+    //    ICommunicator server = new Server();
+    //    ICommunicator client = new Client();
+    //    server.Stop();
+    //    client.Send("huh", ID.GetServerID());
+    //}
     [TestMethod]
     public void OneClientToItself()
     {

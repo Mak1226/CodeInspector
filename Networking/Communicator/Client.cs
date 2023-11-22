@@ -21,7 +21,7 @@ namespace Networking.Communicator
         private string _moduleName;
         private Sender _sender;
         private Receiver _receiver;
-        private Dictionary<string, NetworkStream> _IDToStream = new();
+        public Dictionary<string, NetworkStream> _IDToStream = new();
         Dictionary<string, string> _senderIDToClientID = new();
 
         private string _senderId;
@@ -31,7 +31,7 @@ namespace Networking.Communicator
         private bool _isStarted = false;
 
 
-        public void Send(string serializedData, string moduleName, string destId)
+        public void Send(string serializedData, string moduleName, string destId) 
         {
             if (!_isStarted)
                 throw new Exception("Start the client first");
@@ -116,7 +116,7 @@ namespace Networking.Communicator
             //eventHandlers.Add(eventHandler);
             //_eventHandlersMap[theEvent] = eventHandlers;
             if (_eventHandlersMap.ContainsKey(moduleName))
-                Console.WriteLine("");// already subs
+                Console.WriteLine("[Client] "+moduleName+" already subscribed");// already subs
             else
                 _eventHandlersMap[moduleName] = eventHandler;
 
@@ -124,12 +124,13 @@ namespace Networking.Communicator
 
         public void HandleMessage(Message message)
         {
-            //foreach (IEventHandler eventHandler in _eventHandlersMap[message.EventType])
-            //{
-            //    eventHandler.HandleMessageRecv(message);
-            //}
-            if(message.ModuleName != ID.GetNetworkingID() || _eventHandlersMap.ContainsKey(message.ModuleName))
+            if(_eventHandlersMap.ContainsKey(message.ModuleName))
                 _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            else
+            {
+                 Console.WriteLine("[Client] " + message.ModuleName + " not subscribed");
+            }
+                
 
         }
 

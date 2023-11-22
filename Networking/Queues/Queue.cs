@@ -69,5 +69,11 @@ namespace Networking.Queues
         {
             return _queue.TryPeek(out Message? _, out int _);
         }
+        public Message? Peak()
+        {
+            _queue.TryPeek(out Message? message, out int _);
+            return message;
+
+        }
     }
 }
