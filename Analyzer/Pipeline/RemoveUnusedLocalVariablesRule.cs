@@ -49,8 +49,8 @@ namespace Analyzer.Pipeline
             string errorString = totalUnusedLocals > 0
                 ? $"There are {totalUnusedLocals} unused local variables"
                 : "No unused local variables found.";
-
-            return new AnalyzerResult( "109" , totalUnusedLocals , errorString );
+            int verdict = totalUnusedLocals > 0 ? 0 : 1;
+            return new AnalyzerResult( "109" , verdict , errorString );
         }
 
         /// <summary>
