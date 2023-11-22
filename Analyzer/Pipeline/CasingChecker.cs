@@ -107,15 +107,15 @@ namespace Analyzer.Pipeline
                 // Check method names for PascalCasing and parameter names for camelCasing
                 foreach (MethodDefinition method in cls.MethodsList)
                 {
-                    int flag = 0;
+                    int flag1 = 0;
                     if(method.Name[0] != '.')
                     {
                         if (!IsPascalCase(method.Name))
                         {
-                            flag++;
+                            flag1++;
                             hasMistake = true;
                             Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                            if(flag == 1)
+                            if(flag1 == 1)
                             {
                                 _errorMessage += "Incorrect Method Naming : " + method.Name + " ";
                             }
