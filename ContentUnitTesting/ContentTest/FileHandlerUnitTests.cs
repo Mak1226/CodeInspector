@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename     = FileHandlerUnitTests.cs
  * 
- * Author       = Susan
+ * Author       = Lekshmi
  *
  * Product      = Analyzer
  * 
