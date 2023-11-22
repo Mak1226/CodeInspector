@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
+            _errorMessage = "No Violation Found";
             _verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
@@ -66,8 +66,8 @@ namespace Analyzer.Pipeline
                 if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
                 {
                     hasMistake = true;
-                    Console.WriteLine($"INCORRECT NAMESPACE NAMING : {classObj.TypeObj.BaseType.Namespace}");
-                    _errorMessage = "INCORRECT NAMESPACE NAMING : " + classObj.TypeObj.BaseType.Namespace;
+                    Console.WriteLine($"Incorrect Namespace Naming : {classObj.TypeObj.BaseType.Namespace}");
+                    _errorMessage = "Incorrect Namespace Naming : " + classObj.TypeObj.BaseType.Namespace;
                 }
             }
 
@@ -81,8 +81,8 @@ namespace Analyzer.Pipeline
                         if (!IsPascalCase(method.Name))
                         {
                             hasMistake = true;
-                            Console.WriteLine($"INCORRECT METHOD NAMING : {method.Name}");
-                            _errorMessage = "INCORRECT METHOD NAMING : " + method.Name;
+                            Console.WriteLine($"Incorrect Method Naming : {method.Name}");
+                            _errorMessage = "Incorrect Method Naming : " + method.Name;
                         }
 
                         if (!AreParametersCamelCased(method))
@@ -127,8 +127,8 @@ namespace Analyzer.Pipeline
                     {
                         if (!IsCamelCase( param.Name ))
                         {
-                            Console.WriteLine( $"INCORRECT PARAMETER NAMING : {param.Name}" );
-                            _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
+                            Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
+                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
                             flag = 1;
                         }
                     }
@@ -137,8 +137,8 @@ namespace Analyzer.Pipeline
                     {
                         if (!char.IsLower(param.Name[1]))
                         {
-                            Console.WriteLine( $"INCORRECT PARAMETER NAMING : {param.Name}" );
-                            _errorMessage = "INCORRECT PARAMETER NAMING : " + param.Name;
+                            Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
+                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
                             flag = 1;
                         }
                     }
