@@ -62,7 +62,6 @@ namespace Analyzer.Pipeline
                 _parsedDLLFiles.Add(new ParsedDLLFile(file));
             }
 
-
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);

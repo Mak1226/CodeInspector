@@ -8,7 +8,7 @@ namespace Analyzer.Tests
     public class AnalyzerTests
     {
         [TestMethod()]
-        public void AnalyzerTest()
+        public void AllAnalyzerInPipelineTest()
         {
             Analyzer analyzer = new();
 
@@ -29,7 +29,9 @@ namespace Analyzer.Tests
                 [113] = true ,
                 [114] = true ,
                 [115] = true ,
-                [116] = true
+                [116] = true ,
+                [117] = true ,
+                [118] = true
             };
 
             analyzer.Configure(teacherOptions);
@@ -77,7 +79,184 @@ namespace Analyzer.Tests
                 }
             }
 
-            Assert.AreEqual(result.ToString(), original.ToString());
+            //Assert.AreEqual(result.ToString(), original.ToString());
+            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+        }
+
+        [TestMethod()]
+        public void InvalidTeacherConfiguration()
+        {
+            Analyzer analyzer = new();
+
+            IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
+            {
+                [200] = true,
+                [201] = false,
+            };
+
+            analyzer.Configure(teacherOptions);
+
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\Abstract.dll"
+            };
+
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
+
+            Dictionary<string, List<AnalyzerResult>> original = new();
+
+            original["Abstract.dll"] = new List<AnalyzerResult> {
+
+                new AnalyzerResult("200", 1, "Internal error, analyzer failed to execute"),
+                new AnalyzerResult("201", 1, "Internal error, analyzer failed to execute"),
+            };
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
+
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            //Assert.AreEqual(result.ToString(), original.ToString());
+            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+        }
+
+        [TestMethod()]
+        public void OnlyFewTeacherOptions()
+        {
+            Analyzer analyzer = new();
+
+            IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
+            {
+                [101] = true,
+                [102] = true,
+                [104] = true,
+                [105] = true,
+                [108] = true,
+                [110] = true,
+            };
+
+            analyzer.Configure(teacherOptions);
+
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\Abstract.dll"
+            };
+
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
+
+            Dictionary<string, List<AnalyzerResult>> original = new();
+
+            original["Abstract.dll"] = new List<AnalyzerResult> {
+
+                new AnalyzerResult("101", 1, ""),
+                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
+                new AnalyzerResult("104", 1, "No violation found."),
+                new AnalyzerResult("108", 0, "No violations found."),
+                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+
+            };
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
+
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            //Assert.AreEqual(result.ToString(), original.ToString());
+            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+        }
+
+        [TestMethod]
+        public void MultipleDllFiles()
+        {
+            Analyzer analyzer = new();
+
+            IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
+            {
+                [102] = true,
+                [104] = true,
+                [105] = true,
+                [108] = true,
+                [110] = true,
+            };
+
+            analyzer.Configure(teacherOptions);
+
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\Abstract.dll",
+                "..\\..\\..\\TestDLLs\\BridgePattern.dll",
+                "..\\..\\..\\TestDLLs\\Proxy.dll",
+            };
+
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
+
+            Dictionary<string, List<AnalyzerResult>> original = new();
+
+            original["Abstract.dll"] = new List<AnalyzerResult> {
+
+                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
+                new AnalyzerResult("104", 1, "No violation found."),
+                new AnalyzerResult("108", 0, "No violations found."),
+                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+
+            };
+
+            original["BridgePattern.dll"] = new List<AnalyzerResult> {
+
+                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
+                new AnalyzerResult("104", 1, "No violation found."),
+                new AnalyzerResult("108", 0, "No violations found."),
+                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+
+            };
+
+            original["Proxy.dll"] = new List<AnalyzerResult> {
+
+                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
+                new AnalyzerResult("104", 1, "No violation found."),
+                new AnalyzerResult("108", 0, "No violations found."),
+                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+
+            };
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
+
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+        }
+
+        private class AnalyzerResultComparer : Comparer<AnalyzerResult>
+        {
+            public override int Compare(AnalyzerResult x, AnalyzerResult y)
+            {
+                // Customize the comparison logic as needed
+                return x.AnalyserID.CompareTo(y.AnalyserID) +
+                       x.Verdict.CompareTo(y.Verdict) +
+                       x.ErrorMessage.CompareTo(y.ErrorMessage);
+            }
         }
     }
 }

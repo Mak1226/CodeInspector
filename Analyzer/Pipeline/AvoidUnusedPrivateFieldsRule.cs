@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace Analyzer.Pipeline
 {
     /// <summary>
