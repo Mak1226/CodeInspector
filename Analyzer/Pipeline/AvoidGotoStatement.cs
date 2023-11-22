@@ -1,7 +1,6 @@
 ﻿using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,13 +12,11 @@ namespace Analyzer.Pipeline
     public class AvoidGotoStatementsAnalyzer : AnalyzerBase
     {
         private readonly List<string> _errorMessages;
-        private int _verdict;
         private readonly string _analyzerID;
 
         public AvoidGotoStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessages = new List<string>();
-            _verdict = 1;
             _analyzerID = "117";
         }
 
@@ -31,21 +28,16 @@ namespace Analyzer.Pipeline
         {
             CheckForGotoStatements(parsedDLLFile);
 
-            // Concatenate all error messages into a single string
-            string errorMessageString = string.Join(", ", _errorMessages);
-
             // If no errors, add a message indicating everything looks fine
-            if (string.IsNullOrEmpty(errorMessageString))
+            if (_errorMessages.Count == 0)
             {
-                errorMessageString = "Everything looks fine. No goto statements found.";
-            }
-            else
-            {
-                errorMessageString = $"Goto statements found in functions: {errorMessageString}.";
-                _verdict = 0;
+                return new AnalyzerResult(_analyzerID, 1, "No goto statements found.");
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, errorMessageString);
+            // Create an error message string with the names of classes that have errors
+            string errorMessageString = $"Goto statements found in classes: {string.Join(", ", _errorMessages)}.";
+
+            return new AnalyzerResult(_analyzerID, 0, errorMessageString);
         }
 
         /// <summary>
@@ -61,8 +53,9 @@ namespace Analyzer.Pipeline
                     {
                         if (MethodContainsGotoStatement(method.Body.Instructions))
                         {
-                            // Collect the method name if a goto statement is found
-                            _errorMessages.Add(method.FullName);
+                            // Collect the class name if a goto statement is found
+                            _errorMessages.Add(cls.TypeObj.Name);
+                            break; // Break after finding the first goto statement in the method
                         }
                     }
                 }

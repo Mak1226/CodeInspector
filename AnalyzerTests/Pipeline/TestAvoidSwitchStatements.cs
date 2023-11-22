@@ -44,6 +44,7 @@ namespace AnalyzerTests.Pipeline
 
             Analyzer.AnalyzerResult result = resultObj["Rules1.dll"];
             Assert.AreEqual(0, result.Verdict);
+            Console.WriteLine(result.ErrorMessage);
         }
     }
 }
