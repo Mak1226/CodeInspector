@@ -63,7 +63,7 @@ namespace Analyzer.Pipeline
             // Check namespace names for PascalCasing
             foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                string? s = interfaceObj.TypeObj.Namespace
+                string? s = interfaceObj.TypeObj.Namespace;
                 if (!IsPascalCase(s))
                 {
                     hasMistake = true;
