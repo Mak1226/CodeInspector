@@ -42,6 +42,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingUnitTests", "Netw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardUnitTests", "DashboardViewModelUnitTests\DashboardUnitTests.csproj", "{959F1E1B-37FE-4BEF-9539-53AAABCE2840}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardViewModelUnitTests", "DashboardViewModelUnitTests\DashboardViewModelUnitTests.csproj", "{959F1E1B-37FE-4BEF-9539-53AAABCE2840}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
