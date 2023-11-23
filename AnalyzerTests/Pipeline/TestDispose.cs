@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline.Tests
@@ -31,13 +32,13 @@ namespace Analyzer.Pipeline.Tests
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                Console.WriteLine(dll.Key);
+                Trace.WriteLine(dll.Key);
 
                 AnalyzerResult res = dll.Value;
 
                 Assert.AreEqual( res.Verdict , 0 );
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }
 
         }
@@ -65,7 +66,91 @@ namespace Analyzer.Pipeline.Tests
 
                 Assert.AreEqual( res.Verdict , 1 );
 
-                Console.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+            }
+
+        }
+
+        [TestMethod()]
+        public void TestMultipleDisposableFields()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\MultipleDisposableFieldsTestClass.dll";
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 0 );
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+            }
+
+        }
+
+        [TestMethod()]
+        public void TestRandom()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 1 );
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+            }
+
+        }
+
+        [TestMethod()]
+        public void TestAllBranches()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\branchcoveragedispose.dll";
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 1 );
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
             }
 
         }
