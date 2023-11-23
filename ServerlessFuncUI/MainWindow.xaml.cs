@@ -5,7 +5,7 @@
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Sessions Page.
+ * Description = Defines the View Logic of the Sessions Page.
  *****************************************************************************/
 
 using System;
@@ -44,13 +44,13 @@ namespace ServerlessFuncUI
         public InsightPage4 insight_page_4;
         public InsightPage5 insight_page_5;
         public InsightPage6 insight_page_6;
-        public SessionsPage()
+        public SessionsPage(string _HostName)
         {
             InitializeComponent();
-            userName = "name1";
-            viewModel = new SessionsViewModel(userName);
-            this.DataContext = viewModel;
-            viewModel.PropertyChanged += Listener;
+            userName = _HostName;
+            _viewModel = new SessionsViewModel(userName);
+            DataContext = _viewModel;
+            _viewModel.PropertyChanged += Listener;
             sessions = new List<SessionEntity> { };
             Trace.WriteLine("[Cloud] Session View created Successfully");
             insight_page_1 = new InsightPage1();
@@ -66,7 +66,7 @@ namespace ServerlessFuncUI
 
         }
      
-        private readonly SessionsViewModel viewModel;
+        private readonly SessionsViewModel _viewModel;
 
         public IReadOnlyList<SessionEntity>? sessions;
 
@@ -77,11 +77,11 @@ namespace ServerlessFuncUI
         /// </summary>
         private void Listener(object sender, PropertyChangedEventArgs e)
         {
-            sessions = viewModel.ReceivedSessions;
+            sessions = _viewModel.ReceivedSessions;
             
             if (sessions?.Count == 0)
             {
-                Label label = new Label()
+                Label label = new()
                 {
                     Content = "No Sessions Conducted",
                     Foreground = new SolidColorBrush(Colors.White),
@@ -101,11 +101,14 @@ namespace ServerlessFuncUI
             Trace.WriteLine("[Cloud] Sessions data received to view");
             for (int i = 0; i < sessions?.Count; i++)
             {
-                Button newButton = new Button();
-                newButton.Height = 30;
-                newButton.Margin = new Thickness(0, 5, 0, 5);
-                newButton.Name = "Button" + i.ToString();
-                newButton.Content = $"Session  {sessions[i].Id}";
+                Button newButton = new()
+                {
+                    Height = 30 ,
+                    Margin = new Thickness( 0 , 5 , 0 , 5 ) ,
+                    Name = "Button" + i.ToString() ,
+                    Background = new SolidColorBrush( Colors.LightSkyBlue ) ,
+                    Content = $"Session  {sessions[i].Id}"
+                };
                 newButton.Click += OnButtonClick;
                 Stack.Children.Add(newButton);
                 Trace.WriteLine("[Cloud] Adding Button for the " + (i + 1) + "th Session");
@@ -123,7 +126,7 @@ namespace ServerlessFuncUI
             int index = Convert.ToInt32(caller.Name.Split('n')[1]);
 
             // Getting the Corresponding Submissions of the selected sessions and showing it in the place provided
-            SubmissionsPage submissionsPage = new SubmissionsPage(sessions[index]);
+            SubmissionsPage submissionsPage = new(sessions[index]);
             Trace.WriteLine("[Cloud] SubmissionsPage created");
             SubmissionsPage.Content = submissionsPage;
         }
@@ -131,8 +134,8 @@ namespace ServerlessFuncUI
         private void RefreshButtonClick(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine("[Cloud] Session Refresh Button pressed");
-            viewModel.GetSessions(UserName);
-            viewModel.PropertyChanged += Listener;
+            _viewModel.GetSessions(UserName);
+            _viewModel.PropertyChanged += Listener;
         }
 
         private void RotateGraph(int add)
