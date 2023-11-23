@@ -15,8 +15,8 @@ namespace Networking.Communicator
 {
     public static class CommunicationFactory
     {
-        private static readonly Client _client = new();
-        private static readonly Server _server = new();
+        private static readonly Client s_client = new();
+        private static readonly Server s_server = new();
 
         /// <summary>
         /// Gets the server from the communication factory
@@ -24,7 +24,7 @@ namespace Networking.Communicator
         /// <returns>The server</returns>
         public static ICommunicator GetServer()
         {
-            return _server;
+            return s_server;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Networking.Communicator
         /// <returns>The client</returns>
         public static ICommunicator GetClient()
         {
-            return _client;
+            return s_client;
         }
     }
 }
