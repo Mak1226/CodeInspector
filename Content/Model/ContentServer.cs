@@ -2,7 +2,8 @@
 using Content.FileHandling;
 using Content.Encoder;
 using Analyzer;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Content.Model
 {
@@ -70,15 +71,11 @@ namespace Content.Model
             // Analyse DLL files
             _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
 
-            // Send Analysis results to client
-
             // Save analysis results 
             lock (_sessionLock)
             {
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
-
                 Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
-                res[""] = new(); //blank line as separator
                 foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
                 {
                     res[kvp.Key] = res[kvp.Key].Concat(kvp.Value).ToList();
@@ -94,6 +91,13 @@ namespace Content.Model
                     // Notification for viewModel
                     AnalyzerResultChanged?.Invoke(analyzerResult);
                 }
+
+                byte[] graph = _analyzer.GetRelationshipGraph(new());
+                using MemoryStream ms = new();
+                Image image = Image.FromStream( ms );
+
+                // Save the image as PNG
+                image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
             }
 
         }
