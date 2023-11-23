@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
+
 namespace AnalyzerTests.Parsing
 {
     [TestClass] 
@@ -18,10 +19,12 @@ namespace AnalyzerTests.Parsing
         {
             string currentDLLPath = Assembly.GetExecutingAssembly().Location;   
             ParsedDLLFile parsedDLL = new(currentDLLPath);
+            Assert.AreEqual(parsedDLL.DLLFileName, "AnalyzerTests.dll");
 
             parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
             parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
             parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
+            
 
             List<string> expectedClassNames = new() { "Shapes" , "Square" , "BriefView" , "DetailedView" , "Circle" };
             List<string> retrievedClassNames = new();
@@ -30,10 +33,8 @@ namespace AnalyzerTests.Parsing
             {
                 retrievedClassNames.Add(parsedClass.TypeObj.Name);
             }
+            CollectionAssert.AreEquivalent( expectedClassNames , retrievedClassNames );
 
-            expectedClassNames.Sort();
-            retrievedClassNames.Sort();
-            CollectionAssert.AreEqual( expectedClassNames , retrievedClassNames );
 
             List<string> expectedInterfaceNames = new() { "IDrawingView" };
             List<string> retrievedInterfaceNames = new();
@@ -42,12 +43,7 @@ namespace AnalyzerTests.Parsing
             {
                 retrievedInterfaceNames.Add(parsedInterface.TypeObj.Name);
             }
-
-            expectedInterfaceNames.Sort();
-            retrievedInterfaceNames.Sort();
-            CollectionAssert.AreEqual(expectedInterfaceNames , retrievedInterfaceNames);
-
-            Assert.AreEqual(parsedDLL.DLLFileName, "AnalyzerTests.dll");
+            CollectionAssert.AreEquivalent(expectedInterfaceNames , retrievedInterfaceNames);
         }
     }
 }
@@ -55,7 +51,7 @@ namespace AnalyzerTests.Parsing
 
 namespace TestParsingDLL_BridgePattern
 {
-    public struct sampleStructure
+    public struct SampleStructure
     {
         public int _var1;
     }
