@@ -105,10 +105,6 @@ namespace ViewModel
 
         public ICommunicator Client { get; }
 
-        public ICommunicator Client1 => Client;
-
-        public ICommunicator Client2 => Client;
-
         /// <summary>
         /// Gets the private IP address of the host machine.
         /// </summary>

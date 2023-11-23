@@ -8,7 +8,8 @@
  * Project     = DashboardViewModelUnitTests
  *
  * Description = Unit tests for the Instructor viewmodel.
- *****************************************************************************/using Moq;
+ *****************************************************************************/
+using Moq;
 using Networking.Communicator;
 using SessionState;
 using System;
@@ -24,36 +25,41 @@ namespace InstructorViewModelUnitTests
     [TestClass]
     public class InstructorViewModelTests
     {
-        //[TestMethod]
-        //public void Constructor_WithValidArguments_ShouldInitializeProperties()
-        //{
-        //    // Arrange
-        //    var mockCommunicator = new Mock<ICommunicator>();
-
-        //    // Act
-        //    var viewModel = new InstructorViewModel("John Doe", "123", mockCommunicator.Object);
-
-        //    // Assert
-        //    Assert.IsNotNull(viewModel.UserName);
-        //    Assert.IsNotNull(viewModel.UserId);
-        //    Assert.IsNotNull(viewModel.Communicator);
-        //    Assert.IsNotNull(viewModel.ReceivePort);
-        //    Assert.IsNotNull(viewModel.IpAddress);
-        //}
         [TestMethod]
-        public void HandleMessageRecv_WhenValidMessageReceived_ShouldInvokeAddStudent()
+        public void TestAddingStudent()
         {
-            // Arrange
-            var viewModel = new InstructorViewModel("John Doe", "123");
-            var studentData = new Message { Data = "001|Alice|192.168.0.1|8080|1" }; // Assuming message with student info
-
-            // Act
-            string result = viewModel.HandleMessageRecv(studentData);
-
-            // Assert
-            Assert.AreEqual("", result); // Assuming HandleMessageRecv returns an empty string
-            // Validate the effect on public properties or methods of the ViewModel after invoking HandleMessageRecv
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            Assert.AreEqual( viewModel.StudentCount , 0 );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
+            Assert.AreEqual( viewModel.StudentCount , 1 );
         }
 
+        [TestMethod]
+        public void TestRemovingStudnet()
+        {
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
+            Assert.AreEqual( viewModel.StudentCount , 1 );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|0" } );
+            Assert.AreEqual( viewModel.StudentCount , 0 );
+        }
+
+        [TestMethod]
+        public void TestInvalidMessageReceived()
+        {
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|1" } );
+            Assert.AreEqual( viewModel.StudentCount, 0 );
+        }
+
+        [TestMethod]
+        public void TestObservableCollectionStudentList()
+        {
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
+            Assert.AreEqual( viewModel.StudentList.Count , 1 );
+            viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|0" } );
+            Assert.AreEqual( viewModel.StudentList.Count , 0 );
+        }
     }
 }
