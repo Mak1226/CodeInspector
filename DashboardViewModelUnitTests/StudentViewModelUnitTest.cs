@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Filename    = StudentViewModelUnitTest.cs
  *
  * Author      = Prayag Krishna
@@ -156,18 +156,18 @@ namespace DashboardViewModelUnitTests
             StudentViewModel viewModel = new ("John Doe Jr", "123");
             Assert.IsNotNull(viewModel.Communicator);
         }
-        //[TestMethod]
-        //public void ConnectInstructor_WhenInvalidIp_ShouldReturnFalse()
-        //{
-        //    // Arrange
-        //    var mockCommunicator = new Mock<ICommunicator>();
-        //    var viewModel = new StudentViewModel("John Doe", "123", mockCommunicator.Object);
-        //    viewModel.SetInstructorAddress("168.1.1", "808000");
-        //    viewModel.SetStudentInfo("John Doe", "123");
+        [TestMethod]
+        public void ConnectInstructor_WhenInvalidIp_ShouldReturnFalse()
+        {
+            // Arrange
+            var mockCommunicator = new Mock<ICommunicator>();
+            var viewModel = new StudentViewModel( "John Doe" , "123" , mockCommunicator.Object );
+            viewModel.SetInstructorAddress( "168.1.1" , "808000" );
+            viewModel.SetStudentInfo( "John Doe" , "123" );
 
-        //    // Act & Assert
-        //    bool result = viewModel.ConnectInstructor();
-        //    Assert.IsFalse(result);
-        //}
+            // Act & Assert
+            bool result = viewModel.ConnectInstructor();
+            Assert.IsFalse( result );
+        }
     }
 }

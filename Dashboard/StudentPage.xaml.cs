@@ -44,7 +44,10 @@ namespace Dashboard
         private void LogoutButton_Click( object sender , RoutedEventArgs e )
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
+            StudentViewModel? viewModel = DataContext as StudentViewModel;
+            viewModel?.DisconnectInstructor();
             NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
+
         }
 
         /// <summary>
