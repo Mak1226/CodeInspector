@@ -29,7 +29,8 @@ namespace Analyzer.Tests
                 Tuple.Create(115, "Prefix checker"),
                 Tuple.Create(116, "Switch Statement default case checker"),
                 Tuple.Create(117, "Avoid goto statements"),
-                Tuple.Create(118, "Native fields should not be visible")
+                Tuple.Create(118, "Native fields should not be visible"),
+                Tuple.Create(119, "High parameter count rule")
             };
 
             // Act
