@@ -12,7 +12,7 @@
 
 using System.Windows.Controls;
 using Content.ViewModel;
-
+using System.Diagnostics;
 namespace ContentPage
 {
     /// <summary>
@@ -28,6 +28,8 @@ namespace ContentPage
         /// <param name="viewModel">Content view model</param>
         public ResultPage(IContentViewModel viewModel)
         {
+            Trace.WriteLine( "Initializing ResultPage" );
+
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = _viewModel;

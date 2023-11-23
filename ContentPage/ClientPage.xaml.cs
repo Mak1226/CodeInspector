@@ -13,6 +13,7 @@
 using Content.ViewModel;
 using Content.Model;
 using Networking.Communicator;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 
@@ -32,10 +33,11 @@ namespace ContentPage
         /// <param name="sessionID">Some unique identifier for this user</param>
         public ClientPage(ICommunicator client, string sessionID)
         {
+            Trace.WriteLine( "Initializing ClientPage" );
             InitializeComponent();
             _viewModel = new ContentClientViewModel(new ContentClient(client, sessionID));
             DataContext = _viewModel;
-
+            Trace.WriteLine( "Navigating to FileUpload and ResultPage" );
             UploadFrame.Navigate(new FileUpload(_viewModel));
             ResultFrame.Navigate(new ResultPage(_viewModel));
         }
