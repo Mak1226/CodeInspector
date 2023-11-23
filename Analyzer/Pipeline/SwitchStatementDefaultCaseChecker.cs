@@ -1,4 +1,13 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = SwitchStatementDefaultCaseChecker.cs
+* 
+* Author      = Kaustubh Sapkale
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+using System;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Analyzer.Parsing;
