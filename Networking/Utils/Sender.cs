@@ -11,8 +11,6 @@
  *               here.
  *****************************************************************************/
 
-// TODO: Inherit this class in classes that use this and make the methods protected?
-
 using System.Net.Sockets;
 using Networking.Models;
 using Networking.Queues;
@@ -25,11 +23,34 @@ namespace Networking.Utils
     /// </summary>
     public class Sender
     {
+        /// <summary>
+        /// The priority queue for the messages to be sent.
+        /// </summary>
         private readonly Queue _sendQueue = new();
+
+        /// <summary>
+        /// Thread that sends messages from <see cref="_sendQueue"/>.
+        /// </summary>
         private readonly Thread _sendThread;
+
+        /// <summary>
+        /// Denotes whether the communicator using this <see cref="Sender"/> is a client or not.
+        /// </summary>
         private readonly bool _isClient;
+
+        /// <summary>
+        /// Dictionary mapping client Ids to network streams.
+        /// </summary>
         private readonly Dictionary<string, NetworkStream> _clientIDToStream;
+
+        /// <summary>
+        /// Dictionary mapping Id of the communicator to client Id.
+        /// </summary>
         readonly Dictionary<string, string> _senderIDToClientID;
+
+        /// <summary>
+        /// Flag to signal the <see cref="_sendThread"/> to stop.
+        /// </summary>
         private bool _stopThread;
 
         /// <summary>
@@ -47,7 +68,7 @@ namespace Networking.Utils
             _clientIDToStream = clientIDToStream;
             _sendThread = new Thread(SendLoop)
             {
-                IsBackground = true
+                IsBackground = true                 // if all foreground threads have terminated, then all the background threads are automatically stopped when the application quits
             };
             _sendThread.Start();
         }
@@ -64,32 +85,42 @@ namespace Networking.Utils
         }
 
         /// <summary>
-        /// Adds the <paramref name="message"/> to <see cref="_sendQueue"/> for it to be sent
+        /// Enqueues the <paramref name="message"/> to <see cref="_sendQueue"/> for it to be sent
         /// </summary>
         /// <param name="message">The message to be sent</param>
         public void Send(Message message)
         {
-            // NOTE: destID should be in line with the dict passed 
-            _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName)/* TODO */);
+            _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName));
         }
+
+        /// <summary>
+        /// Whether the next-to-be-dequeued message is directed to `networking` or `networkingBroadcast`.
+        /// Used to temporatily delay Stoping the <see cref="Sender"/>.
+        /// </summary>
+        /// <returns>true if and only if <see cref="_sendQueue"/> can be dequeued and the next-to-be-dequeued message is directed to `networking` or `networkingBroadcast`.</returns>
         private bool IfNetworkingMessage()
         {
-            Message? message = _sendQueue.Peak();
+            Message? message = _sendQueue.Peek();
             if (message == null)
             {
                 return false;
             }
             else
             {
-                if (message.ModuleName == ID.GetNetworkingID()||message.ModuleName==ID.GetNetworkingBroadcastID())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return message.ModuleName == ID.GetNetworkingID() || message.ModuleName == ID.GetNetworkingBroadcastID();
             }
+        }
+
+        /// <summary>
+        /// Writes the <paramref name="message"/> to the <paramref name="stream"/> following the sending protocol.
+        /// </summary>
+        /// <param name="stream">The network stream to write to</param>
+        /// <param name="message">The bytes of the message to send</param>
+        /// <param name="messageSize">The length of the bytes of the message</param>
+        private static void SendToDest(NetworkStream stream, byte[] message, int messageSize)
+        {
+            stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
+            stream.Write( message );                                                    // sending the message itself
         }
 
         /// <summary>
@@ -97,11 +128,12 @@ namespace Networking.Utils
         /// </summary>
         public void SendLoop()
         {
-            while (IfNetworkingMessage()||(!_stopThread)) 
+            // Continue sending messages, if to be sent, until the thread is signaled to stop
+            while (IfNetworkingMessage() || (!_stopThread))             // Temporaily halt stopping when the next-to-be-dequeued message is directed to `networking` or `networkingBroadcast`.
             {
                 if (!_sendQueue.canDequeue())
                 {
-                    // wait for some time
+                    // wait for some time to avoid busy-waiting
                     Thread.Sleep(500);
                     continue;
                 }
@@ -109,16 +141,17 @@ namespace Networking.Utils
                 // Get the next message to send
                 Message message = _sendQueue.Dequeue();
 
+                // Serialize the message; convert to Bytes; get its length
                 string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
                 int messageSize = messagebytes.Length;
+
+                // Try to send the message
                 try
                 {
-                    if (_isClient == true)              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
+                    if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                     {
-                        _clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
-                        _clientIDToStream[ID.GetServerID()].Write(messagebytes);
-                        _clientIDToStream[ID.GetServerID()].Flush();
+                        SendToDest( _clientIDToStream[ID.GetServerID()] , messagebytes , messageSize );
                     }
                     else
                     {
@@ -126,23 +159,20 @@ namespace Networking.Utils
                         {
                             foreach (KeyValuePair<string, NetworkStream> pair in _clientIDToStream)
                             {
-                                pair.Value.Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
-                                pair.Value.Write(messagebytes);
-                                pair.Value.Flush();
+                                SendToDest( pair.Value , messagebytes , messageSize );
                             }
                         }
-                        else            // Send the message to the appropriate recipient
+                        else                                            // Send the message to the appropriate recipient
                         {
-                            _clientIDToStream[_senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
-                            _clientIDToStream[_senderIDToClientID[message.DestID]].Write(messagebytes);
-                            _clientIDToStream[_senderIDToClientID[message.DestID]].Flush();
+                            SendToDest( _clientIDToStream[_senderIDToClientID[message.DestID]] , messagebytes , messageSize );
                         }
                     }
-                } catch(Exception e) {
+                }
+                catch (Exception e)
+                {
                     Console.WriteLine("Cannot send message to "+ message.DestID);
                     Console.WriteLine(e.Message);    
                 }
-
             }
         }
     }

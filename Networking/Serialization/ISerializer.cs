@@ -22,7 +22,7 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to serialize.</typeparam>
         /// <param name="genericObject">The object to serialize.</param>
-        /// <returns>The serialized string.</returns>
+        /// <returns>The serialized string. "failed" if failed</returns>
         string Serialize<T>( T genericObject );
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to deserialize.</typeparam>
         /// <param name="serializedString">The string to deserialize.</param>
-        /// <returns>The deserialized object.</returns>
+        /// <returns>The deserialized object. default if deserialization failed.</returns>
         T Deserialize<T>( string serializedString );
     }
 }
