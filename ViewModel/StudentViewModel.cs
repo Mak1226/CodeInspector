@@ -30,6 +30,10 @@ namespace ViewModel
     {
         private readonly ICommunicator _client; // Communicator used to send and receive messages.
 
+        /// </summary>
+        /// <param name="name">The name of the student.</param>
+        /// <param name="id">The ID of the student.</param>
+        /// <param name="communicator">An optional communicator parameter.</param>
         public StudentViewModel( string name , string id, ICommunicator? communicator = null)
         {
             _client = communicator ?? CommunicationFactory.GetClient();
@@ -64,9 +68,9 @@ namespace ViewModel
         /// </summary>
         /// 
 
-        private string _isConnected = "false";
+        private bool _isConnected = false;
 
-        public string IsConnected
+        public bool IsConnected
         {
             get
             {
@@ -88,12 +92,7 @@ namespace ViewModel
             get 
             {
                 return _client;
-            }
-            
-            private set
-            {
-
-            }
+            } 
         }
 
         /// <summary>
@@ -120,6 +119,10 @@ namespace ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
+        /// <summary>
+        /// Retrieves the private IP address of the host machine.
+        /// </summary>
+        /// <returns>The private IP address if found, otherwise null.</returns>
         private string? GetPrivateIp()
         {
             string hostName = Dns.GetHostName();
@@ -131,54 +134,53 @@ namespace ViewModel
                 {
                     if (address.ToString().Length >= 3 && address.ToString().Substring(0, 3) == "10.")
                     {
+                        Trace.WriteLine($"Private IP address found: {address}");
                         return address.ToString();
                     }
                 }
             }
+            Trace.WriteLine("No suitable private IP address found.");
             return null;
         }
 
+        /// <summary>
+        /// Serializes student information into a string format.
+        /// </summary>
+        /// <param name="name">The name of the student.</param>
+        /// <param name="rollNo">The roll number of the student.</param>
+        /// <param name="ip">The IP address of the student.</param>
+        /// <param name="port">The port of the student.</param>
+        /// <param name="connect">The connection status (1 for connected, 0 for disconnected).</param>
+        /// <returns>The serialized string containing student information.</returns>
         private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port, int connect)
         {
-            return $"{rollNo}|{name}|{ip}|{port}|{connect}";
+            string serializedInfo = $"{rollNo}|{name}|{ip}|{port}|{connect}";
+            Trace.WriteLine($"Serialized student information: {serializedInfo}");
+            return serializedInfo;
         }
 
-        private static (int, string?, string?, int) DeserializeStudnetInfo(string data)
-        {
-            string[] parts = data.Split('|');
-            if (parts.Length == 4)
-            {
-                try
-                {
-                    return
-                    (
-                        int.Parse(parts[0]),
-                        parts[1],
-                        parts[2],
-                        int.Parse(parts[3])
-                    );
-                }
-                catch { }
-
-            }
-            return (0, null, null, 0);
-        }
-
+        /// <summary>
+        /// Handles the message received from the instructor.
+        /// </summary>
+        /// <param name="message">The received message.</param>
         private void HandleMessage(string message)
         {
             if (message == "1")
             {
-                IsConnected = "true";
-                Debug.WriteLine("Connected to Instructor");
+                IsConnected = true;
+                Trace.WriteLine("Connected to Instructor");
             }
             else if (message == "0")
             {
-                IsConnected = "false";
+                IsConnected = false;
                 _client.Stop();
-                Debug.WriteLine("Disconnected from Instructor");
+                Trace.WriteLine("Disconnected from Instructor");
             }
         }
 
+        /// <summary>
+        /// Disconnects from the instructor.
+        /// </summary>
         public void DisconnectInstructor()
         {
             string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
@@ -188,7 +190,10 @@ namespace ViewModel
                 _client.Send(message, "server");
             }
         }
-
+        /// <summary>
+        /// Connects to the instructor.
+        /// </summary>
+        /// <returns>True if connection succeeds, false otherwise.</returns>
         public bool ConnectInstructor()
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
@@ -199,7 +204,7 @@ namespace ViewModel
                     return false;
                 }
                 _client.Subscribe(this, "Dashboard");
-                Debug.WriteLine(ipPort);
+                Trace.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
                 {
@@ -234,6 +239,11 @@ namespace ViewModel
             StudentRoll = roll;
         }
 
+        /// <summary>
+        /// Receives message from the network and relays it to the HandleMessage function 
+        /// </summary>
+        /// <param name="data">The received message data.</param>
+        /// <returns>An empty string.</returns>
         public string HandleMessageRecv(Networking.Models.Message data)
         {
             HandleMessage(data.Data);
