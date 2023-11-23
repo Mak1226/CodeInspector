@@ -106,7 +106,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             Directory.CreateDirectory(tempDirectory);
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
             string encoding = fileHandler.HandleUpload(tempDirectory, "testSessionID");
-
+            contentServer.SendToCloud();
             contentServer.HandleRecieve(encoding, "testClientID2");
             Assert.IsTrue(contentServer.analyzerResult.ContainsKey("File1"));
             Directory.Delete(tempDirectory, true);
