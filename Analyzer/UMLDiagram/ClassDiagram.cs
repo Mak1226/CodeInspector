@@ -68,7 +68,7 @@ namespace Analyzer.UMLDiagram
                 }
                 else
                 {
-                    return new byte[];
+                    return Array.Empty<byte>();
                 }
             }
             catch (Exception ex)

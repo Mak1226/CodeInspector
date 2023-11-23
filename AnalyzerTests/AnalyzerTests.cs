@@ -418,11 +418,11 @@ namespace Analyzer.Tests
 
             // Above DLL contains everything in single namespace named "BridgePattern"
             byte[] classDiagramBytes = analyzer.GetRelationshipGraph(new());
-            Assert.AreNotEqual(0 , classDiagramBytes);
+            Assert.AreNotEqual(0 , classDiagramBytes.Length);
 
             // Removing BridgePattern namespace from the graph
             byte[] diagWithoutBridgeBytes = analyzer.GetRelationshipGraph( new() { "BridgePattern" } );
-            Assert.AreEqual(0, diagWithoutBridgeBytes);
+            Assert.AreEqual(0, diagWithoutBridgeBytes.Length);
         }
 
     }
