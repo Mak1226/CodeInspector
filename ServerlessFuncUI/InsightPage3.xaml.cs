@@ -29,16 +29,16 @@ namespace ServerlessFuncUI
         private readonly InsightsApi _insightsApi;
         public string InsightPath = "http://localhost:7074/api/insights";
         public string hostname;
-        private ChartValues<ObservableValue> meanValues;
+        private ChartValues<ObservableValue> _meanValues;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ChartValues<ObservableValue> MeanValues
         {
-            get => meanValues;
+            get => _meanValues;
             set
             {
-                meanValues = value;
+                _meanValues = value;
                 OnPropertyChanged(nameof(MeanValues));
             }
         }
@@ -54,7 +54,7 @@ namespace ServerlessFuncUI
             hostname = host_name;
 
             _insightsApi = new InsightsApi(InsightPath);
-            meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
+            _meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
             DataContext = this;
         }
         private void CartesianChart_Loaded(object sender, RoutedEventArgs e)
@@ -69,11 +69,11 @@ namespace ServerlessFuncUI
                 string testName = TestNameTextBox.Text;
                 List<double> averageList = await _insightsApi.RunningAverageOnGivenTest(hostname, testName);
                 Trace.WriteLine("retrieved runinng averages and diplayed the changes in bar graph");
-                meanValues.Clear();
+                _meanValues.Clear();
                 // Create a ColumnSeries and add the average values to it
                 foreach (double average in averageList)
                 {
-                    meanValues.Add(new ObservableValue(average));
+                    _meanValues.Add(new ObservableValue(average));
                 }
 
             }

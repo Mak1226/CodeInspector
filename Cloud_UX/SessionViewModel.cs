@@ -47,15 +47,15 @@ namespace Cloud_UX
         {
             IReadOnlyList<SessionEntity> sessionsList = await _model.GetSessionsDetails(userName);
             Trace.WriteLine("[Cloud] Session details received");
-            _ = this.ApplicationMainThreadDispatcher.BeginInvoke(
+            _ = ApplicationMainThreadDispatcher.BeginInvoke(
                         DispatcherPriority.Normal,
                         new Action<IReadOnlyList<SessionEntity>>((sessionsList) =>
                         {
                             lock (this)
                             {
-                                this.ReceivedSessions = sessionsList;
+                                ReceivedSessions = sessionsList;
 
-                                this.OnPropertyChanged("ReceivedSessions");
+                                OnPropertyChanged("ReceivedSessions");
                             }
                         }),
                         sessionsList);
@@ -94,7 +94,7 @@ namespace Cloud_UX
         /// <summary>
         /// Underlying data model.
         /// </summary>
-        private SessionsModel _model;
+        private readonly SessionsModel _model;
     }
 
 }

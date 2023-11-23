@@ -43,7 +43,7 @@ namespace ServerlessFuncUI
         public string hostname;
         public InsightPage2(string hostname)
         {
-            this.InitializeComponent();
+            InitializeComponent();
             _insightsApi = new InsightsApi(InsightPath);
             this.hostname = hostname;
             Trace.WriteLine("insight page 2 created");
@@ -57,7 +57,7 @@ namespace ServerlessFuncUI
 
             try
             {
-                var failedStudents = await _insightsApi.GetFailedStudentsGivenTest(hostname, testName);
+                List<string> failedStudents = await _insightsApi.GetFailedStudentsGivenTest(hostname, testName);
                 Trace.WriteLine("retrieved failed students");
                 // Assuming you want to display the results in a ListView.
                 resultListBox.ItemsSource = failedStudents;

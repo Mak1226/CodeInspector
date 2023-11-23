@@ -38,15 +38,15 @@ namespace ServerlessFuncUI
         private readonly InsightsApi _insightsApi;
         public static string InsightPath = "http://localhost:7074/api/insights";
         public string hostname;
-        private ChartValues<ObservableValue> meanValues;
+        private ChartValues<ObservableValue> _meanValues;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ChartValues<ObservableValue> MeanValues
         {
-            get => meanValues;
+            get => _meanValues;
             set
             {
-                meanValues = value;
+                _meanValues = value;
                 OnPropertyChanged(nameof(MeanValues));
             }
         }
@@ -59,12 +59,12 @@ namespace ServerlessFuncUI
 
         public InsightPage4(string host_name)
         {
-            this.InitializeComponent();
-            this.hostname = host_name;
+            InitializeComponent();
+            hostname = host_name;
 
             // Initialize InsightsApi with the appropriate insightsRoute
             _insightsApi = new InsightsApi(InsightPath);
-            meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
+            _meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
             DataContext = this;
         }
         private void CartesianChart_Loaded(object sender, RoutedEventArgs e)
@@ -80,13 +80,13 @@ namespace ServerlessFuncUI
                 string studentName = StudentNameTextBox.Text;
 
                 // Call the RunningAverageOnGivenStudent method from InsightsApi
-                var averageList = await _insightsApi.RunningAverageOnGivenStudent(hostname, studentName);
+                List<double> averageList = await _insightsApi.RunningAverageOnGivenStudent(hostname, studentName);
                 Trace.WriteLine("averages retrieved for student ");
-                meanValues.Clear();
+                _meanValues.Clear();
                 // Create a ColumnSeries and add the average values to it
                 foreach (double average in averageList)
                 {
-                    meanValues.Add(new ObservableValue(average));
+                    _meanValues.Add(new ObservableValue(average));
                 }
             }
             catch (Exception ex)

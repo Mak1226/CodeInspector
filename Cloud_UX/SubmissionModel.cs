@@ -20,15 +20,15 @@ namespace Cloud_UX
     public class SubmissionsModel
     {
         //getting path from the files
-        string[] paths;
-        private string analysisUrl = "http://localhost:7074/api/analysis";
-        private string submissionUrl = "http://localhost:7074/api/submission";
-        private string sessionUrl = "http://localhost:7074/api/session";
+        
+        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
+        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
+        private readonly string _sessionUrl = "http://localhost:7074/api/session";
         public DownloadApi fileDownloadApi; //creating an instance of the FiledowloadApi.
         
         public SubmissionsModel() //constructor for the submissionmodel class. 
         {
-            fileDownloadApi = new DownloadApi(sessionUrl, submissionUrl, analysisUrl);
+            fileDownloadApi = new DownloadApi(_sessionUrl, _submissionUrl, _analysisUrl);
         }
 
         public IReadOnlyList<SubmissionEntity>? SubmissionsList; //creating the submission list to store the details of type submission model. 
@@ -50,7 +50,7 @@ namespace Cloud_UX
             }
 
             // Convert the bytes to a SubmissionEntity object
-            SubmissionEntity submissionEntity = new SubmissionEntity(sessionId, userName);
+            SubmissionEntity submissionEntity = new(sessionId, userName);
             
          
             SubmissionsList = new List<SubmissionEntity> { submissionEntity };

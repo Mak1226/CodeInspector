@@ -39,15 +39,15 @@ namespace ServerlessFuncUI
         public static string InsightPath = "http://localhost:7074/api/insights";
         public string hostname;
 
-        private ChartValues<ObservableValue> meanValues;
+        private ChartValues<ObservableValue> _meanValues;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ChartValues<ObservableValue> MeanValues
         {
-            get => meanValues;
+            get => _meanValues;
             set
             {
-                meanValues = value;
+                _meanValues = value;
                 OnPropertyChanged(nameof(MeanValues));
             }
         }
@@ -62,9 +62,9 @@ namespace ServerlessFuncUI
         public InsightPage5(string user_name)
         {
             InitializeComponent();
-            this.hostname = user_name;
+            hostname = user_name;
             _insightsApi = new InsightsApi(InsightPath);
-            meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
+            _meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
             DataContext = this;
             build();
         }
@@ -79,12 +79,12 @@ namespace ServerlessFuncUI
             {
 
                 List<double> averageList = await _insightsApi.RunningAverageAcrossSessoins(hostname);
-                meanValues.Clear();
+                _meanValues.Clear();
                 Trace.WriteLine("average list updated (retrieved)");
                 // Create a ColumnSeries and add the average values to it
                 foreach (double average in averageList)
                 {
-                    meanValues.Add(new ObservableValue(average));
+                    _meanValues.Add(new ObservableValue(average));
                 }
             }
             

@@ -82,7 +82,7 @@ namespace ServerlessFuncUI
                 // Display the student scores in the second text box
                 if (studentsscoreSession is not null)
                 {
-                    foreach (var cur in studentsscoreSession)
+                    foreach (KeyValuePair<string , int> cur in studentsscoreSession)
                     {
                         resultListBox1.Text += $"{cur.Key} {cur.Value}\n";
                     }
@@ -95,7 +95,7 @@ namespace ServerlessFuncUI
                 // Display the test scores in the third text box
                 if (TestScore is not null)
                 {
-                    foreach (var cur in TestScore)
+                    foreach (KeyValuePair<string , int> cur in TestScore)
                     {
                         resultListBox2.Text += $"{cur.Key} {cur.Value}\n";
                     }

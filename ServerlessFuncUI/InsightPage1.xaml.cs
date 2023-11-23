@@ -72,10 +72,10 @@ namespace ServerlessFuncUI
             resultListBox.Items.Clear();
 
             // Display the result in the ListBox
-            foreach (var dict in result)
+            foreach (Dictionary<string , int> dict in result)
             {
                 string entry = "";
-                foreach (var kvp in dict)
+                foreach (KeyValuePair<string , int> kvp in dict)
                 {
                     entry += $"{kvp.Key}: {kvp.Value}, ";
                 }
