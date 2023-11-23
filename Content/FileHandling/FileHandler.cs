@@ -31,6 +31,7 @@ namespace Content.FileHandling
         /// </summary>
         public FileHandler()
         {
+            Trace.WriteLine( "Content: FileHandler.cs: FileHandler: Started" );
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
         }
@@ -41,7 +42,9 @@ namespace Content.FileHandling
         /// <returns>A list of file paths as strings.</returns>
         public List<string> GetFiles()
         {
-            return _filesList; 
+            Trace.WriteLine( "Content: FileHandler.cs: GetFiles" );
+            return _filesList;
+
         }
 
         /// <summary>
