@@ -44,10 +44,10 @@ namespace ServerlessFuncUI
         public InsightPage4 insight_page_4;
         public InsightPage5 insight_page_5;
         public InsightPage6 insight_page_6;
-        public SessionsPage()
+        public SessionsPage(string Hostname)
         {
             InitializeComponent();
-            userName = "name1";
+            userName = Hostname;
             viewModel = new SessionsViewModel(userName);
             this.DataContext = viewModel;
             viewModel.PropertyChanged += Listener;
