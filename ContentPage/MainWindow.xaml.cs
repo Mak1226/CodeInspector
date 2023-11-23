@@ -31,7 +31,7 @@ namespace ContentPage
             ICommunicator server = CommunicationFactory.GetServer();
 // <<<<<<< master
             server.Start(null, null, Id.GetServerId(), "Content");
-            ServerPage serverPage = new ServerPage(server);
+            ServerPage serverPage = new (server, "TestServer" );
 // =======
 //             server.Start(null, null, ID.GetServerID(), "Content");
 //             ServerPage serverPage = new (server, "TestServer");
