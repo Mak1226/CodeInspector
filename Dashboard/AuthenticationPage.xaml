@@ -6,19 +6,48 @@
       xmlns:local="clr-namespace:Dashboard"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Page1">
+      Title="Page1"
+      Background="#9EDDFF" 
+      Height="500" 
+      Width="800">
 
     <Grid>
-        <StackPanel VerticalAlignment="Center">
-            <TextBlock Text="Code Inspector" FontSize="20" Margin="0 0 0 20" HorizontalAlignment="Center"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <!-- Your content for the upper half goes here -->
 
-            <!-- Empty space to push content to the upper half -->
-            <StackPanel Height="50" />
 
-            <!--<Button Content="Login with Google" Width="150" Height="40" HorizontalAlignment="Center" Command="{Binding AuthenticateButton_ClickCommand}"/>-->
-            <Button Content="Login with Google" Width="150" Height="40" HorizontalAlignment="Center" Click="Login_Click"/>
-        </StackPanel>
+        <Image Source="/Image/Analyzer.png" />
+
+        <Border Background="#FFFFFF" Grid.Column="1" CornerRadius="0 10 10 0" >
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Analyzer" Foreground="#0C356A" HorizontalAlignment="Center" FontFamily="Segoe Script" />
+
+
+                <TextBlock Text="Welcome to Analyzer" HorizontalAlignment="Center" Foreground="#0C356A" Style="{StaticResource NormalText}" />
+
+
+                <Grid>
+                    <!-- Your other content here -->
+
+                    <!-- Centered Horizontal Line -->
+                    <Line X1="60" Y1="0" X2="180" Y2="0" Stroke="Black" StrokeThickness="0.5" VerticalAlignment="Center" />
+                    <TextBlock Text=".. " Foreground="#878787" Style="{StaticResource NormalText}" />
+                    <Line X1="215" Y1="0" X2="335" Y2="0" Stroke="Black" StrokeThickness="0.5" VerticalAlignment="Center" />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="0 20" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource buttonCircle}">
+                        <Image Source="/Image/google.png" Width="20" Height="20" />
+                    </Button>
+                    <Button Content="Sign in with Google" Margin="0 10 0 15" Foreground="black" Click="Login_Click" Background="white"   />
+
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Page>
