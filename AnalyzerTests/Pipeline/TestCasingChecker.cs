@@ -116,6 +116,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["CasingChecker1.dll"];
+            
             Assert.AreEqual(1, result.Verdict);
         }
 
