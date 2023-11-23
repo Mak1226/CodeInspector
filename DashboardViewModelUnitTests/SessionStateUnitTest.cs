@@ -19,7 +19,7 @@ namespace SessionStateUnitTesting
     /// Unit Tests for SessionState
     /// </summary>
     [TestClass]
-    public class UnitTest1
+    public class SessionStateUnitTest
     {
         /// <summary>
         /// Validates that a student is added to list
