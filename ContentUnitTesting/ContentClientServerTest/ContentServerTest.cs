@@ -9,6 +9,7 @@
  *
  * Description  = Unit Tests for ContentServer
 *****************************************************************************/
+using System.Diagnostics;
 using Content.Encoder;
 using Content.FileHandling;
 using Content.Model;
@@ -167,10 +168,12 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void AnalyzerResultChangeEventTest()
         {
-            ContentServer contentServer = new( _communicator , _analyzer , "TestServer" )
+            ContentServer contentServer = new( _communicator , _analyzer , "TestServer" );
+            contentServer.AnalyzerResultChanged += ( result ) =>
             {
-                AnalyzerResultChanged = null
+                Trace.WriteLine( "AnalyzerResultChangeEventTest Event details");
             };
+
             contentServer.SetSessionID("testSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
