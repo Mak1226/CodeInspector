@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
 using System.Linq;
