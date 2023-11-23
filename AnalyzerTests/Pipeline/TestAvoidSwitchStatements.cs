@@ -53,7 +53,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidSwitchStatements.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["NoSwitch.dll"];
-            Assert.AreNotEqual(1, result.Verdict);
+            Assert.AreEqual(1, result.Verdict);
         }
 
         [TestMethod()]
