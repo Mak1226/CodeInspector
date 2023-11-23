@@ -22,10 +22,10 @@ namespace Content.Model
     /// </summary>
     public class ContentClient
     {
-        ICommunicator _client;
-        IFileHandler _fileHandler;
-        string _sessionID;
-        AnalyzerResultSerializer _serializer;
+        readonly ICommunicator _client;
+        readonly IFileHandler _fileHandler;
+        readonly string _sessionID;
+        readonly AnalyzerResultSerializer _serializer;
 
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
@@ -36,7 +36,7 @@ namespace Content.Model
         public ContentClient(ICommunicator client, string sessionID)
         {
             _client = client;
-            ClientRecieveHandler recieveHandler = new ClientRecieveHandler(this);
+            ClientRecieveHandler recieveHandler = new (this);
             _client.Subscribe(recieveHandler, "Content-Results");
 
             _fileHandler = new FileHandler();

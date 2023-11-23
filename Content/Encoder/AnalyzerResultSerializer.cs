@@ -40,10 +40,10 @@ namespace Content.Encoder
             {
                 var dictionary = genericObject as Dictionary<string, List<AnalyzerResult>>;
                 var serializedDictionary = new Dictionary<string, List<string>>();
-                foreach (var kvp in dictionary)
+                foreach (KeyValuePair<string , List<AnalyzerResult>> kvp in dictionary)
                 {
                     var serializedList = new List<string>();
-                    foreach (var analyzerResult in kvp.Value)
+                    foreach (AnalyzerResult analyzerResult in kvp.Value)
                     {
                         // Recursively call Serialize for each AnalyzerResult in the list
                         serializedList.Add(Serialize(analyzerResult));
@@ -60,19 +60,19 @@ namespace Content.Encoder
         private T DeserializeAnalyzerResult<T>(string serializedString)
         {
             // Implement custom deserialization logic for AnalyzerResult
-            var lines = serializedString.Split("||\n", StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = serializedString.Split("||\n", StringSplitOptions.RemoveEmptyEntries);
 
             string analyserID = string.Empty;
             int verdict = 0;
             string errorMessage = string.Empty;
 
-            foreach (var line in lines)
+            foreach (string line in lines)
             {
-                var parts = line.Split(":", StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = line.Split( ":" , StringSplitOptions.RemoveEmptyEntries );
                 if (parts.Length == 2)
                 {
-                    var propertyName = parts[0].Trim();
-                    var propertyValue = parts[1].Trim();
+                    string propertyName = parts[0].Trim();
+                    string propertyValue = parts[1].Trim();
 
                     switch (propertyName)
                     {
@@ -80,7 +80,7 @@ namespace Content.Encoder
                             analyserID = propertyValue;
                             break;
                         case "Verdict":
-                            if (int.TryParse(propertyValue, out var parsedVerdict))
+                            if (int.TryParse(propertyValue, out int parsedVerdict ))
                             {
                                 verdict = parsedVerdict;
                             }
@@ -93,7 +93,7 @@ namespace Content.Encoder
                 }
             }
 
-            AnalyzerResult analyzerResult = new AnalyzerResult(analyserID, verdict, errorMessage);
+            AnalyzerResult analyzerResult = new(analyserID, verdict, errorMessage);
 
             return (T)(object)analyzerResult;
         }
@@ -104,9 +104,9 @@ namespace Content.Encoder
                 throw new ArgumentException("Serialized string is null or empty.", nameof(serializedString));
             }
 
-            var deserializedDict = new Dictionary<string, List<AnalyzerResult>>();
-            var serializedDictionary = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(serializedString);
-            foreach (var kvp in serializedDictionary)
+            Dictionary<string , List<AnalyzerResult>> deserializedDict = new();
+            Dictionary<string , List<string>>? serializedDictionary = JsonSerializer.Deserialize<Dictionary<string , List<string>>>( serializedString );
+            foreach (KeyValuePair<string , List<string>> kvp in serializedDictionary)
             {
                 var deserializedList = kvp.Value.Select(item => DeserializeAnalyzerResult<AnalyzerResult>(item)).ToList();
                 deserializedDict.Add(kvp.Key, deserializedList);

@@ -9,12 +9,13 @@
       Title="ClientPage">
 
     <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-        <StackPanel Orientation="Vertical">
-            <Frame x:Name="UploadFrame" />
-            <Frame x:Name="ResultFrame" />
+            <StackPanel Orientation="Vertical">
+                <Frame x:Name="UploadFrame" />
+                <Frame x:Name="ResultFrame" />
 
-        </StackPanel>
-
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

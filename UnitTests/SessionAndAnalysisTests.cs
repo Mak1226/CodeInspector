@@ -197,5 +197,82 @@ namespace CloudUnitTests
             Assert.AreEqual( "demotext" , text1 );
             Assert.AreEqual( "demotext" , text2 );
         }
+
+        /// <summary>
+        /// Tests Session Entity
+        /// </summary>
+        [TestMethod]
+        public void CreateSessionEntity_VerifyProperties()
+        {
+            
+            SessionData sessionData = new ()
+            {
+                SessionId = "1" ,
+                HostUserName = "name1" ,
+                Tests = new byte[] { 1 , 2 , 3 } ,
+                Students = new byte[] { 4 , 5 , 6 } ,
+                TestNameToID = new byte[] { 7 , 8 , 9 }
+            };
+
+            SessionEntity sessionEntity = new ( sessionData );
+
+            Assert.AreEqual( SessionEntity.PartitionKeyName , sessionEntity.PartitionKey );
+            Assert.IsNotNull( sessionEntity.RowKey );
+            Assert.AreEqual( sessionEntity.Id , sessionEntity.RowKey );
+            Assert.AreEqual( sessionData.SessionId , sessionEntity.SessionId );
+            Assert.AreEqual( sessionData.HostUserName , sessionEntity.HostUserName );
+            CollectionAssert.AreEqual( sessionData.Tests , sessionEntity.Tests );
+            CollectionAssert.AreEqual( sessionData.Students , sessionEntity.Students );
+            CollectionAssert.AreEqual( sessionData.TestNameToID , sessionEntity.TestNameToID );
+            Assert.IsNotNull( sessionEntity.Timestamp );
+            Assert.IsNotNull( sessionEntity.ETag );
+        }
+
+        /// <summary>
+        /// Tests Analysis Entity
+        /// </summary>
+        [TestMethod]
+        public void CreateAnalysisEntity_VerifyProperties()
+        {
+            
+            AnalysisData analysisData = new ()
+            {
+                SessionId = "1" ,
+                UserName = "student1" ,
+                AnalysisFile = new byte[] { 10 , 20 , 30 }
+            };
+
+            AnalysisEntity analysisEntity = new ( analysisData );
+
+            Assert.AreEqual( AnalysisEntity.PartitionKeyName , analysisEntity.PartitionKey );
+            Assert.IsNotNull( analysisEntity.RowKey );
+            Assert.AreEqual( analysisEntity.Id , analysisEntity.RowKey );
+            Assert.AreEqual( analysisData.SessionId , analysisEntity.SessionId );
+            Assert.AreEqual( analysisData.UserName , analysisEntity.UserName );
+            CollectionAssert.AreEqual( analysisData.AnalysisFile , analysisEntity.AnalysisFile );
+            Assert.IsNotNull( analysisEntity.Timestamp );
+        }
+
+        /// <summary>
+        /// Tests Submission Entity
+        /// </summary>
+        [TestMethod]
+        public void CreateSubmissionEntity_VerifyProperties()
+        {
+           
+            string sessionId = "456789";
+            string userName = "BobDoe";
+
+            SubmissionEntity submissionEntity = new ( sessionId , userName );
+
+            Assert.AreEqual( SubmissionEntity.PartitionKeyName , submissionEntity.PartitionKey );
+            Assert.IsNotNull( submissionEntity.RowKey );
+            Assert.AreEqual( submissionEntity.Id , submissionEntity.RowKey );
+            Assert.AreEqual( sessionId , submissionEntity.SessionId );
+            Assert.AreEqual( userName , submissionEntity.UserName );
+            Assert.AreEqual( $"{sessionId}/{userName}" , submissionEntity.BlobName );
+            Assert.IsNotNull( submissionEntity.Timestamp );
+            Assert.IsNotNull( submissionEntity.ETag );
+        }
     }
 }
