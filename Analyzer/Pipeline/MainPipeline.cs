@@ -186,6 +186,7 @@ namespace Analyzer.Pipeline
             // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
             byte[] bytes = classDiag.Run(removableNamespaces).Result;
+            Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));
             return bytes;
         }
     }

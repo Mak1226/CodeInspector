@@ -53,7 +53,7 @@ namespace TestParsingDLL_BridgePattern
 {
     public struct SampleStructure
     {
-        public int _var1;
+        public int var1;
     }
 
     enum ShapesEnum 
