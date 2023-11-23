@@ -1,16 +1,32 @@
-﻿using Analyzer;
+﻿/******************************************************************************
+ * Filename    = ContentClientViewModel.cs
+ * 
+ * Author      = Jyothiradithya
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Client side ViewModel
+ *****************************************************************************/
+using Analyzer;
 using Content.Model;
-using Networking.Communicator;
 using System.ComponentModel;
 
 namespace Content.ViewModel
 {
+    /// <summary>
+    /// View model for client, deriving off of IContentViewModel
+    /// </summary>
     public class ContentClientViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private readonly ContentClient _contentClient;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
 
+        /// <summary>
+        /// Property change event
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -64,6 +80,9 @@ namespace Content.ViewModel
 
         }
 
+        /// <summary>
+        /// ViewModel binding for tab navigation
+        /// </summary>
         public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
         {
             get => _selectedItem;
@@ -79,7 +98,10 @@ namespace Content.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        /// <summary>
+        /// Pass on to the client filepath to handle uploading at given path
+        /// </summary>
+        /// <param name="path">path of file/directory to upload</param>
         public void HandleUpload(string path)
         {
             _contentClient.HandleUpload(path);

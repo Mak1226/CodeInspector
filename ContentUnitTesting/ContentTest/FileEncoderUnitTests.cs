@@ -28,6 +28,7 @@ namespace ContentUnitTesting.ContentTest
         public void TestInitialize()
         {
             _testDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            Trace.WriteLine( $"currentDirectory : {_testDirectory}" );
         }
 
         /// <summary>
