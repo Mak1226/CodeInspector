@@ -98,6 +98,8 @@ namespace Content.Encoder
 
             XmlNode? root = xmlDocument.SelectSingleNode("Root");
 
+            _data.Clear();
+
             // Decode session ID
             XmlAttribute sessionAttribute = root.Attributes["SessionID"];
             if (sessionAttribute != null)

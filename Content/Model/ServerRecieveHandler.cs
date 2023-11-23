@@ -26,7 +26,7 @@ namespace Content.Model
         /// <returns></returns>
         public string HandleMessageRecv(Message message)
         {
-            _server.HandleRecieve(message.Data, message.SenderID);
+            _server.HandleRecieve(message.Data, message.SenderId);
             return "";
         }
     }

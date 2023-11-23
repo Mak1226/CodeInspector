@@ -1,4 +1,15 @@
-﻿using System;
+﻿/******************************************************************************
+ * Filename    = MainWindow.xaml.cs
+ *
+ * Author      = Aravind Somaraj
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Dashboard
+ *
+ * Description = Defines the Main window is the intermediate start page.
+ *****************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
