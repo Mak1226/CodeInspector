@@ -25,16 +25,13 @@ namespace ContentPage
         /// <summary>
         /// Initializes content Server ViewModel
         /// </summary>
-        /// <param name="server">Running server</param>
+        /// <param name="viewModel">Content view model</param>
         public ResultPage(IContentViewModel viewModel)
         {
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = _viewModel;
         }
-       
-
-        
     }
 
 }

@@ -1,6 +1,5 @@
 ﻿using Analyzer;
 using Content.Model;
-using Networking.Communicator;
 using System.ComponentModel;
 
 namespace Content.ViewModel
@@ -64,6 +63,9 @@ namespace Content.ViewModel
 
         }
 
+        /// <summary>
+        /// ViewModel binding for tab navigation
+        /// </summary>
         public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
         {
             get => _selectedItem;
@@ -79,7 +81,10 @@ namespace Content.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        /// <summary>
+        /// Pass on to the client filepath to handle uploading at given path
+        /// </summary>
+        /// <param name="path">path of file/directory to upload</param>
         public void HandleUpload(string path)
         {
             _contentClient.HandleUpload(path);

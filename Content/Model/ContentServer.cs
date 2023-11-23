@@ -36,8 +36,15 @@ namespace Content.Model
         string? _fileEncoding;
         string? _resultEncoding;
         IDictionary<int, bool> _configuration;
+
+        /// <summary>
+        /// Delegate Function called when <see cref="analyzerResult"/> is changed
+        /// </summary>
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
+        /// <summary>
+        /// Currently loaded Analyzer Result
+        /// </summary>
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
 
         private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> _sessionAnalysisResultDict;
@@ -178,6 +185,9 @@ namespace Content.Model
             Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: done" );
         }
 
+        /// <summary>
+        /// Funciton to cumulate all data and send them to cloud.
+        /// </summary>
         public void SendToCloud()
         {
 

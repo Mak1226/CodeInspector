@@ -28,7 +28,14 @@ namespace Content.Model
         readonly string _sessionID;
         readonly AnalyzerResultSerializer _serializer;
 
+        /// <summary>
+        /// Output of analysis
+        /// </summary>
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+
+        /// <summary>
+        /// Action to be invoked when <see cref="analyzerResult"/> is changed
+        /// </summary>
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         /// <summary>

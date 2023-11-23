@@ -33,6 +33,7 @@ namespace ContentPage
         /// Refer <see cref="SetSessionID"/> on how to change result to each client's
         /// </summary>
         /// <param name="server">Running networking server</param>
+        /// <param name="sessionID">Unique ID of server</param>
         public ServerPage(ICommunicator server, string sessionID)
         {
             InitializeComponent();

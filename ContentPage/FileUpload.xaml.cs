@@ -78,11 +78,7 @@ namespace ContentPage
                 Trace.WriteLine(ex.Message);
             }
 
-
         }
-
-
-
 
     }
 }

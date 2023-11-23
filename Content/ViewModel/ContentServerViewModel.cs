@@ -1,8 +1,6 @@
 ﻿using Analyzer;
 using Content.Model;
-using Networking.Communicator;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace Content.ViewModel
 {
