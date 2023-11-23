@@ -82,15 +82,8 @@ namespace Analyzer.Pipeline
                         
             foreach (Type type in abstractTypesWithPublicConstructor)
             {
-                try
-                {
-                    // sanity check
-                    errorLog.AppendLine(type.FullName);
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid Argument ", ex);
-                }
+                errorLog.AppendLine(type.FullName);
+                
             }
             return errorLog.ToString();
         }
@@ -113,9 +106,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                _verdict = 0;
-                _errorMessage = "";
-                Trace.WriteLine("NullReferenceException in DLL files " + ex.Message);
+                throw new NullReferenceException("Encountered exception while processing.", ex);
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
