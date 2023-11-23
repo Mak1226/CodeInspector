@@ -12,6 +12,7 @@
 
 using System.Diagnostics;
 using Networking.Models;
+using System.Diagnostics;
 
 namespace Networking.Queues
 {

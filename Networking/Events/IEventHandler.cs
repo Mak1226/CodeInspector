@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Events/IEventHandler.cs
  *
- * Author      = Shubhang kedia
+ * Author      = Shubhang Kedia
  *
  * Product     = Analyzer
  * 
