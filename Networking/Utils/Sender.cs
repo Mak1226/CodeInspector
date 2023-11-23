@@ -25,11 +25,11 @@ namespace Networking.Utils
     /// </summary>
     public class Sender
     {
-        private Queue _sendQueue = new();
-        private Thread _sendThread;
-        private bool _isClient;
-        private Dictionary<string, NetworkStream> clientIDToStream;
-        Dictionary<string, string> senderIDToClientID;
+        private readonly Queue _sendQueue = new();
+        private readonly Thread _sendThread;
+        private readonly bool _isClient;
+        private readonly Dictionary<string, NetworkStream> _clientIDToStream;
+        readonly Dictionary<string, string> _senderIDToClientID;
         private bool _stopThread;
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace Networking.Utils
         public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
         {
             _stopThread = false;
-            this.senderIDToClientID=senderIDToClientID;
+            _senderIDToClientID=senderIDToClientID;
             _isClient = isClient;
             Console.WriteLine("[Sender] Init");
-            this.clientIDToStream = clientIDToStream;
+            _clientIDToStream = clientIDToStream;
             _sendThread = new Thread(SendLoop)
             {
                 IsBackground = true
@@ -116,15 +116,15 @@ namespace Networking.Utils
                 {
                     if (_isClient == true)              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                     {
-                        clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
-                        clientIDToStream[ID.GetServerID()].Write(messagebytes);
-                        clientIDToStream[ID.GetServerID()].Flush();
+                        _clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
+                        _clientIDToStream[ID.GetServerID()].Write(messagebytes);
+                        _clientIDToStream[ID.GetServerID()].Flush();
                     }
                     else
                     {
                         if (message.DestID == ID.GetBroadcastID())      // Broadcast the message to all clients
                         {
-                            foreach (KeyValuePair<string, NetworkStream> pair in clientIDToStream)
+                            foreach (KeyValuePair<string, NetworkStream> pair in _clientIDToStream)
                             {
                                 pair.Value.Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                                 pair.Value.Write(messagebytes);
@@ -133,9 +133,9 @@ namespace Networking.Utils
                         }
                         else            // Send the message to the appropriate recipient
                         {
-                            clientIDToStream[senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
-                            clientIDToStream[senderIDToClientID[message.DestID]].Write(messagebytes);
-                            clientIDToStream[senderIDToClientID[message.DestID]].Flush();
+                            _clientIDToStream[_senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
+                            _clientIDToStream[_senderIDToClientID[message.DestID]].Write(messagebytes);
+                            _clientIDToStream[_senderIDToClientID[message.DestID]].Flush();
                         }
                     }
                 } catch(Exception e) {

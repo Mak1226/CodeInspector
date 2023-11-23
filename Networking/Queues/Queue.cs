@@ -6,7 +6,7 @@ namespace Networking.Queues
 {
     public class Queue : IQueue
     {
-        private PriorityQueue<Message, int> _queue;
+        private readonly PriorityQueue<Message, int> _queue;
         private readonly object _lock; // Create a lock object
         public Queue()
         {

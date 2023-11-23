@@ -14,13 +14,13 @@ namespace Networking.Utils
     public class Receiver
     {
         //TODO: HANDLE THREAD SLEEP IN RECV LOOP
-        private Queue _recvQueue = new();
-        private Thread _recvThread;
-        private Thread _recvQueueThread;
-        private Dictionary<string, NetworkStream> _clientIDToStream;
+        private readonly Queue _recvQueue = new();
+        private readonly Thread _recvThread;
+        private readonly Thread _recvQueueThread;
+        private readonly Dictionary<string, NetworkStream> _clientIDToStream;
 
         private bool _stopThread = false;
-        ICommunicator _comm;
+        private readonly ICommunicator _comm;
 
         public Receiver(Dictionary<string, NetworkStream> clientIDToStream, ICommunicator comm)
         {
@@ -53,7 +53,7 @@ namespace Networking.Utils
             while (!_stopThread)
             {
                 bool ifAval = false;
-                foreach (var item in _clientIDToStream)
+                foreach (KeyValuePair<string , NetworkStream> item in _clientIDToStream)
                 {
                     try
                     {
@@ -100,7 +100,9 @@ namespace Networking.Utils
                     }
                 }
                 if (ifAval == false)
+                {
                     Thread.Sleep(200);
+                }
             }
             Console.WriteLine("[Receiver] Receive stops");
         }

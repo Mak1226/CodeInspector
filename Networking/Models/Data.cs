@@ -1,4 +1,4 @@
-namespace Networking.Models
+﻿namespace Networking.Models
 {
     public class Data
     {
@@ -6,8 +6,8 @@ namespace Networking.Models
         public string? Payload { get; set; }
         public Data()
         {
-            this.EventType = "";
-            this.Payload = "";
+            EventType = "";
+            Payload = "";
         }
         public Data(string EventType)
         {
@@ -15,7 +15,7 @@ namespace Networking.Models
         }
         public Data(string payload,string EventType)
         {
-            this.Payload = payload;
+            Payload = payload;
             this.EventType = EventType;
         }
     }

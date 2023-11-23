@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Reflection;
@@ -12,7 +12,7 @@ namespace Networking.Utils
     {
         public static int GetPriority(string moduleName)
         {
-            var priority=10;
+            int priority =10;
             if (moduleName == ID.GetNetworkingBroadcastID())
             {
                 priority = 0;
