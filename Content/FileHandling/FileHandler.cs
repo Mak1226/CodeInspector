@@ -124,11 +124,13 @@ namespace Content.FileHandling
             recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
             if( recvData == null ) 
             {
+                Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Empty data received" );
                 return null;
             }
 
             if (recvData["EventType"] != "File")
             {
+                Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Received encoding not of file" );
                 // Packet not meant for this module
                 return null;
             }
@@ -140,6 +142,7 @@ namespace Content.FileHandling
 
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
+            Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Decoded Files" );
             _filesList = new List<string>();
             foreach (KeyValuePair<string , string> file in decodedFiles)
             {

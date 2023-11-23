@@ -43,7 +43,7 @@ namespace Content.Model
         /// </summary>
         public ContentClient(ICommunicator client, string sessionID)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: ContentClient: Initialized ContentClient" );
+            Trace.WriteLine( "[Content][ContentClient.cs] ContentClient: Initialized ContentClient" );
             _client = client;
             ClientRecieveHandler recieveHandler = new (this);
             _client.Subscribe(recieveHandler, "Content-Results");
@@ -62,10 +62,10 @@ namespace Content.Model
         /// or path to the file to upload</param>
         public void HandleUpload(string folderPath)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: HandleUpload: Started" );
+            Trace.WriteLine( "[Content][ContentClient.cs] HandleUpload: Started" );
             string encoding = _fileHandler.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
-            Trace.WriteLine( "Content: ContentClient.cs: HandleUpload: Started" );
+            Trace.WriteLine( "[Content][ContentClient.cs] HandleUpload: Started" );
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace Content.Model
         /// <param name="encoding">The encoded data containing analyzer results.</param>
         public void HandleReceive(string encoding)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: HandleReceive: Started" );
+            Trace.WriteLine( "[Content][ContentClient.cs] HandleReceive: Started" );
             analyzerResult = _serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(encoding);
             AnalyzerResultChanged?.Invoke(analyzerResult);
-            Trace.WriteLine( "Content: ContentClient.cs: HandleReceive: Started" );
+            Trace.WriteLine( "[Content][ContentClient.cs] HandleReceive: Started" );
         }
     }
 }
