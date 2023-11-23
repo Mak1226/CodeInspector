@@ -154,7 +154,19 @@ namespace Content.Encoder
             {
                 Directory.CreateDirectory( path );
             }
+            DirectoryInfo directoryInfo = new( path );
 
+            // Delete all files in the directory
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
+
+            // Delete all subdirectories and their contents
+            foreach (DirectoryInfo subdirectory in directoryInfo.GetDirectories())
+            {
+                subdirectory.Delete( true );
+            }
             foreach (KeyValuePair<string, string> kvp in _data)
             {
                 string filePath = Path.Combine( path , kvp.Key );

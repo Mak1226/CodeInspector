@@ -16,7 +16,7 @@ using System.Text.Json;
 namespace ContentUnitTesting.ContentTest
 {
     /// <summary>
-    /// Class to test interface IFileHandler
+    /// Class to test file FileHandler.cs
     /// </summary>
     [TestClass]
     public class FileHandlerUnitTests
@@ -45,6 +45,9 @@ namespace ContentUnitTesting.ContentTest
             Directory.Delete( tempDirectory , true );
         }
 
+        /// <summary>
+        /// Test to check if given a file, processing is done properly
+        /// </summary>
         [TestMethod]
         public void FileFindingTest()
         {
@@ -61,6 +64,10 @@ namespace ContentUnitTesting.ContentTest
             // Clean up the temporary directory and files
             Directory.Delete(tempDirectory, true);
         }
+
+        /// <summary>
+        /// Test to check if files other than dlls are properly handled
+        /// </summary>
         [TestMethod]
         public void WrongFileTypeTest()
         {
@@ -73,6 +80,9 @@ namespace ContentUnitTesting.ContentTest
             Assert.IsTrue((filesList).Count == 0);
         }
 
+        /// <summary>
+        /// Test to check if if directory has no dlls, its handled properly
+        /// </summary>
         [TestMethod]
         public void EmptyDirectoryTest()
         {
@@ -83,7 +93,10 @@ namespace ContentUnitTesting.ContentTest
             List<string> filesList = fileHandler.GetFiles();
             Assert.IsTrue((filesList).Count == 0);
         }
-
+        /// <summary>
+        /// Test to check if eventtype associated with encoding received is matching 
+        /// to that of a file. Done using sending an encoding of not file type
+        /// </summary>
         [TestMethod]
         public void NotFileReceiveTest()
         {
@@ -146,37 +159,17 @@ namespace ContentUnitTesting.ContentTest
             Directory.Delete(tempDirectory, true);
 
         }
+        /// <summary>
+        /// Validates that the FileHandler's HandleReceive method returns null 
+        /// when provided with invalid JSON data.
+        /// </summary>
         [TestMethod]
-        public void HandleReceive_InvalidJson_ReturnsNull()
+        public void InvalidJsonReceiveTest()
         {
-            // Arrange
             FileHandler fileHandler = new FileHandler();
             string invalidJson = "invalid json data";
-
-            // Act
             string? result = fileHandler.HandleRecieve(invalidJson);
-
-            // Assert
             Assert.IsNull(result, "Expected result to be null for invalid JSON");
-        }
-
-        [TestMethod]
-        public void HandleReceive_WrongEventType_ReturnsNull()
-        {
-            // Arrange
-            FileHandler fileHandler = new FileHandler();
-            Dictionary<string, string> invalidData = new Dictionary<string, string>
-        {
-            { "EventType", "WrongEventType" },
-            { "Data", "some data" }
-        };
-            string encoding = JsonSerializer.Serialize(invalidData);
-
-            // Act
-            string? result = fileHandler.HandleRecieve(encoding);
-
-            // Assert
-            Assert.IsNull(result, "Expected result to be null for wrong event type");
         }
 
     }

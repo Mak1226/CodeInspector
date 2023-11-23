@@ -1,8 +1,23 @@
-﻿using System.Windows.Controls;
+﻿/******************************************************************************
+ * Filename    = ServerPage.xaml.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyser
+ * 
+ * Project     = ContentPage
+ *
+ * Description = This file contains the code-behind for the ServerPage.xaml.
+ *             
+ *****************************************************************************/
+
+using System.Windows.Controls;
 using Content.ViewModel;
 using Networking.Communicator;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Analyzer;
+using Content.Model;
 
 namespace ContentPage
 {
@@ -21,7 +36,9 @@ namespace ContentPage
         public ServerPage(ICommunicator server, string sessionID)
         {
             InitializeComponent();
-            _viewModel = new ContentServerViewModel(server, sessionID);
+            _viewModel = new ContentServerViewModel(
+                new ContentServer( server, AnalyzerFactory.GetAnalyzer(), sessionID )
+                );
             DataContext = _viewModel;
 
             LoadResultPage(); // Load ResultPage initially
@@ -39,14 +56,18 @@ namespace ContentPage
             _viewModel.SetSessionID(sessionID);
         }
 
-       
+        /// <summary>
+        /// Loads the ResultPage into the ResultFrame.
+        /// </summary>
         private void LoadResultPage()
         {
             ResultPage resultPage = new (_viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
         }
-
+        /// <summary>
+        /// Loads the ConfigurationPage into the ConfigFrame.
+        /// </summary>
         private void LoadConfigurationPage()
         {
             ConfigurationPage configPage = new (_viewModel);
@@ -54,11 +75,16 @@ namespace ContentPage
             
         }
 
+        /// <summary>
+        /// Event handler for the AnalyzerUploadButton click. Allows uploading DLL files for analysis.
+        /// </summary>
         private void AnalyzerUploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true; // Allow multiple file selection
-            openFileDialog.Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*"; // Filter for DLL files
+            OpenFileDialog openFileDialog = new()
+            {
+                Multiselect = true , // Allow multiple file selection
+                Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*" // Filter for DLL files
+            };
 
             // Show the dialog and get the result
             DialogResult result = openFileDialog.ShowDialog();
@@ -66,12 +92,15 @@ namespace ContentPage
             // Process the selected files
             if (result == DialogResult.OK)
             {
-                List<string> filePaths = new List<string>(openFileDialog.FileNames);
+                List<string> filePaths = new (openFileDialog.FileNames);
                 _viewModel.LoadCustomDLLs(filePaths);
 
             }
         }
 
+        /// <summary>
+        /// Event handler for the SendToCloudButton click. Initiates sending data to the cloud.
+        /// </summary>
         private void SendToCloudButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             _viewModel.SendToCloud();
