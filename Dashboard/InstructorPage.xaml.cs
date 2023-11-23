@@ -56,6 +56,10 @@ namespace Dashboard
                 // Create and set up the ServerPage
                 _contentServerPage = new ServerPage ( viewModel.Communicator, userId);
                 ResultFrame.Content = _contentServerPage;
+
+                //Create and ste up the Cloud Page
+                SessionsPage _cloudPage = new (userId);
+                CloudFrame.Content = _cloudPage;
             }
             catch (Exception exception)
             {
