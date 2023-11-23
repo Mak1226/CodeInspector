@@ -34,7 +34,7 @@ namespace Networking.Serialization
             }
             catch (Exception e)
             {
-                Console.WriteLine( "[Serializer] Deserialize failed: " + e );
+                Console.WriteLine( "[Serializer] Deserialize failed: " + e.Message );
             }
             return message;
         }
@@ -44,19 +44,11 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to serialize.</typeparam>
         /// <param name="genericObject">The object to serialize.</param>
-        /// <returns>The serialized JSON string. "failed" if failed</returns>
+        /// <returns>The serialized JSON string.</returns>
         public static string Serialize<T>( T genericObject )
         {
-            try
-            {
-                string message = JsonSerializer.Serialize( genericObject );
-                return message;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine( "[Serializer] Serialize failed: " + e );
-            }
-            return "failed";
+            string message = JsonSerializer.Serialize( genericObject );
+            return message;
         }
     }
 }

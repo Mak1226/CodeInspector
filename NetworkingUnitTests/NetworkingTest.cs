@@ -10,6 +10,14 @@ namespace NetworkingUnitTests;
 public class NetworkingTest
 {
     [TestMethod]
+    public void DeserializationFailure()
+    {
+        string invalidJson = "invalid_json_string";
+        object result = Serializer.Deserialize<object>( invalidJson );
+        Assert.AreEqual( default , result );
+    }
+
+    [TestMethod]
     public void TwoServersTwoPortNumbers()
     {
         ICommunicator server1 = new Server();
@@ -25,7 +33,7 @@ public class NetworkingTest
     [TestMethod]
     public void ServerSendBeforeStart()
     {
-        ICommunicator server = new Server();
+        Server server = new Server();
         try
         {
             server.Send("123", "456");
@@ -41,6 +49,14 @@ public class NetworkingTest
         catch (Exception exception)
         {
             Assert.AreEqual("Start server first", exception.Message);
+        }
+        try
+        {
+            server.Send( "123" , "456" , "e4e4","fsdc" );
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual( "Start server first" , exception.Message );
         }
     }
 
@@ -175,10 +191,19 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
-        //TODO: Verify dict
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
-        //TODO: Verify dict
         client.Stop();
+        server.Stop();
+    }
+
+    [TestMethod]
+    public void ServerDoubleSubscribe()
+    {
+        Queue messages = new();
+        ICommunicator server = new Server();
+        string[] _ = server.Start( null , null , ID.GetServerID() , ID.GetNetworkingID() ).Split( ':' );
+        server.Subscribe( new GenericEventHandler( messageQueue: messages ) , "unitTestClient" );
+        server.Subscribe( new GenericEventHandler( messageQueue: messages ) , "unitTestClient" );
         server.Stop();
     }
 
@@ -200,6 +225,35 @@ public class NetworkingTest
     }
 
     [TestMethod]
+    public void OneClientToServerWithExceptionInHandle()
+    {
+        int cnt = 0;
+        Queue messages = new();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
+        string[] ipPort = server.Start( null , null , ID.GetServerID() , ID.GetNetworkingID() ).Split( ':' );
+        server.Subscribe( new GenericEventHandler( messageQueue: messages ) , "unitTestServer" );
+        string ip = ipPort[0];
+        int port = int.Parse( ipPort[1] );
+        client.Start( ip , port , "testClient1" , "unitTestClient" );
+        Networking.Models.Message message = new( "Throw" , "unitTestServer" , ID.GetServerID() , "testClient1" );
+        client.Send( message.Data , "unitTestServer" , message.DestID );
+        while (!messages.canDequeue())
+        {
+            Thread.Sleep( 300 );
+            cnt++;
+            if (cnt == 10)
+            {
+                Assert.Fail( "Did not receive message" );
+            }
+        }
+        Networking.Models.Message receivedMessage = messages.Dequeue();
+        Assert.IsTrue( CompareMessages( receivedMessage , message ) );
+        client.Stop();
+        server.Stop();
+    }
+
+    [TestMethod]
     public void OneClientToServer()
     {
         int cnt = 0;
@@ -212,6 +266,7 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
         Networking.Models.Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
+        client.Send( message.Data , "NOTunitTestServer" , message.DestID );
         client.Send(message.Data, "unitTestServer", message.DestID);
         //client.Send(message.Data, ID.GetNetworkingID(), ID.GetServerID());
         while (!messages.canDequeue())
@@ -224,9 +279,9 @@ public class NetworkingTest
             }
         }
         Networking.Models.Message receivedMessage = messages.Dequeue();
+        Assert.IsTrue(CompareMessages(receivedMessage, message));
         client.Stop();
         server.Stop();
-        Assert.IsTrue(CompareMessages(receivedMessage, message));
     }
 
     [TestMethod]
