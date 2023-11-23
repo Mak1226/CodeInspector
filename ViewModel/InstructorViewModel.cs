@@ -1,4 +1,15 @@
-﻿using Networking.Communicator;
+﻿/******************************************************************************
+ * Filename    = InstructorViewModel.cs
+ *
+ * Author      = Saarang S
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = ViewModel
+ *
+ * Description = Defines the Instructor viewmodel.
+ *****************************************************************************/
+using Networking.Communicator;
 using Networking.Events;
 using SessionState;
 using System.ComponentModel;
@@ -114,9 +125,14 @@ namespace ViewModel
             return (null, null, null, 0, 0);
         }
 
+        /// <summary>
+        /// Adds or removes a student from the session based on received serialized student data.
+        /// </summary>
+        /// <param name="serializedStudent">Serialized student data to process.</param>
+        /// <returns>True if the operation was successful, false otherwise.</returns>
         private bool AddStudnet(string serializedStudnet)
         {
-            Debug.WriteLine($"One message received {serializedStudnet}");
+            Trace.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
                 (string?, string?, string?, int, int) result = DeserializeStudnetInfo(serializedStudnet);
@@ -130,14 +146,16 @@ namespace ViewModel
                     if (isConnect == 1)
                     {
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
-                        Communicator.Send("1",$"{rollNo}");
+                        Communicator.Send("1", $"{rollNo}");
+                        Trace.WriteLine($"Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
                     }
-                    else if (isConnect == 0) 
+                    else if (isConnect == 0)
                     {
                         _studentSessionState.RemoveStudent(rollNo);
                         Communicator.Send("0", $"{rollNo}");
+                        Trace.WriteLine($"Removed student: Roll No - {rollNo}");
                     }
-                    
+
                     OnPropertyChanged(nameof(StudentList));
                    
                     OnPropertyChanged(nameof(StudentCount));
