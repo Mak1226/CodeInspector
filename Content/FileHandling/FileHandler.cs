@@ -120,15 +120,13 @@ namespace Content.FileHandling
 
             Dictionary<string, string> recvData;
             _filesList = new List<string>();
-            try
-            {
-                Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Deserializing the encoding" );
-                recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
-            }
-            catch (JsonException) 
+            Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Deserializing the encoding" );
+            recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
+            if( recvData == null ) 
             {
                 return null;
             }
+
             if (recvData["EventType"] != "File")
             {
                 // Packet not meant for this module
