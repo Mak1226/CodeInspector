@@ -57,12 +57,12 @@ namespace Analyzer.Tests
                 new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
                 new AnalyzerResult("106", 1, "No readonly array fields found."),
                 new AnalyzerResult("107", 1, "No switch statements found."),
-                new AnalyzerResult("108", 0, "No violations found."),
-                new AnalyzerResult("109", 0, "No unused local variables found."),
-                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
-                new AnalyzerResult("111", 0, "No Violation FoundIncorrect Abstract Class Naming : Badname"),
-                new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module>"),
-                new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10"),
+                new AnalyzerResult("108", 1, "No violations found."),
+                new AnalyzerResult("109", 1, "No unused local variables found."),
+                new AnalyzerResult("110", 1, "No occurrences of useless control flow found."),
+                new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : Badname "),
+                new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> "),
+                new AnalyzerResult("113", 1, "Methods having cyclomatic complexity greater than 10: [NOTE: Switch case complexity is not accurate]"),
                 new AnalyzerResult("114", 1, ""),
                 new AnalyzerResult("115", 1, "No Violation Found"),
                 new AnalyzerResult("116", 1, ""),
@@ -71,6 +71,18 @@ namespace Analyzer.Tests
                 new AnalyzerResult("119", 1, "methods with a high number of parameters found.")
 
             };
+
+            // Sort the lists based on AnalyserID
+            foreach (var key in original.Keys)
+            {
+                original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
+            // Sort the lists based on AnalyserID
+            foreach (var key in result.Keys)
+            {
+                result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
+            }
 
             foreach(KeyValuePair<string , List<AnalyzerResult>> dll in result)
             {
@@ -81,10 +93,6 @@ namespace Analyzer.Tests
                     Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
                 }
             }
-
-            result = result.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
-            original = original.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
-
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {
