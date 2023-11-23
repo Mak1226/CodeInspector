@@ -1,4 +1,16 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+ * Filename    = ReviewUselessControlFlowRule.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Analyzer
+ *
+ * Description = Class that implements Review Useless Control Flow Analyser
+ *****************************************************************************/
+
+using Analyzer.Parsing;
 using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
