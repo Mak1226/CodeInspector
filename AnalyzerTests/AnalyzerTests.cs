@@ -62,7 +62,7 @@ namespace Analyzer.Tests
                 new AnalyzerResult("110", 1, "No occurrences of useless control flow found."),
                 new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : Badname "),
                 new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> "),
-                new AnalyzerResult("113", 1, "Methods having cyclomatic complexity greater than 10: [NOTE: Switch case complexity is not accurate]"),
+                new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10\r\n[NOTE: Switch case complexity is not accurate]"),
                 new AnalyzerResult("114", 1, ""),
                 new AnalyzerResult("115", 1, "No Violation Found"),
                 new AnalyzerResult("116", 1, ""),
@@ -71,6 +71,8 @@ namespace Analyzer.Tests
                 new AnalyzerResult("119", 1, "methods with a high number of parameters found.")
 
             };
+
+            //Methods having cyclomatic complexity greater than { _maxAllowedComplexity}:\n[NOTE: Switch case complexity is not accurate]\n
 
             // Sort the lists based on AnalyserID
             foreach (var key in original.Keys)
