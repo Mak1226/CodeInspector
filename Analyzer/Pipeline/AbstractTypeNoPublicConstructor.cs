@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -81,15 +82,7 @@ namespace Analyzer.Pipeline
                         
             foreach (Type type in abstractTypesWithPublicConstructor)
             {
-                try
-                {
-                    // sanity check
-                    errorLog.AppendLine(type.FullName);
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid Argument ", ex);
-                }
+                errorLog.AppendLine(type.FullName);
                 
             }
             return errorLog.ToString();
@@ -113,7 +106,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException("Internal error. Analyzer could not be run.", ex);
+                throw new NullReferenceException("Encountered exception while processing.", ex);
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

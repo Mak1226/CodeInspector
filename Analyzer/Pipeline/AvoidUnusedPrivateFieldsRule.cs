@@ -1,11 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/******************************************************************************
+* Filename    = AvoidUnusedPrivateFieldsRule.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Unused private fields in a class in C# should be avoided to enhance code clarity and maintainability, minimizing unnecessary complexity.
+******************************************************************************/
+
 using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
+
 namespace Analyzer.Pipeline
 {
     /// <summary>
@@ -30,7 +40,12 @@ namespace Analyzer.Pipeline
             _analyzerID = "103";
         }
 
-        public List<string> HandleClass( ParsedClassMonoCecil cls )
+        /// <summary>
+        /// Handles the analysis of a ParsedClassMonoCecil instance to find unused fields.
+        /// </summary>
+        /// <param name="cls"></param>
+        /// <returns></returns>
+        public List<string> HandleClass(ParsedClassMonoCecil cls)
         {
             List<string> unusedFields = new(cls.FieldsList.Select( field => field.Name.ToString()));
 
@@ -43,6 +58,7 @@ namespace Analyzer.Pipeline
 
                 foreach (Instruction? ins in method.Body.Instructions)
                 {
+                    // Check for instructions related to field access or loading
                     if (ins.OpCode == OpCodes.Ldfld || ins.OpCode == OpCodes.Ldsfld || ins.OpCode == OpCodes.Ldflda || ins.OpCode == OpCodes.Ldsflda || ins.OpCode == OpCodes.Ldloc || ins.OpCode == OpCodes.Ldloca)
                     {
                         FieldReference fieldReference = (FieldReference)ins.Operand;
@@ -89,6 +105,10 @@ namespace Analyzer.Pipeline
             _ = _verdict == 0 ? _errorMessage += " are unused private field." : _errorMessage = "No violation found.";
         }
 
+        /// <summary>
+        /// Constructs the AnalyzerResult object based on the analysis.
+        /// </summary>
+        /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             _errorMessage = "";
