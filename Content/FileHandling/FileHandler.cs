@@ -56,12 +56,16 @@ namespace Content.FileHandling
         /// <returns>The encoded representation of the file data for further analysis.</returns>
         public string HandleUpload(string filepath, string sessionID)
         {
+            Trace.WriteLine( "Content: FileHandler.cs: HandleUpload: Started" );
+
             List<string> dllFiles = new();
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string encoding;
             if (Directory.Exists(filepath))
             {
+                Trace.WriteLine( "Content: FileHandler.cs: HandleUpload: Directory Exists in the given path" );
+
                 try
                 {
                     dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
@@ -75,12 +79,16 @@ namespace Content.FileHandling
             // Check if the path is a file
             else if (File.Exists(filepath) && string.Equals(Path.GetExtension(filepath), ".dll", StringComparison.OrdinalIgnoreCase))
             {
+                Trace.WriteLine( "Content: FileHandler.cs: HandleUpload: File Exists in given path" );
+
                 dllFiles = new List<string> { filepath };
                 encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
                 // Do something specific for files
             }
             else
             {
+                Trace.WriteLine( "Content: FileHandler.cs: HandleUpload: Invalid Input" );
+
                 return "";
             }
 
@@ -95,6 +103,7 @@ namespace Content.FileHandling
 
             _filesList = dllFiles;
             Trace.Write(encoding);
+            Trace.WriteLine( "Content: FileHandler.cs: HandleUpload: Done" );
             return encoding;
         }
 
@@ -107,10 +116,13 @@ namespace Content.FileHandling
         /// or null if the decoding fails or the event type is not "File".</returns>
         public string? HandleRecieve(string encoding)
         {
+            Trace.WriteLine( "Content: FileHandler.cs: HandleReceive: Started" );
+
             Dictionary<string, string> recvData;
             _filesList = new List<string>();
             try
             {
+                Trace.WriteLine( "Content: FileHandler.cs: HandleReceive: Deserializing the encoding" );
                 recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
             }
             catch (JsonException) 
@@ -135,7 +147,7 @@ namespace Content.FileHandling
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));
             }
-
+            Trace.WriteLine( "Content: FileHandler.cs: HandleReceive: Done" );
             return sessionID;
         }
     }
