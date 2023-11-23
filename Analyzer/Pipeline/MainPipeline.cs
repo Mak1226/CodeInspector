@@ -61,9 +61,17 @@ namespace Analyzer.Pipeline
         {
             foreach (string file in _studentDLLFiles)
             {
-                _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                try
+                {
+                    _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                }
+                catch (Exception)
+                {
+                    Trace.WriteLine("MainPipeline : Failed to parse " + file);
+                }
             }
-            Trace.Write("MainPipeline :  Generating instance of Analyzers\n");
+
+            Trace.Write("MainPipeline : Generating instance of Analyzers\n");
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -83,7 +91,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
-            Trace.Write("MainPipeline :  Generated\n");
+            Trace.Write("MainPipeline : All Analyzers Generated\n");
         }
 
         /// <summary>

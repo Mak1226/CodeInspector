@@ -38,7 +38,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["array1.dll"];
-            Assert.AreNotEqual(0, result.Verdict);
+            Assert.AreEqual(1, result.Verdict);
         }
 
         [TestMethod()]
@@ -46,7 +46,7 @@ namespace AnalyzerTests.Pipeline
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
-            string path = "..\\..\\..\\TestDLLs\\Rules.dll";
+            string path = "..\\..\\..\\TestDLLs\\notReadOnly.dll";
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
@@ -55,7 +55,7 @@ namespace AnalyzerTests.Pipeline
 
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["Rules.dll"];
+            Analyzer.AnalyzerResult result = resultObj["notReadOnly.dll"];
             Assert.AreNotEqual(0, result.Verdict);
         }
 
@@ -75,7 +75,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["Array.dll"];
-            Assert.AreEqual(1, result.Verdict);
+            Assert.AreEqual(0, result.Verdict);
         }
 
         [TestMethod()]
@@ -83,7 +83,7 @@ namespace AnalyzerTests.Pipeline
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
-            string path = "..\\..\\..\\TestDLLs\\Rules.dll";
+            string path = "..\\..\\..\\TestDLLs\\readOnly.dll";
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
@@ -92,8 +92,8 @@ namespace AnalyzerTests.Pipeline
 
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["Rules.dll"];
-            Assert.AreEqual(1, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["readOnly.dll"];
+            Assert.AreEqual(0, result.Verdict);
         }
     }
 }

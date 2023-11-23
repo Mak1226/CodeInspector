@@ -6,6 +6,7 @@ using PlantUml.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,10 +28,11 @@ namespace AnalyzerTests.Pipeline
 
             List<string> DllFilePaths = new()
             {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+                //"..\\..\\..\\TestDLLs\\BridgePattern.dll"
+                Assembly.GetExecutingAssembly().Location
             };
             //DllFilePaths.Add("C:\\Users\\nikhi\\source\\repos\\BridgePatternDemo\\UnitTests\\bin\\Debug\\UnitTests.dll");
-            //DllFilePaths.Add("C:\\Users\\nikhi\\source\\repos\\dotnet-reflection-demo-master\\MonoCecilExecution\\bin\\Debug\\MonoCecilExecution.dll");
+            //DllFilePaths.Add( "C:\\Users\\nikhi\\source\\repos\\dotnet-reflection-demo-master\\MonoCecilExecution\\bin\\Debug\\MonoCecilExecution.dll" );
 
             List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile(DllFilePaths[0]) };
 
@@ -43,7 +45,17 @@ namespace AnalyzerTests.Pipeline
             Console.WriteLine(imageBytes);
             Console.WriteLine(imageBytes.Length);
             Assert.AreNotEqual(imageBytes.Length, 0);
-            //File.WriteAllBytes("C:\\Users\\nikhi\\source\\repos\\out.png", imageBytes);
+
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                // Save the file
+                File.WriteAllBytes( "C:\\Users\\nikhi\\source\\repos\\Outputimage1.png" , imageBytes );
+            }
+            else
+            {
+                Console.WriteLine( "No SVG data to save." );
+            }
+
 
 
             //var factory = new RendererFactory();
