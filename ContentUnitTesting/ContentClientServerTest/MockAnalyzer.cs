@@ -43,7 +43,11 @@ namespace ContentUnitTesting.ContentClientServerTest
 
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
         {
-            throw new NotImplementedException();
+            return new Dictionary<string, List<AnalyzerResult>>
+            {
+                { "File1", new List<AnalyzerResult> { new AnalyzerResult("AnalyzerCustom", 1, "Some errors") } },
+                // Add more initial values as needed
+            };
         }
 
         public Dictionary<string, List<AnalyzerResult>> Run()
@@ -52,7 +56,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             {
                 { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
                 // Add more initial values as needed
-            }; ;
+            }; 
         }
     }
 }
