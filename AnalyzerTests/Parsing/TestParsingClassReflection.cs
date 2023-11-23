@@ -147,7 +147,7 @@ namespace AnalyzerTests.Parsing
             CollectionAssert.AreEquivalent(new FieldInfo[1] { typeof(TestParsingClass_BridgePattern.Square).GetField("_length", BindingFlags.NonPublic | BindingFlags.Instance) },
                                       squareClass_Bridge.Fields);
 
-            // no field - Even though auto properties
+            // no field 
             Assert.AreEqual(0, briefViewClass_Bridge.Fields.Length);
 
 

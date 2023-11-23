@@ -42,28 +42,28 @@ namespace Analyzer.Parsing
             Fields = type.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             Properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 
-            // Properties can come into fields and methods. Currently here trying to remove as much as possible from fields (Auto properties)
-            if(Properties.Length > 0)
-            {
-                List<FieldInfo> fields = Fields.ToList();
+            //// Properties can come into fields and methods. Currently here trying to remove as much as possible from fields (Auto properties)
+            //if(Properties.Length > 0)
+            //{
+            //    List<FieldInfo> fields = Fields.ToList();
 
-                List<string> propertiesNames = new();
+            //    List<string> propertiesNames = new();
 
-                foreach(PropertyInfo property in Properties)
-                {
-                    propertiesNames.Add(property.Name);
-                }
+            //    foreach(PropertyInfo property in Properties)
+            //    {
+            //        propertiesNames.Add(property.Name);
+            //    }
 
-                foreach(FieldInfo field in Fields)
-                {
-                    if (field.Name.StartsWith("<") && field.Name.EndsWith(">k__BackingField") && propertiesNames.Contains(field.Name.Substring(1,field.Name.Length - 17)))
-                    {
-                        fields.Remove(field);
-                    }
-                }
+            //    foreach(FieldInfo field in Fields)
+            //    {
+            //        if (field.Name.StartsWith("<") && field.Name.EndsWith(">k__BackingField") && propertiesNames.Contains(field.Name.Substring(1,field.Name.Length - 17)))
+            //        {
+            //            fields.Remove(field);
+            //        }
+            //    }
 
-                Fields = fields.ToArray();
-            }
+            //    Fields = fields.ToArray();
+            //}
 
 
             // Finding parent class declared in the project - does not contain classes starting with System/Microsoft
