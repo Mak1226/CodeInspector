@@ -25,7 +25,7 @@ namespace Cloud_UX
         private DownloadApi fileDownloadApi;
         public SessionsModel()
         {
-            Trace.WriteLine("[cloud] New FileDownloadApi instance created");
+            Trace.WriteLine("[cloud] New DownloadApi instance created");
             fileDownloadApi = new DownloadApi(sessionUrl, submissionUrl, analysisUrl);
         }
         /// <summary>
