@@ -1,4 +1,18 @@
-﻿namespace Analyzer
+﻿/******************************************************************************
+* Filename    = IAnalyzerResult.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Represents the result of an analysis performed by an analyzer.
+******************************************************************************/
+
+namespace Analyzer
 {
     /// <summary>
     /// Represents the result of an analysis performed by an analyzer.

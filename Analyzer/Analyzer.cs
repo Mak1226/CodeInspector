@@ -10,6 +10,14 @@
 * Project     = Analyzer
 *
 * Description = Represents the main Analyzer class responsible for orchestrating the analysis process.
+* 
+* Features:
+* - Configures the Analyzer with teacher options.
+* - Loads DLL files provided by the student for analysis.
+* - Loads DLL files of custom analyzers for additional analysis.
+* - Runs the main analysis pipeline of 19 Analyzers and returns the results.
+* - Generates a relationship graph based on the analysis results with support of removable namespaces.
+* - Runs multiple custom analyzers specified by the teacher on students dll files.
 ******************************************************************************/
 
 using Analyzer.DynamicAnalyzer;
@@ -44,7 +52,7 @@ namespace Analyzer
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
             Trace.WriteLine("Teacher Options\n");
-            foreach (var kvp in TeacherOptions)
+            foreach (KeyValuePair<int , bool> kvp in TeacherOptions)
             {
                 Trace.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}\n");
             }
@@ -84,9 +92,9 @@ namespace Analyzer
             Dictionary<string, List<AnalyzerResult>> result = _customAnalyzerPipeline.Start();
             Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
 
-            foreach (var keyValuePair in result)
+            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
             {
-                foreach (var analyzerResult in keyValuePair.Value)
+                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
                 {
                     Trace.Write($"Analyzer : Key: {keyValuePair.Key}");
                     Trace.Write($"  {analyzerResult}\n");
@@ -103,7 +111,7 @@ namespace Analyzer
         /// <returns>Byte array representing the generated relationship graph.</returns>
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-
+            Trace.Write( "Analyzer : Starting Relationship Graph with " + string.Join( " ", _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces));
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
@@ -117,7 +125,20 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results from custom analyzers.</returns>
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
         {
-            return new InvokeCustomAnalyzers(_pathOfDLLFilesOfCustomAnalyzers, _pathOfDLLFilesOfStudent).Start();
+            Trace.Write("Analyzer : Invoking custom Analysers " + string.Join( " ", _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " ", _pathOfDLLFilesOfStudent));
+            Dictionary<string , List<AnalyzerResult>> result = new InvokeCustomAnalyzers( _pathOfDLLFilesOfCustomAnalyzers , _pathOfDLLFilesOfStudent ).Start();
+            Trace.Write( "Analyzer : Completed custom Analysers " + string.Join( " " , _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " " , _pathOfDLLFilesOfStudent ) );
+
+            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
+            {
+                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
+                {
+                    Trace.Write( $"Analyzer : Key: {keyValuePair.Key}");
+                    Trace.Write( $"  {analyzerResult}\n" );
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -10,24 +10,24 @@ namespace AnalyzerTests.Parsing
     [TestClass]
     public class TestParsingClassReflection
     {
-        readonly ParsedClass squareClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Square));
-        readonly ParsedClass shapesClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Shapes));
-        readonly ParsedClass briefViewClass_Bridge = new(typeof(TestParsingClass_BridgePattern.BriefView));
+        public readonly ParsedClass squareClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Square));
+        public readonly ParsedClass shapesClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Shapes));
+        public readonly ParsedClass briefViewClass_Bridge = new(typeof(TestParsingClass_BridgePattern.BriefView));
 
-        readonly ParsedClass App1Class_Demo = new(typeof(TestParsingClass_DemoProject.App1));
-        readonly ParsedClass App2Class_Demo = new(typeof(TestParsingClass_DemoProject.App2));
-        readonly ParsedClass App3Class_Demo = new(typeof(TestParsingClass_DemoProject.App3));
-        readonly ParsedClass App4Class_Demo = new(typeof(TestParsingClass_DemoProject.App4));
-        readonly ParsedClass App5Class_Demo = new(typeof(TestParsingClass_DemoProject.App5));
-        readonly ParsedClass App6Class_Demo = new(typeof(TestParsingClass_DemoProject.App6));
-        readonly ParsedClass App7Class_Demo = new(typeof(TestParsingClass_DemoProject.App7));
+        public readonly ParsedClass App1Class_Demo = new(typeof(TestParsingClass_DemoProject.App1));
+        public readonly ParsedClass App2Class_Demo = new(typeof(TestParsingClass_DemoProject.App2));
+        public readonly ParsedClass App3Class_Demo = new(typeof(TestParsingClass_DemoProject.App3));
+        public readonly ParsedClass App4Class_Demo = new(typeof(TestParsingClass_DemoProject.App4));
+        public readonly ParsedClass App5Class_Demo = new(typeof(TestParsingClass_DemoProject.App5));
+        public readonly ParsedClass App6Class_Demo = new(typeof(TestParsingClass_DemoProject.App6));
+        public readonly ParsedClass App7Class_Demo = new(typeof(TestParsingClass_DemoProject.App7));
 
-        readonly ParsedClass SampleClass1_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass1));
-        readonly ParsedClass SampleClass2_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass2));
-        readonly ParsedClass SampleClass3_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass3));
-        readonly ParsedClass SampleClass4_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass4));
-        readonly ParsedClass SampleClass5_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass5));
-        readonly ParsedClass CalculatorClass_Demo2 = new(typeof(TestParsingClass_DemoProject2.Calculator_OverloadCase));
+        public readonly ParsedClass SampleClass1_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass1));
+        public readonly ParsedClass SampleClass2_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass2));
+        public readonly ParsedClass SampleClass3_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass3));
+        public readonly ParsedClass SampleClass4_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass4));
+        public readonly ParsedClass SampleClass5_Demo2 = new(typeof(TestParsingClass_DemoProject2.SampleClass5));
+        public readonly ParsedClass CalculatorClass_Demo2 = new(typeof(TestParsingClass_DemoProject2.Calculator_OverloadCase));
 
 
         [TestMethod]
@@ -94,7 +94,8 @@ namespace AnalyzerTests.Parsing
 
             // App6: App3,IApp2,IApp  , App3: IApp  (class , interface combination)
             Assert.AreEqual(1, App6Class_Demo.Interfaces.Length);
-            Assert.AreEqual(typeof(TestParsingClass_DemoProject.IApp2), App6Class_Demo.Interfaces[0]);
+            CollectionAssert.AreEquivalent( new Type[1] { typeof(TestParsingClass_DemoProject.IApp2) } , 
+                                            App6Class_Demo.Interfaces);
 
             // App7: IApp, IApp2  - Normal Multiple interfaces implementation case
             Assert.AreEqual(2, App7Class_Demo.Interfaces.Length);
@@ -148,7 +149,9 @@ namespace AnalyzerTests.Parsing
                                       squareClass_Bridge.Fields);
 
             // no field 
-            Assert.AreEqual(0, briefViewClass_Bridge.Fields.Length);
+            Assert.AreEqual(0, App1Class_Demo.Fields.Length);
+
+            Assert.AreEqual(1, briefViewClass_Bridge.Fields.Length);
 
 
             // public + static  : here inherited class fields should not come (i.e. sampleValue21(public) from sampleClass2)
@@ -166,7 +169,7 @@ namespace AnalyzerTests.Parsing
             // protected/public/private + instance (auto + explicit)
             Assert.AreEqual(4, SampleClass1_Demo2.Properties.Length);
             CollectionAssert.AreEquivalent(new PropertyInfo[4] {
-                                                                   typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("Name"),
+                                                                   typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleX"),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp1"),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp2", BindingFlags.NonPublic | BindingFlags.Instance),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp3", BindingFlags.NonPublic | BindingFlags.Instance)
@@ -203,6 +206,7 @@ namespace TestParsingClass_BridgePattern
             get { return SProp; }
             set { SProp = value; }
         }
+
         public List<string> DisplayCircle(double radius)
         {
             List<string> result = new();
@@ -303,12 +307,13 @@ namespace TestParsingClass_DemoProject2
 
     public class SampleClass1
     {
-        private string _name;
+        private readonly string _name;
 
-        public string Name
+        public int x;
+        public int SampleX
         {
-            get { return _name; } 
-            set { _name = value; }
+            get { return x; } 
+            set { x = value; }
         }
 
         public string SampleProp1 { get; set; }

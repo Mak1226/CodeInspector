@@ -1,4 +1,18 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = AnalyzerFactory.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Factory class for creating analyzers and retrieving configuration options.
+******************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

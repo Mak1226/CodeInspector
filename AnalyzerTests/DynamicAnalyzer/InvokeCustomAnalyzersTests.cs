@@ -1,11 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.DynamicAnalyzer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+﻿/******************************************************************************
+* Filename    = AnalyzerFactoryTests.cs
+*
+* Author      = Mangesh Dalvi, Yukta Salunkhe
+* 
+* Roll No     = 112001010, 112001052
+*
+* Product     = Code Inspector
+* 
+* Project     = AnalyzerTests
+*
+* Description = Test class for testing the functionality of invoking a custom analyzer on student dlls
+******************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Analyzer.DynamicAnalyzer.Tests
 {
@@ -15,6 +22,64 @@ namespace Analyzer.DynamicAnalyzer.Tests
     [TestClass()]
     public class InvokeCustomAnalyzersTests
     {
+
+        /* 
+        
+        TeacherAnalyserCheckingAbstractClassNaming.dll
+
+        using Analyzer.Parsing;
+        using Analyzer.Pipeline;
+        using System;
+        using System.Reflection;
+
+        namespace Analyzer.DynamicAnalyzer
+        {
+            public class CustomAnalyzer : AnalyzerBase
+            {
+                private readonly string _analyzerID;
+                private string _errorMessage;
+                private int _verdict;
+
+                public CustomAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+                {
+                    _errorMessage = "This is an error message";
+                    _verdict = 0;
+                    _analyzerID = "Teacher"; // update analyzer ID here
+                }
+
+                protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+                {
+                    _verdict = 1;
+                    _errorMessage = "";
+
+                    foreach (ParsedClass classObj in parsedDLLFile.classObjList)
+                    {
+                        if (classObj.TypeObj.GetTypeInfo().IsAbstract && !IsValidAbstractClassName(classObj.TypeObj.Name))
+                        {
+                            _errorMessage += $"{(_verdict == 1 ? "Incorrect Abstract Class Naming : " : ", ")}{classObj.TypeObj.Name}";
+                            _verdict = 0;
+                        }
+                    }
+
+                    if(_verdict == 1)
+                    {
+                        _errorMessage = "All abstract classes are named correctly";
+                    }
+
+                    return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+                }
+
+                private bool IsValidAbstractClassName(string className)
+                {
+                    return className.EndsWith("Base") && char.IsLower(className[0]);
+                }
+            }
+        }
+        */
+
+        /// <summary>
+        /// Invoke custom analyzers test with correct abstract class naming
+        /// </summary>
         [TestMethod()]
         public void InvokeCustomAnalyzersTestWithCorrectAbstractClassNaming()
         {
@@ -74,6 +139,9 @@ namespace Analyzer.DynamicAnalyzer.Tests
             }
         }
 
+        /// <summary>
+        /// Invoke custom analyzers test with wrong abstract class naming
+        /// </summary>
         [TestMethod()]
         public void InvokeCustomAnalyzersTestWithWrongAbstractClassNaming()
         {
