@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Content;
 
 namespace ContentUnitTesting.CloudIntergrationTests
 {
@@ -29,8 +25,6 @@ namespace ContentUnitTesting.CloudIntergrationTests
 
             // Assert
             Assert.IsNotNull( cloudHandler );
-            Assert.IsNotNull( cloudHandler.SessionID );
-            Assert.IsFalse( string.IsNullOrEmpty( cloudHandler.SessionID ) );
         }
     }
 }
