@@ -15,6 +15,7 @@ using Networking.Communicator;
 using Networking.Utils;
 using System.Windows;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace ContentPage
 {
@@ -25,6 +26,7 @@ namespace ContentPage
     {
         public MainWindow()
         {
+            Trace.WriteLine( "Initializing MainWindow" );
             InitializeComponent();
         }
         /// <summary>
@@ -37,6 +39,7 @@ namespace ContentPage
         {
             ICommunicator client = CommunicationFactory.GetClient();
             client.Start("localhost", 12399, "TestClient", "Content");
+            Trace.WriteLine( "Client started: TestClient" );
             Page clientPage = new ClientPage(client, "TestClient");
             MainFrame.Navigate(clientPage);
 
@@ -54,6 +57,8 @@ namespace ContentPage
         {
             ICommunicator server = CommunicationFactory.GetServer();
             server.Start(null, null, ID.GetServerID(), "Content");
+            Trace.WriteLine( "Server started: " + ID.GetServerID() );
+
             ServerPage serverPage = new (server, "TestServer");
             MainFrame.Navigate(serverPage);
 
