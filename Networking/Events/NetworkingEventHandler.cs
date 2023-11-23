@@ -107,8 +107,8 @@ namespace Networking.Events
         private string HandleClientDeregister(Message message)
         {
 
-            string clientID = ((Server)_communicator)._senderIDToClientID[message.SenderID];
-            lock (((Server)_communicator)._clientIDToStream)
+            string clientID = ((Server)_communicator)._senderIdToClientId[message.SenderID];
+            lock (((Server)_communicator)._clientIdToStream)
             {
                 ((Server)_communicator)._clientIdToStream.Remove(clientID);
             }
