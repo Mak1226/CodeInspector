@@ -102,7 +102,7 @@ namespace Analyzer.Pipeline
             {
                 _verdict = 0;
                 _errorMessage = "";
-                Trace.WriteLine("NullReferenceException in DLL files" + ex.Message);
+                Trace.WriteLine("NullReferenceException in DLL files " + ex.Message);
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

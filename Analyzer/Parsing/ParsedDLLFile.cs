@@ -11,11 +11,7 @@ namespace Analyzer.Parsing
 
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
-<<<<<<< HEAD
 
-=======
-                    
->>>>>>> upstream/master
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
 
