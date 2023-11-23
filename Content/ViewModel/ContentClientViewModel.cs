@@ -7,8 +7,9 @@ namespace Content.ViewModel
 {
     public class ContentClientViewModel : INotifyPropertyChanged, IContentViewModel
     {
-        private Dictionary<string, List<AnalyzerResult>> analyzerResults;
-        private ContentClient contentClient;
+        private readonly ContentClient _contentClient;
+        private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
+        private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,14 +18,14 @@ namespace Content.ViewModel
         /// </summary>
         public ContentClientViewModel(ICommunicator client, string sessionID)
         {
-            contentClient = new ContentClient(client, sessionID);
-            contentClient.AnalyzerResultChanged += (result) =>
+            _contentClient = new ContentClient(client, sessionID);
+            _contentClient.AnalyzerResultChanged += (result) =>
             {
-                analyzerResults = result;
-                OnPropertyChanged(nameof(analyzerResults));
+                _analyzerResults = result;
+                OnPropertyChanged(nameof(_analyzerResults));
                 OnPropertyChanged(nameof(DataList));
             };
-            analyzerResults = contentClient.analyzerResult;
+            _analyzerResults = _contentClient.analyzerResult;
         }
 
         /// <summary>
@@ -37,14 +38,14 @@ namespace Content.ViewModel
         {
             get
             {
-                if (analyzerResults == null)
+                if (_analyzerResults == null)
                 {
                     return new();
                 }
 
 
                 List<Tuple<string, List<Tuple<string, int, string>>>> outList = new();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in analyzerResults)
+                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in _analyzerResults)
                 {
                     List<Tuple<string, int, string>> resultList = new();
                     foreach (AnalyzerResult result in kvp.Value)
@@ -63,6 +64,16 @@ namespace Content.ViewModel
 
         }
 
+        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -71,7 +82,7 @@ namespace Content.ViewModel
 
         public void HandleUpload(string path)
         {
-            contentClient.HandleUpload(path);
+            _contentClient.HandleUpload(path);
         }
     }
 }
