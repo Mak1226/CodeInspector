@@ -88,6 +88,24 @@ namespace CloudUnitTests
         }
 
         /// <summary>
+        /// Creates dummy submission data for a specific sessionID and studentName.
+        /// </summary>
+        /// <author> Nideesh N </author>
+        /// <param name="sessionId">The ID of the session.</param>
+        /// <param name="studentName">The name of the student</param>
+        /// <returns>The dummy submission data.</returns>
+        public static SubmissionData GetDummySubmissionData(string sessionId, string studentName)
+        {
+            SubmissionData submission = new()
+            {
+                SessionId = sessionId,
+                UserName = studentName,
+                ZippedDllFiles = Encoding.ASCII.GetBytes("demotext")
+            };
+            return submission;
+        }
+
+        /// <summary>
         /// Creates dummy analysis results for two tests.
         /// </summary>
         /// <author> Nideesh N </author>
@@ -123,6 +141,13 @@ namespace CloudUnitTests
             SessionData sessionData2 = GetDummySessionData( "name1" , "2" , ["101", "102"] , ["Student1", "Student2"] , NameToID );
             SessionData sessionData3 = GetDummySessionData( "name1" , "3" , ["101", "102"] , ["Student1", "Student2"] , NameToID );
 
+            SubmissionData submissionData1 = GetDummySubmissionData("1", "Student1");
+            SubmissionData submissionData2 = GetDummySubmissionData("1", "Student2");
+            SubmissionData submissionData3 = GetDummySubmissionData("2", "Student1");
+            SubmissionData submissionData4 = GetDummySubmissionData("2", "Student2");
+            SubmissionData submissionData5 = GetDummySubmissionData("3", "Student1");
+            SubmissionData submissionData6 = GetDummySubmissionData("3", "Student2");
+
             AnalysisData analysisData1 = GetDummyAnalysisData( "1" , "Student1" , GetAnalysisResult( 1 , 0 ) );
             AnalysisData analysisData2 = GetDummyAnalysisData( "1" , "Student2" , GetAnalysisResult( 0 , 1 ) );
             AnalysisData analysisData3 = GetDummyAnalysisData( "2" , "Student1" , GetAnalysisResult( 1 , 0 ) );
@@ -133,6 +158,13 @@ namespace CloudUnitTests
             await _uploadClient.PostSessionAsync( sessionData1 );
             await _uploadClient.PostSessionAsync( sessionData2 );
             await _uploadClient.PostSessionAsync( sessionData3 );
+
+            await _uploadClient.PostSubmissionAsync(submissionData1);
+            await _uploadClient.PostSubmissionAsync(submissionData2);
+            await _uploadClient.PostSubmissionAsync(submissionData3);
+            await _uploadClient.PostSubmissionAsync(submissionData4);
+            await _uploadClient.PostSubmissionAsync(submissionData5);
+            await _uploadClient.PostSubmissionAsync(submissionData6);
             await _uploadClient.PostAnalysisAsync( analysisData1 );
             await _uploadClient.PostAnalysisAsync( analysisData2 );
             await _uploadClient.PostAnalysisAsync( analysisData3 );
@@ -175,6 +207,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
             List<string> students = await _insightsClient.GetFailedStudentsGivenTest( "name1" , "102" );
@@ -187,6 +220,7 @@ namespace CloudUnitTests
             CollectionAssert.AreEqual( expectedStudents , students );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -198,6 +232,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenTest( "name1" , "101" );
@@ -206,6 +241,7 @@ namespace CloudUnitTests
             Assert.AreEqual( averageList[2] , 50 );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -217,6 +253,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageOnGivenStudent( "name1" , "Student1" );
@@ -225,6 +262,7 @@ namespace CloudUnitTests
             Assert.AreEqual( averageList[2] , 0 );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -236,6 +274,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
             await FillTestData();
             List<double> averageList = await _insightsClient.RunningAverageAcrossSessoins( "name1" );
             Assert.AreEqual( averageList[0] , 50 );
@@ -244,6 +283,7 @@ namespace CloudUnitTests
 
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -255,6 +295,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
             List<Tuple<string , string>> NameToID = new()
             {
                 Tuple.Create("Test1", "101"),
@@ -267,6 +308,7 @@ namespace CloudUnitTests
             List<string> studentsList = await _insightsClient.UsersWithoutAnalysisGivenSession( "1" );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
             Assert.AreEqual( studentsList.Count , 1 );
             Assert.AreEqual( studentsList[0] , "Student2" );
         }
@@ -280,6 +322,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
 
@@ -292,6 +335,7 @@ namespace CloudUnitTests
 
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -303,6 +347,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
             await FillTestData();
             Dictionary<string , int> StudentScore = await _insightsClient.GetStudentScoreGivenSession( "1" );
             Assert.AreEqual( 2 , StudentScore.Count );
@@ -310,6 +355,7 @@ namespace CloudUnitTests
             Assert.AreEqual( StudentScore["Student2"] , 1 );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
@@ -319,7 +365,9 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task TestScoreTest()
         {
-            
+            await _downloadClient.DeleteAllAnalysisAsync();
+            await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
             await FillTestData();
             Dictionary<string , int> TestScore = await _insightsClient.GetTestScoreGivenSession( "1" );
             Assert.AreEqual( 2 , TestScore.Count );
@@ -327,6 +375,7 @@ namespace CloudUnitTests
             Assert.AreEqual( TestScore["102"] , 1 );
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
     }
 }
