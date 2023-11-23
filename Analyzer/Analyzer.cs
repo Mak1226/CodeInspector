@@ -43,6 +43,11 @@ namespace Analyzer
         /// <param name="TeacherOptions">Dictionary of teacher options.</param>
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
+            Trace.WriteLine("Teacher Options\n");
+            foreach (var kvp in TeacherOptions)
+            {
+                Trace.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}\n");
+            }
             _teacherOptions = TeacherOptions;
         }
 
@@ -52,6 +57,7 @@ namespace Analyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to DLL files.</param>
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
+            Trace.Write("Analyzer : Loaded students " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
 
@@ -61,6 +67,7 @@ namespace Analyzer
         /// <param name="PathOfDLLFilesOfCustomAnalyzers">List of paths to DLL files of custom analyzers.</param>
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
+            Trace.Write("Analyzer : Loaded custom analyzers " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
         }
 
@@ -70,15 +77,23 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results.</returns>
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            Trace.Write("Analyzers MainPipeline is starting\n");
-
+            Trace.Write("Analyzer : MainPipeline is starting with " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+            Dictionary<string, List<AnalyzerResult>> result = _customAnalyzerPipeline.Start();
+            Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
 
-            Trace.Write("Analyzers MainPipeline is over\n");
+            foreach (var keyValuePair in result)
+            {
+                foreach (var analyzerResult in keyValuePair.Value)
+                {
+                    Trace.Write($"Analyzer : Key: {keyValuePair.Key}");
+                    Trace.Write($"  {analyzerResult}\n");
+                }
+            }
 
-            return _customAnalyzerPipeline.Start();
+            return result;
         }
 
         /// <summary>

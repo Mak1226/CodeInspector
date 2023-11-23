@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AvoidGotoStatement.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer designed to identify and report the presence of goto statements
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System.Collections.Generic;

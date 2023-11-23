@@ -43,7 +43,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
                 ["CasingChecker.dll"] = new List<AnalyzerResult>() ,
             };
 
-            expected["CasingChecker.dll"].Add(new AnalyzerResult("This is an analyzer ID", 1, "No incorrect abstract class naming found."));
+            expected["CasingChecker.dll"].Add(new AnalyzerResult("Teacher", 1, "All abstract classes are named correctly"));
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {
@@ -102,7 +102,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
                 ["NotValidAbstractClassNaming.dll"] = new List<AnalyzerResult>(),
             };
 
-            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "Incorrect Abstract Class Naming : someClass"));
+            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("Teacher", 0, "Incorrect Abstract Class Naming : someClass"));
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {

@@ -6,15 +6,74 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Parsing;
 
+namespace TestNativeFieldsShouldNotBeVisible
+{
+    public class PublicClassWithPublicField
+    {
+        public int _publicField;
+    }
+
+    public class HasPublicNativeField
+    {
+        public IntPtr Native;
+    }
+
+    public class HasProtectedNativeField
+    {
+        protected IntPtr Native;
+    }
+
+    public class HasInternalNativeField
+    {
+        internal IntPtr Native;
+    }
+
+    public class HasPublicReadonlyNativeField
+    {
+        public readonly IntPtr Native;
+    }
+
+    public class HasPublicNativeFieldArray
+    {
+        public IntPtr[]? Native;
+    }
+
+    public class HasPublicReadonlyNativeFieldArray
+    {
+        public IntPtr[]? Native;
+    }
+
+    public class HasPublicNativeFieldArrayArray
+    {
+        public IntPtr[][]? Native;
+    }
+
+    public class HasPublicNonNativeField
+    {
+        public object? Field;
+    }
+
+    public class HasPrivateNativeField
+    {
+        private IntPtr Native;
+    }
+    
+    public class ClassHasProperty
+    {
+        private int value {  get; }        
+    }
+        
+}
+
 namespace Analyzer.Pipeline.Tests
 {
     [TestClass()]
     public class TestNativeFieldsShouldNotBeVisible
     {
         [TestMethod()]
-        public void TestHasPublicNativeField()
+        public void TestHasPublicTypeWithNoFields()
         {
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NoEmptyInterfaces1.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NativeFieldsShouldNotBeVisible1.dll";
 
             ParsedDLLFile dllFile = new( path );
 
@@ -23,7 +82,7 @@ namespace Analyzer.Pipeline.Tests
 
             Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
             Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
-            Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
+            Assert.AreEqual( 1 , result[dllFile.DLLFileName].Verdict );
         }
     }
 }
