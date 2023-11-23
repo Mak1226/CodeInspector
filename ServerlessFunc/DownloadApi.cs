@@ -45,6 +45,23 @@ namespace ServerlessFunc
         }
 
         /// <summary>
+        /// Initializes a new instance of the DownloadApi class.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+        /// <param name="sessionRoute">The base URL for the session endpoint.</param>
+        /// <param name="submissionRoute">The base URL for the submission endpoint.</param>
+        /// <param name="analysisRoute">The base URL for the analysis endpoint.</param>
+        public DownloadApi( HttpClient httpClient , string sessionRoute , string submissionRoute , string analysisRoute )
+        {
+            _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
+            _sessionRoute = sessionRoute;
+            _submissionRoute = submissionRoute;
+            _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New download client created" );
+        }
+
+
+        /// <summary>
         /// Retrieves a list of session entities for the specified host username.
         /// </summary>
         /// <param name="hostUsername">The host username to filter sessions by.</param>

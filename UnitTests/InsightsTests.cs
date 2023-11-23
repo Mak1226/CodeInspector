@@ -204,7 +204,7 @@ namespace CloudUnitTests
             await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
-            /*List<string> students = await _insightsClient.GetFailedStudentsGivenTest("name1", "102");
+            List<string> students = await _insightsClient.GetFailedStudentsGivenTest("name1", "102");
             students.Sort();
             List<string> expectedStudents = new()
             {
@@ -214,7 +214,7 @@ namespace CloudUnitTests
             CollectionAssert.AreEqual(expectedStudents, students);
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
-            await _downloadClient.DeleteAllSubmissionsAsync();*/
+            await _downloadClient.DeleteAllSubmissionsAsync();
         }
 
         /// <summary>
