@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 * Filename    = InsightsTests.cs
 *
-* Author      = Sahil, Nideesh N
+* Author      = Sahil
 *
 * Product     = Analyzer
 * 
@@ -47,7 +47,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Creates dummy analysis data for a specific session and student.
         /// </summary>
-        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="studentName">The name of the student.</param>
         /// <param name="map">A dictionary of test names to analyzer results.</param>
@@ -67,7 +66,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Creates dummy session data for a specific host, session ID, tests, students, and test name to ID mapping.
         /// </summary>
-        /// <author> Nideesh N </author>
         /// <param name="hostName">The name of the host.</param>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="tests">A list of test names.</param>
@@ -90,7 +88,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Creates dummy submission data for a specific sessionID and studentName.
         /// </summary>
-        /// <author> Nideesh N </author>
         /// <param name="sessionId">The ID of the session.</param>
         /// <param name="studentName">The name of the student</param>
         /// <returns>The dummy submission data.</returns>
@@ -108,7 +105,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Creates dummy analysis results for two tests.
         /// </summary>
-        /// <author> Nideesh N </author>
         /// <param name="test1Verdict">The verdict for test 1.</param>
         /// <param name="test2Verdict">The verdict for test 2.</param>
         /// <returns>A dictionary of test names to analyzer results.</returns>
@@ -129,7 +125,7 @@ namespace CloudUnitTests
         /// <summary>
         /// Fills the test data for the unit tests.
         /// </summary>
-        /// <author> Sahil </author>
+        
         public async Task FillTestData()
         {
             List<Tuple<string, string>> NameToID = new()
@@ -169,7 +165,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the CompareTwoSessions method of the InsightsApi class.
         /// </summary>
-        /// <author> Sahil </author>
         [TestMethod()]
         public async Task CompareTwoSessionsTest()
         {
@@ -194,7 +189,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the GetFailedStudentsGivenTest method of the InsightsApi class.
         /// </summary>
-        /// <author> Sahil </author>
         [TestMethod()]
         public async Task GetFailedStudentsGivenTestTest()
         {
@@ -219,7 +213,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the RunningAverageOnGivenTest method of the InsightsApi class.
         /// </summary>
-        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenTestTest()
         {
@@ -240,7 +233,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
-        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageOnGivenStudentTest()
         {
@@ -261,7 +253,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the RunningAverageAcrossSessoins method of the InsightsApi class.
         /// </summary>
-        /// <author> Sahil </author>
         [TestMethod()]
         public async Task RunningAverageAcrossSessoinsTest()
         {
@@ -282,7 +273,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the UsersWithoutAnalysisGivenSession method of the InsightsApi class.
         /// </summary>
-        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentsWithoutAnalysisTest()
         {
@@ -307,7 +297,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the GetBestWorstGivenSession method of the InsightsApi class.
         /// </summary>
-        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task BestWorstAnalysisTest()
         {
@@ -316,7 +305,7 @@ namespace CloudUnitTests
             await _downloadClient.DeleteAllSubmissionsAsync();
 
             await FillTestData();
-            /*
+            
             List<string> result = await _insightsClient.GetBestWorstGivenSession("2");
             Assert.AreEqual(result.Count, 4);
             Assert.AreEqual(result[0], "Student2");
@@ -331,7 +320,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the GetStudentScoreGivenSession method of the InsightsApi class.
         /// </summary>
-        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task StudentScoreTest()
         {
@@ -351,7 +339,6 @@ namespace CloudUnitTests
         /// <summary>
         /// Tests the GetTestScoreGivenSession method of the InsightsApi class.
         /// </summary>
-        /// <author> Nideesh N </author>
         [TestMethod()]
         public async Task TestScoreTest()
         {
