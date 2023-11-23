@@ -30,8 +30,8 @@ namespace Networking.Communicator
         private Thread _listenThread;
         private Receiver _receiver;
         private TcpListener _serverListener;
-        public Dictionary<string, NetworkStream> _clientIDToStream { get; set; } = new();
-        public Dictionary<string, string> _senderIDToClientID { get; set; } = new();
+        public Dictionary<string, NetworkStream> _clientIdToStream { get; set; } = new();
+        public Dictionary<string, string> _senderIdToClientId { get; set; } = new();
         private readonly Dictionary<string, IEventHandler> _eventHandlersMap = new();
         private string _senderId;
         private bool _isStarted = false;
@@ -141,8 +141,8 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _moduleName = moduleName;
             _senderId = senderId;
-            _sender = new(_clientIDToStream, _senderIDToClientID, false);
-            _receiver = new(_clientIDToStream, this);
+            _sender = new(_clientIdToStream, _senderIdToClientId, false);
+            _receiver = new(_clientIdToStream, this);
 
             int port = 12399;
             Random random = new();
@@ -201,7 +201,7 @@ namespace Networking.Communicator
             Send(Serializer.Serialize<Data>(data),ID.GetNetworkingID(),ID.GetBroadcastID());
             _sender.Stop();
             _receiver.Stop();
-            foreach (NetworkStream stream in _clientIDToStream.Values)
+            foreach (NetworkStream stream in _clientIdToStream.Values)
             {
                 stream.Close(); // Close the network stream
             }
@@ -266,7 +266,7 @@ namespace Networking.Communicator
                 try
                 {
                     NetworkStream stream = client.GetStream();
-                    lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
+                    lock (_clientIdToStream) { _clientIdToStream.Add(clientID, stream); }
                 }
                 catch (Exception)
                 {

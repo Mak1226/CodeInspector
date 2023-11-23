@@ -29,14 +29,15 @@ namespace Networking.Communicator
         private string _moduleName;
         private Sender _sender;
         private Receiver _receiver;
-        public Dictionary<string, NetworkStream> _IDToStream = new();
-        readonly Dictionary<string, string> _senderIDToClientID = new();
+        public Dictionary<string, NetworkStream> _IdToStream = new();
+        readonly Dictionary<string, string> _senderIdToClientId = new();
 
         private string _senderId;
         private NetworkStream _networkStream;
         private readonly Dictionary<string, IEventHandler> _eventHandlersMap = new();
 
         private bool _isStarted = false;
+        
 
         /// <summary>
         /// Sends serialized data to destination. 
@@ -126,13 +127,13 @@ namespace Networking.Communicator
             Message message = new(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetServerID(), _senderId);
 
             _networkStream = tcpClient.GetStream();
-            lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
+            lock (_IdToStream) { _IdToStream[ID.GetServerID()] = _networkStream; }
 
             // starting the sender and receiver threads
             Console.WriteLine("[Client] Starting sender");
-            _sender = new(_IDToStream,_senderIDToClientID, true);
+            _sender = new(_IdToStream,_senderIdToClientId, true);
             Console.WriteLine("[Client] Starting receiver");
-            _receiver = new(_IDToStream, this);
+            _receiver = new(_IdToStream, this);
             _sender.Send(message);
 
             // subscribing to the Networking module's event handler.

@@ -61,10 +61,10 @@ namespace Networking.Events
 
         private string HandleClientRegister(Message message)
         {
-            lock(((Server)_communicator)._senderIDToClientID)
+            lock(((Server)_communicator)._senderIdToClientId)
             {
                 Data data=Serializer.Deserialize<Data>(message.Data);
-                ((Server)_communicator)._senderIDToClientID[message.SenderID] = data.Payload;
+                ((Server)_communicator)._senderIdToClientId[message.SenderID] = data.Payload;
             }
             HandleClientJoined(message);
             return "";
@@ -73,14 +73,14 @@ namespace Networking.Events
         private string HandleClientDeregister(Message message)
         {
             Console.WriteLine("herererer");
-            string clientID = ((Server)_communicator)._senderIDToClientID[message.SenderID];
-            lock (((Server)_communicator)._clientIDToStream)
+            string clientID = ((Server)_communicator)._senderIdToClientId[message.SenderID];
+            lock (((Server)_communicator)._clientIdToStream)
             {
-                ((Server)_communicator)._clientIDToStream.Remove(clientID);
+                ((Server)_communicator)._clientIdToStream.Remove(clientID);
             }
-            lock (((Server)_communicator)._senderIDToClientID)
+            lock (((Server)_communicator)._senderIdToClientId)
             {
-                ((Server)_communicator)._senderIDToClientID.Remove(message.SenderID);
+                ((Server)_communicator)._senderIdToClientId.Remove(message.SenderID);
             }
             Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
             HandleClientLeft(message);
@@ -89,9 +89,9 @@ namespace Networking.Events
         private string HandleServerLeft(Message message)
         {
             string serverID = message.SenderID;
-            lock (((Client)_communicator)._IDToStream)
+            lock (((Client)_communicator)._IdToStream)
             {
-                ((Client)_communicator)._IDToStream.Remove(serverID);
+                ((Client)_communicator)._IdToStream.Remove(serverID);
             }
             Console.WriteLine("[client] removed server with: " + serverID + " " + message.SenderID);
             return "";

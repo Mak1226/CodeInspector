@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using Networking.Communicator;
+﻿using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
