@@ -46,7 +46,7 @@ namespace Analyzer.Parsing
                         }
                     }
                     
-                    if (type.IsClass)
+                    if (type.IsClass && type.FullName != "<Module>")
                     {
                         // To avoid structures and delegates
                         if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
@@ -85,7 +85,7 @@ namespace Analyzer.Parsing
                             }
                         }
 
-                        if (type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate")
+                        if (type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate" && type.FullName != "<Module>")
                         {
                             ParsedClassMonoCecil classObj = new( type );
                             classObjListMC.Add( classObj );
