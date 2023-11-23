@@ -81,7 +81,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(_parsedDLLFiles);
             _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
-            _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
+            _allAnalyzers[110] = new AsyncMethodAnalyzer( _parsedDLLFiles);
             _allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
             _allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
             _allAnalyzers[113] = new CyclomaticComplexity(_parsedDLLFiles);

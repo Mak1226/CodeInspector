@@ -7,26 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
-    public class TestClassForControl
-    {
-        public void MethodWithUselessControlFlow()
-        {
-            int x = 10;
-            int y = 20;
-
-            if (x == 0)
-            {
-                // TODO - ever seen such a thing ? ;-)
-            }
-            if (y == 0) ;
-            {
-                Console.WriteLine( "always printed" );
-            }
-        }
-    }
 
     [TestClass()]
     public class TestControl
@@ -43,7 +27,7 @@ namespace Analyzer.Pipeline.Tests
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
-            ReviewUselessControlFlowRule analyzer = new(dllFiles);
+            AsyncMethodAnalyzer analyzer = new(dllFiles);
 
             // Run the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
@@ -54,9 +38,38 @@ namespace Analyzer.Pipeline.Tests
 
                 AnalyzerResult res = dll.Value;
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
 
                 Assert.AreEqual( res.Verdict , 0 );
+            }
+
+        }
+        [TestMethod()]
+        public void Test2()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
+            //string path = Assembly.GetExecutingAssembly().Location;
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            AsyncMethodAnalyzer analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                //Console.WriteLine(dll.Key);
+
+                AnalyzerResult res = dll.Value;
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+
+                Assert.AreEqual( res.Verdict , 1 );
             }
 
         }
