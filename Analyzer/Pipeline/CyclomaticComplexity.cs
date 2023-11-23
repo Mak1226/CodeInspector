@@ -15,17 +15,26 @@ using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline
 {
+    /// <summary>
+    /// Measures the cyclomatic complexity of methods in the files
+    /// And Flags the higher complex methods (default complexity = 10)
+    /// </summary>
     public class CyclomaticComplexity : AnalyzerBase
     {
         private readonly int _maxAllowedComplexity;
         private readonly string _analyzerID ;
+
         public CyclomaticComplexity(List<ParsedDLLFile> dllFiles , int maxAllowedComplexity=10) : base(dllFiles)
         {
             _maxAllowedComplexity = maxAllowedComplexity;
             _analyzerID = "113";
         }
 
-
+        /// <summary>
+        /// Traverses over all Methods and Constructors in the dll to find their complexity
+        /// </summary>
+        /// <param name="parsedDLLFile"></param>
+        /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             StringBuilder errorMessageBuilder = new();
@@ -66,6 +75,11 @@ namespace Analyzer.Pipeline
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public int GetMethodCyclomaticComplexity(MethodDefinition method)
         {
             List<Instruction> targets = new();
@@ -89,6 +103,12 @@ namespace Analyzer.Pipeline
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
         private int CalculateCondBranchCaseComplexity(Instruction instruction , List<Instruction> targets)
         {
             int complexity = 0;
@@ -112,6 +132,11 @@ namespace Analyzer.Pipeline
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="targets"></param>
         private void FindSwitchTargetLabels(Instruction instruction , List<Instruction> targets)
         {
             // Analysing the cases of the switch statement to calculate complexity

@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+ * Filename    = RemoveUnusedLocalVariablesRule.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = AnalyzerTests
+ *
+ * Description = Unit Tests for RemoveUnusedLocalVariablesRule class
+ *****************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -7,10 +19,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
+using System.Diagnostics;
+
 
 namespace Analyzer.Pipeline.Tests
 {
-    public class TestClass
+    //TestUnused.dll
+    //public class TestClass
+    //{
+    //    public void SomeMethod()
+    //    {
+    //        int x = 42;
+    //        int y = 10;
+    //        int n = x + y;
+    //    }
+    //}
+
+    public class LetUsTestVariables
     {
         public static void MethodWithUnusedVariables()
         {
@@ -34,11 +59,17 @@ namespace Analyzer.Pipeline.Tests
         public static void MethodWithNoLocals() => Console.WriteLine( "No local variables in this method." );
     }
 
+    /// <summary>
+    /// Test class for the RemoveUnusedLocalVariablesRule.
+    /// </summary>
     [TestClass()]
     public class TestUnused
     {
+        /// <summary>
+        /// Test method for detecting unused local variables.
+        /// </summary>
         [TestMethod()]
-        public void TestRemoveUnusedLocalVariables()
+        public void TestUnusedLocalVariables()
         {
             // Specify the path to the DLL file
             //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\TestUnused.dll";
@@ -46,12 +77,12 @@ namespace Analyzer.Pipeline.Tests
             string path = Assembly.GetExecutingAssembly().Location;
 
             // Create a list of DLL paths
-            ParsedDLLFile dllFile = new(path);
+            ParsedDLLFile dllFile = new( path );
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
-            RemoveUnusedLocalVariablesRule analyzer = new(dllFiles);
+            RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
 
             // Run the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
@@ -60,9 +91,41 @@ namespace Analyzer.Pipeline.Tests
             {
                 AnalyzerResult res = dll.Value;
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
 
                 Assert.AreEqual( 0 , res.Verdict , "There are no unused local variables!" );
+            }
+        }
+
+        /// <summary>
+        /// Test method for detecting no unused local variables.
+        /// </summary>
+        [TestMethod()]
+        public void TestNoUnusedLocalVariables()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\TestUnused.dll";
+
+            //string path = Assembly.GetExecutingAssembly().Location;
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+
+                Assert.AreEqual( 1 , res.Verdict , "There are unused local variables!" );
             }
         }
     }
