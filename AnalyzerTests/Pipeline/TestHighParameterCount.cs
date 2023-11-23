@@ -23,7 +23,7 @@ namespace AnalyzerTests.Pipeline
     public class TestHighParameterCount
     {
         [TestMethod()]
-        public void TestParams()
+        public void TestLowParams()
         {
             // Specify the path to the DLL file
             //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\xyz.dll";
@@ -45,6 +45,33 @@ namespace AnalyzerTests.Pipeline
                 Assert.AreEqual(res.Verdict, 1);
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+            }
+
+        }
+
+        [TestMethod()]
+        public void TestHighParams()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\xyz.dll";
+            //string path = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of HighParameterCountRule
+            HighParameterCountRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Assert.AreEqual( res.Verdict , 0 );
+
+                Console.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
             }
 
         }
