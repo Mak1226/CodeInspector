@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+ * Filename    = TestDepthOfInheritance.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = AnalyzerTests
+ *
+ * Description = Unit Tests for TestDepthOfInheritance class
+ *****************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -7,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -30,14 +43,20 @@ namespace Analyzer.Pipeline.Tests
         // ViolatingClass class logic
     }
 
+    /// <summary>
+    /// Unit tests for the <see cref="DepthOfInheritance"/> class.
+    /// </summary>
     [TestClass()]
     public class TestDepth
     {
+
+        /// <summary>
+        /// Tests the depth of inheritance analyzer.
+        /// </summary>
         [TestMethod()]
         public void TestDepthOfInh()
         {
-            // Specify the path to the DLL file
-            //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
+            // Specify the path to the DLL file, which is the code above the Test Class
             string path = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile dllFile = new(path);
 
@@ -53,18 +72,13 @@ namespace Analyzer.Pipeline.Tests
 
             Assert.IsNotNull( depthMap, "DepthMap is NULL!");
 
-            //foreach (KeyValuePair<Type , int> pair in depthMap)
-            //{
-            //    Console.WriteLine( $"Key: {pair.Key}, Value: {pair.Value}" );
-            //}
-
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
                 AnalyzerResult res = dll.Value;
 
                 Assert.AreEqual(res.Verdict, 0 );
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }
 
         }

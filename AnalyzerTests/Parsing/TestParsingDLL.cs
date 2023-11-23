@@ -45,6 +45,17 @@ namespace AnalyzerTests.Parsing
             }
             CollectionAssert.AreEquivalent(expectedInterfaceNames , retrievedInterfaceNames);
         }
+
+        [TestMethod]
+        public void CheckCompleteDLL()
+        {
+            string dllPath = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\BridgePattern.dll";
+            ParsedDLLFile parsedDLL = new( dllPath );
+
+            Assert.AreEqual(5, parsedDLL.classObjList.Count);
+            Assert.AreEqual(5, parsedDLL.classObjListMC.Count);
+            Assert.AreEqual(1, parsedDLL.interfaceObjList.Count);
+        }
     }
 }
 

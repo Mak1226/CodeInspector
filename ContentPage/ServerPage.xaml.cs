@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Analyzer;
 using Content.Model;
+using System.Diagnostics; 
 
 namespace ContentPage
 {
@@ -33,8 +34,11 @@ namespace ContentPage
         /// Refer <see cref="SetSessionID"/> on how to change result to each client's
         /// </summary>
         /// <param name="server">Running networking server</param>
+        /// <param name="sessionID">Unique ID of server</param>
         public ServerPage(ICommunicator server, string sessionID)
         {
+            Trace.WriteLine( "Initializing ServerPage" );
+
             InitializeComponent();
             _viewModel = new ContentServerViewModel(
                 new ContentServer( server, AnalyzerFactory.GetAnalyzer(), sessionID )
@@ -53,6 +57,8 @@ namespace ContentPage
         /// <param name="sessionID">Session ID or Client ID</param>
         public void SetSessionID(string sessionID)
         {
+            Trace.WriteLine( $"Setting session ID: {sessionID}" );
+
             _viewModel.SetSessionID(sessionID);
         }
 
@@ -61,6 +67,8 @@ namespace ContentPage
         /// </summary>
         private void LoadResultPage()
         {
+            Trace.WriteLine( "Loading ResultPage" );
+
             ResultPage resultPage = new (_viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
@@ -70,6 +78,8 @@ namespace ContentPage
         /// </summary>
         private void LoadConfigurationPage()
         {
+            Trace.WriteLine( "Loading ConfigurationPage" );
+
             ConfigurationPage configPage = new (_viewModel);
             ConfigFrame.NavigationService.Navigate(configPage);
             
@@ -80,6 +90,8 @@ namespace ContentPage
         /// </summary>
         private void AnalyzerUploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            Trace.WriteLine( "AnalyzerUploadButton Click" );
+
             OpenFileDialog openFileDialog = new()
             {
                 Multiselect = true , // Allow multiple file selection
@@ -95,6 +107,8 @@ namespace ContentPage
                 List<string> filePaths = new (openFileDialog.FileNames);
                 _viewModel.LoadCustomDLLs(filePaths);
 
+                Trace.WriteLine( "Custom DLLs loaded" );
+
             }
         }
 
@@ -103,6 +117,8 @@ namespace ContentPage
         /// </summary>
         private void SendToCloudButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            Trace.WriteLine( "SendToCloudButton Click" );
+
             _viewModel.SendToCloud();
         }
     }

@@ -176,7 +176,6 @@ namespace Analyzer.Parsing
         //UpdateInhetanceList updates the Inheritance List
         private void UpdateInheritanceList()
         {
-            Trace.WriteLine("Updating Inheritance List");
             //Adding the parent class (if exist) in the inheritance list
             if (ParentClass != null)
             {
@@ -200,8 +199,6 @@ namespace Analyzer.Parsing
         //their method of instantiation specifically related to the constructor
         private void UpdateRelationshipsListFromCtors()
         {
-            Trace.WriteLine("Checking object Relationships in constructor");
-
             //Composition Relation:
             //Cases1: If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
             //CAse2: If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
@@ -293,7 +290,6 @@ namespace Analyzer.Parsing
         //UpdateAggreagationList is used to extract out the aggregation relationship existing between the current class and other classes
         private void UpdateAggregationList()
         {
-            Trace.WriteLine("Updating Aggregation List");
             // Aggregation List:
             // Cases1: If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
             // Cases2: If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
@@ -308,10 +304,13 @@ namespace Analyzer.Parsing
                         {
                             var constructorReference = (MethodReference)inst.Operand;
                             TypeReference objectType = constructorReference.DeclaringType;
+                            //TypeDefinition typeDef = objectType.Resolve();
+                            //Type typeObj = typeDef);
 
                             // adding to aggrgation list, if object is not of generic type
                             if (!objectType.GetType().IsGenericType && !objectType.FullName.StartsWith( "System" ) && !SetsContainElement( "C" + objectType.FullName , InheritanceList , CompositionList ))
                             {
+                                //Console.WriteLine("iii        " +objectType.Name);
                                 AggregationList.Add( "C" + objectType.FullName );
                             }
                         }
@@ -323,7 +322,6 @@ namespace Analyzer.Parsing
         //UpdateUsingList is used to extract out the using relationship existing between the current class and other classes
         private void UpdateUsingList()
         {
-            Trace.WriteLine("Updating Using List");
             // Using Class Relationship 
             // Cases2: If any method (other than constructors) contain other class as parameter
 
@@ -378,5 +376,22 @@ namespace Analyzer.Parsing
 
             return dict;
         }
+
+        //private static bool IsCompilerGenerated(Type type )
+        //{
+        //    if (type == null)
+        //    {
+        //        throw new ArgumentNullException( nameof( type ) );
+        //    }
+
+        //    // Check for CompilerGeneratedAttribute on the type
+        //    if (Attribute.IsDefined( type , typeof( System.Runtime.CompilerServices.CompilerGeneratedAttribute ) ))
+        //    {
+        //        return true;
+        //    }
+
+        //    return type.Name.StartsWith( "<>" ) || type.Name.Contains( "__Anonymous" ) || type.Name.Contains( "DisplayClass" );
+
+        //}
     }
 }

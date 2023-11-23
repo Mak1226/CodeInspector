@@ -9,6 +9,7 @@
  *
  * Description  = Unit Tests for ContentClient
 *****************************************************************************/
+using System.Diagnostics;
 using Analyzer;
 using Content.Encoder;
 using Content.FileHandling;
@@ -31,6 +32,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestInitialize]
         public void TestInitializer()
         {
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] Initializing test class for ContentClient" );
             _communicator = new MockCommunicator();
         }
 
@@ -40,6 +42,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void FileSendTest()
         {
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileSendTest: Started" );
             ContentClient contentClient = new (_communicator, "testSessionID");
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);
@@ -47,11 +50,12 @@ namespace ContentUnitTesting.ContentClientServerTest
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll2.dll"), "DLL Content 2");
             Directory.CreateDirectory(tempDirectory + "\\subdir1");
             File.WriteAllText(Path.Combine(tempDirectory + "\\subdir1", "TestDll3.dll"), "DLL Content 3");
-
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileSendTest: Uploading temp directory with one subdirectory" );
             contentClient.HandleUpload(tempDirectory);
             IFileHandler fileHandler = new FileHandler();
             string encoding = fileHandler.HandleUpload(tempDirectory, "testSessionID");
             Assert.AreEqual(encoding, _communicator.GetEncoding());
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileSendTest: Deleting temp directory" );
             Directory.Delete(tempDirectory, true);
         }
 
@@ -61,12 +65,14 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void FileReceiveTest()
         {
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileReceiveTest: Started" );
             ContentClient contentClient = new (_communicator, "currSession");
             Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new ();
             contentClient.AnalyzerResultChanged += (result) =>
             {
                 analyzerResultUpdated = result;
             };
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileReceiveTest: Sample analyzer result created" );
             Dictionary<string, List<AnalyzerResult>> analyzerResult = new()
             {
                 { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
@@ -76,6 +82,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             string encoding = serializer.Serialize(analyzerResult);
             contentClient.HandleReceive(encoding);
             Assert.IsTrue(analyzerResultUpdated.ContainsKey("File1"));
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] FileReceiveTest: Done" );
         }
 
         /// <summary>
@@ -84,8 +91,8 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void NullReceiveTest()
         {
+            Trace.WriteLine( "[ContentUnitTesting][ContentClientTest.cs] NullReceiveTest: Started" );
             ContentClient contentClient = new (_communicator, "currSession");
-
             Dictionary<string, List<AnalyzerResult>> analyzerResult = new ()
             {
                 { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },

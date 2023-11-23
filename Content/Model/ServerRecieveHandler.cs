@@ -1,4 +1,15 @@
-﻿using Networking.Events;
+﻿/******************************************************************************
+ * Filename    = ServerRecieveHandler.cs
+ * 
+ * Author      = Jyothiradithya
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Network subscriber for handling server recieve
+ *****************************************************************************/
+using Networking.Events;
 using Networking.Models;
 
 namespace Content.Model
@@ -23,7 +34,7 @@ namespace Content.Model
         /// Recieved file
         /// </summary>
         /// <param name="message"></param>
-        /// <returns></returns>
+        /// <returns>Nothing... Return is just there for the interface</returns>
         public string HandleMessageRecv(Message message)
         {
             _server.HandleRecieve(message.Data, message.SenderId);

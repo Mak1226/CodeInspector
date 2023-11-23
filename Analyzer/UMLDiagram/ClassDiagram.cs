@@ -54,12 +54,22 @@ namespace Analyzer.UMLDiagram
             try
             {
                 System.Diagnostics.Debug.WriteLine(_plantUMLCode.ToString());
-                // Render the PlantUML diagram asynchronously
-                _plantUMLImage = await renderer.RenderAsync(_plantUMLCode.ToString(), OutputFormat.Png);
-                System.Diagnostics.Debug.WriteLine(_plantUMLImage);
-                System.Diagnostics.Debug.Assert(_plantUMLImage != null);
 
-                return _plantUMLImage;
+                string emptyDiagramUMLString = "@startuml\r\n\r\n@enduml";
+
+                if(_plantUMLCode.ToString() != emptyDiagramUMLString)
+                {
+                    // Render the PlantUML diagram asynchronously
+                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Png );
+                    System.Diagnostics.Debug.WriteLine( _plantUMLImage );
+                    System.Diagnostics.Debug.Assert( _plantUMLImage != null );
+
+                    return _plantUMLImage;
+                }
+                else
+                {
+                    return Array.Empty<byte>();
+                }
             }
             catch (Exception ex)
             {
@@ -157,13 +167,6 @@ namespace Analyzer.UMLDiagram
             {
                 if (!isPartOfRemovableNamespace(relationName, removableNamespaces))
                 {
-                    if (typeFullName.StartsWith( "<>" ) || typeFullName.Contains( "__Anonymous" ) || typeFullName.Contains( "DisplayClass" ))
-                    {
-                        if (RemoveFirstLetter( relationName ).StartsWith( "<>" ) || RemoveFirstLetter( relationName ).Contains( "__Anonymous" ) || RemoveFirstLetter( relationName ).Contains( "DisplayClass" ))
-                        {
-                            _plantUMLCode.Append( relationStatement + $" {typeFullName} {relationSymbol} {RemoveFirstLetter( relationName )}\r\n" );
-                        }
-                    }
                     _plantUMLCode.Append(relationStatement + $" {typeFullName} {relationSymbol} {RemoveFirstLetter(relationName)}\r\n");
                 }
             }
@@ -199,7 +202,7 @@ namespace Analyzer.UMLDiagram
             return type.Remove(0, 1);
         }
 
-        
+        /*
         private bool isPartOfRemovableNamespace(string objName, List<string> removableNamespaces)
         {
             string[] splittedString = objName.Split(".");
@@ -214,26 +217,31 @@ namespace Analyzer.UMLDiagram
                 return false;
             }
         }
-        
-        /*
+        */
+
+        // checks if the given namespace name in present in the removable namespace list
         private bool isPartOfRemovableNamespace( string objName , List<string> removableNamespaces )
         {
-            string[] splittedString = objName.Split( "." );
-
+            // string[] splittedString = objName.Split( "." );
+            bool check = false;
             if (removableNamespaces != null)
             {
+                foreach (string rem in removableNamespaces)
+                {
+                    if (!objName.Remove( 0 , 1 ).Contains(rem + "."))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+            }
 
-            }
-            if (removableNamespaces != null && objName.Remove( 0 , 1 ).Contains( removableNamespaces ))
-            {
-                Console.WriteLine( objName );
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return check;
         }
-        */
+        
     }
 }

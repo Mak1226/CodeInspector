@@ -34,6 +34,7 @@ namespace ContentPage
         /// <param name="client">client view model</param>
         public FileUpload(ContentClientViewModel client)
         {
+            Trace.WriteLine( "Initializing FileUpload" );
             _client = client;
             InitializeComponent();
         }
@@ -60,7 +61,7 @@ namespace ContentPage
                 if (result == DialogResult.OK)
                 {
                     string folderPath = ofd.FileName;
-                    Trace.WriteLine(folderPath);
+                    Trace.WriteLine( $"Selected folder path: {folderPath}" );
                     // Pass folder path to Content Client
                     if (Directory.Exists(folderPath.Substring(0, folderPath.Length - 12)))
                     {
@@ -78,11 +79,7 @@ namespace ContentPage
                 Trace.WriteLine(ex.Message);
             }
 
-
         }
-
-
-
 
     }
 }

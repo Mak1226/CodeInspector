@@ -1,4 +1,16 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+ * Filename    = DepthOfInheritance.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Analyzer
+ *
+ * Description = Class that implements Depth Of Inheritance Check Analyser
+ *****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
