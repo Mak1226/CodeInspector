@@ -1,4 +1,18 @@
-﻿namespace Analyzer
+﻿/******************************************************************************
+* Filename    = IAnalyzer.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Represents the main Analyzer interface responsible for orchestrating the analysis process.
+******************************************************************************/
+
+namespace Analyzer
 {
     /// <summary>
     /// Represents the main Analyzer interface responsible for orchestrating the analysis process.

@@ -1,13 +1,13 @@
 ﻿/******************************************************************************
  * Filename    = Communicator/ICommunicator.cs
  *
- * Author      = 
+ * Author      = Shubhang Kedia
  *
  * Product     = Analyzer
  * 
  * Project     = Networking
  *
- * Description = 
+ * Description = The Interface for communicators 
  *****************************************************************************/
 
 
@@ -15,6 +15,9 @@
 using Networking.Events;
 namespace Networking.Communicator
 {
+    /// <summary>
+    /// Defines the common functionality for communicators(server and client) in a networking system.
+    /// </summary>
     public interface ICommunicator
     {
         /// <summary>

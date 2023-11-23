@@ -1,15 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+* Filename    = AnalyzerFactoryTests.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit tests for the AnalyzerFactory class.
+******************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Analyzer.Tests
 {
+    /// <summary>
+    /// Unit tests for the AnalyzerFactory class.
+    /// </summary>
     [TestClass()]
     public class AnalyzerFactoryTests
     {
-
         [TestMethod]
         public void TestGetAllConfigurationOptions()
         {
-            // Arrange
             var expectedOptions = new List<Tuple<int, string>>
             {
                 Tuple.Create(101, "Abstract type no public constructor"),
@@ -33,23 +48,14 @@ namespace Analyzer.Tests
                 Tuple.Create(119, "High parameter count rule")
             };
 
-            // Act
             List<Tuple<int , string>> actualOptions = AnalyzerFactory.GetAllConfigurationOptions();
-
-            // Assert
             CollectionAssert.AreEqual(expectedOptions, actualOptions);
         }
 
         [TestMethod]
         public void TestGetAnalyzer()
         {
-            // Arrange
-            // You may need to use a mocking framework to mock IAnalyzer if it has complex behavior.
-
-            // Act
             IAnalyzer analyzer = AnalyzerFactory.GetAnalyzer();
-
-            // Assert
             Assert.IsNotNull(analyzer);
             Assert.IsInstanceOfType(analyzer, typeof(IAnalyzer));
         }

@@ -63,11 +63,6 @@ namespace Analyzer.Pipeline
                 }
                 */
 
-                if (!classtype.HasFields)
-                {
-                    continue;
-                }
-
                 // By default, this rule only looks at externally visible types
                 if (!classtype.IsPublic)
                 {
@@ -105,15 +100,8 @@ namespace Analyzer.Pipeline
 
             foreach (FieldDefinition field in visibleNativeFieldsList)
             {
-                try
-                {
-                    // sanity check
-                    errorLog.AppendLine( field.FullName );
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid Argument ", ex);
-                }
+                errorLog.AppendLine( field.FullName );
+
             }
             return errorLog.ToString();
         }
@@ -135,11 +123,9 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                _verdict = 0;
-                _errorMessage = "";
-                Trace.WriteLine("NullReferenceException in DLL files " + ex.Message);
+                throw new NullReferenceException( "Encountered exception while processing." , ex );
             }
-            
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }

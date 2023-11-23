@@ -262,10 +262,8 @@ namespace Analyzer.Pipeline.Tests
             List<ParsedDLLFile> parseddllFiles = new() { null };
 
             AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new( parseddllFiles );
-            Dictionary<string , AnalyzerResult> result = abstractTypeNoPublicConstructor.AnalyzeAllDLLs();
 
-            // If control flow reaches this point, then no exception was raised.
-            Assert.Fail( "Exception was not raised" );
+            Assert.ThrowsException<NullReferenceException>(() => abstractTypeNoPublicConstructor.AnalyzeAllDLLs());
         }
     }
 }

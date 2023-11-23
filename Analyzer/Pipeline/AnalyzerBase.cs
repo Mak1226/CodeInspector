@@ -1,4 +1,18 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = MainPipeline.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = A base class providing a common structure for various analyzers.
+******************************************************************************/
+
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

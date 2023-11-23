@@ -1,33 +1,50 @@
-﻿using Networking.Communicator;
+﻿/******************************************************************************
+ * Filename    = Events/NetworkingEventHandler.cs
+ *
+ * Author      = Shubhang kedia
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = Defines the event handler for the Networking module.
+ *****************************************************************************/
+
+using Networking.Communicator;
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
 
+
 namespace Networking.Events
 {
+    /// <summary>
+    /// Defines the event handler for the Networking module.
+    /// </summary>
     public class NetworkingEventHandler : IEventHandler
     {
+        /// <summary>
+        /// The communicator that uses the <see cref="NetworkingEventHandler"/>
+        /// </summary>
+        readonly ICommunicator _communicator ;
 
-        ICommunicator communicator ;
-        public NetworkingEventHandler(ICommunicator server) { 
-            this.communicator = server;
+        /// <summary>
+        /// The constructor for the Networking module's event handler.
+        /// </summary>
+        /// <param name="communicator">The communicator that is subscribing to the <see cref="NetworkingEventHandler"/></param>
+        public NetworkingEventHandler(ICommunicator communicator) { 
+            _communicator = communicator;
         }
+
+        /// <summary>
+        /// Handles the message received by the subscriber.
+        /// </summary>
+        /// <param name="message">The received message</param>
+        /// <returns>An empty string</returns>
         public string HandleMessageRecv(Message message)
         {
             Data data=Serializer.Deserialize<Data>(message.Data);
-            if (data.EventType == EventType.ChatMessage())
-            {
-                return HandleChatMessage(message);
-            }
-            else if (data.EventType == EventType.NewClientJoined())
-            {
-                return HandleClientJoined(message);
-            }
-            else if (data.EventType == EventType.ClientLeft())
-            {
-                return HandleClientLeft(message);
-            }
-            else if (data.EventType == EventType.ClientRegister())
+            if (data.EventType == EventType.ClientRegister())
             {
                 return HandleClientRegister(message);
             }
@@ -42,60 +59,79 @@ namespace Networking.Events
             return "";
         }
 
-        private string HandleChatMessage(Message message)
-        {
-            Console.WriteLine("message received in server:" + message.Data);
-            return "";
-        }
-
+        /// <summary>
+        /// Broadcasts that a new client has been joined
+        /// </summary>
+        /// <param name="message">TODO</param>
+        /// <returns>A null string</returns>
         private string HandleClientJoined(Message message)
         {
-            //TODO: add respective module name
-            Data data = new Data(message.SenderID, EventType.NewClientJoined());
-            communicator.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
+            Data data = new(message.SenderID, EventType.NewClientJoined());
+            _communicator.Send(Serializer.Serialize( data ), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
             return "";
         }
 
+        /// <summary>
+        /// Broadcasts that a new client has been joined
+        /// </summary>
+        /// <param name="message">TODO</param>
+        /// <returns>A null string</returns>
         private string HandleClientLeft(Message message)
         {
-            Data data = new Data(message.SenderID, EventType.ClientLeft());
-            communicator.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
+            Data data = new (message.SenderID, EventType.ClientLeft());
+            _communicator.Send(Serializer.Serialize( data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
             return "";
         }
 
+        /// <summary>
+        /// Broadcasts that a client has left
+        /// </summary>
+        /// <param name="message">TODO</param>
+        /// <returns>A null string</returns>
         private string HandleClientRegister(Message message)
         {
-            lock(((Server)communicator)._senderIDToClientID)
+            lock(((Server)_communicator)._senderIdToClientId)
             {
                 Data data=Serializer.Deserialize<Data>(message.Data);
-                ((Server)communicator)._senderIDToClientID[message.SenderID] = data.Payload;
+                ((Server)_communicator)._senderIdToClientId[message.SenderID] = data.Payload;
             }
             HandleClientJoined(message);
             return "";
         }
 
+        /// <summary>
+        /// Removed the entry in the dictionaries corresponding to the client who left
+        /// </summary>
+        /// <param name="message">TODO</param>
+        /// <returns>A null string</returns>
         private string HandleClientDeregister(Message message)
         {
-            Console.WriteLine("herererer");
-            string clientID = ((Server)communicator)._senderIDToClientID[message.SenderID];
-            lock (((Server)communicator)._clientIDToStream)
+
+            string clientID = ((Server)_communicator)._senderIdToClientId[message.SenderID];
+            lock (((Server)_communicator)._clientIdToStream)
             {
-                ((Server)communicator)._clientIDToStream.Remove(clientID);
+                ((Server)_communicator)._clientIdToStream.Remove(clientID);
             }
-            lock (((Server)communicator)._senderIDToClientID)
+            lock (((Server)_communicator)._senderIdToClientId)
             {
-                ((Server)communicator)._senderIDToClientID.Remove(message.SenderID);
+                ((Server)_communicator)._senderIdToClientId.Remove(message.SenderID);
             }
             Console.WriteLine("[server] removed client with: " + clientID + " " + message.SenderID);
             HandleClientLeft(message);
             return "";
         }
+
+        /// <summary>
+        /// Removes the networkstream to the server from the client
+        /// </summary>
+        /// <param name="message">TODO</param>
+        /// <returns>A null string</returns>
         private string HandleServerLeft(Message message)
         {
             string serverID = message.SenderID;
-            lock (((Client)communicator)._IDToStream)
+            lock (((Client)_communicator)._IdToStream)
             {
-                ((Client)communicator)._IDToStream.Remove(serverID);
+                ((Client)_communicator)._IdToStream.Remove(serverID);
             }
             Console.WriteLine("[client] removed server with: " + serverID + " " + message.SenderID);
             return "";
