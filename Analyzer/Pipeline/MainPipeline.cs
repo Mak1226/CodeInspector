@@ -89,7 +89,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
-            _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
+            _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
             Trace.Write("MainPipeline : All Analyzers Generated\n");
         }

@@ -1,4 +1,16 @@
-﻿using Analyzer.Parsing;
+/******************************************************************************
+* Filename    = TestAbstractClassNamingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit Tests for AbstractClassNamingChecker.cs
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -19,6 +31,17 @@ namespace AnalyzerTests.Pipeline
         /// <summary>
         /// Test method for a case in which all classes follow the rule 
         /// </summary>
+
+        //Abstract1.cs
+
+        //namespace ClassLibrary1
+        //{
+        //    public abstract class goodBase
+        //    {
+        //        //..
+        //    }
+        //}
+
         [TestMethod()]
         public void TestGoodExample()
         {
@@ -40,6 +63,24 @@ namespace AnalyzerTests.Pipeline
         /// <summary>
         /// Test method for a case in which classes don't follow the above mentioned rule.
         /// </summary>
+        /// 
+
+        //Abstract.cs
+
+        //namespace ClassLibrary1
+        //{
+        //    public abstract class BadBase
+        //    {
+        //        //..
+        //    }
+
+        //    public abstract class badabstractclass
+        //    {
+        //        //..
+        //    }
+        //}
+
+
         [TestMethod()]
         public void TestBadExample()
         {
