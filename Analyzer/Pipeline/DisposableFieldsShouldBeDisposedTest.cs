@@ -46,8 +46,8 @@ namespace Analyzer.Pipeline
             string errorString = violationCount > 0
                 ? $"{violationCount} violations found: Some disposable fields are not properly disposed."
                 : "No violations found.";
-
-            return new AnalyzerResult("108", violationCount, errorString);
+            int verdict = violationCount > 0 ? 0 : 1;
+            return new AnalyzerResult("108", verdict, errorString);
         }
 
         /// <summary>

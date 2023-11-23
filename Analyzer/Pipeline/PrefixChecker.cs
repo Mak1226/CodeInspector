@@ -38,16 +38,26 @@ namespace Analyzer.Pipeline
         /// <returns>The number of errors found during the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
             int errorCount = 0;
+            int flag = 0;
+            int flag1 = 0;
 
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
+                    flag++;
                     Console.WriteLine($"Incorrect Class Prefix : {classObj.Name}");
-                    _errorMessage = "Incorrect Class Prefix : " + classObj.Name;
+                    if(flag == 1)
+                    {
+                        _errorMessage += "Incorrect Class Prefix : " + classObj.Name + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + classObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
@@ -57,14 +67,23 @@ namespace Analyzer.Pipeline
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
+                    flag1++;
                     Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
-                    _errorMessage = "Incorrect Interface Prefix : " + interfaceObj.Name;
+                    if(flag1 == 1)
+                    {
+                        _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + interfaceObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
 
             if (errorCount == 0)
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1;
             }
             else

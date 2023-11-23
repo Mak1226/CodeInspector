@@ -23,7 +23,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "112";
+            _analyzerID = "118";
         }
 
         private List<FieldDefinition> FindVisibleNativeFields(ParsedDLLFile parsedDLLFile)
@@ -104,14 +104,15 @@ namespace Analyzer.Pipeline
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
-            _verdict = 1;
-
             List<FieldDefinition> visibleNativeFieldsList = FindVisibleNativeFields(parsedDLLFile);
             if (visibleNativeFieldsList.Count > 0)
             {
                 _verdict = 0;
                 _errorMessage = ErrorMessage(visibleNativeFieldsList);
+            }
+            else
+            {
+                _errorMessage = "No violation found.";
             }
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
