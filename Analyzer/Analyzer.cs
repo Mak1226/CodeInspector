@@ -44,7 +44,7 @@ namespace Analyzer
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
             Trace.WriteLine("Teacher Options\n");
-            foreach (var kvp in TeacherOptions)
+            foreach (KeyValuePair<int , bool> kvp in TeacherOptions)
             {
                 Trace.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}\n");
             }
@@ -84,9 +84,9 @@ namespace Analyzer
             Dictionary<string, List<AnalyzerResult>> result = _customAnalyzerPipeline.Start();
             Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
 
-            foreach (var keyValuePair in result)
+            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
             {
-                foreach (var analyzerResult in keyValuePair.Value)
+                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
                 {
                     Trace.Write($"Analyzer : Key: {keyValuePair.Key}");
                     Trace.Write($"  {analyzerResult}\n");
