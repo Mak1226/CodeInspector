@@ -54,12 +54,22 @@ namespace Analyzer.UMLDiagram
             try
             {
                 System.Diagnostics.Debug.WriteLine(_plantUMLCode.ToString());
-                // Render the PlantUML diagram asynchronously
-                _plantUMLImage = await renderer.RenderAsync(_plantUMLCode.ToString(), OutputFormat.Png);
-                System.Diagnostics.Debug.WriteLine(_plantUMLImage);
-                System.Diagnostics.Debug.Assert(_plantUMLImage != null);
 
-                return _plantUMLImage;
+                string emptyDiagramUMLString = "@startuml\r\n\r\n@enduml";
+
+                if(_plantUMLCode.ToString() != emptyDiagramUMLString)
+                {
+                    // Render the PlantUML diagram asynchronously
+                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Png );
+                    System.Diagnostics.Debug.WriteLine( _plantUMLImage );
+                    System.Diagnostics.Debug.Assert( _plantUMLImage != null );
+
+                    return _plantUMLImage;
+                }
+                else
+                {
+                    return Array.Empty<byte>();
+                }
             }
             catch (Exception ex)
             {
