@@ -1,4 +1,4 @@
-﻿using Analyzer.Parsing;
+﻿/*using Analyzer.Parsing;
 using Analyzer.Pipeline;
 
 namespace Analyzer.DynamicAnalyzer
@@ -43,3 +43,4 @@ namespace Analyzer.DynamicAnalyzer
 
     }
 }
+*/
