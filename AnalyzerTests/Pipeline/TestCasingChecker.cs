@@ -34,6 +34,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["CasingChecker.dll"];
+
             Assert.AreEqual(0, result.Verdict);
         }
 

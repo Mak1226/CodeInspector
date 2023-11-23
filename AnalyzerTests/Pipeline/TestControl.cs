@@ -40,8 +40,6 @@ namespace Analyzer.Pipeline.Tests
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
 
-            //DllFilePaths.Add(path);
-
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
             // Create an instance of RemoveUnusedLocalVariablesRule
@@ -57,6 +55,8 @@ namespace Analyzer.Pipeline.Tests
                 AnalyzerResult res = dll.Value;
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+
+                Assert.AreEqual( res.Verdict , 0 );
             }
 
         }

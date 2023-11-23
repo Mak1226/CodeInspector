@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer
+namespace Analyzer.Tests
 {
-    /// <summary>
-    /// Factory class for creating analyzers and retrieving configuration options.
-    /// </summary>
-    public static class AnalyzerFactory
+    [TestClass()]
+    public class AnalyzerFactoryTests
     {
-        /// <summary>
-        /// Retrieves a list of all available configuration options for analyzers.
-        /// </summary>
-        /// <returns>A list of tuples containing analyzer IDs and their corresponding descriptions.</returns>
-        public static List<Tuple<int, string>> GetAllConfigurationOptions()
+
+        [TestMethod]
+        public void TestGetAllConfigurationOptions()
         {
-            List<Tuple<int, string>> analyzers = new()
+            // Arrange
+            var expectedOptions = new List<Tuple<int, string>>
             {
                 Tuple.Create(101, "Abstract type no public constructor"),
                 Tuple.Create(102, "Avoid constructor in static types"),
@@ -39,18 +32,25 @@ namespace Analyzer
                 Tuple.Create(118, "Native fields should not be visible")
             };
 
-            return analyzers;
+            // Act
+            var actualOptions = AnalyzerFactory.GetAllConfigurationOptions();
+
+            // Assert
+            CollectionAssert.AreEqual(expectedOptions, actualOptions);
         }
-        /// <summary>
-        /// Creates an instance of the default analyzer.
-        /// </summary>
-        /// <returns>An instance of the default analyzer.</returns>
-        public static IAnalyzer GetAnalyzer()
+
+        [TestMethod]
+        public void TestGetAnalyzer()
         {
+            // Arrange
+            // You may need to use a mocking framework to mock IAnalyzer if it has complex behavior.
 
-            IAnalyzer Analyzer = new Analyzer();
-            return Analyzer;
+            // Act
+            var analyzer = AnalyzerFactory.GetAnalyzer();
+
+            // Assert
+            Assert.IsNotNull(analyzer);
+            Assert.IsInstanceOfType(analyzer, typeof(IAnalyzer));
         }
-
     }
 }

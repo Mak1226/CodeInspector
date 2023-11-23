@@ -1,7 +1,5 @@
 ﻿using Analyzer.Parsing;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
@@ -46,8 +44,8 @@ namespace Analyzer.Pipeline
             string errorString = uselessControlFlowCount > 0
                 ? $"Detected {uselessControlFlowCount} occurrences of useless control flow."
                 : "No occurrences of useless control flow found.";
-
-            return new AnalyzerResult( "110" , uselessControlFlowCount , errorString );
+            int verdict = uselessControlFlowCount > 0 ? 0 : 1;
+            return new AnalyzerResult( "110" , verdict , errorString );
         }
 
         /// <summary>
@@ -62,7 +60,6 @@ namespace Analyzer.Pipeline
 
             for (int i = 0; i < instructions.Count; i++)
             {
-                Console.WriteLine(i);
                 Instruction instruction = instructions[i];
                 if (IsJumpToNextInstruction( instruction ))
                 {
@@ -70,13 +67,11 @@ namespace Analyzer.Pipeline
                     if (i + 1 < instructions.Count && instructions[i + 1].OpCode == OpCodes.Nop)
                     {
                         methodUselessControlFlowCount++;
-                        Console.WriteLine(instruction.ToString());
                         i++; // Skip the next instruction
                     }
                 }
-                else if (IsEmptyBlock( instruction ))
+                else if (IsEmptyBlock( instructions , i ))
                 {
-                    Console.WriteLine( "hello" );
                     methodUselessControlFlowCount++;
                 }
             }
@@ -91,18 +86,34 @@ namespace Analyzer.Pipeline
         /// <returns>True if the instruction is a jump to the next instruction; otherwise, false.</returns>
         private static bool IsJumpToNextInstruction( Instruction instruction )
         {
-            return instruction.OpCode.FlowControl == FlowControl.Cond_Branch || instruction.OpCode.FlowControl == FlowControl.Branch;
+            if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch || instruction.OpCode.FlowControl == FlowControl.Branch)
+            {
+                // Check if the target of the branch is the next instruction or a NOP, which indicates useless control flow
+                Instruction targetInstruction = (Instruction)instruction.Operand;
+                return targetInstruction == instruction.Next || targetInstruction.OpCode == OpCodes.Nop;
+            }
+            return false;
         }
 
         /// <summary>
         /// Checks if an instruction represents an empty block.
         /// </summary>
-        /// <param name="instruction">The instruction to check.</param>
+        /// <param name="instructions">The collection of instructions.</param>
+        /// <param name="index">The index of the current instruction.</param>
         /// <returns>True if the instruction represents an empty block; otherwise, false.</returns>
-        private static bool IsEmptyBlock( Instruction instruction )
+        private static bool IsEmptyBlock( Collection<Instruction> instructions , int index )
         {
-            // Check if the instruction is a jump to itself (empty block)
-            return instruction.OpCode == OpCodes.Br || instruction.OpCode == OpCodes.Br_S;
+            // Check if the instruction is an unconditional jump to the next instruction
+            if (instructions[index].OpCode == OpCodes.Br
+                && index + 1 < instructions.Count
+                && instructions[index + 1].Offset == (int)instructions[index].Operand)
+            {
+                // Check if the next instruction is a no-op
+                return index + 2 < instructions.Count && instructions[index + 2].OpCode == OpCodes.Nop;
+            }
+
+            return false;
         }
+
     }
 }

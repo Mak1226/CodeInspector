@@ -73,14 +73,13 @@ namespace Analyzer.Parsing
                     ParentClass = TypeObj.BaseType.Resolve();
                 }
             }
-            ///????????????????????????????///////////////
             else
             {
                 ParentClass = TypeObj.BaseType?.Resolve();
             }
 
 
-            // Finding interfaces which are only implemented by the class and declares specifically in the class
+            // Finding interfaces which are only implemented by the class and declared specifically in the class
             if (type.HasInterfaces)
             {
                 Interfaces = type.Interfaces.ToList();
@@ -117,6 +116,7 @@ namespace Analyzer.Parsing
             FieldsList = TypeObj.Fields.ToList();
             PropertiesList = TypeObj.Properties.ToList();
 
+            //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
             if (!TypeObj.GetType().IsGenericType)
             {
                 InheritanceList = new HashSet<string>();
@@ -135,9 +135,9 @@ namespace Analyzer.Parsing
             return sets.Any( set => set.Contains( element ) );
         }
 
-        public void UpdateInheritanceList()
+        //UpdateInhetanceList updates the Inheritance List
+        private void UpdateInheritanceList()
         {
-            //Inheritance List
             //Adding the parent class (if exist) in the inheritance list
             if (ParentClass != null)
             {
@@ -157,11 +157,13 @@ namespace Analyzer.Parsing
             }
         }
 
-        public void UpdateRelationshipsListFromCtors()
+        //UpdateRelationShipsFromCtorList updates the Relationships List by analyzing the objects and
+        //their method of instantiation specifically related to the constructor
+        private void UpdateRelationshipsListFromCtors()
         {
-            //Composition List
-            //Cases: 1. If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
-            //2. If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
+            //Composition Relation:
+            //Cases1: If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
+            //CAse2: If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
             foreach (MethodDefinition ctor in Constructors)
             {
                 List<ParameterDefinition> parameterList = ctor.Parameters.ToList();
@@ -204,23 +206,19 @@ namespace Analyzer.Parsing
                     if (!parameterTypeName.StartsWith( "System" ) && !parameterType.GetType().IsGenericType)
                     {
                         //Console.WriteLine( parameterType );
-
                         //Console.WriteLine( parameterType.IsClass );
                         if (parameterType.IsClass && !SetsContainElement( "C" + parameter.ParameterType.FullName , InheritanceList , CompositionList ))
                         {
-                            //Console.WriteLine( "2: C" + parameter.ParameterType.FullName );
                             UsingList.Add( "C" + parameter.ParameterType.FullName );
                         }
                         else if (parameterType.IsInterface && !SetsContainElement( "I" + parameter.ParameterType.FullName , InheritanceList , CompositionList ))
                         {
-                            //Console.WriteLine( "2: I" + parameter.ParameterType.FullName );
-
                             UsingList.Add( "I" + parameter.ParameterType.FullName );
                         }
                     }
                 }
 
-                //Handling Case 2 of aggregation relationship, where new object is instantiated inside a constructor and is assigned to its local variable.
+                //Handling Case 1 of aggregation relationship, where new object is instantiated inside a constructor and is assigned to its local variable.
                 //If between 2 classes composition and aggregation relation exists, giving priority to composition relation.
                 foreach (MethodDefinition ctr in Constructors)
                 {
@@ -235,18 +233,13 @@ namespace Analyzer.Parsing
 
                                 // adding to aggregation list, if object is not of generic type and is not in composition list (i.e either the object is assigned to a local variable
                                 // or if not, since we have decided on the priority of composition over aggreagation, we can check if the composition list has that particular class object or not).
-                                if (!objectType.IsGenericInstance && !objectType.FullName.StartsWith( "System" ))
+                                if (!objectType.GetType().IsGenericType && !objectType.FullName.StartsWith( "System" ))
                                 {
                                     if (objectType.IsClass && !SetsContainElement( "C" + objectType.FullName , InheritanceList , CompositionList ))
                                     {
                                         AggregationList.Add( "C" + objectType.FullName );
                                         UsingList.Remove( "C" + objectType.FullName );
 
-                                    }
-                                    else if (objectType.IsInterface && !SetsContainElement( "I" + objectType.FullName , InheritanceList , CompositionList ))
-                                    {
-                                        AggregationList.Add( "I" + objectType.FullName );
-                                        UsingList.Remove( "I" + objectType.FullName );
                                     }
                                 }
                             }
@@ -255,11 +248,13 @@ namespace Analyzer.Parsing
                 }
             }
         }
-        public void UpdateAggregationList()
+
+        //UpdateAggreagationList is used to extract out the aggregation relationship existing between the current class and other classes
+        private void UpdateAggregationList()
         {
-            // Aggregation List
-            // Cases: 1. If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
-            // 2. If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
+            // Aggregation List:
+            // Cases1: If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
+            // Cases2: If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
             // check if new opcode is present in method body and get its type
             foreach (MethodDefinition method in MethodsList)
             {
@@ -283,11 +278,11 @@ namespace Analyzer.Parsing
             }
         }
 
-        public void UpdateUsingList()
+        //UpdateUsingList is used to extract out the using relationship existing between the current class and other classes
+        private void UpdateUsingList()
         {
             // Using Class Relationship 
-            // Cases considering: 1. if any method (other than constructors) contain other class as parameter
-            // 2.If its a parameter for a constructor, and is not assigned to any field inside the constructor, then it is considered as using relationship. 
+            // Cases2: If any method (other than constructors) contain other class as parameter
 
             //Get all the methods and its parameters into a dictionary, which can be iterated over to check its types.
             Dictionary<MethodDefinition , List<ParameterDefinition>> dict = GetFunctionParameters();

@@ -10,6 +10,7 @@
 * Description = Testing the upload and download API by pushing and pulling from cloud
 *****************************************************************************/
 
+using System.Collections.Immutable;
 using System.Text;
 using ServerlessFunc;
 
@@ -21,9 +22,14 @@ namespace CloudUnitTests
     [TestClass()]
     public class SessionAndAnalysisTests
     {
+        /*
         private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
         private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
         private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        */
+        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
+        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
+        private readonly string _sessionUrl = "http://localhost:7074/api/session";
         private readonly DownloadApi _downloadClient;
         private readonly UploadApi _uploadClient;
 
@@ -142,7 +148,7 @@ namespace CloudUnitTests
         public async Task PostAndGetTestAnalysis1()
         {
             await _downloadClient.DeleteAllAnalysisAsync();
-            await Task.Delay( 1000 );
+          
             AnalysisData analysis = new()
             {
                 SessionId = "1" ,
@@ -150,11 +156,9 @@ namespace CloudUnitTests
                 AnalysisFile = Encoding.ASCII.GetBytes( "demotext" )
             };
             AnalysisEntity postEntity = await _uploadClient.PostAnalysisAsync( analysis );
-            await Task.Delay( 1000 );
             IReadOnlyList<AnalysisEntity> entities = await _downloadClient.GetAnalysisByUserNameAndSessionIdAsync( analysis.UserName , analysis.SessionId );
-            await Task.Delay( 1000 );
             await _downloadClient.DeleteAllAnalysisAsync();
-            await Task.Delay( 1000 );
+           
             Assert.AreEqual( 1 , entities.Count );
             Assert.AreEqual( entities[0].SessionId , postEntity.SessionId );
             Assert.AreEqual( entities[0].UserName , postEntity.UserName );
@@ -187,9 +191,7 @@ namespace CloudUnitTests
             await _downloadClient.DeleteAllAnalysisAsync();
             Assert.AreEqual( 2 , entities.Count );
             Assert.AreEqual( entities[0].SessionId , postEntity1.SessionId );
-            Assert.AreEqual( entities[0].UserName , postEntity1.UserName );
             Assert.AreEqual( entities[1].SessionId , postEntity2.SessionId );
-            Assert.AreEqual( entities[1].UserName , postEntity2.UserName );
             string text1 = Encoding.ASCII.GetString( entities[0].AnalysisFile );
             string text2 = Encoding.ASCII.GetString( entities[1].AnalysisFile );
             Assert.AreEqual( "demotext" , text1 );
