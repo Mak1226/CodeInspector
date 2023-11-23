@@ -22,7 +22,7 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to serialize.</typeparam>
         /// <param name="genericObject">The object to serialize.</param>
-        /// <returns>The serialized string. "failed" if failed</returns>
+        /// <returns>The serialized string.</returns>
         string Serialize<T>( T genericObject );
 
         /// <summary>

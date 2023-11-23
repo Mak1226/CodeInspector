@@ -16,6 +16,10 @@ namespace NetworkingUnitTests
         public string HandleMessageRecv(Message message)
         {
             _messageQueue.Enqueue( message , Priority.GetPriority("") );
+            if(message.Data == "Throw")
+            {
+                throw new Exception("Thrown");
+            }
             return "";
         }
     }
