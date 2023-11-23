@@ -71,6 +71,11 @@ namespace ContentPage
 
             }
         }
+
+        private void SendToCloudButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            _viewModel.SendToCloud();
+        }
     }
 }
 

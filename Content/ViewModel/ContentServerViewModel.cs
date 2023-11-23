@@ -72,6 +72,11 @@ namespace Content.ViewModel
             OnPropertyChanged(nameof(UploadedFiles));
         }
 
+        public void SendToCloud()
+        {
+            _contentServer.SendToCloud();
+        }
+
         /// <summary>
         /// Analysis result
         /// Currenly only shows the latest one
