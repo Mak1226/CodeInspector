@@ -1,7 +1,15 @@
-﻿// Created By - Monesh Vanga (112001047)
-/// <summary>
-/// Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
-/// </summary>
+﻿/******************************************************************************
+* Filename    = AbstractClassNamingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
