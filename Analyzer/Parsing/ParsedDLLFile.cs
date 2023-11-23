@@ -1,9 +1,22 @@
-﻿using Mono.Cecil;
+﻿/******************************************************************************
+* Filename    = ParsedDLLFile.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description =  Parses each of the dll files and creating ParsedClass Objects for each class
+*****************************************************************************/
+
+using Mono.Cecil;
 using System.IO;
 using System.Reflection;
 
 namespace Analyzer.Parsing
 {
+    /// <summary>
+    /// Parses each of the dll files and creating ParsedClass Objects for each class
+    /// </summary>
     public class ParsedDLLFile
     {
         private string _dllPath { get; }
@@ -11,7 +24,7 @@ namespace Analyzer.Parsing
 
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
-                    
+
         // MONO.CECIL objects lists (considering single module assembly)
         public List<ParsedClassMonoCecil> classObjListMC = new();
 

@@ -1,3 +1,15 @@
+/******************************************************************************
+* Filename    = TestCasingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit Tests for CasingChecker.cs
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +23,7 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     /// <summary>
-    /// Test class for testing the analyzer - PrefixChecker.
+    /// Test class for testing the analyzer - CasingChecker.
     /// </summary>
     [TestClass()]
     public class TestCasingChecker
@@ -68,6 +80,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(0, result.Verdict);
         }
 
+        /// <summary>
+        /// Test method for a case in which all classes follow the rule 
+        /// </summary>
+        
         //CasingChecker1.cs
 
         //namespace GoodNamespace
@@ -111,6 +127,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["CasingChecker1.dll"];
+            
             Assert.AreEqual(1, result.Verdict);
         }
 

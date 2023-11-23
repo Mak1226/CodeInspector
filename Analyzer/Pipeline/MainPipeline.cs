@@ -1,12 +1,20 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = MainPipeline.cs
+*
+* Author      = Mangesh Dalvi, Nikhitha
+* 
+* Roll No     = 112001010, 112001009
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Represents the main pipeline for orchestrating the analysis process.
+******************************************************************************/
+
+using Analyzer.Parsing;
 using Analyzer.UMLDiagram;
-using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
@@ -89,7 +97,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
-            _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
+            _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
             Trace.Write("MainPipeline : All Analyzers Generated\n");
         }

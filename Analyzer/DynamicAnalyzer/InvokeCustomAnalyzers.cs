@@ -1,10 +1,16 @@
-﻿using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿/******************************************************************************
+* Filename    = InvokeCustomAnalyzer.cs
+* 
+* Author      = Yukta Salunkhe, Mangesh Dalvi
+* 
+* Project     = Analyzer
+*
+* Description = Utility class for invoking custom analyzers on student DLL files.
+*****************************************************************************/
+
+using Analyzer.Parsing;
+using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.DynamicAnalyzer
 {
@@ -23,6 +29,7 @@ namespace Analyzer.DynamicAnalyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to student DLL files.</param>
         public InvokeCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers, List<string> PathOfDLLFilesOfStudent)
         {
+            Trace.WriteLine("Invoking Custom Analyzers ");
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
@@ -56,6 +63,7 @@ namespace Analyzer.DynamicAnalyzer
             foreach (string customAnalyzer in _pathOfDLLFilesOfCustomAnalyzers)
             {
                 // Load the custom analyzer assembly
+                Trace.WriteLine("Running custom Analyzer ", customAnalyzer);
                 Assembly customAnalyzerAssembly = Assembly.Load(File.ReadAllBytes(customAnalyzer));
                 Type? type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
 
@@ -66,14 +74,7 @@ namespace Analyzer.DynamicAnalyzer
                 MethodInfo? method = type.GetMethod("AnalyzeAllDLLs");
                 object? currentAnalyzerResult = method.Invoke(teacher, null);
 
-                //res -> Dictionary<string, AnalyzerResult>
-                //foreach (var item in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
-                //{
-                //    Console.WriteLine(item.Key);
-                //    Console.WriteLine(item.Value.AnalyserID);
-                //    Console.WriteLine(item.Value.ErrorMessage);
-                //    Console.WriteLine(item.Value.Verdict);
-                //}
+                Trace.WriteLine("Analysis completed for all student dlls");
 
                 foreach (KeyValuePair<string, AnalyzerResult> dllResult in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
                 {

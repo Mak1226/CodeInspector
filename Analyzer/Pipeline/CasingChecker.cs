@@ -1,7 +1,14 @@
-// Created By - Monesh Vanga (112001047)
-/// <summary>
-/// An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
-/// </summary>
+/******************************************************************************
+* Filename    = CasingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
+*****************************************************************************/
 
 using System;
 using Analyzer.Parsing;
@@ -78,7 +85,7 @@ namespace Analyzer.Pipeline
             //Checking Class names for Pascal Casing
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                if(cls.Name[0] != '.')
+                if((cls.Name[0] >= 'a' && cls.Name[0] <= 'z') || (cls.Name[0] >= 'A' && cls.Name[0] <= 'Z'))
                 {
                     if(!IsPascalCase(cls.Name))
                     {

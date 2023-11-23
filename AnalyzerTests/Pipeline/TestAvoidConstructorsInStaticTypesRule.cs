@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = TestAvoidConstructorsInStaticTypes.cs
+* 
+* Author      = Yukta Salunkhe
+* 
+* Project     = AnalyzerTests
+*
+* Description = Tsts the functionality of analyzer AvoidConstructorsInStaticTypes
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
