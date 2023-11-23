@@ -56,7 +56,7 @@ namespace Analyzer.Pipeline
         }
 
 
-        public static int GetMethodCyclomaticComplexity(MethodDefinition method)
+        public int GetMethodCyclomaticComplexity(MethodDefinition method)
         {
             List<Instruction> targets = new();
             int cyclomaticComplexity = 1;
@@ -79,7 +79,7 @@ namespace Analyzer.Pipeline
         }
 
 
-        private static int CalculateCondBranchCaseComplexity(Instruction instruction , List<Instruction> targets)
+        private int CalculateCondBranchCaseComplexity(Instruction instruction , List<Instruction> targets)
         {
             int complexity = 0;
 
@@ -102,7 +102,7 @@ namespace Analyzer.Pipeline
         }
 
 
-        private static void FindSwitchTargetLabels(Instruction instruction , List<Instruction> targets)
+        private void FindSwitchTargetLabels(Instruction instruction , List<Instruction> targets)
         {
             // Analysing the cases of the switch statement to calculate complexity
             Instruction[] cases = instruction.Operand as Instruction[];

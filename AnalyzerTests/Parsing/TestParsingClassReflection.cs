@@ -169,7 +169,7 @@ namespace AnalyzerTests.Parsing
             // protected/public/private + instance (auto + explicit)
             Assert.AreEqual(4, SampleClass1_Demo2.Properties.Length);
             CollectionAssert.AreEquivalent(new PropertyInfo[4] {
-                                                                   typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("Name"),
+                                                                   typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleX"),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp1"),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp2", BindingFlags.NonPublic | BindingFlags.Instance),
                                                                    typeof(TestParsingClass_DemoProject2.SampleClass1).GetProperty("SampleProp3", BindingFlags.NonPublic | BindingFlags.Instance)
