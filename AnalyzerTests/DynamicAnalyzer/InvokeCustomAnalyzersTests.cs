@@ -16,21 +16,21 @@ namespace Analyzer.DynamicAnalyzer.Tests
     public class InvokeCustomAnalyzersTests
     {
         [TestMethod()]
-        public void InvokeCustomAnalyzersTest()
+        public void InvokeCustomAnalyzersTestWithCorrectAbstractClassNaming()
         {
             var analyzer = new Analyzer();
 
             // Load student's dll files
             List<string> paths = new()
             {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll" ,
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+                "..\\..\\..\\TestDLLs\\CasingChecker.dll",
             };
             analyzer.LoadDLLFileOfStudent(paths);
 
             // Load the custom analyzer dll
             List<string> tdlls = new();
-            string path = "C:\\Users\\HP\\Desktop\\software\\Demo\\Test1\\ClassLibrary2\\bin\\Debug\\net6.0\\ClassLibrary2.dll";
+            string path = "..\\..\\..\\TestDLLs\\TeacherAnalyserCheckingAbstractClassNaming.dll";
+
             tdlls.Add(path);
             analyzer.LoadDLLOfCustomAnalyzers(tdlls);
 
@@ -40,17 +40,98 @@ namespace Analyzer.DynamicAnalyzer.Tests
             // Defining the expected result
             Dictionary<string , List<AnalyzerResult>> expected = new()
             {
-                ["ClassLibrary1.dll"] = new List<AnalyzerResult>() ,
-                ["BridgePattern.dll"] = new List<AnalyzerResult>()
+                ["CasingChecker.dll"] = new List<AnalyzerResult>() ,
             };
 
-            expected["ClassLibrary1.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
-            expected["BridgePattern.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
+            expected["CasingChecker.dll"].Add(new AnalyzerResult("This is an analyzer ID", 1, "No incorrect abstract class naming found."));
 
-            // Assert that the actual Analyzer result matches with the expected one.
-            Assert.AreEqual(expected["ClassLibrary1.dll"].ToString(), result["ClassLibrary1.dll"].ToString());
-            Assert.AreEqual(expected["BridgePattern.dll"].ToString(), result["BridgePattern.dll"].ToString());
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
 
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            // Assert
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(expected.ContainsKey(dll.Key), $"Unexpected DLL: {dll.Key}");
+
+                List<AnalyzerResult> expectedResults = expected[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(expectedResults.Count, actualResults.Count, $"Mismatched number of results for {dll.Key}");
+
+                for (int i = 0; i < expectedResults.Count; i++)
+                {
+                    Assert.AreEqual(expectedResults[i].AnalyserID, actualResults[i].AnalyserID);
+                    Assert.AreEqual(expectedResults[i].Verdict, actualResults[i].Verdict);
+                    Assert.AreEqual(expectedResults[i].ErrorMessage, actualResults[i].ErrorMessage);
+                }
+            }
         }
+
+        [TestMethod()]
+        public void InvokeCustomAnalyzersTestWithWrongAbstractClassNaming()
+        {
+            var analyzer = new Analyzer();
+
+            // Load student's dll files
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\NotValidAbstractClassNaming.dll",
+            };
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            // Load the custom analyzer dll
+            List<string> tdlls = new();
+            string path = "..\\..\\..\\TestDLLs\\TeacherAnalyserCheckingAbstractClassNaming.dll";
+
+            tdlls.Add(path);
+            analyzer.LoadDLLOfCustomAnalyzers(tdlls);
+
+            // Run the custom Analyzer on student dlls and get the result
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
+
+            // Defining the expected result
+            Dictionary<string, List<AnalyzerResult>> expected = new()
+            {
+                ["NotValidAbstractClassNaming.dll"] = new List<AnalyzerResult>(),
+            };
+
+            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "Incorrect Abstract Class Naming : someClass"));
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
+
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            // Assert
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(expected.ContainsKey(dll.Key), $"Unexpected DLL: {dll.Key}");
+
+                List<AnalyzerResult> expectedResults = expected[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(expectedResults.Count, actualResults.Count, $"Mismatched number of results for {dll.Key}");
+
+                for (int i = 0; i < expectedResults.Count; i++)
+                {
+                    Assert.AreEqual(expectedResults[i].AnalyserID, actualResults[i].AnalyserID);
+                    Assert.AreEqual(expectedResults[i].Verdict, actualResults[i].Verdict);
+                    Assert.AreEqual(expectedResults[i].ErrorMessage, actualResults[i].ErrorMessage);
+                }
+            }
+        }
+
     }
 }

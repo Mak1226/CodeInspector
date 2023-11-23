@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+        <!--<Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />-->
+        <Frame x:Name="MainFrame" Grid.Row="1" Source="/AuthenticationView.xaml" NavigationUIVisibility="Hidden" />
+
     </Grid>
+    
 </Window>

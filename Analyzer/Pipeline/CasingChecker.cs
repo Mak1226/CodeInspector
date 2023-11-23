@@ -38,7 +38,7 @@ namespace Analyzer.Pipeline
         /// <returns>the verdict if the casing is right or not</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
 
             // Return an AnalyzerResult with a verdict (0 for mistakes, 1 for correct casing)            
@@ -49,6 +49,7 @@ namespace Analyzer.Pipeline
 
             else
             {
+                _errorMessage = "No Violations Found";
                 _verdict = 1;
             }
 
@@ -59,36 +60,56 @@ namespace Analyzer.Pipeline
         {
             // Flag to track if any casing mistake is found
             bool hasMistake = false;
-
+            int flag1 = 0;
+            
             // Check namespace names for PascalCasing
-            foreach(ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
+            foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                if (!IsPascalCase(classObj.TypeObj.BaseType.Namespace))
+                string? s = interfaceObj.TypeObj.Namespace;
+                if (!IsPascalCase(s))
                 {
+                    flag1++;
                     hasMistake = true;
-                    Console.WriteLine($"Incorrect Namespace Naming : {classObj.TypeObj.BaseType.Namespace}");
-                    _errorMessage = "Incorrect Namespace Naming : " + classObj.TypeObj.BaseType.Namespace;
+                    Console.WriteLine($"Incorrect Namespace Naming : {s}");
+                    if(flag1==1)
+                    {
+                        _errorMessage += "Incorrect Namespace Naming : " + s + " ";
+                    }
+                    else
+                    {
+                        _errorMessage += ", " + s + " ";
+                    }
                 }
             }
 
-            if (!hasMistake)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
+                if(cls.Name[0] != '.')
                 {
-                    // Check method names for PascalCasing and parameter names for camelCasing
-                    foreach (MethodDefinition method in cls.MethodsList)
+                    if(!IsPascalCase(cls.Name))
+                    {
+                        hasMistake = true;
+                        Console.WriteLine( $"Incorrect Class Naming : {cls.Name}" );
+                        _errorMessage += "Incorrect Class Naming : " + cls.Name + " ";
+                    }
+                }
+                
+                // Check method names for PascalCasing and parameter names for camelCasing
+                foreach (MethodDefinition method in cls.MethodsList)
+                {
+                    if(method.Name[0] != '.')
                     {
                         if (!IsPascalCase(method.Name))
                         {
                             hasMistake = true;
                             Console.WriteLine($"Incorrect Method Naming : {method.Name}");
-                            _errorMessage = "Incorrect Method Naming : " + method.Name;
+                            _errorMessage += "Incorrect Method Naming : " + method.Name + " ";
                         }
+                    }
 
-                        if (!AreParametersCamelCased(method))
-                        {
-                            hasMistake = true;
-                        }
+                    if (!AreParametersCamelCased(method))
+                    {
+                        hasMistake = true;
                     }
                 }
             }
@@ -128,7 +149,7 @@ namespace Analyzer.Pipeline
                         if (!IsCamelCase( param.Name ))
                         {
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            _errorMessage += "Incorrect Parameter Naming : " + param.Name + " ";
                             flag = 1;
                         }
                     }
@@ -138,7 +159,7 @@ namespace Analyzer.Pipeline
                         if (!char.IsLower(param.Name[1]))
                         {
                             Console.WriteLine( $"Incorrect Parameter Naming : {param.Name}" );
-                            _errorMessage = "Incorrect Parameter Naming : " + param.Name;
+                            _errorMessage += "Incorrect Parameter Naming : " + param.Name + " ";    
                             flag = 1;
                         }
                     }

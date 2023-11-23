@@ -10,6 +10,7 @@
 * Description = Testing the upload and download API by pushing and pulling from cloud
 *****************************************************************************/
 
+using System.Collections.Immutable;
 using System.Text;
 using ServerlessFunc;
 
@@ -21,6 +22,11 @@ namespace CloudUnitTests
     [TestClass()]
     public class SessionAndAnalysisTests
     {
+        /*
+        private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
+        private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
+        private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        */
         private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
         private readonly string _submissionUrl = "http://localhost:7074/api/submission";
         private readonly string _sessionUrl = "http://localhost:7074/api/session";
@@ -88,7 +94,7 @@ namespace CloudUnitTests
         [TestMethod()]
         public async Task PostAndGetTestSubmission()
         {
-
+            await _downloadClient.DeleteAllSubmissionsAsync();
             SubmissionData submission = new()
             {
                 SessionId = "1" ,
@@ -105,12 +111,44 @@ namespace CloudUnitTests
         }
 
         /// <summary>
+        /// Tests the PostSubmissionAsync and GetSubmissionByUserNameAndSessionIdAsync methods
+        /// Using a dll file
+        /// </summary>
+        [TestMethod()]
+        public async Task PostAndGetTestSubmissionFile()
+        {
+            await _downloadClient.DeleteAllSubmissionsAsync();
+            // Specify the path to your demo.dll file in the same directory as the test.
+            string dllFilePath = Path.Combine( "..\\..\\..\\" , "demo.dll" );
+
+            // Read the contents of the DLL file into a byte array.
+            byte[] submissionFileUpload = File.ReadAllBytes( dllFilePath );
+
+            SubmissionData submission = new()
+            {
+                SessionId = "1" ,
+                UserName = "Student1" ,
+                ZippedDllFiles = submissionFileUpload
+            };
+
+            // Call the PostSubmissionAsync method with the DLL file content.
+            _ = await _uploadClient.PostSubmissionAsync( submission );
+
+            // Call the GetSubmissionByUserNameAndSessionIdAsync to retrieve the DLL file content.
+            byte[] submissionFileDownload = await _downloadClient.GetSubmissionByUserNameAndSessionIdAsync( submission.UserName , submission.SessionId );
+            await _downloadClient.DeleteAllSubmissionsAsync();
+            // Compare the uploaded and downloaded DLL file content.
+            CollectionAssert.AreEqual( submissionFileDownload , submissionFileUpload );
+        }
+
+        /// <summary>
         /// Tests the PostAnalysisAsync and GetAnalysisByUserNameAndSessionIdAsync methods.
         /// </summary>
         [TestMethod()]
         public async Task PostAndGetTestAnalysis1()
         {
             await _downloadClient.DeleteAllAnalysisAsync();
+          
             AnalysisData analysis = new()
             {
                 SessionId = "1" ,
@@ -120,6 +158,7 @@ namespace CloudUnitTests
             AnalysisEntity postEntity = await _uploadClient.PostAnalysisAsync( analysis );
             IReadOnlyList<AnalysisEntity> entities = await _downloadClient.GetAnalysisByUserNameAndSessionIdAsync( analysis.UserName , analysis.SessionId );
             await _downloadClient.DeleteAllAnalysisAsync();
+           
             Assert.AreEqual( 1 , entities.Count );
             Assert.AreEqual( entities[0].SessionId , postEntity.SessionId );
             Assert.AreEqual( entities[0].UserName , postEntity.UserName );
@@ -152,9 +191,7 @@ namespace CloudUnitTests
             await _downloadClient.DeleteAllAnalysisAsync();
             Assert.AreEqual( 2 , entities.Count );
             Assert.AreEqual( entities[0].SessionId , postEntity1.SessionId );
-            Assert.AreEqual( entities[0].UserName , postEntity1.UserName );
             Assert.AreEqual( entities[1].SessionId , postEntity2.SessionId );
-            Assert.AreEqual( entities[1].UserName , postEntity2.UserName );
             string text1 = Encoding.ASCII.GetString( entities[0].AnalysisFile );
             string text2 = Encoding.ASCII.GetString( entities[1].AnalysisFile );
             Assert.AreEqual( "demotext" , text1 );

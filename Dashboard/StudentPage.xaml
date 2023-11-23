@@ -1,0 +1,133 @@
+﻿<Page x:Class="Dashboard.StudentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Dashboard"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="StudentPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="12*"/>
+        </Grid.RowDefinitions>
+        <!--Frist Bar-->
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <SolidColorBrush Color="Yellow" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <StackPanel x:Name="StudentInformation" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,5,5,5">
+                        <Run Text="Name : " />
+                        <Run Text="{Binding StudentName, Mode=OneWay}" FontWeight="Bold"/>
+                     </TextBlock>
+
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,5,5,5">
+                        <Run Text="Id : " />
+                        <Run Text="{Binding StudentRoll, Mode=OneWay}" FontWeight="Bold"/>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <StackPanel x:Name="LogoutStack" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        
+        <!--Second Bar-->
+        <Grid Grid.Row="1">
+            <Grid.Background>
+                <SolidColorBrush Color="Cyan" />
+            </Grid.Background>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <StackPanel x:Name="InstructorInfoStack" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="Instructor IP:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBox Name="InstructorIpTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"  TextChanged="InstructorIpTextBox_TextChanged"/>
+                    <Label Content="Instructor Port:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                    <TextBox Name="InstructorPortTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure" TextChanged="InstructorIpTextBox_TextChanged"/>
+                </StackPanel>
+            </Grid>
+            
+            <Grid Grid.Column="1">
+                <StackPanel x:Name="ConnectionStack" Orientation="Horizontal" HorizontalAlignment="Right">
+                    
+                    <!--Connection Status-->
+                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,5,5,5" FontWeight="Bold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Disconnected" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                        <Setter Property="Text" Value="Connected" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!--Connect Button-->
+                    <Button x:Name="connectButton" Content="Connect" Background="LawnGreen" Width="84" Height="20" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="5,5,5,5" >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    <!--Disconnect Button-->
+                    <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="20" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!--Content -->
+        <Grid Grid.Row="2">
+            <Grid.Background>
+                <SolidColorBrush Color="LightCyan" />
+            </Grid.Background>
+            <Frame x:Name="ContentFrame">
+                <Frame.Style>
+                    <Style TargetType="Frame">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Frame.Style>
+            </Frame>
+        </Grid>
+    </Grid>
+</Page>

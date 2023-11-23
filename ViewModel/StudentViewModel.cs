@@ -28,39 +28,14 @@ namespace ViewModel
 {
     public class StudentViewModel : INotifyPropertyChanged , IEventHandler
     {
-        private readonly ICommunicator client; // Communicator used to send and receive messages.
-        //private readonly ChatMessenger _newConnection; // To communicate between instructor and student.
+        private readonly ICommunicator _client; // Communicator used to send and receive messages.
 
-        public StudentViewModel( ICommunicator? communicator = null)
+        public StudentViewModel( string name , string id, ICommunicator? communicator = null)
         {
-            client = communicator ?? CommunicationFactory.GetClient();
-
+            _client = communicator ?? CommunicationFactory.GetClient();
+            StudentName = name;
+            StudentRoll = id;
             IpAddress = GetPrivateIp();
-
-            // Update the port that the communicator is listening on.
-            //ReceivePort = _communicator.ListenPort.ToString();
-            /*
-            var ipPort = client.Start(null, null, "server");
-
-            string[] parts = ipPort.Split(':');
-            try
-            {
-                IpAddress = parts[0];
-                ReceivePort = parts[1];
-                OnPropertyChanged(nameof(IpAddress));
-                OnPropertyChanged(nameof(ReceivePort));
-            }
-            catch { }
-            */
-            //OnPropertyChanged(nameof(ReceivePort));
-
-            // Create an instance of the chat messenger and signup for callback.
-            //_newConnection = new(_communicator);
-
-            //_newConnection.OnChatMessageReceived += delegate (string message)
-            //{
-            //    HandleMessage(message);
-            //};
 
         }
 
@@ -112,7 +87,7 @@ namespace ViewModel
         {
             get 
             {
-                return client;
+                return _client;
             }
             
             private set
@@ -129,12 +104,12 @@ namespace ViewModel
         /// <summary>
         /// Handles the property changed event raised on a component.
         /// </summary>
-        public string? StudentName { get; private set; }
+        public string StudentName { get; private set; }
 
         /// <summary>
         /// Gets the instructor's port.
         /// </summary>
-        public string? StudentRoll { get; private set; }
+        public string StudentRoll { get; private set; }
 
         /// <summary>
         /// Gets the private IP address of the host machine.
@@ -199,19 +174,18 @@ namespace ViewModel
             else if (message == "0")
             {
                 IsConnected = "false";
-                client.Stop();
+                _client.Stop();
                 Debug.WriteLine("Disconnected from Instructor");
             }
         }
 
         public void DisconnectInstructor()
         {
-            var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
+            string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
             
             if (InstructorIp != null && InstructorPort != null)
             {
-                //_newConnection.SendMessage(InstructorIp, int.Parse(InstructorPort), message);
-                client.Send(message, EventType.ChatMessage(), "server");
+                _client.Send(message, "server");
             }
         }
 
@@ -219,8 +193,8 @@ namespace ViewModel
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
             {
-                var ipPort = client.Start(InstructorIp, int.Parse(InstructorPort), StudentRoll, "Dashboard");
-                client.Subscribe(this, "Dashboard");
+                string ipPort = _client.Start( InstructorIp , int.Parse( InstructorPort ) , StudentRoll , "Dashboard" );
+                _client.Subscribe(this, "Dashboard");
                 Debug.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
@@ -230,8 +204,8 @@ namespace ViewModel
                     OnPropertyChanged(nameof(IpAddress));
                     OnPropertyChanged(nameof(ReceivePort));
 
-                    var message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
-                    client.Send(message, "server");
+                    string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
+                    _client.Send(message, "server");
                 }
                 catch { }
             }
