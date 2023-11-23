@@ -1,4 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿/******************************************************************************
+ * Filename    = AuthenticationViewModel.cs
+ *
+ * Author      = Aravind Somaraj
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Dashboard
+ *
+ * Description = Defines the AuthenticationViewModel.
+ *****************************************************************************/
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,15 @@
-﻿using System;
+﻿/******************************************************************************
+ * Filename    = ISessionState.cs
+ *
+ * Author      = Aravind Somaraj
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = SessionState
+ *
+ * Description = Defines the Session state interface.
+ *****************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

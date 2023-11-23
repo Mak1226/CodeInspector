@@ -1,4 +1,15 @@
-﻿using System;
+﻿/******************************************************************************
+ * Filename    = StudentPage.xaml.cs
+ *
+ * Author      = Prayag Krishna
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Dashboard
+ *
+ * Description = Defines the student page code-behind.
+ *****************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
