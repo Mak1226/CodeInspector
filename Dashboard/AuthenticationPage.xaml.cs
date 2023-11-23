@@ -1,4 +1,15 @@
-﻿using System;
+﻿/******************************************************************************
+ * Filename    = AuthenticationPage.xaml.cs
+ *
+ * Author      = Sushma Kamuju
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Dashboard
+ *
+ * Description = Implements authentication.
+ *****************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,8 +24,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Dashboard;
-using Dashboard.Authentication;
 
 namespace Dashboard
 {

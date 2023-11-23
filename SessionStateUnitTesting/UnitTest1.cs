@@ -1,3 +1,14 @@
+﻿/******************************************************************************
+ * Filename    = UnitTest1.cs
+ *
+ * Author      = Aravind Somaraj
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = SessionState
+ *
+ * Description = Defines the Session state unit tests.
+ *****************************************************************************/
 using SessionState;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -23,7 +34,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
             Assert.AreEqual("1", students.First().Id);
             Assert.AreEqual("John", students.First().Name);
@@ -45,7 +56,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent("1", "Jane", "192.168.0.2", 8081); // Duplicate student ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
         }
 
@@ -63,7 +74,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveStudent("1");
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
 
@@ -81,7 +92,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveStudent("2"); // Student with ID "2" not added
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
         }
 
@@ -97,7 +108,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent("2", "Jane", "192.168.0.2", 8081);
 
             // Act
-            var count = sessionState.GetStudentsCount();
+            int count = sessionState.GetStudentsCount();
 
             // Assert
             Assert.AreEqual(2, count);
@@ -118,7 +129,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveAllStudents();
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
         
@@ -135,7 +146,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveAllStudents();
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
 
@@ -152,7 +163,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent(null, "John", "192.168.0.1", 8080); // Invalid ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
 
@@ -170,7 +181,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveStudent(null); // Invalid ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
         }
 
@@ -187,7 +198,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent("", "John", "192.168.0.1", 8080); // Empty ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
 
@@ -204,7 +215,7 @@ namespace SessionStateUnitTesting
             sessionState.AddStudent("1", "John", "192.168.0.1", -8080); // Negative port
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
 
@@ -222,7 +233,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveStudent("2"); // Nonexistent ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
         }
 
@@ -240,7 +251,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveStudent(null); // Null ID
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(1, students.Count);
         }
 
@@ -251,7 +262,7 @@ namespace SessionStateUnitTesting
         public void RemoveAllStudents_WithNullList_DoesNothing()
         {
             // Arrange
-            StudentSessionState sessionState = new StudentSessionState();
+            StudentSessionState sessionState = new();
             sessionState.AddStudent("1", "John", "192.168.0.1", 8080);
 
             // Act
@@ -259,7 +270,7 @@ namespace SessionStateUnitTesting
             sessionState.RemoveAllStudents(); // Call again with null list
 
             // Assert
-            var students = sessionState.GetAllStudents();
+            List<Student> students = sessionState.GetAllStudents();
             Assert.AreEqual(0, students.Count);
         }
     }
