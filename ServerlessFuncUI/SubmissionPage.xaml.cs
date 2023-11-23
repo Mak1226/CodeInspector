@@ -5,7 +5,7 @@
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Submissions Page.
+ * Description = Defines the View of the Submissions Page
  *****************************************************************************/
 
 using ServerlessFunc;
@@ -34,14 +34,14 @@ namespace ServerlessFuncUI
     /// </summary>
     public partial class SubmissionsPage : Page
     {
-        private string cur_user;
+        private readonly string _cur_user;
         public SubmissionsPage(SessionEntity Session)
         {
             InitializeComponent();
             
-            viewModel = new SubmissionsViewModel(Session);
-            this.DataContext = viewModel;
-            viewModel.PropertyChanged += Listener;
+            _viewModel = new SubmissionsViewModel(Session);
+            DataContext = _viewModel;
+            _viewModel.PropertyChanged += Listener;
             submissions = new List<SubmissionEntity> { };
             Trace.WriteLine("[Cloud] Submission View created Successfully");
         }
@@ -49,7 +49,7 @@ namespace ServerlessFuncUI
         /// <summary>
         /// ViewModel to use.
         /// </summary>
-        private readonly SubmissionsViewModel viewModel;
+        private readonly SubmissionsViewModel _viewModel;
 
         /// <summary>
         /// List of submissions made.
@@ -61,14 +61,14 @@ namespace ServerlessFuncUI
         /// </summary>
         private void Listener(object sender, PropertyChangedEventArgs e)
         {
-            submissions = viewModel.ReceivedSubmissions;
+            submissions = _viewModel.ReceivedSubmissions;
 
             /*
              * Building the UI when no submissions are made.
              */
             if (submissions?.Count == 0)
             {
-                Label label = new Label()
+                Label label = new()
                 {
                     Content = "No Submissions Available",
                     Foreground = new SolidColorBrush(Colors.White),
@@ -79,12 +79,8 @@ namespace ServerlessFuncUI
                 Trace.WriteLine("[Cloud] No Submissions detected");
                 return;
             }
-
-            /*
-             * Building the UI when there are list of submissions made.
-             * Adding an entry for each submission in the session with 
-             * 4 columns - index, student id, submission time and download button.
-             */
+            // 4 columns - index, student id, submission time and download button.
+            
             for (int i = 0; i < submissions?.Count; i++)
             {
                 Grid grid = new();
@@ -117,7 +113,7 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(sNo, 0);
@@ -131,7 +127,7 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(studentId, 1);
@@ -145,17 +141,19 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(submissionTime, 2);
                 grid.Children.Add(submissionTime);
 
                 //Download button of the submission
-                Button button = new();
-                button.Content = "Download ZIP";
-                button.Name = "Button" + i.ToString();
-                button.Margin = new Thickness(5, 5, 5, 5);
+                Button button = new()
+                {
+                    Content = "Download ZIP" ,
+                    Name = "Button" + i.ToString() ,
+                    Margin = new Thickness( 5 , 5 , 5 , 5 )
+                };
                 button.Click += OnButtonClick;
                 button.Background = new SolidColorBrush(Colors.White);
                 Grid.SetColumn(button, 3);
@@ -174,7 +172,8 @@ namespace ServerlessFuncUI
             Trace.WriteLine("[Cloud] Download Button pressed");
             Button caller = (Button)sender;
             int index = Convert.ToInt32(caller.Name.Split('n')[1]);
-            //viewModel.SubmissionToDownload = index;
+            _viewModel.SubmissionToDownload = index;
+            MessageBox.Show("Downloaded", "Download Status", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
     }

@@ -25,7 +25,6 @@ namespace Cloud_UX
     public class SubmissionsViewModel :
         INotifyPropertyChanged // Notifies clients that a property value has changed.
     {
-        private string cur_user;
         /// <summary>
         /// Creates an instance of the Submissions ViewModel.
         /// Gets the details of the submissions of the session conducted by the user.
@@ -45,7 +44,6 @@ namespace Cloud_UX
             {
                 GetSubmissions(session.SessionId, name);
             }
-          //  GetSubmissions(sessionId);
             Trace.WriteLine("[Cloud] Submissions View Model Created");
         }
 
@@ -58,15 +56,15 @@ namespace Cloud_UX
         {
             IReadOnlyList<SubmissionEntity> submissionsList = await _model.GetSubmissions(sessionId, studentName);
             Trace.WriteLine("[Cloud] Submission details recieved");
-            _ = this.ApplicationMainThreadDispatcher.BeginInvoke(
+            _ = ApplicationMainThreadDispatcher.BeginInvoke(
                         DispatcherPriority.Normal,
                         new Action<IReadOnlyList<SubmissionEntity>>((submissionsList) =>
                         {
                             lock (this)
                             {
-                                this.ReceivedSubmissions = submissionsList;
+                                ReceivedSubmissions = submissionsList;
 
-                                this.OnPropertyChanged("ReceivedSubmissions");
+                                OnPropertyChanged("ReceivedSubmissions");
                             }
                         }),
                         submissionsList);
@@ -107,6 +105,15 @@ namespace Cloud_UX
         /// <summary>
         /// Underlying data model.
         /// </summary>
-        private SubmissionsModel _model;
+        private readonly SubmissionsModel _model;
+
+        /// <summary>
+        /// To store which pdf to download.
+        /// Call the corresponding function to download once the value is set.
+        /// </summary>
+        public int SubmissionToDownload
+        {
+            set => _model.DownloadPdf(value);
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = ResultPage.xaml.cs
  * 
- * Author      = Sreelekshmi
+ * Author      = Sreelakshmi
  *
  * Product     = Analyzer
  * 

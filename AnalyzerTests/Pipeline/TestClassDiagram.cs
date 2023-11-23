@@ -108,7 +108,7 @@ namespace AnalyzerTests.Pipeline
 
             ClassDiagram classDiag = new( dllFiles );
 
-            List<string> removableNamespaces = new() { "Analyzer" , "Analyzer.Pipeline" };
+            List<string> removableNamespaces = new() { "Analyzer" , "AnalyzerTests.Pipeline" };
 
             byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
 
@@ -120,6 +120,60 @@ namespace AnalyzerTests.Pipeline
             if (imageBytes != null && imageBytes.Length > 0)
             {
                 File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out4.png" , imageBytes );
+            }
+        }
+
+        [TestMethod()]
+        public void TestVerifyImageAfterRemovingNestedNamespaces2()
+        {
+            List<string> DllFilePaths = new()
+            {
+                "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\AnalyzerTests.dll"
+            };
+
+            List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
+
+            ClassDiagram classDiag = new( dllFiles );
+
+            List<string> removableNamespaces = new() { "Analyzer" , "Analyzer.Pipeline" };
+
+            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+
+            Console.WriteLine( imageBytes );
+            Console.WriteLine( imageBytes.Length );
+            Assert.IsNotNull( imageBytes );
+            Assert.AreNotEqual( imageBytes.Length , 0 );
+
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out5.png" , imageBytes );
+            }
+        }
+
+        [TestMethod()]
+        public void TestVerifyImageAfterRemovingNestedNamespaces3()
+        {
+            List<string> DllFilePaths = new()
+            {
+                "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\AnalyzerTests.dll"
+            };
+
+            List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
+
+            ClassDiagram classDiag = new( dllFiles );
+
+            List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil" };
+
+            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+
+            Console.WriteLine( imageBytes );
+            Console.WriteLine( imageBytes.Length );
+            Assert.IsNotNull( imageBytes );
+            Assert.AreNotEqual( imageBytes.Length , 0 );
+
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out6.png" , imageBytes );
             }
         }
     }

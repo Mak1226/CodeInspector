@@ -46,6 +46,23 @@ namespace ServerlessFunc
         }
 
         /// <summary>
+        /// Initializes a new instance of the UploadApi class.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+        /// <param name="sessionRoute">The base URL for the session endpoint.</param>
+        /// <param name="submissionRoute">The base URL for the submission endpoint.</param>
+        /// <param name="analysisRoute">The base URL for the analysis endpoint.</param>
+        public UploadApi( HttpClient httpClient , string sessionRoute , string submissionRoute , string analysisRoute )
+        {
+            _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
+            _sessionRoute = sessionRoute;
+            _submissionRoute = submissionRoute;
+            _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New upload client created" );
+        }
+
+
+        /// <summary>
         /// Creates a new session and returns the session entity.
         /// </summary>
         /// <param name="sessionData">The session data to create the new session with.</param>

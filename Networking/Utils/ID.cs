@@ -1,24 +1,56 @@
+﻿/******************************************************************************
+ * Filename    = Utils/Id.cs
+ *
+ * Author      = Shubhang Kedia
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = Defines static methods to retrieve predefined string IDs for various purposes.
+ *****************************************************************************/
 
 namespace Networking.Utils
 {
-    public class ID
+    /// <summary>
+    /// Defines static methods to retrieve predefined string IDs for various purposes.
+    /// </summary>
+    public class Id
     {
-        public static string GetServerID()
+        /// <summary>
+        /// Gets the ID string for the server.
+        /// </summary>
+        /// <returns>The server ID string.</returns>
+        public static string GetServerId()
         {
             return "server";
         }
-        public static string GetBroadcastID()
+
+        /// <summary>
+        /// Gets the ID string for broadcast communication.
+        /// </summary>
+        /// <returns>The broadcast ID string.</returns>
+        public static string GetBroadcastId()
         {
             return "broadcast";
         }
-        public static string GetNetworkingID()
+
+        /// <summary>
+        /// Gets the ID string for the Networking module.
+        /// </summary>
+        /// <returns>The Networking module ID string.</returns>
+        public static string GetNetworkingId()
         {
             return "networking";
         }
-        public static string GetNetworkingBroadcastID()
+
+        /// <summary>
+        /// Gets the ID string for broadcast communication within the Networking module.
+        /// </summary>
+        /// <returns>The Networking broadcast ID string.</returns>
+        public static string GetNetworkingBroadcastId()
         {
             return "networkingBroadcast";
         }
     }
 }
-
