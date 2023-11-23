@@ -58,6 +58,10 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodInfo method in methods)
                 {
+                    if(method == null)
+                    {
+                        continue;
+                    }
                     Type? declaringType = method.DeclaringType;
                     if ((declaringType != null) && (declaringType.ToString().StartsWith( "System.Object" )))
                     {
@@ -77,7 +81,7 @@ namespace Analyzer.Pipeline
 
             if (fields.Length != 0)
             {
-                foreach (FieldInfo field in fields)
+                foreach (FieldInfo? field in fields)
                 {
                     if (!field.IsStatic)
                     {
