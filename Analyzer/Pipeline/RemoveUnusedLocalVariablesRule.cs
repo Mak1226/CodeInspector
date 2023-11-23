@@ -136,12 +136,10 @@ namespace Analyzer.Pipeline
                 }
             }
             int unusedLocalsCount = 0;
-            //List<VariableDefinition> unusedLocals = new();
             for (int i = 0; i < count; i++)
             {
                 if (!used[i])
                 {
-                    //VariableDefinition variable = variables[i];
                     unusedLocalsCount += 1;
                 }
             }

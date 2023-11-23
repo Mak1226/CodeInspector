@@ -1,4 +1,16 @@
-﻿using System;
+﻿/******************************************************************************
+ * Filename    = TestHighParameterCount.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = AnalyzerTests
+ *
+ * Description = Unit Tests for TestHighParameterCount class
+ *****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +31,15 @@ namespace AnalyzerTests.Pipeline
         }
     }
 
+    /// <summary>
+    /// Test class for the HighParameterCountRule.
+    /// </summary>
     [TestClass()]
     public class TestHighParameterCount
     {
+        /// <summary>
+        /// Test method for low parameter count.
+        /// </summary>
         [TestMethod()]
         public void TestLowParams()
         {
@@ -49,6 +67,9 @@ namespace AnalyzerTests.Pipeline
 
         }
 
+        /// <summary>
+        /// Test method for high parameter count.
+        /// </summary>
         [TestMethod()]
         public void TestHighParams()
         {
