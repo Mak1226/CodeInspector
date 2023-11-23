@@ -1,4 +1,15 @@
-﻿using System.Diagnostics;
+﻿/******************************************************************************
+ * Filename    = SessionState.cs
+ *
+ * Author      = Aravind Somaraj
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = SessionState
+ *
+ * Description = Defines the Session state methods.
+ *****************************************************************************/
+using System.Diagnostics;
 
 namespace SessionState
 {

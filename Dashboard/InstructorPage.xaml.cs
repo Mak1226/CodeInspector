@@ -1,4 +1,15 @@
-﻿using ContentPage;
+﻿/******************************************************************************
+ * Filename    = Instructor.xaml.cs
+ *
+ * Author      = Saarang S
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Dashboard
+ *
+ * Description = Defines the Instructor page code-behind.
+ *****************************************************************************/
+using ContentPage;
 using SessionState;
 using System;
 using System.Collections.Generic;
