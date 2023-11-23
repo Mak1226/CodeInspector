@@ -139,7 +139,7 @@ namespace Networking.Utils
                         }
                     }
                 } catch(Exception e) {
-                    Console.WriteLine("Cannot send message to "+ message.SenderID);
+                    Console.WriteLine("Cannot send message to "+ message.DestID);
                     Console.WriteLine(e.Message);    
                 }
 

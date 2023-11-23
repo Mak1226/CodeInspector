@@ -1,8 +1,11 @@
 ﻿using System;
+using Microsoft.VisualStudio.TestPlatform.TestExecutor;
 using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
+using Networking.Serialization;
 using Networking.Utils;
+using Newtonsoft.Json.Serialization;
 
 namespace NetworkingUnitTests;
 
@@ -29,6 +32,14 @@ public class NetworkingTest
         try
         {
             server.Send("123", "456");
+        }
+        catch (Exception exception)
+        {
+            Assert.AreEqual("Start server first", exception.Message);
+        }
+        try
+        {
+            server.Send("123", "456","e4e4");
         }
         catch (Exception exception)
         {
@@ -166,6 +177,24 @@ public class NetworkingTest
     }
 
     [TestMethod]
+    public void ClientDoubleStart()
+    {
+        Queue messages = new();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
+        string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
+        string ip = ipPort[0];
+        int port = int.Parse(ipPort[1]);
+        string ret = client.Start(ip, port, "testClient1", "unitTestClient");
+        Assert.AreNotEqual(ret, "already started");
+        ret = client.Start(ip, port, "testClient1", "unitTestClient");
+        Assert.AreEqual(ret, "already started");
+
+        client.Stop();
+        server.Stop();
+    }
+
+    [TestMethod]
     public void OneClientToServer()
     {
         int cnt = 0;
@@ -179,6 +208,7 @@ public class NetworkingTest
         client.Start(ip, port, "testClient1", "unitTestClient");
         Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
         client.Send(message.Data, "unitTestServer", message.DestID);
+        //client.Send(message.Data, ID.GetNetworkingID(), ID.GetServerID());
         while (!messages.canDequeue())
         {
             Thread.Sleep(300);
@@ -255,15 +285,70 @@ public class NetworkingTest
         client.Stop();
         server.Stop();
     }
+    [TestMethod]
+    public void ServerToClient()
+    {
+        int cnt = 0;
+        Queue messages = new();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
+        string[] ipPort = server.Start(null, null, ID.GetServerID(), "unitTestClient").Split(':');
+        string ip = ipPort[0];
+        int port = int.Parse(ipPort[1]);
+        
+        client.Start(ip, port, "testClient1", "unitTestClient");
+        Thread.Sleep(4000);
+        client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
+        Message message = new("testMessage", "unitTestClient", "testClient1", ID.GetServerID());
+        server.Send(message.Data,message.DestID);
+        while (!messages.canDequeue())
+        {
+            Thread.Sleep(300);
+            cnt++;
+            if (cnt == 10)
+            {
+                Assert.Fail("Did not receive message");
+            }
+        }
+        Message receivedMessage = messages.Dequeue();
+        client.Stop();
+        server.Stop();
+        Assert.IsTrue(CompareMessages(receivedMessage, message));
+    }
 
-    //[TestMethod]
-    //public void ServerStopped()
-    //{
-    //    ICommunicator server = new Server();
-    //    ICommunicator client = new Client();
-    //    server.Stop();
-    //    client.Send("huh", ID.GetServerID());
-    //}
+    [TestMethod]
+    public void ServerLeftBeforeClient()
+    {
+        int cnt = 0;
+        Queue messages = new();
+        ICommunicator server = new Server();
+        ICommunicator client = new Client();
+        string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
+        
+        string ip = ipPort[0];
+        int port = int.Parse(ipPort[1]);
+        client.Start(ip, port, "testClient1", "unitTestClient");
+        client.Subscribe(new GenericEventHandler(messageQueue: messages), ID.GetNetworkingBroadcastID());
+        //Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
+        Data data = new Data(EventType.ServerLeft());
+
+        Message message = new Message(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID(), ID.GetServerID());
+        //client.Send(message.Data, "unitTestServer", message.DestID);
+        server.Stop();
+        client.Stop();
+        while (!messages.canDequeue())
+        {
+            Thread.Sleep(300);
+            cnt++;
+            if (cnt == 10)
+            {
+                Assert.Fail("Did not receive message");
+            }
+        }
+        Message receivedMessage = messages.Dequeue();
+        
+        Assert.IsTrue(CompareMessages(receivedMessage, message));
+    }
     [TestMethod]
     public void OneClientToItself()
     {
@@ -275,7 +360,8 @@ public class NetworkingTest
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Message message = new("testMessage", "unitTestClient", "testClient1", "testClient1");
+        Data data=new Data("testMessage",EventType.ChatMessage());
+        Message message = new(Serializer.Serialize(data), "unitTestClient", "testClient1", "testClient1");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
         client.Send(message.Data, message.DestID);
         while (!messages.canDequeue())
@@ -334,17 +420,21 @@ public class NetworkingTest
 
         Client[] clients = getClientsAndStart(NUMCLIENTS, ip, port, "unitTestClient");
     }
+    [TestMethod]
+    public void DequeingEmptyQueue()
+    {
+        Queue queue = new Queue();
+        queue.Dequeue();
+        Assert.IsTrue(true);
+        
+    }
 
     private bool CompareMessages(Message message1, Message message2)
     {
-        if ((message1.Data != message2.Data) ||
+        return !((message1.Data != message2.Data) ||
             (message1.DestID != message2.DestID) ||
             (message1.SenderID != message2.SenderID) ||
-            (message1.ModuleName != message2.ModuleName))
-        {
-            return false;
-        }
-        return true;
+            (message1.ModuleName != message2.ModuleName));
     }
 
     private Client[] getClientsAndStart(int n, string destIP, int destPort, string moduleName)

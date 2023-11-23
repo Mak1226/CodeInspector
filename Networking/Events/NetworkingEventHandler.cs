@@ -2,6 +2,7 @@
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
+using Networking.Queues;
 
 namespace Networking.Events
 {
@@ -9,25 +10,26 @@ namespace Networking.Events
     {
 
         ICommunicator communicator ;
+
         public NetworkingEventHandler(ICommunicator server) { 
             this.communicator = server;
         }
         public string HandleMessageRecv(Message message)
         {
             Data data=Serializer.Deserialize<Data>(message.Data);
-            if (data.EventType == EventType.ChatMessage())
-            {
-                return HandleChatMessage(message);
-            }
-            else if (data.EventType == EventType.NewClientJoined())
-            {
-                return HandleClientJoined(message);
-            }
-            else if (data.EventType == EventType.ClientLeft())
-            {
-                return HandleClientLeft(message);
-            }
-            else if (data.EventType == EventType.ClientRegister())
+            //if (data.EventType == EventType.ChatMessage())
+            //{
+            //    return HandleChatMessage(message);
+            //}
+            //if (data.EventType == EventType.NewClientJoined())
+            //{
+            //    return HandleClientJoined(message);
+            //}
+            //else if (data.EventType == EventType.ClientLeft())
+            //{
+            //    return HandleClientLeft(message);
+            //}
+            if (data.EventType == EventType.ClientRegister())
             {
                 return HandleClientRegister(message);
             }
@@ -42,11 +44,11 @@ namespace Networking.Events
             return "";
         }
 
-        private string HandleChatMessage(Message message)
-        {
-            Console.WriteLine("message received in server:" + message.Data);
-            return "";
-        }
+        //private string HandleChatMessage(Message message)
+        //{
+        //    Console.WriteLine("message received in server:" + message.Data);
+        //    return "";
+        //}
 
         private string HandleClientJoined(Message message)
         {

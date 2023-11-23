@@ -10,7 +10,17 @@ namespace ServerApp
     {
         static void Main(string[] args)
         {
+            
+            Thread thread = new(fun);
+            try
+            {
+                thread.Start();
+            }
 
+            catch (Exception ex){
+                Console.WriteLine("lol");
+            }
+            return;
             ICommunicator server = CommunicationFactory.GetServer();
             string addr = server.Start(null, null, ID.GetServerID(),ID.GetNetworkingID());
             /*server.Subscribe(new Events(), "asdfasf");*/
@@ -24,11 +34,17 @@ namespace ServerApp
             client.Send("hello", EventType.ChatMessage(), "clientA");*/
             //Console.ReadKey();
             /*server.Send("omg_Server", EventType.ChatMessage(), "hee");*/
-            Console.ReadKey();
+            Console.ReadKey();            /*client.Stop();*/
 
-            /*client.Stop();*/
+
             server.Stop();
 
+        }
+        public static void fun()
+        {
+            int a;
+            throw new Exception();
+            Console.Write("asdf");
         }
     }
 }
