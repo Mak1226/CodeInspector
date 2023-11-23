@@ -79,6 +79,8 @@ namespace Dashboard
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Navigate to the AuthenticationPage when the logout button is clicked
+            InstructorViewModel? viewModel = DataContext as InstructorViewModel;
+            viewModel?.Logout();
             NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
         }
 
