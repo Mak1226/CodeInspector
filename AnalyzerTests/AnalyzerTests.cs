@@ -14,24 +14,25 @@ namespace Analyzer.Tests
 
             IDictionary<int , bool> teacherOptions = new Dictionary<int , bool>
             {
-                [101] = true ,
-                [102] = true ,
-                [103] = true ,
-                [104] = true ,
-                [105] = true ,
-                [106] = true ,
-                [107] = true ,
-                [108] = true ,
-                [109] = true ,
-                [110] = true ,
-                [111] = true ,
-                [112] = true ,
-                [113] = true ,
-                [114] = true ,
-                [115] = true ,
-                [116] = true ,
-                [117] = true ,
-                [118] = true
+                [101] = true,
+                [102] = true,
+                [103] = true,
+                [104] = true,
+                [105] = true,
+                [106] = true,
+                [107] = true,
+                [108] = true,
+                [109] = true,
+                [110] = true,
+                [111] = true,
+                [112] = true,
+                [113] = true,
+                [114] = true,
+                [115] = true,
+                [116] = true,
+                [117] = true,
+                [118] = true,
+                [119] = true
             };
 
             analyzer.Configure(teacherOptions);
@@ -65,7 +66,9 @@ namespace Analyzer.Tests
                 new AnalyzerResult("114", 1, ""),
                 new AnalyzerResult("115", 1, "No Violation Found"),
                 new AnalyzerResult("116", 1, ""),
-                new AnalyzerResult("117", 1, "No Violation Found")
+                new AnalyzerResult("117", 1, "No Violation Found"),
+                new AnalyzerResult("118", 1, "No Violation Found"),
+                new AnalyzerResult("119", 1, "No Violation Found")
 
             };
 
