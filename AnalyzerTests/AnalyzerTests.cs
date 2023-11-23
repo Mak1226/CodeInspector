@@ -400,6 +400,30 @@ namespace Analyzer.Tests
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Tests the RelationShip Graph generation when different kinds of removable namespaces will be given
+        /// </summary>
+        [TestMethod]
+        public void CheckRelationshipGraphGeneration()
+        {
+            Analyzer analyzer = new();
+
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\BridgePattern.dll"
+            };
+
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            // Above DLL contains everything in single namespace named "BridgePattern"
+            byte[] classDiagramBytes = analyzer.GetRelationshipGraph(new());
+            Assert.AreNotEqual(0 , classDiagramBytes);
+
+            // Removing BridgePattern namespace from the graph
+            byte[] diagWithoutBridgeBytes = analyzer.GetRelationshipGraph( new() { "BridgePattern" } );
+            Assert.AreEqual(0, diagWithoutBridgeBytes);
+        }
+
     }
 }
