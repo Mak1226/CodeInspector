@@ -1,4 +1,5 @@
-﻿using Analyzer.Parsing;
+// Created By - Monesh Vanga (112001047)
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     /// <summary>
-    /// Test class for testing the analyzer - PrefixChecker.
+    /// Test class for testing the analyzer - CasingChecker.
     /// </summary>
     [TestClass()]
     public class TestCasingChecker
@@ -68,6 +69,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(0, result.Verdict);
         }
 
+        /// <summary>
+        /// Test method for a case in which all classes follow the rule 
+        /// </summary>
+        
         //CasingChecker1.cs
 
         //namespace GoodNamespace
