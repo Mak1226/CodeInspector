@@ -23,10 +23,13 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <summary>
         /// Initializes a new instance of the MockAnalyzer class.
         /// </summary>
+        private IDictionary<int, bool> _teacherOptions;
+        private List<string> _dllFilePath;
+        private List<string> _dllFilePathCustom;
         public MockAnalyzer()
         {
-            teacherOptions = new Dictionary<int, bool>();
-            dllFilePath = new List<string>();
+            _teacherOptions = new Dictionary<int, bool>();
+            _dllFilePath = new List<string>();
         }
         /// <summary>
         /// Configures the mock analyzer with the specified teacher options.
@@ -35,7 +38,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// configuration options.</param>
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
-            teacherOptions = TeacherOptions;
+            _teacherOptions = TeacherOptions;
         }
         /// <summary>
         /// Retrieves the teacher configuration options set for the mock analyzer.
@@ -43,7 +46,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <returns>The dictionary containing teacher configuration options.</returns>
         public IDictionary<int, bool> GetTeacherOptions()
         {
-            return teacherOptions;
+            return _teacherOptions;
         }
         /// <summary>
         /// Placeholder implementation that throws a NotImplementedException.
@@ -59,7 +62,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <param name="PathOfDLLFilesOfStudent">The list of paths to DLL files submitted by the student.</param>
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
-            dllFilePath = PathOfDLLFilesOfStudent;
+            _dllFilePath = PathOfDLLFilesOfStudent;
         }
 
         /// <summary>
@@ -68,7 +71,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <returns>The list of paths to DLL files loaded by the analyzer.</returns>
         public List<string> GetDllFilePath()
         {
-            return dllFilePath;
+            return _dllFilePath;
         }
 
         /// <summary>
@@ -76,9 +79,13 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// </summary>
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
-            throw new NotImplementedException();
+            _dllFilePathCustom = PathOfDLLFilesOfCustomAnalyzers;
         }
 
+        public List<string> GetDLLOfCustomAnalyzers()
+        {
+            return _dllFilePathCustom;
+        }
         /// <summary>
         /// Runs custom analyzers and returns the results as a dictionary.
         /// </summary>

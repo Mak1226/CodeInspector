@@ -40,7 +40,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void FileSendTest()
         {
-            ContentClient contentClient = new ContentClient(_communicator, "testSessionID");
+            ContentClient contentClient = new (_communicator, "testSessionID");
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
@@ -61,18 +61,18 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void FileReceiveTest()
         {
-            ContentClient contentClient = new ContentClient(_communicator, "currSession");
-            Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new Dictionary<string, List<AnalyzerResult>>();
+            ContentClient contentClient = new (_communicator, "currSession");
+            Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new ();
             contentClient.AnalyzerResultChanged += (result) =>
             {
                 analyzerResultUpdated = result;
             };
-            Dictionary<string, List<AnalyzerResult>> analyzerResult = new Dictionary<string, List<AnalyzerResult>>
+            Dictionary<string, List<AnalyzerResult>> analyzerResult = new()
             {
                 { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
                 // Add more initial values as needed
             };
-            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+            AnalyzerResultSerializer serializer = new ();
             string encoding = serializer.Serialize(analyzerResult);
             contentClient.HandleReceive(encoding);
             Assert.IsTrue(analyzerResultUpdated.ContainsKey("File1"));
@@ -84,15 +84,15 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void NullReceiveTest()
         {
-            ContentClient contentClient = new ContentClient(_communicator, "currSession");
+            ContentClient contentClient = new (_communicator, "currSession");
 
-            Dictionary<string, List<AnalyzerResult>> analyzerResult = new Dictionary<string, List<AnalyzerResult>>
+            Dictionary<string, List<AnalyzerResult>> analyzerResult = new ()
             {
                 { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
                 // Add more initial values as needed
             };
-            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
-            Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new Dictionary<string, List<AnalyzerResult>>();
+            AnalyzerResultSerializer serializer = new ();
+            Dictionary<string, List<AnalyzerResult>> analyzerResultUpdated = new ();
             string encoding = serializer.Serialize(analyzerResultUpdated);
             contentClient.HandleReceive(encoding);
             // When passed value is empty, analyzerResult is not updated

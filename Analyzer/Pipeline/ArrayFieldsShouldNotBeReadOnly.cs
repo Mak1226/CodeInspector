@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = ArrayFieldsShouldNotBeReadOnly.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer to identify readonly array fields 
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System;
@@ -35,7 +45,7 @@ namespace Analyzer.Pipeline
             // If no errors, add a message indicating everything looks fine
             if (string.IsNullOrEmpty(_errorMessage))
             {
-                _errorMessage = "Everything looks fine. No readonly array fields found.";
+                _errorMessage = "No readonly array fields found.";
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

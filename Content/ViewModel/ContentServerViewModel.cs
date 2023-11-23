@@ -29,9 +29,9 @@ namespace Content.ViewModel
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
-        public ContentServerViewModel(ICommunicator server)
+        public ContentServerViewModel(ICommunicator server, string sessionID)
         {
-            _contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer());
+            _contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer(), sessionID);
             _contentServer.AnalyzerResultChanged += (result) =>
             {
                 _analyzerResults = result;
@@ -70,6 +70,11 @@ namespace Content.ViewModel
             _contentServer.LoadCustomDLLs(filePaths);
             _uploadedFiles = filePaths;
             OnPropertyChanged(nameof(UploadedFiles));
+        }
+
+        public void SendToCloud()
+        {
+            _contentServer.SendToCloud();
         }
 
         /// <summary>
@@ -124,10 +129,7 @@ namespace Content.ViewModel
         }
 
 
-        public string UploadedFiles
-        {
-            get { return string.Join(",", _uploadedFiles);  }
-        }
+        public string UploadedFiles => string.Join( "," , _uploadedFiles );
 
         private void OnPropertyChanged(string propertyName)
         {

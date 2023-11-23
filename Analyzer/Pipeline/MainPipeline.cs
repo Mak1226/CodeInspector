@@ -3,19 +3,18 @@ using Analyzer.UMLDiagram;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-
     /// <summary>
-    /// The main pipeline for running analyzers
+    /// Represents the main pipeline for orchestrating the analysis process.
     /// </summary>
     public class MainPipeline
     {
-
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _studentDLLFiles;
         private readonly Dictionary<int, AnalyzerBase> _allAnalyzers;
@@ -23,6 +22,9 @@ namespace Analyzer.Pipeline
         private readonly Dictionary<string, List<AnalyzerResult>> _results;
         private readonly object _lock;
 
+        /// <summary>
+        /// Initializes a new instance of the MainPipeline class.
+        /// </summary>
         public MainPipeline()
         {
             _allAnalyzers = new();
@@ -34,18 +36,18 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Adds the given teacher options to the pipeline.
+        /// Adds teacher options to the pipeline.
         /// </summary>
-        /// <param name="TeacherOptions">The teacher options to add</param>
+        /// <param name="TeacherOptions">Dictionary of teacher options.</param>
         public void AddTeacherOptions(IDictionary<int, bool> TeacherOptions)
         {
             _teacherOptions = TeacherOptions;
         }
 
         /// <summary>
-        /// Adds the given student DLL files to the pipeline.
+        /// Adds DLL files to the pipeline for analysis.
         /// </summary>
-        /// <param name="PathOfDLLFilesOfStudent">The paths to the student DLL files to add</param>
+        /// <param name="PathOfDLLFilesOfStudent">List of paths to DLL files.</param>
         public void AddDLLFiles(List<string> PathOfDLLFilesOfStudent)
         {
             _studentDLLFiles = PathOfDLLFilesOfStudent;
@@ -53,16 +55,23 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Generates the analyzers that will be run by the pipeline.
+        /// Initializes the analyzers based on the provided DLL files.
         /// </summary>
         private void GenerateAnalysers()
         {
             foreach (string file in _studentDLLFiles)
             {
-                _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                try
+                {
+                    _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                }
+                catch (Exception)
+                {
+                    Trace.WriteLine("MainPipeline : Failed to parse " + file);
+                }
             }
 
-
+            Trace.Write("MainPipeline : Generating instance of Analyzers\n");
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -80,38 +89,57 @@ namespace Analyzer.Pipeline
             _allAnalyzers[115] = new PrefixCheckerAnalyzer(_parsedDLLFiles);
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
+            _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
+            _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
+            Trace.Write("MainPipeline : All Analyzers Generated\n");
         }
 
+        /// <summary>
+        /// Runs the specified analyzer on all parsed DLL files.
+        /// </summary>
+        /// <param name="analyzerID">Identifier of the analyzer to run.</param>
         private void RunAnalyzer(int analyzerID)
         {
+            Trace.WriteLine("MainPipeline : Calling analyzer " + analyzerID);
+
             Dictionary<string, AnalyzerResult> currentAnalyzerResult;
 
             try
             {
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
+                Trace.WriteLine("MainPipeline : Succeed analyzer " + analyzerID);
             }
-            catch (Exception _)
+            catch (Exception)
             {
+                Trace.WriteLine("Internal error, analyzer failed to execute " + analyzerID);
                 currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
+                string errorMsg = "Internal error, analyzer failed to execute";
+
+                if (!_allAnalyzers.ContainsKey(analyzerID))
+                {
+                    errorMsg = "Analyser does not exists";
+                    Trace.WriteLine("MainPipeline : Analyser does not exists " + analyzerID);
+                }
 
                 foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
                 {
-                    currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(analyzerID.ToString(), 1, "Internal error, analyzer failed to execute");
+                    currentAnalyzerResult[dllFile.DLLFileName] = new AnalyzerResult(analyzerID.ToString(), 1, errorMsg);
                 }
             }
 
             foreach (KeyValuePair<string, AnalyzerResult> dllResult in currentAnalyzerResult)
             {
-                lock (_lock) {
+                lock (_lock) 
+                {
                     _results[dllResult.Key].Add(dllResult.Value);
                 }
             }
         }
 
         /// <summary>
-        /// Starts the pipeline and runs all of the analyzers that have been selected by teacher
+        /// Starts the analysis process using multiple threads.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Dictionary of analysis results.</returns>
         public Dictionary<string, List<AnalyzerResult>> Start()
         {
 
@@ -140,6 +168,11 @@ namespace Analyzer.Pipeline
             return _results;
         }
 
+        /// <summary>
+        /// Generates a class diagram based on the analysis results.
+        /// </summary>
+        /// <param name="removableNamespaces">List of namespaces to be excluded from the diagram.</param>
+        /// <returns>Byte array representing the generated class diagram.</returns>
         public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             // TODO: Call ClassDiagram.Run() after modifications

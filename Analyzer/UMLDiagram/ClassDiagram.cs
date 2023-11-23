@@ -200,11 +200,11 @@ namespace Analyzer.UMLDiagram
             return type.Remove(0, 1);
         }
 
-        private bool isPartOfRemovableNamespace(string objName , List<string> removableNamespaces)
+        private bool isPartOfRemovableNamespace(string objName, List<string> removableNamespaces)
         {
-            string[] splitted_string = objName.Split(".");
+            string[] splittedString = objName.Split(".");
 
-            if (removableNamespaces != null && removableNamespaces.Contains(splitted_string[0].Remove(0 , 1)))
+            if (removableNamespaces != null && removableNamespaces.Contains( splittedString[0].Remove(0 , 1)))
             {
                 Console.WriteLine(objName);
                 return true;

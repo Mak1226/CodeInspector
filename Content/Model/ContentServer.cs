@@ -14,6 +14,7 @@ using Networking.Communicator;
 using Content.FileHandling;
 using Content.Encoder;
 using Analyzer;
+using System.Threading.Tasks;
 
 namespace Content.Model
 {
@@ -24,11 +25,15 @@ namespace Content.Model
     public class ContentServer
     {
         readonly ICommunicator _server;
+        readonly string _hostSessionID;
         readonly IFileHandler _fileHandler;
         readonly IAnalyzer _analyzer;
         readonly AnalyzerResultSerializer _serializer;
-        
+
         string? _sessionID;
+        string? _fileEncoding;
+        string? _resultEncoding;
+        IDictionary<int, bool> _configuration;
 
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
@@ -42,9 +47,10 @@ namespace Content.Model
         /// </summary>
         /// <param name="_server">Networking server</param>
         /// <param name="_analyzer">Analyzer</param>
-        public ContentServer(ICommunicator _server, IAnalyzer _analyzer)
+        public ContentServer(ICommunicator _server, IAnalyzer _analyzer, string sessionID)
         {
             this._server = _server;
+            _hostSessionID = sessionID;
             ServerRecieveHandler recieveHandler = new (this);
             this._server.Subscribe( recieveHandler , "Content-Files");
 
@@ -65,6 +71,7 @@ namespace Content.Model
         /// <param name="clientID">Unique ID of client</param>
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
+            _fileEncoding = encodedFiles;
             // Save files to user session directory and collect sessionID
             string? recievedSessionID = _fileHandler.HandleRecieve(encodedFiles);
             if (recievedSessionID == null) 
@@ -90,7 +97,9 @@ namespace Content.Model
                 }
 
                 _sessionAnalysisResultDict[recievedSessionID] = res;
-                _server.Send(_serializer.Serialize(res), "Content-Results", clientID);
+                string serializedResults = _serializer.Serialize(res);
+                _resultEncoding = serializedResults;
+                _server.Send(serializedResults, "Content-Results", clientID);
                 if (_sessionID == recievedSessionID)
                 {
                     analyzerResult = res;
@@ -106,6 +115,7 @@ namespace Content.Model
         /// <param name="configuration">The dictionary containing configuration settings.</param>
         public void Configure(IDictionary<int, bool> configuration)
         {
+            _configuration = configuration;
             _analyzer.Configure(configuration);
         }
 
@@ -143,6 +153,17 @@ namespace Content.Model
                 _sessionAnalysisResultDict[sessionID] = analyzerResult;
             }
             AnalyzerResultChanged?.Invoke(analyzerResult);
+        }
+
+        public void SendToCloud()
+        {
+            CloudHandler cloudHandler = new();
+            Task.Run(() 
+                => cloudHandler.PostSessionAsync(_hostSessionID, _configuration, _sessionAnalysisResultDict.Keys.ToList()));
+            Task.Run(()
+                => cloudHandler.PostSubmissionAsync(_hostSessionID, _fileEncoding));
+            Task.Run(()
+                => cloudHandler.PostSubmissionAsync(_hostSessionID, _resultEncoding));
         }
 
     }

@@ -105,7 +105,7 @@ namespace Content.FileHandling
         public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
-            _filesList = new List<String>();
+            _filesList = new List<string>();
             try
             {
                 recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);

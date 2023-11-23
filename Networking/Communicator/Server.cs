@@ -1,6 +1,15 @@
-﻿/////
-/// Author:
-/////
+﻿/******************************************************************************
+ * Filename    = Communicator/Server.cs
+ *
+ * Author      = 
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = 
+ *****************************************************************************/
+
 
 using System.Net.Sockets;
 using System.Net;
@@ -32,6 +41,18 @@ namespace Networking.Communicator
         private string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+
+            // prioritizing the returning of private IPv4 in the subnet 10.*.*.*
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork &&
+                    ip.ToString().Length>3 && ip.ToString()[..3] == "10.")
+                {
+                    return ip.ToString();
+                }
+            }
+
+            // otherwise return any valid IPv4
             foreach (var ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
@@ -79,9 +100,11 @@ namespace Networking.Communicator
         public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
+            {
+                Console.WriteLine("[Server] Already started, returning same IP:Port");
                 return _ipPort;
+            }
 
-            _isStarted = true;
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _moduleName = moduleName;
             _senderId = senderId;
@@ -119,6 +142,7 @@ namespace Networking.Communicator
                 IsBackground = true
             };
             _listenThread.Start();
+            _isStarted = true;
             Subscribe(new NetworkingEventHandler(this), ID.GetNetworkingID());
             _ipPort = GetLocalIPAddress() + ":" + localEndPoint.Port;
             return _ipPort;
@@ -145,6 +169,7 @@ namespace Networking.Communicator
             _listenThread.Interrupt();
             _serverListener.Stop();
             //_listenThread.Join();
+            _isStarted = false;
             Console.WriteLine("[Server] Stopped");
         }
 
@@ -201,7 +226,16 @@ namespace Networking.Communicator
         public void HandleMessage(Message message)
         {
             if (message.DestID == ID.GetServerID())
-                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            {
+                try
+                {
+                    _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+                }
+                catch
+                {
+                    Console.WriteLine("[Server] " + message.ModuleName + " not subscribed");
+                }
+            }
             else
                 Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
 

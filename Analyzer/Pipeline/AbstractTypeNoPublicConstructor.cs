@@ -1,4 +1,19 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AbstractTypeNoPublicConstructor.cs
+* 
+* Author      = Sneha Bhattacharjee
+*
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = Abstract types must not have Public or Protected Internal constructors. 
+*               Constructors on abstract types can be called only by derived types. 
+*               Because public constructors create instances of a type and you cannot create instances of an abstract type, 
+*               an abstract type that has a public constructor is incorrectly designed.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +63,7 @@ namespace Analyzer.Pipeline
                     // Loop over all constructors of that class
                     foreach (ConstructorInfo constructor in allConstructors)
                     {
-                        if (constructor.IsPublic)
+                        if (constructor.IsPublic || constructor.IsFamilyOrAssembly)
                         {
                             abstractTypesWithPublicConstructors.Add(classType);
                             break;
@@ -59,22 +74,17 @@ namespace Analyzer.Pipeline
             return abstractTypesWithPublicConstructors;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="abstractTypesWithPublicConstructor"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+
         private string ErrorMessage(List<Type> abstractTypesWithPublicConstructor)
         {
-            var errorLog = new System.Text.StringBuilder("The following abstract classes have public constructors:");
+            var errorLog = new System.Text.StringBuilder("The following abstract classes have public constructors:\r\n");
                         
             foreach (Type type in abstractTypesWithPublicConstructor)
             {
                 try
                 {
                     // sanity check
-                    errorLog.AppendLine(type.Name.ToString());
+                    errorLog.AppendLine(type.FullName);
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
@@ -85,21 +95,27 @@ namespace Analyzer.Pipeline
             return errorLog.ToString();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "";
-            _verdict = 1;
-
-            List<Type> abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor(parsedDLLFile);
-            if (abstractTypesWithPublicConstructor.Count > 0)
+            List<Type> abstractTypesWithPublicConstructor;
+            try
             {
-                _verdict = 0;
-                _errorMessage = ErrorMessage(abstractTypesWithPublicConstructor);
+                abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor( parsedDLLFile );
+                if (abstractTypesWithPublicConstructor.Count > 0)
+                {
+                    _verdict = 0;
+                    _errorMessage = ErrorMessage( abstractTypesWithPublicConstructor );
+                }
+                else
+                {
+                    _errorMessage = "No violation found.";
+                }
             }
+            catch (NullReferenceException ex)
+            {
+                throw new NullReferenceException("Internal error. Analyzer could not be run.", ex);
+            }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }

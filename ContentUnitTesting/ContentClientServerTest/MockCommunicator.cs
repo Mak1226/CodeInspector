@@ -28,7 +28,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <param name="destId">The destination ID.</param>
         public void Send(string serializedData, string moduleName, string destId)
         {
-            this.encoding = serializedData;
+            _encoding = serializedData;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <returns>The last encoding value.</returns>
         public string GetEncoding()
         {
-            return encoding;
+            return _encoding;
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -7,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+using Analyzer;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -16,12 +19,18 @@ namespace AnalyzerTests.Pipeline
     [TestClass()]
     public class TestClassRelationships
     {
+        /// <summary>
+        /// Testing all 4 types of relationships existing between classes of TypeRelationships.dl
+        /// </summary>
         [TestMethod()]
         public void CheckRelationshipsList()
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
-            string path = "..\\..\\..\\..\\Analyzer\\TestDLLs\\TypeRelationships.dll";
+            string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
+
+            //C: \Users\HP\Desktop\software\SoftwareGroupProject\Analyzer\AnalyzerTests\TestDLLs\TypeRelationships.dll
+
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
@@ -128,5 +137,104 @@ namespace AnalyzerTests.Pipeline
                 CollectionAssert.AreEqual(UsingExp[key], UsingRel[key]);
             }
         }
+
+        /// <summary>
+        /// Checking the case where the constructor takes in an object as parameter, but is then assigned to local variable
+        /// </summary>
+        [TestMethod()]
+        public void CheckParameterInCtorCase()
+        {
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+
+            ParsedDLLFile parsedDLL = new(dllFile);
+
+            foreach (ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
+            {
+                if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Square"))
+                {
+                    HashSet<string> expectedUsingList = new HashSet<string>{ "CClassRelTestCase1.Circle" };
+                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
+                    Assert.AreEqual(true, areEqual);
+                }
+
+                if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Circle"))
+                {
+                    HashSet<string> expectedUsingList = new HashSet<string> { "IClassRelTestCase1.IColor" };
+                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
+                    Assert.AreEqual(true, areEqual);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Testing the case where an interface is present as parameter of a method in a class.  
+        /// </summary>
+        [TestMethod()]
+        public void CheckInterfaceParameter()
+        {
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+
+            ParsedDLLFile parsedDLL = new(dllFile);
+
+            foreach (ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
+            {
+                if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Rectangle"))
+                {
+                    HashSet<string> expectedUsingList = new HashSet<string> { "IClassRelTestCase1.IColor" };
+                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
+                    Assert.AreEqual(true, areEqual);
+                }
+            }
+        }
     }
+
 }
+    namespace ClassRelTestCase1
+    {
+        public interface IColor
+        {
+            
+        }
+        public interface IDrawable
+        {
+            void Draw();
+        }
+
+        public class Circle : IDrawable
+        {
+            public Circle(IColor clr)
+            {
+                IColor rClr = clr;        
+            }
+            public void Draw()
+            {
+                Console.WriteLine("Drawing a circle.");
+            }
+        }
+
+        public class Square : IDrawable
+        {
+            public Square(Circle c1)
+            {
+                //parameter is assigned to local variable
+                //using expected betn square and circle
+                Circle cc1 = c1;
+                Console.WriteLine(cc1);
+            }
+            public void Draw()
+            {
+                Console.WriteLine("Drawing a square.");
+            }
+        }
+        public class Rectangle: IDrawable
+        {
+            public void Draw()
+            {
+                Console.WriteLine("Drawing a square.");
+            }
+            public void AddColour(IColor clr)
+            {
+                Console.WriteLine("Using some Clr ");
+            }
+        }
+    }

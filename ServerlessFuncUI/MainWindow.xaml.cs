@@ -44,10 +44,10 @@ namespace ServerlessFuncUI
         public InsightPage4 insight_page_4;
         public InsightPage5 insight_page_5;
         public InsightPage6 insight_page_6;
-        public SessionsPage(string id)
+        public SessionsPage()
         {
             InitializeComponent();
-            userName = id;
+            userName = "name1";
             viewModel = new SessionsViewModel(userName);
             this.DataContext = viewModel;
             viewModel.PropertyChanged += Listener;
@@ -78,7 +78,6 @@ namespace ServerlessFuncUI
         private void Listener(object sender, PropertyChangedEventArgs e)
         {
             sessions = viewModel.ReceivedSessions;
-
             
             if (sessions?.Count == 0)
             {
@@ -124,7 +123,7 @@ namespace ServerlessFuncUI
             int index = Convert.ToInt32(caller.Name.Split('n')[1]);
 
             // Getting the Corresponding Submissions of the selected sessions and showing it in the place provided
-            SubmissionsPage submissionsPage = new SubmissionsPage(sessions[index].SessionId, UserName);
+            SubmissionsPage submissionsPage = new SubmissionsPage(sessions[index]);
             Trace.WriteLine("[Cloud] SubmissionsPage created");
             SubmissionsPage.Content = submissionsPage;
         }
