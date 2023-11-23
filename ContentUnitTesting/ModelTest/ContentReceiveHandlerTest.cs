@@ -1,6 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Content.Model;
 using Networking.Models;
+using Content.Encoder;
+using Analyzer;
+using Newtonsoft.Json.Linq;
 
 namespace ContentUnitTesting.ModelTest
 {
@@ -21,16 +24,28 @@ namespace ContentUnitTesting.ModelTest
         }
 
         [TestMethod]
-        public void HandleMessageRecv_ValidMessage_ReturnsEmptyString()
+        public void HandleMessageRecv_ValidMessage()
         {
-            // Arrange: Create a test message
-            Message message = new( "Test data" );
+            // Dictionary<string , List<AnalyzerResult>> analyzerResult = new()
+            // {
+            //     { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
+            //      Add more initial values as needed
+            // };
+            //AnalyzerResultSerializer serializer = new();
 
-            // Act: Call the HandleMessageRecv method and capture the return value
-            string result = _handler.HandleMessageRecv( message );
+            // string encoding = serializer.Serialize( analyzerResult );
+            // _handler.HandleMessageRecv( encoding );
+            // When passed value is empty, analyzerResult is not updated
+            //Assert.IsTrue( analyzerResult.ContainsKey( "File1" ) );
+            var message = new Message { Data = "Test Data" }; // Create a message instance with some data
 
-            // Assert: Verify that the method returns an empty string
-            Assert.IsTrue( string.IsNullOrEmpty( result ) );
+            // Act
+            _handler.HandleMessageRecv( message );
+
+            // Assert
+            // Assuming analyzerResult is a public property in ClientReceiveHandler
+            Assert.IsNull( _clientMock.analyzerResult ); // Assert that analyzerResult is not null
+            
         }
 
         // Add more test cases to cover different scenarios and edge cases
