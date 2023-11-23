@@ -1,20 +1,43 @@
-﻿using Content.Encoder;
+﻿/******************************************************************************
+ * Filename     = ContentServerTest.cs
+ * 
+ * Author       = Lekshmi
+ *
+ * Product      = Analyzer
+ * 
+ * Project      = ContentUnitTesting
+ *
+ * Description  = Unit Tests for ContentServer
+*****************************************************************************/
+using Content.Encoder;
 using Content.FileHandling;
 using Content.Model;
 
 namespace ContentUnitTesting.ContentClientServerTest
 {
+    /// <summary>
+    /// Class to test file ContentServer.cs
+    /// </summary>
     [TestClass]
     public class ContentServerTest
     {
         MockCommunicator _communicator;
         MockAnalyzer _analyzer;
+        /// <summary>
+        /// Test initialization method. 
+        /// Creates new instances of MockCommunicator and MockAnalyzer for each test.
+        /// </summary>
         [TestInitialize]
         public void TestInitializer()
         {
             _communicator = new MockCommunicator();
             _analyzer = new MockAnalyzer(); 
         }
+
+        /// <summary>
+        /// Tests the behavior of handling an empty receive 
+        /// in the ContentServer class.
+        /// </summary>
         [TestMethod]
         public void EmptyReceiveTest()
         {
@@ -22,6 +45,11 @@ namespace ContentUnitTesting.ContentClientServerTest
             contentServer.HandleRecieve("","testSessionID");
             Assert.IsTrue(contentServer.analyzerResult.Count() == 0);
         }
+
+        /// <summary>
+        /// Tests the behavior of handling DLL files received 
+        /// in the ContentServer class.
+        /// </summary>
         [TestMethod]
         public void DLLReceiveTest()
         {
@@ -43,7 +71,8 @@ namespace ContentUnitTesting.ContentClientServerTest
         }
 
         /// <summary>
-        /// If sessionID mismatch is there, analyzerResults are not updated
+        /// Tests if sessionID mismatch is there, 
+        /// analyzerResults are not updated
         /// </summary>
         [TestMethod]
         public void SessionIDMismatchTest()
@@ -63,7 +92,8 @@ namespace ContentUnitTesting.ContentClientServerTest
         }
 
         /// <summary>
-        /// If sessionID mismatch is there, analyzerResults are not updated
+        /// Tests the behavior when there is a session ID match 
+        /// in the ContentServer class.
         /// </summary>
         [TestMethod]
         public void SessionIDMatchTest()
@@ -80,8 +110,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             Assert.IsTrue(contentServer.analyzerResult.ContainsKey("File1"));
             Directory.Delete(tempDirectory, true);
         }
+
         /// <summary>
-        /// Test to check if proper configurations are being stored
+        /// Tests if proper configurations are being stored 
+        /// in the ContentServer class.
         /// </summary>
         [TestMethod]
         public void ConfigureTest()
@@ -96,6 +128,11 @@ namespace ContentUnitTesting.ContentClientServerTest
             contentServer.Configure(configuration);
             Assert.AreEqual(configuration, _analyzer.GetTeacherOptions());
         }
+
+        /// <summary>
+        /// Tests the behavior when the session ID is set to null 
+        /// in the ContentServer class.
+        /// </summary>
         [TestMethod]
         public void NullSessionIDTest()
         {
@@ -104,6 +141,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             Assert.IsTrue(contentServer.analyzerResult.Count() == 0);
         }
 
+        /// <summary>
+        /// Tests the behavior when the session ID is set to a previous session ID 
+        /// in the ContentServer class.
+        /// </summary>
         [TestMethod]
         public void PreviousSessionIDTest()
         {

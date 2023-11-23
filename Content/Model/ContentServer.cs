@@ -1,4 +1,16 @@
-﻿using Networking.Communicator;
+﻿/******************************************************************************
+ * Filename    = ContentServer.cs
+ * 
+ * Author      = Lekshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Class that represents a client for handling file uploads.
+ *****************************************************************************/
+
+using Networking.Communicator;
 using Content.FileHandling;
 using Content.Encoder;
 using Analyzer;
