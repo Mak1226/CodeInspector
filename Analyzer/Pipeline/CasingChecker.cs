@@ -62,7 +62,6 @@ namespace Analyzer.Pipeline
         {
             // Flag to track if any casing mistake is found
             bool hasMistake = false;
-            int flag1 = 0;
             
             // Check namespace names for PascalCasing
             foreach(ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
@@ -70,21 +69,9 @@ namespace Analyzer.Pipeline
                 string? s = interfaceObj.TypeObj.Namespace;
                 if (!IsPascalCase(s))
                 {
-                    flag1++;
                     hasMistake = true;
                     Console.WriteLine($"Incorrect Namespace Naming : {s}");
-
-                    //if it is the first mistake
-                    if(flag1==1)
-                    {
-                        _errorMessage += "Incorrect Namespace Naming : " + s + " ";
-                    }
-
-                    //if it is not the first mistake
-                    else
-                    {
-                        _errorMessage += ", " + s + " ";
-                    }
+                    _errorMessage += "Incorrect Namespace Naming : " + s + " ";
                 }
             }
 
