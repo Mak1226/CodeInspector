@@ -1,12 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
-using System;
+﻿/******************************************************************************
+* Filename    = AnalyzerTests.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = AnalyzerTests
+*
+* Description =  Unit tests for the Analyzer class.
+******************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Analyzer.Tests
 {
+    /// <summary>
+    /// Unit tests for the Analyzer class.
+    /// </summary>
     [TestClass()]
     public class AnalyzerTests
     {
+        /// <summary>
+        /// Tests the Analyzer's ability to analyze all analyzers in the pipeline for a given DLL.
+        /// </summary>
         [TestMethod()]
         public void AllAnalyzerInPipelineTest()
         {
@@ -118,7 +136,10 @@ namespace Analyzer.Tests
             }
 
         }
-        
+
+        /// <summary>
+        /// Tests the behavior when the teacher provides invalid configuration options for analyzers.
+        /// </summary>
         [TestMethod()]
         public void InvalidTeacherConfiguration()
         {
@@ -183,6 +204,9 @@ namespace Analyzer.Tests
 
         }
 
+        /// <summary>
+        /// Tests the behavior when an invalid path of DLL is provided.
+        /// </summary>
         [TestMethod()]
         public void InvalidPathOfDLL()
         {
@@ -208,6 +232,9 @@ namespace Analyzer.Tests
 
         }
 
+        /// <summary>
+        /// Tests the Analyzer's behavior when only a few teacher options are enabled.
+        /// </summary>
         [TestMethod()]
         public void OnlyFewTeacherOptions()
         {
@@ -277,7 +304,9 @@ namespace Analyzer.Tests
             }
         }
 
-
+        /// <summary>
+        /// Tests the Analyzer's behavior when multiple DLL files are provided.
+        /// </summary>
         [TestMethod]
         public void MultipleDllFiles()
         {

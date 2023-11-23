@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 * Filename    = InvokeCustomAnalyzer.cs
 * 
-* Author      = 
+* Author      = Yukta Salunkhe, Mangesh Dalvi
 * 
 * Project     = Analyzer
 *
@@ -9,13 +9,8 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.DynamicAnalyzer
 {
@@ -80,14 +75,6 @@ namespace Analyzer.DynamicAnalyzer
                 object? currentAnalyzerResult = method.Invoke(teacher, null);
 
                 Trace.WriteLine("Analysis completed for all student dlls");
-                //res -> Dictionary<string, AnalyzerResult>
-                //foreach (var item in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
-                //{
-                //    Console.WriteLine(item.Key);
-                //    Console.WriteLine(item.Value.AnalyserID);
-                //    Console.WriteLine(item.Value.ErrorMessage);
-                //    Console.WriteLine(item.Value.Verdict);
-                //}
 
                 foreach (KeyValuePair<string, AnalyzerResult> dllResult in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
                 {

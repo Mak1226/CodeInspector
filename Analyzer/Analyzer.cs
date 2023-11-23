@@ -10,6 +10,14 @@
 * Project     = Analyzer
 *
 * Description = Represents the main Analyzer class responsible for orchestrating the analysis process.
+* 
+* Features:
+* - Configures the Analyzer with teacher options.
+* - Loads DLL files provided by the student for analysis.
+* - Loads DLL files of custom analyzers for additional analysis.
+* - Runs the main analysis pipeline of 19 Analyzers and returns the results.
+* - Generates a relationship graph based on the analysis results with support of removable namespaces.
+* - Runs multiple custom analyzers specified by the teacher on students dll files.
 ******************************************************************************/
 
 using Analyzer.DynamicAnalyzer;
