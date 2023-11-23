@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = ArrayFieldsShouldNotBeReadOnly.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer to identify readonly array fields 
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System;

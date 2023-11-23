@@ -1,4 +1,15 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AvoidSwitchStatements.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer to detect the presence of switch statements 
+*****************************************************************************/
+
+
+using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System;
