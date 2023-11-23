@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Models/Data.cs
  *
- * Author      = Shubhang kedia
+ * Author      = Shubhang Kedia
  *
  * Product     = Analyzer
  * 

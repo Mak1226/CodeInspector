@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
- * Filename    = Utils/ID.cs
+ * Filename    = Utils/Id.cs
  *
- * Author      = VM Sreeram
+ * Author      = Shubhang Kedia
  *
  * Product     = Analyzer
  * 
@@ -15,13 +15,13 @@ namespace Networking.Utils
     /// <summary>
     /// Defines static methods to retrieve predefined string IDs for various purposes.
     /// </summary>
-    public class ID
+    public class Id
     {
         /// <summary>
         /// Gets the ID string for the server.
         /// </summary>
         /// <returns>The server ID string.</returns>
-        public static string GetServerID()
+        public static string GetServerId()
         {
             return "server";
         }
@@ -30,7 +30,7 @@ namespace Networking.Utils
         /// Gets the ID string for broadcast communication.
         /// </summary>
         /// <returns>The broadcast ID string.</returns>
-        public static string GetBroadcastID()
+        public static string GetBroadcastId()
         {
             return "broadcast";
         }
@@ -39,7 +39,7 @@ namespace Networking.Utils
         /// Gets the ID string for the Networking module.
         /// </summary>
         /// <returns>The Networking module ID string.</returns>
-        public static string GetNetworkingID()
+        public static string GetNetworkingId()
         {
             return "networking";
         }
@@ -48,7 +48,7 @@ namespace Networking.Utils
         /// Gets the ID string for broadcast communication within the Networking module.
         /// </summary>
         /// <returns>The Networking broadcast ID string.</returns>
-        public static string GetNetworkingBroadcastID()
+        public static string GetNetworkingBroadcastId()
         {
             return "networkingBroadcast";
         }

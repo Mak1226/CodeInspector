@@ -12,6 +12,7 @@
  *****************************************************************************/
 
 using System.Net.Sockets;
+using System.Diagnostics;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
@@ -41,12 +42,12 @@ namespace Networking.Utils
         /// <summary>
         /// Dictionary mapping client Ids to network streams.
         /// </summary>
-        private readonly Dictionary<string, NetworkStream> _clientIDToStream;
+        private readonly Dictionary<string, NetworkStream> _clientIdToStream;
 
         /// <summary>
         /// Dictionary mapping Id of the communicator to client Id.
         /// </summary>
-        readonly Dictionary<string, string> _senderIDToClientID;
+        readonly Dictionary<string, string> _senderIdToClientId;
 
         /// <summary>
         /// Flag to signal the <see cref="_sendThread"/> to stop.
@@ -56,16 +57,16 @@ namespace Networking.Utils
         /// <summary>
         /// Constructor for the sender. Spawns thread that polls from <see cref="_sendQueue"/> and sends it
         /// </summary>
-        /// <param name="clientIDToStream">The mapping of Client Id (internal) to Networksteam of the client</param>
-        /// <param name="senderIDToClientID">The mapping of the Id of the communicator to the Client Id (internal)</param>
+        /// <param name="clientIdToStream">The mapping of Client Id (internal) to Networksteam of the client</param>
+        /// <param name="senderIdToClientId">The mapping of the Id of the communicator to the Client Id (internal)</param>
         /// <param name="isClient">Whether the communicator is Client</param>
-        public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
+        public Sender(Dictionary<string, NetworkStream> clientIdToStream, Dictionary<string, string> senderIdToClientId, bool isClient)
         {
             _stopThread = false;
-            _senderIDToClientID=senderIDToClientID;
+            _senderIdToClientId=senderIdToClientId;
             _isClient = isClient;
-            Console.WriteLine("[Sender] Init");
-            _clientIDToStream = clientIDToStream;
+            Trace.WriteLine("[Sender] Init");
+            _clientIdToStream = clientIdToStream;
             _sendThread = new Thread(SendLoop)
             {
                 IsBackground = true                 // if all foreground threads have terminated, then all the background threads are automatically stopped when the application quits
@@ -79,7 +80,7 @@ namespace Networking.Utils
         public void Stop()
         {
 
-            Console.WriteLine("[Sender] Stop");
+            Trace.WriteLine("[Sender] Stop");
             _stopThread = true;
             _sendThread.Join();
         }
@@ -107,7 +108,7 @@ namespace Networking.Utils
             }
             else
             {
-                return message.ModuleName == ID.GetNetworkingID() || message.ModuleName == ID.GetNetworkingBroadcastID();
+                return message.ModuleName == Id.GetNetworkingId() || message.ModuleName == Id.GetNetworkingBroadcastId();
             }
         }
 
@@ -151,27 +152,27 @@ namespace Networking.Utils
                 {
                     if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                     {
-                        SendToDest( _clientIDToStream[ID.GetServerID()] , messagebytes , messageSize );
+                        SendToDest( _clientIdToStream[Id.GetServerId()] , messagebytes , messageSize );
                     }
                     else
                     {
-                        if (message.DestID == ID.GetBroadcastID())      // Broadcast the message to all clients
+                        if (message.DestId == Id.GetBroadcastId())      // Broadcast the message to all clients
                         {
-                            foreach (KeyValuePair<string, NetworkStream> pair in _clientIDToStream)
+                            foreach (KeyValuePair<string, NetworkStream> pair in _clientIdToStream)
                             {
                                 SendToDest( pair.Value , messagebytes , messageSize );
                             }
                         }
                         else                                            // Send the message to the appropriate recipient
                         {
-                            SendToDest( _clientIDToStream[_senderIDToClientID[message.DestID]] , messagebytes , messageSize );
+                            SendToDest( _clientIdToStream[_senderIdToClientId[message.DestId]] , messagebytes , messageSize );
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Cannot send message to "+ message.DestID);
-                    Console.WriteLine(e.Message);    
+                    Trace.WriteLine("Cannot send message to "+ message.DestId);
+                    Trace.WriteLine(e.Message);    
                 }
             }
         }

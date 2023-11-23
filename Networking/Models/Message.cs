@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Models/Message.cs
  *
- * Author      = Shubhang Kedia
+ * Author      = VM Sreeram
  *
  * Product     = Analyzer
  * 
@@ -30,12 +30,12 @@ namespace Networking.Models
         /// <summary>
         /// Gets or sets the destination ID of the message.
         /// </summary>
-        public string DestID { get; set; }
+        public string DestId { get; set; }
 
         /// <summary>
         /// Gets or sets the sender ID of the message.
         /// </summary>
-        public string SenderID { get; set; }
+        public string SenderId { get; set; }
 
         /// <summary>
         /// Default constructor for the Message class.
@@ -44,8 +44,8 @@ namespace Networking.Models
         public Message()
         {
             Data = "";
-            DestID = "";
-            SenderID = "";
+            DestId = "";
+            SenderId = "";
             ModuleName = "";
         }
 
@@ -55,14 +55,14 @@ namespace Networking.Models
         /// </summary>
         /// <param name="Data">The data content of the message.</param>
         /// <param name="ModuleName">The destination module name associated with the message.</param>
-        /// <param name="destID">The destination ID of the message.</param>
-        /// <param name="senderID">The sender ID of the message.</param>
-        public Message( string Data , string ModuleName , string destID , string senderID )
+        /// <param name="destId">The destination ID of the message.</param>
+        /// <param name="senderId">The sender ID of the message.</param>
+        public Message( string Data , string ModuleName , string destId , string senderId )
         {
             this.ModuleName = ModuleName;
             this.Data = Data;
-            DestID = destID;
-            SenderID = senderID;
+            DestId = destId;
+            SenderId = senderId;
         }
     }
 }

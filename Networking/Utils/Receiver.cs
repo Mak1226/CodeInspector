@@ -12,6 +12,7 @@
  *****************************************************************************/
 
 using System.Net.Sockets;
+using System.Diagnostics;
 using System.Text;
 using Networking.Communicator;
 using Networking.Models;
@@ -43,7 +44,7 @@ namespace Networking.Utils
         /// <summary>
         /// Dictionary mapping client IDs to network streams
         /// </summary>
-        private readonly Dictionary<string , NetworkStream> _clientIDToStream;
+        private readonly Dictionary<string , NetworkStream> _clientIdToStream;
 
         /// <summary>
         /// Flag to signal the threads to stop
@@ -58,12 +59,12 @@ namespace Networking.Utils
         /// <summary>
         /// Initializes a new instance of the Receiver class.
         /// </summary>
-        /// <param name="clientIDToStream">Dictionary mapping client IDs to network streams.</param>
+        /// <param name="clientIdToStream">Dictionary mapping client IDs to network streams.</param>
         /// <param name="comm">Communicator interface for handling received messages.</param>
-        public Receiver( Dictionary<string , NetworkStream> clientIDToStream , ICommunicator comm )
+        public Receiver( Dictionary<string , NetworkStream> clientIdToStream , ICommunicator comm )
         {
-            Console.WriteLine( "[Receiver] Init" );
-            _clientIDToStream = clientIDToStream;
+            Trace.WriteLine( "[Receiver] Init" );
+            _clientIdToStream = clientIdToStream;
             _recvThread = new Thread( Receive )
             {
                 IsBackground = true
@@ -82,7 +83,7 @@ namespace Networking.Utils
         /// </summary>
         public void Stop()
         {
-            Console.WriteLine( "[Receiver] Stop" );
+            Trace.WriteLine( "[Receiver] Stop" );
             _stopThread = true;
 
             // Wait for the threads to terminate
@@ -95,7 +96,7 @@ namespace Networking.Utils
         /// </summary>
         private void Receive()
         {
-            Console.WriteLine( "[Receiver] Receive starts" );
+            Trace.WriteLine( "[Receiver] Receive starts" );
 
             // Continue receiving messages until the thread is signaled to stop
             while (!_stopThread)
@@ -103,7 +104,7 @@ namespace Networking.Utils
                 bool ifAval = false;
 
                 // Iterate over each client's network stream
-                foreach (KeyValuePair<string , NetworkStream> item in _clientIDToStream)
+                foreach (KeyValuePair<string , NetworkStream> item in _clientIdToStream)
                 {
                     try
                     {
@@ -135,7 +136,7 @@ namespace Networking.Utils
                             Message message = Serializer.Deserialize<Message>( receivedMessage );
 
                             // If the message belongs to the Networking module, attach the client ID to the payload and update the message data
-                            if (message.ModuleName == ID.GetNetworkingID())
+                            if (message.ModuleName == Id.GetNetworkingId())
                             {
                                 Data data = Serializer.Deserialize<Data>( message.Data );
 
@@ -152,7 +153,7 @@ namespace Networking.Utils
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine( "Exception in receiver: " + ex.Message );
+                        Trace.WriteLine( "Exception in receiver: " + ex.Message );
                     }
                 }
 
@@ -163,7 +164,7 @@ namespace Networking.Utils
                 }
             }
 
-            Console.WriteLine( "[Receiver] Receive stops" );
+            Trace.WriteLine( "[Receiver] Receive stops" );
         }
 
 

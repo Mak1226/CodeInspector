@@ -29,7 +29,7 @@ namespace ContentPage
         private void ClientPageButtonClick(object sender, RoutedEventArgs e)
         {
             ICommunicator server = CommunicationFactory.GetServer();
-            server.Start(null, null, ID.GetServerID(), "Content");
+            server.Start(null, null, Id.GetServerId(), "Content");
             ServerPage serverPage = new ServerPage(server);
             MainFrame.Navigate(serverPage);
 

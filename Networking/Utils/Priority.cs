@@ -27,11 +27,11 @@ namespace Networking.Utils
             int priority = 10;  // Default priority level
 
             // Assign priority based on the module name
-            if (moduleName == ID.GetNetworkingBroadcastID())
+            if (moduleName == Id.GetNetworkingBroadcastId())
             {
                 priority = 0;
             }
-            else if (moduleName == ID.GetNetworkingID())
+            else if (moduleName == Id.GetNetworkingId())
             {
                 priority = 1;
             }
