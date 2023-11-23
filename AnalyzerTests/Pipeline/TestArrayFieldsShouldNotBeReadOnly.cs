@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = TestArrayFieldsShouldNotBeReadOnly.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Test class to verify the functionality of the ArrayFieldsShouldNotBeReadOnly
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -12,12 +22,13 @@ namespace AnalyzerTests.Pipeline
     [TestClass()]
     public class TestArrayFieldsShouldNotBeReadOnly
     {
+
         [TestMethod()]
         public void GoodTest()
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
-            string path = "..\\..\\..\\TestDLLs\\demo.dll";
+            string path = "..\\..\\..\\TestDLLs\\array1.dll";
             var parsedDllObj = new ParsedDLLFile(path);
 
             DllFileObjs.Add(parsedDllObj);
@@ -26,13 +37,49 @@ namespace AnalyzerTests.Pipeline
 
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["demo.dll"];
-            Assert.AreEqual(0, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["array1.dll"];
+            Assert.AreNotEqual(0, result.Verdict);
+        }
+
+        [TestMethod()]
+        public void GoodTest1()
+        {
+            List<ParsedDLLFile> DllFileObjs = new();
+
+            string path = "..\\..\\..\\TestDLLs\\Rules.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
+
+            DllFileObjs.Add(parsedDllObj);
+
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
+
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["Rules.dll"];
+            Assert.AreNotEqual(0, result.Verdict);
         }
 
 
         [TestMethod()]
         public void BadTest()
+        {
+            List<ParsedDLLFile> DllFileObjs = new();
+
+            string path = "..\\..\\..\\TestDLLs\\Array.dll";
+            var parsedDllObj = new ParsedDLLFile(path);
+
+            DllFileObjs.Add(parsedDllObj);
+
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
+
+            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["Array.dll"];
+            Assert.AreEqual(1, result.Verdict);
+        }
+
+        [TestMethod()]
+        public void BadTest1()
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
