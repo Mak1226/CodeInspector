@@ -129,10 +129,7 @@ namespace Content.ViewModel
         }
 
 
-        public string UploadedFiles
-        {
-            get { return string.Join(",", _uploadedFiles);  }
-        }
+        public string UploadedFiles => string.Join( "," , _uploadedFiles );
 
         private void OnPropertyChanged(string propertyName)
         {

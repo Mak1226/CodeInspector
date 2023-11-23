@@ -87,8 +87,10 @@ namespace ContentUnitTesting.ContentTest
         [TestMethod]
         public void NotFileReceiveTest()
         {
-            Dictionary<string, string> fileInfo = new Dictionary<string, string>();
-            fileInfo["EventType"] = "NotFile";
+            Dictionary<string , string> fileInfo = new()
+            {
+                ["EventType"] = "NotFile"
+            };
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
@@ -150,7 +152,7 @@ namespace ContentUnitTesting.ContentTest
         public void HandleReceive_InvalidJson_ReturnsNull()
         {
             // Arrange
-            FileHandler fileHandler = new FileHandler();
+            FileHandler fileHandler = new();
             string invalidJson = "invalid json data";
 
             // Act
@@ -164,12 +166,12 @@ namespace ContentUnitTesting.ContentTest
         public void HandleReceive_WrongEventType_ReturnsNull()
         {
             // Arrange
-            FileHandler fileHandler = new FileHandler();
-            Dictionary<string, string> invalidData = new Dictionary<string, string>
-        {
-            { "EventType", "WrongEventType" },
-            { "Data", "some data" }
-        };
+            FileHandler fileHandler = new();
+            Dictionary<string, string> invalidData = new()
+            {
+                { "EventType", "WrongEventType" },
+                { "Data", "some data" }
+            };
             string encoding = JsonSerializer.Serialize(invalidData);
 
             // Act

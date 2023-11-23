@@ -56,9 +56,11 @@ namespace ContentPage
 
         private void AnalyzerUploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true; // Allow multiple file selection
-            openFileDialog.Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*"; // Filter for DLL files
+            OpenFileDialog openFileDialog = new()
+            {
+                Multiselect = true , // Allow multiple file selection
+                Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*" // Filter for DLL files
+            };
 
             // Show the dialog and get the result
             DialogResult result = openFileDialog.ShowDialog();
@@ -66,7 +68,7 @@ namespace ContentPage
             // Process the selected files
             if (result == DialogResult.OK)
             {
-                List<string> filePaths = new List<string>(openFileDialog.FileNames);
+                List<string> filePaths = new (openFileDialog.FileNames);
                 _viewModel.LoadCustomDLLs(filePaths);
 
             }

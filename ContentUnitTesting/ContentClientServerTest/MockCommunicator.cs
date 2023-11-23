@@ -5,16 +5,16 @@ namespace ContentUnitTesting.ContentClientServerTest
 {
     internal class MockCommunicator : ICommunicator
     {
-        private string? encoding;
+        private string? _encoding;
 
         public void Send(string serializedData, string moduleName, string destId)
         {
-            this.encoding = serializedData;
+            _encoding = serializedData;
         }
 
         public string GetEncoding()
         {
-            return encoding;
+            return _encoding;
         }
         public void Send(string serializedData, string destId)
         {

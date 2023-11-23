@@ -133,7 +133,7 @@ namespace Content.Model
 
         public void SendToCloud()
         {
-            CloudHandler cloudHandler = new CloudHandler();
+            CloudHandler cloudHandler = new();
             Task.Run(() 
                 => cloudHandler.PostSessionAsync(_hostSessionID, _configuration, _sessionAnalysisResultDict.Keys.ToList()));
             Task.Run(()

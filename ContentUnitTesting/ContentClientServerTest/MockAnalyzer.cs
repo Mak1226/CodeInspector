@@ -4,21 +4,21 @@ namespace ContentUnitTesting.ContentClientServerTest
 {
     internal class MockAnalyzer : IAnalyzer
     {
-        private IDictionary<int, bool> teacherOptions;
-        private List<string> dllFilePath;
+        private IDictionary<int, bool> _teacherOptions;
+        private List<string> _dllFilePath;
         public MockAnalyzer()
         {
-            teacherOptions = new Dictionary<int, bool>();
-            dllFilePath = new List<string>();
+            _teacherOptions = new Dictionary<int, bool>();
+            _dllFilePath = new List<string>();
         }
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
-            teacherOptions = TeacherOptions;
+            _teacherOptions = TeacherOptions;
         }
 
         public IDictionary<int, bool> GetTeacherOptions()
         {
-            return teacherOptions;
+            return _teacherOptions;
         }
 
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
@@ -28,12 +28,12 @@ namespace ContentUnitTesting.ContentClientServerTest
 
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
-            dllFilePath = PathOfDLLFilesOfStudent;
+            _dllFilePath = PathOfDLLFilesOfStudent;
         }
 
         public List<string> GetDllFilePath()
         {
-            return dllFilePath;
+            return _dllFilePath;
         }
 
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)

@@ -18,14 +18,14 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void EmptyReceiveTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.HandleRecieve("","testSessionID");
             Assert.IsTrue(contentServer.analyzerResult.Count() == 0);
         }
         [TestMethod]
         public void DLLReceiveTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.SetSessionID("testSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -36,7 +36,7 @@ namespace ContentUnitTesting.ContentClientServerTest
 
             contentServer.HandleRecieve(encoding, "testClientID");
             List<string> filePaths = _analyzer.GetDllFilePath();
-            List<string> expectedFilePaths = new List<string> { "testSessionID\\" + "TestDll1.dll", "testSessionID\\" + "TestDll2.dll" };
+            List<string> expectedFilePaths = new() { "testSessionID\\" + "TestDll1.dll", "testSessionID\\" + "TestDll2.dll" };
             Assert.AreEqual(filePaths[0], expectedFilePaths[0]);
             Assert.AreEqual(filePaths[1], expectedFilePaths[1]);
             Directory.Delete(tempDirectory, true);
@@ -48,7 +48,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void SessionIDMismatchTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.SetSessionID("testSessionID1");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -68,7 +68,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void SessionIDMatchTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.SetSessionID("testSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -86,7 +86,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void ConfigureTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             IDictionary<int, bool> configuration = new Dictionary<int, bool>
             {
                 { 1, true },
@@ -99,7 +99,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void NullSessionIDTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.SetSessionID(null);
             Assert.IsTrue(contentServer.analyzerResult.Count() == 0);
         }
@@ -107,7 +107,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void PreviousSessionIDTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
+            ContentServer contentServer = new (_communicator, _analyzer, "TestServer");
             contentServer.SetSessionID("TestSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -126,8 +126,10 @@ namespace ContentUnitTesting.ContentClientServerTest
         [TestMethod]
         public void AnalyzerResultChangeEventTest()
         {
-            ContentServer contentServer = new ContentServer(_communicator, _analyzer);
-            contentServer.AnalyzerResultChanged = null;
+            ContentServer contentServer = new( _communicator , _analyzer , "TestServer" )
+            {
+                AnalyzerResultChanged = null
+            };
             contentServer.SetSessionID("testSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
