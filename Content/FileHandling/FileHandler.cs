@@ -55,12 +55,18 @@ namespace Content.FileHandling
             string encoding;
             if (Directory.Exists(filepath))
             {
-                dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
-                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
-                _filesList = dllFiles.ToList();
+                try
+                {
+                    dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
+                    encoding = _fileEncoder.GetEncoded(dllFiles, filepath, sessionID);
+                }
+                catch
+                {
+                    encoding = "";
+                }
             }
             // Check if the path is a file
-            else if (File.Exists(filepath))
+            else if (File.Exists(filepath) && string.Equals(Path.GetExtension(filepath), ".dll", StringComparison.OrdinalIgnoreCase))
             {
                 dllFiles = new List<string> { filepath };
                 encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
@@ -68,8 +74,7 @@ namespace Content.FileHandling
             }
             else
             {
-                Trace.WriteLine("Not a valid dll or directory with dll");
-                encoding = "";
+                return "";
             }
 
             Trace.Write(encoding);
@@ -94,6 +99,7 @@ namespace Content.FileHandling
         public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
+            _filesList = new List<String>();
             try
             {
                 recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
