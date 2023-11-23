@@ -18,8 +18,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Dashboard;
-using Dashboard.Authentication;
 using System.ComponentModel;
 
 namespace Dashboard

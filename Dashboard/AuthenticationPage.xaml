@@ -6,10 +6,9 @@
       xmlns:local="clr-namespace:Dashboard"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Page1"
-      Background="#9EDDFF" 
-      Height="500" 
-      Width="800">
+       Background="#9EDDFF" 
+ Height="500" 
+     Width="800">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,10 +22,10 @@
 
         <Border Background="#FFFFFF" Grid.Column="1" CornerRadius="0 10 10 0" >
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Analyzer" Foreground="#0C356A" HorizontalAlignment="Center" FontFamily="Segoe Script" />
+                <TextBlock Text="Analyzer" Foreground="#0C356A" Style="{StaticResource TitleText}" FontFamily="Segoe Script" />
 
 
-                <TextBlock Text="Welcome to Analyzer" HorizontalAlignment="Center" Foreground="#0C356A" Style="{StaticResource NormalText}" />
+                <TextBlock Text="Welcome to Analyzer" Foreground="#0C356A" Style="{StaticResource NormalText}" />
 
 
                 <Grid>
@@ -48,6 +47,9 @@
 
             </StackPanel>
         </Border>
+
+
+
 
     </Grid>
 </Page>
