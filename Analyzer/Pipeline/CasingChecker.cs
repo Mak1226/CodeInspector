@@ -78,7 +78,7 @@ namespace Analyzer.Pipeline
             //Checking Class names for Pascal Casing
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                if(cls.Name[0] != '.')
+                if((cls.Name[0] >= 'a' && cls.Name[0] <= 'z') || (cls.Name[0] >= 'A' && cls.Name[0] <= 'Z'))
                 {
                     if(!IsPascalCase(cls.Name))
                     {
