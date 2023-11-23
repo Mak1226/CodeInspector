@@ -1,7 +1,18 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = ParsedClassMonoCecil.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description = Parses most used information from Class Object using Mono.Cecil
+*****************************************************************************/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
@@ -40,8 +51,9 @@ namespace Analyzer.Parsing
         public HashSet<string> UsingList { get; }
         public HashSet<string> InheritanceList { get; }
 
-        public ParsedClassMonoCecil( TypeDefinition type )
+        public ParsedClassMonoCecil(TypeDefinition type)
         {
+            Trace.WriteLine("Creating ParsedMonoCecil Obj for " + type.FullName);
             TypeObj = type;
             Name = type.Name;
 
@@ -56,17 +68,16 @@ namespace Analyzer.Parsing
             {
                 if (method.IsConstructor)
                 {
-                    Constructors.Add( method );
+                    Constructors.Add(method);
                 }
                 else
                 {
-                    MethodsList.Add( method );
+                    MethodsList.Add(method);
                 }
             }
 
-
             // Finding parent class declared in the project - does not contain classes starting with System/Microsoft
-            if (type.BaseType?.Namespace != null)
+            if (type.BaseType?.Namespace != null || type.BaseType?.Namespace == "")
             {
                 if (!(type.BaseType.Namespace.StartsWith( "System" ) || type.BaseType.Namespace.StartsWith( "Microsoft" )))
                 {
@@ -77,7 +88,6 @@ namespace Analyzer.Parsing
             {
                 ParentClass = TypeObj.BaseType?.Resolve();
             }
-
 
             // Finding interfaces which are only implemented by the class and declared specifically in the class
             if (type.HasInterfaces)
@@ -116,6 +126,32 @@ namespace Analyzer.Parsing
             FieldsList = TypeObj.Fields.ToList();
             PropertiesList = TypeObj.Properties.ToList();
 
+            //// Properties can come into fields and methods. Currently here trying to remove those fields from fields list (Auto properties)
+            //if (PropertiesList.Count > 0)
+            //{
+            //    List<FieldDefinition> fieldsToRemove = new();
+
+            //    List<string> propertiesNames = new();
+
+            //    foreach (PropertyDefinition property in PropertiesList)
+            //    {
+            //        propertiesNames.Add(property.Name);
+            //    }
+
+            //    foreach (FieldDefinition field in FieldsList)
+            //    {
+            //        if ((field.Name.StartsWith("<")) && (field.Name.EndsWith(">k__BackingField")) && (propertiesNames.Contains(field.Name.Substring(1, field.Name.Length - 17)))){
+            //            fieldsToRemove.Add(field);
+            //        }
+            //    }
+
+            //    foreach(FieldDefinition field in fieldsToRemove)
+            //    {
+            //       FieldsList.Remove(field);
+            //    }
+            //}
+
+            Trace.WriteLine("Extracting Relationships List for " + type.FullName);
             //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
             if (!TypeObj.GetType().IsGenericType)
             {
@@ -128,6 +164,8 @@ namespace Analyzer.Parsing
                 UpdateAggregationList();
                 UpdateUsingList();
             }
+            Trace.WriteLine("Updated the Relationships List for " + type.FullName);
+            Trace.WriteLine("ParsedMonoCecil Obj creation Completed for " + type.FullName);
         }
 
         private bool SetsContainElement<T>( T element , params HashSet<T>[] sets )
@@ -138,6 +176,7 @@ namespace Analyzer.Parsing
         //UpdateInhetanceList updates the Inheritance List
         private void UpdateInheritanceList()
         {
+            Trace.WriteLine("Updating Inheritance List");
             //Adding the parent class (if exist) in the inheritance list
             if (ParentClass != null)
             {
@@ -161,6 +200,8 @@ namespace Analyzer.Parsing
         //their method of instantiation specifically related to the constructor
         private void UpdateRelationshipsListFromCtors()
         {
+            Trace.WriteLine("Checking object Relationships in constructor");
+
             //Composition Relation:
             //Cases1: If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
             //CAse2: If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
@@ -252,6 +293,7 @@ namespace Analyzer.Parsing
         //UpdateAggreagationList is used to extract out the aggregation relationship existing between the current class and other classes
         private void UpdateAggregationList()
         {
+            Trace.WriteLine("Updating Aggregation List");
             // Aggregation List:
             // Cases1: If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
             // Cases2: If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
@@ -281,6 +323,7 @@ namespace Analyzer.Parsing
         //UpdateUsingList is used to extract out the using relationship existing between the current class and other classes
         private void UpdateUsingList()
         {
+            Trace.WriteLine("Updating Using List");
             // Using Class Relationship 
             // Cases2: If any method (other than constructors) contain other class as parameter
 

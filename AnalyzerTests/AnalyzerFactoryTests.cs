@@ -34,7 +34,7 @@ namespace Analyzer.Tests
             };
 
             // Act
-            var actualOptions = AnalyzerFactory.GetAllConfigurationOptions();
+            List<Tuple<int , string>> actualOptions = AnalyzerFactory.GetAllConfigurationOptions();
 
             // Assert
             CollectionAssert.AreEqual(expectedOptions, actualOptions);
@@ -47,7 +47,7 @@ namespace Analyzer.Tests
             // You may need to use a mocking framework to mock IAnalyzer if it has complex behavior.
 
             // Act
-            var analyzer = AnalyzerFactory.GetAnalyzer();
+            IAnalyzer analyzer = AnalyzerFactory.GetAnalyzer();
 
             // Assert
             Assert.IsNotNull(analyzer);
