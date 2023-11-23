@@ -9,6 +9,8 @@
  *
  * Description  = MockAnalyzer for Unit Testing
 *****************************************************************************/
+using System.Drawing;
+using System.Drawing.Imaging;
 using Analyzer;
 
 namespace ContentUnitTesting.ContentClientServerTest
@@ -24,10 +26,12 @@ namespace ContentUnitTesting.ContentClientServerTest
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _dllFilePath;
         private List<string> _dllFilePathCustom;
+        bool _isGraph;
         public MockAnalyzer()
         {
             _teacherOptions = new Dictionary<int, bool>();
             _dllFilePath = new List<string>();
+            _isGraph = false;
         }
         /// <summary>
         /// Configures the mock analyzer with the specified teacher options.
@@ -46,12 +50,35 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             return _teacherOptions;
         }
+        public void SetRelationshipGraph(bool val)
+        {
+            if(val == true)
+            {
+                _isGraph = true;
+            }
+        }
         /// <summary>
         /// Placeholder implementation that throws a NotImplementedException.
         /// </summary>
-        public byte[] GetRelationshipGraph(List<string> removableNamespaces)
+        public byte[] GetRelationshipGraph( List<string> removableNamespaces )
         {
-            return Array.Empty<byte>();
+            if (_isGraph == false)
+            {
+                return Array.Empty<byte>();
+            }
+            else
+            {
+                string testDirectory = Directory.GetParent( Environment.CurrentDirectory ).Parent.Parent.FullName;
+                string imagePath = Path.Combine( testDirectory , "TestImage\\test_image.jpg" );
+                Image image = Image.FromFile( imagePath );
+                // Create a MemoryStream
+                MemoryStream ms = new();
+                // Save the image to the MemoryStream with the desired format (e.g., JPEG)
+                image.Save( ms , ImageFormat.Jpeg );
+                // Convert the MemoryStream to byte[]
+                byte[] byteStream = ms.ToArray(); ;
+                return byteStream;
+            }
         }
 
         /// <summary>

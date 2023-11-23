@@ -1,5 +1,14 @@
-﻿
-using System.Reflection;
+﻿/******************************************************************************
+ * Filename     = ServerViewModelTest.cs
+ * 
+ * Author       = Susan
+ *
+ * Product      = Analyzer
+ * 
+ * Project      = ContentUnitTesting
+ *
+ * Description  = Unit tests for ServerViewModel
+*****************************************************************************/
 using Content.Model;
 using Content.ViewModel;
 using ContentUnitTesting.ContentClientServerTest;
@@ -11,6 +20,9 @@ namespace ContentUnitTesting.ContentViewModelTest
     [TestClass]
     public class ServerViewModelTest
     {
+        /// <summary>
+        /// Test case to assert that the ContentServerViewModel constructor initializes correctly.
+        /// </summary>
         [TestMethod]
         public void ContentServerViewModel_Constructor_Initialization()
         {
@@ -27,6 +39,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             // Add more assertions based on your constructor logic
         }
 
+        /// <summary>
+        /// Test case to ensure that the DataList property returns the correct data when AnalyzerResultChanged event is invoked.
+        /// </summary>
         [TestMethod]
         public void ContentServerViewModel_DataList_ReturnsCorrectData()
         {
@@ -74,6 +89,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.AreEqual( 2 , file2Data.Item2.Count );
         }
 
+        /// <summary>
+        /// Test case to verify that the DataList getter returns an empty list when AnalyzerResults is null.
+        /// </summary>
         [TestMethod]
         public void DataList_Getter_ReturnsEmptyListWhenAnalyzerResultsIsNull()
         {
@@ -92,6 +110,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.AreEqual( 0 , dataList.Count );
         }
 
+        /// <summary>
+        /// Test case to confirm that LoadCustomDLLs adds files to the UploadedFiles list.
+        /// </summary>
         [TestMethod]
         public void LoadCustomDLLs_AddsFilesToUploadedFilesList()
         {
@@ -116,6 +137,10 @@ namespace ContentUnitTesting.ContentViewModelTest
             Trace.WriteLine( uploadedFiles );
             Assert.AreEqual( "PersistentStorage.dll,Content.dll" , uploadedFiles );
         }
+
+        /// <summary>
+        /// Test case to ensure that the PropertyChanged event is raised when setting the SelectedItem property.
+        /// </summary>
         [TestMethod]
         public void SelectedItem_SetValue_PropertyChangedEventRaised()
         {
@@ -141,6 +166,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.IsTrue( eventRaised , "PropertyChanged event should be raised for SelectedItem." );
         }
 
+        /// <summary>
+        /// Test case to verify that the SelectedItem getter returns the default value when not set.
+        /// </summary>
         [TestMethod]
         public void SelectedItem_Getter_ReturnsDefaultValueWhenNotSet()
         {
@@ -157,6 +185,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.IsNull( selectedItem );
         }
 
+        /// <summary>
+        /// Test case to check if the PropertyChanged event is raised when setting the ConfigOptionsList property.
+        /// </summary>
         [TestMethod]
         public void ConfigOptionsList_SetValue_PropertyChangedEventRaised()
         { 
@@ -182,6 +213,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.IsTrue( eventRaised , "PropertyChanged event should be raised for ConfigOptionsList." );
         }
 
+        /// <summary>
+        /// Test case to ensure that ConfigureAnalyzer calls ContentServer.Configure with the correct parameters.
+        /// </summary>
         [TestMethod]
         public void ConfigureAnalyzer_CallsContentServerConfigure()
         {
@@ -202,6 +236,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.AreEqual(inputTeacherOptions, teacherOptions );
         }
 
+        /// <summary>
+        /// Test case to validate that the ConfigOptionsList getter returns the expected value.
+        /// </summary>
         [TestMethod]
         public void ConfigOptionsList_Getter_ReturnsExpectedValue()
         {
