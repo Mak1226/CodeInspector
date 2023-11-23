@@ -69,6 +69,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(0, result.Verdict);
         }
 
+        /// <summary>
+        /// Test method for a case in which all classes follow the rule 
+        /// </summary>
+        
         //CasingChecker1.cs
 
         //namespace GoodNamespace
