@@ -1,7 +1,14 @@
-// Created By - Monesh Vanga (112001047)
-/// <summary>
-/// An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
-/// </summary>
+/******************************************************************************
+* Filename    = CasingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
+*****************************************************************************/
 
 using System;
 using Analyzer.Parsing;

@@ -1,7 +1,15 @@
-// Created By - Monesh Vanga (112001047)
-/// <summary>
-/// An analyzer that checks the correctness of prefixes of interfaces and classes in parsed DLL files.
-/// </summary>
+/******************************************************************************
+* Filename    = PrefixChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = An analyzer that checks the correctness of prefixes of interfaces and classes in parsed DLL files.
+*****************************************************************************/
+
 using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
