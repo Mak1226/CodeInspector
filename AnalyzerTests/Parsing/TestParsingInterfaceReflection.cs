@@ -15,7 +15,6 @@ namespace AnalyzerTests.Parsing
         public readonly ParsedInterface IApp2_Demo = new(typeof(TestParsingInterface_DemoProject.IApp2));
 
 
-
         [TestMethod]
         public void CheckBasicFields()
         {

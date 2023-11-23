@@ -107,6 +107,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
             string encoding = fileHandler.HandleUpload(tempDirectory, "testSessionID");
             contentServer.SendToCloud();
+            _analyzer.SetRelationshipGraph( 1 );
             contentServer.HandleRecieve(encoding, "testClientID2");
             Assert.IsTrue(contentServer.analyzerResult.ContainsKey("File1"));
             Directory.Delete(tempDirectory, true);
@@ -202,6 +203,29 @@ namespace ContentUnitTesting.ContentClientServerTest
             contentServer.LoadCustomDLLs(new List<string>() { Path.Combine( tempDirectory , "TestDll1.dll" ) } );
             Assert.IsTrue( _analyzer.GetDLLOfCustomAnalyzers().SequenceEqual( new List<string>() { Path.Combine( tempDirectory , "TestDll1.dll" ) } ));
             // No assertions needed, we are testing that the event is not invoked when null
+            Directory.Delete( tempDirectory , true );
+        }
+        /// <summary>
+        /// Tests the behavior of handling DLL files received 
+        /// in the ContentServer class.
+        /// </summary>
+        [TestMethod]
+        public void DLLReceiveNonEmptyGraphTest()
+        {
+            ContentServer contentServer = new( _communicator , _analyzer , "TestServer" );
+            contentServer.SetSessionID( "testSessionID" );
+            IFileHandler fileHandler = new FileHandler();
+            string tempDirectory = Path.Combine( Path.GetTempPath() , Path.GetRandomFileName() );
+            Directory.CreateDirectory( tempDirectory );
+            File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
+            File.WriteAllText( Path.Combine( tempDirectory , "TestDll2.dll" ) , "DLL Content 2" );
+            string encoding = fileHandler.HandleUpload( tempDirectory , "testSessionID" );
+            _analyzer.SetRelationshipGraph( 2 );
+            contentServer.HandleRecieve( encoding , "testClientID" );
+            List<string> filePaths = _analyzer.GetDllFilePath();
+            List<string> expectedFilePaths = new() { "testSessionID\\" + "TestDll1.dll" , "testSessionID\\" + "TestDll2.dll" };
+            Assert.AreEqual( filePaths[0] , expectedFilePaths[0] );
+            Assert.AreEqual( filePaths[1] , expectedFilePaths[1] );
             Directory.Delete( tempDirectory , true );
         }
     }
