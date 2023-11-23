@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
+using System.Diagnostics;
+
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -38,7 +40,7 @@ namespace Analyzer.Pipeline.Tests
     public class TestUnused
     {
         [TestMethod()]
-        public void TestRemoveUnusedLocalVariables()
+        public void TestUnusedLocalVariables()
         {
             // Specify the path to the DLL file
             //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\TestUnused.dll";
@@ -60,9 +62,38 @@ namespace Analyzer.Pipeline.Tests
             {
                 AnalyzerResult res = dll.Value;
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
 
                 Assert.AreEqual( 0 , res.Verdict , "There are no unused local variables!" );
+            }
+        }
+
+        [TestMethod()]
+        public void TestNoUnusedLocalVariables()
+        {
+            // Specify the path to the DLL file
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\TestUnused.dll";
+
+            //string path = Assembly.GetExecutingAssembly().Location;
+
+            // Create a list of DLL paths
+            ParsedDLLFile dllFile = new( path );
+
+            List<ParsedDLLFile> dllFiles = new() { dllFile };
+
+            // Create an instance of RemoveUnusedLocalVariablesRule
+            RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
+
+            // Run the analyzer
+            Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
+
+            foreach (KeyValuePair<string , AnalyzerResult> dll in result)
+            {
+                AnalyzerResult res = dll.Value;
+
+                Trace.WriteLine( res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage );
+
+                Assert.AreEqual( 1 , res.Verdict , "There are no unused local variables!" );
             }
         }
     }
