@@ -18,10 +18,10 @@ namespace ContentPage
         /// Refer <see cref="SetSessionID"/> on how to change result to each client's
         /// </summary>
         /// <param name="server">Running networking server</param>
-        public ServerPage(ICommunicator server)
+        public ServerPage(ICommunicator server, string sessionID)
         {
             InitializeComponent();
-            _viewModel = new ContentServerViewModel(server);
+            _viewModel = new ContentServerViewModel(server, sessionID);
             DataContext = _viewModel;
 
             LoadResultPage(); // Load ResultPage initially

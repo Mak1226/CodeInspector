@@ -35,10 +35,10 @@ namespace Content.Model
         /// </summary>
         /// <param name="_server">Networking server</param>
         /// <param name="_analyzer">Analyzer</param>
-        public ContentServer(ICommunicator _server, IAnalyzer _analyzer)
+        public ContentServer(ICommunicator _server, IAnalyzer _analyzer, string sessionID)
         {
             this._server = _server;
-            _hostSessionID = "";
+            _hostSessionID = sessionID;
             ServerRecieveHandler recieveHandler = new (this);
             this._server.Subscribe( recieveHandler , "Content-Files");
 
