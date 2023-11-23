@@ -1,4 +1,5 @@
 ﻿using Content.ViewModel;
+using Content.Model;
 using Networking.Communicator;
 using System.Windows.Controls;
 
@@ -20,7 +21,7 @@ namespace ContentPage
         public ClientPage(ICommunicator client, string sessionID)
         {
             InitializeComponent();
-            _viewModel = new ContentClientViewModel(client, sessionID);
+            _viewModel = new ContentClientViewModel(new ContentClient(client, sessionID));
             DataContext = _viewModel;
 
             UploadFrame.Navigate(new FileUpload(_viewModel));

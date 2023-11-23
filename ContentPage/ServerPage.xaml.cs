@@ -3,6 +3,8 @@ using Content.ViewModel;
 using Networking.Communicator;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Analyzer;
+using Content.Model;
 
 namespace ContentPage
 {
@@ -21,7 +23,9 @@ namespace ContentPage
         public ServerPage(ICommunicator server, string sessionID)
         {
             InitializeComponent();
-            _viewModel = new ContentServerViewModel(server, sessionID);
+            _viewModel = new ContentServerViewModel(
+                new ContentServer( server, AnalyzerFactory.GetAnalyzer(), sessionID )
+                );
             DataContext = _viewModel;
 
             LoadResultPage(); // Load ResultPage initially
