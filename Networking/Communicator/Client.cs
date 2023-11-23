@@ -11,7 +11,6 @@
  *               is implemented here.
  *****************************************************************************/
 
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using Networking.Events;

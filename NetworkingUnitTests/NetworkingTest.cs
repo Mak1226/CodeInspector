@@ -1,4 +1,5 @@
-﻿using Networking.Communicator;
+﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
@@ -211,7 +212,7 @@ public class NetworkingTest
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
+        Networking.Models.Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
         client.Send(message.Data, "unitTestServer", message.DestID);
         //client.Send(message.Data, ID.GetNetworkingID(), ID.GetServerID());
         while (!messages.canDequeue())
@@ -223,7 +224,7 @@ public class NetworkingTest
                 Assert.Fail("Did not receive message");
             }
         }
-        Message receivedMessage = messages.Dequeue();
+        Networking.Models.Message receivedMessage = messages.Dequeue();
         client.Stop();
         server.Stop();
         Assert.IsTrue(CompareMessages(receivedMessage, message));
@@ -241,7 +242,7 @@ public class NetworkingTest
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
+        Networking.Models.Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
         client.Send(message.Data, message.ModuleName, message.DestID);
         while (!messages.canDequeue())
         {
@@ -274,7 +275,7 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
         //client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
-        Message message = new("testMessage", "unitTestClient", "testClient1", ID.GetServerID());
+        Networking.Models.Message message = new("testMessage", "unitTestClient", "testClient1", ID.GetServerID());
         server.Send(message.Data, message.ModuleName, message.DestID);
         while (!messages.canDequeue())
         {
@@ -308,7 +309,7 @@ public class NetworkingTest
         client.Start(ip, port, "testClient1", "unitTestClient");
         Thread.Sleep(4000);
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
-        Message message = new("testMessage", "unitTestClient", "testClient1", ID.GetServerID());
+        Networking.Models.Message message = new("testMessage", "unitTestClient", "testClient1", ID.GetServerID());
         server.Send(message.Data,message.DestID);
         while (!messages.canDequeue())
         {
@@ -319,7 +320,7 @@ public class NetworkingTest
                 Assert.Fail("Did not receive message");
             }
         }
-        Message receivedMessage = messages.Dequeue();
+        Networking.Models.Message receivedMessage = messages.Dequeue();
         client.Stop();
         server.Stop();
         Assert.IsTrue(CompareMessages(receivedMessage, message));
@@ -341,7 +342,7 @@ public class NetworkingTest
         //Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
         Data data = new(EventType.ServerLeft());
 
-        Message message = new(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID(), ID.GetServerID());
+        Networking.Models.Message message = new(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID(), ID.GetServerID());
         //client.Send(message.Data, "unitTestServer", message.DestID);
         server.Stop();
         client.Stop();
@@ -354,7 +355,7 @@ public class NetworkingTest
                 Assert.Fail("Did not receive message");
             }
         }
-        Message receivedMessage = messages.Dequeue();
+        Networking.Models.Message receivedMessage = messages.Dequeue();
         
         Assert.IsTrue(CompareMessages(receivedMessage, message));
     }
@@ -370,7 +371,7 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
         Data data=new("testMessage",EventType.ChatMessage());
-        Message message = new(Serializer.Serialize(data), "unitTestClient", "testClient1", "testClient1");
+        Networking.Models.Message message = new(Serializer.Serialize(data), "unitTestClient", "testClient1", "testClient1");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
         client.Send(message.Data, message.DestID);
         while (!messages.canDequeue())
@@ -382,7 +383,7 @@ public class NetworkingTest
                 Assert.Fail("Did not receive message");
             }
         }
-        Message receivedMessage = messages.Dequeue();
+        Networking.Models.Message receivedMessage = messages.Dequeue();
         client.Stop();
         server.Stop();
         Assert.IsTrue(CompareMessages(receivedMessage, message));
@@ -399,7 +400,7 @@ public class NetworkingTest
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Message message = new("testMessage", "unitTestClient", "testClient1", "testClient1");
+        Networking.Models.Message message = new("testMessage", "unitTestClient", "testClient1", "testClient1");
         //client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
         client.Send(message.Data, message.ModuleName, message.DestID);
         while (!messages.canDequeue())
@@ -429,20 +430,59 @@ public class NetworkingTest
         
     }
 
-    ////[TestMethod]
-    //public void ManyClientsToServer()
-    //{
-    //    int NUMCLIENTS = 3;
-    //    ICommunicator server = CommunicationFactory.GetServer();
-    //    string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
-    //    string ip = ipPort[0];
-    //    int port = int.Parse(ipPort[1]);
+    [TestMethod]
+    public void MultipleClientsSendingMessages()
+    {
+        const int numClients = 10;
+        Queue[] messages = new Queue[numClients];
+        Networking.Models.Message[] sentMessages = new Networking.Models.Message[numClients];
+        ICommunicator server = new Server();
+        ICommunicator[] clients = new ICommunicator[numClients];
 
-    //    Client[] clients = getClientsAndStart(NUMCLIENTS, ip, port, "unitTestClient");
-    //    // TODO
-    //}
+        string[] ipPort = server.Start( null , null , ID.GetServerID() , ID.GetNetworkingID() ).Split( ':' );
+        string ip = ipPort[0];
+        int port = int.Parse( ipPort[1] );
+        for (int i = 0; i < numClients; i++)
+        {
+            clients[i] = new Client();
+            clients[i].Start( ip , port , $"testClient{i + 1}" , "unitTestClient" );
+            messages[i] = new Queue();
+            // Subscribe each client to its own message queue
+            clients[i].Subscribe( new GenericEventHandler( messageQueue: messages[i] ) , "unitTestClient" );
+        }
+            for (int i = 0; i < numClients; i++)
+        {
+            // Send a message from each client to itself
+            Data data = new( "testMessage" , EventType.ChatMessage() );
+            sentMessages[i] = new( Serializer.Serialize( data ) , "unitTestClient" , $"testClient{i + 1}" , $"testClient{i + 1}" );
+            clients[i].Send( sentMessages[i].Data , sentMessages[i].DestID );
+        }
 
-    private bool CompareMessages(Message message1, Message message2)
+
+        // Check if each client received its own message
+        for (int i = 0; i < numClients; i++)
+        {
+            int cnt = 0;
+            while (!messages[i].canDequeue())
+            {
+                Thread.Sleep( 300 );
+                cnt++;
+                if (cnt == 10)
+                {
+                    Assert.Fail( "Did not receive message" );
+                }
+            }
+            Networking.Models.Message receivedMessage = messages[i].Dequeue();
+            Assert.IsTrue( CompareMessages( receivedMessage , sentMessages[i] ) );
+            clients[i].Stop();
+        }
+        server.Stop();
+    }
+
+
+
+
+    private bool CompareMessages(Networking.Models.Message message1, Networking.Models.Message message2)
     {
         return !((message1.Data != message2.Data) ||
             (message1.DestID != message2.DestID) ||
