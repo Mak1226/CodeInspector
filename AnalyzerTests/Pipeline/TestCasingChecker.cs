@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     /// <summary>
-    /// Test class for testing the analyzer - PrefixChecker.
+    /// Test class for testing the analyzer - CasingChecker.
     /// </summary>
     [TestClass()]
     public class TestCasingChecker
