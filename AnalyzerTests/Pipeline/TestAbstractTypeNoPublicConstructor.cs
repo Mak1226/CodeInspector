@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+* Filename    = TestAbstractTypeNoPublicConstructor.cs
+* 
+* Author      = Sneha Bhattacharjee
+*
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit Tests for AbstractTypeNoPublicConstructor.cs
+*****************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -96,7 +108,6 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 }
-
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -243,15 +254,18 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
-        /*
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(NullReferenceException))]
         public void TestException()
         {
-            
+            _parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.FullName != "AbstractClassWithPublicConstructor.AbstractClassWithProtectedInternalConstructor" );
+            List<ParsedDLLFile> parseddllFiles = new() { null };
+
+            AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new( parseddllFiles );
+            Dictionary<string , AnalyzerResult> result = abstractTypeNoPublicConstructor.AnalyzeAllDLLs();
+
             // If control flow reaches this point, then no exception was raised.
-            Assert.Fail( "Invalid Expression exception was not raised" );
+            Assert.Fail( "Exception was not raised" );
         }
-        */
     }
 }

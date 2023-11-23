@@ -7,7 +7,10 @@
 * 
 * Project     = Analyzer
 *
-* Description = 
+* Description = Abstract types must not have Public or Protected Internal constructors. 
+*               Constructors on abstract types can be called only by derived types. 
+*               Because public constructors create instances of a type and you cannot create instances of an abstract type, 
+*               an abstract type that has a public constructor is incorrectly designed.
 *****************************************************************************/
 
 using Analyzer.Parsing;
@@ -71,12 +74,7 @@ namespace Analyzer.Pipeline
             return abstractTypesWithPublicConstructors;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="abstractTypesWithPublicConstructor"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+
         private string ErrorMessage(List<Type> abstractTypesWithPublicConstructor)
         {
             var errorLog = new System.Text.StringBuilder("The following abstract classes have public constructors:\r\n");
@@ -97,22 +95,27 @@ namespace Analyzer.Pipeline
             return errorLog.ToString();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            List<Type> abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor(parsedDLLFile);
-            if (abstractTypesWithPublicConstructor.Count > 0)
+            List<Type> abstractTypesWithPublicConstructor;
+            try
             {
-                _verdict = 0;
-                _errorMessage = ErrorMessage(abstractTypesWithPublicConstructor);
+                abstractTypesWithPublicConstructor = FindAbstractTypeWithPublicConstructor( parsedDLLFile );
+                if (abstractTypesWithPublicConstructor.Count > 0)
+                {
+                    _verdict = 0;
+                    _errorMessage = ErrorMessage( abstractTypesWithPublicConstructor );
+                }
+                else
+                {
+                    _errorMessage = "No violation found.";
+                }
             }
-            else
+            catch (NullReferenceException ex)
             {
-                _errorMessage = "No violation found.";
+                throw new NullReferenceException("Internal error. Analyzer could not be run.", ex);
             }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
