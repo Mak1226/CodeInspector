@@ -105,8 +105,14 @@ namespace Content.Model
                 }
 
                 byte[] graph = _analyzer.GetRelationshipGraph(new());
+                if (graph == null || graph.Length == 0)
+                {
+                    return;
+                }
+
                 using MemoryStream ms = new();
                 Image image = Image.FromStream( ms );
+
 
                 // Save the image as PNG
                 image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );

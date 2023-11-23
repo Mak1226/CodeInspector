@@ -51,7 +51,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// </summary>
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-            throw new NotImplementedException();
+            return Array.Empty<byte>();
         }
 
         /// <summary>
