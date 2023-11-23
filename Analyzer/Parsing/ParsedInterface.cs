@@ -1,4 +1,14 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = ParsedInterface.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description = Parses the most used information from the interface object using System.Reflection
+*****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,14 +24,14 @@ namespace Analyzer.Parsing
     {
         public Type TypeObj { get; }     // type object to access interface related information
         public string Name { get; }    // Name of Interface. (Doesn't include namespace name in it)
-        public MethodInfo[]? Methods { get; }
+        public MethodInfo[] Methods { get; }
 
         /// <summary>
         /// Contains interfaces implemented by the class only the ones specifically mentioned 
         /// Does not include interfaces implemented by the parent class/ implemented interface
         /// This is useful for creation of class relational diagram
         /// </summary>
-        public Type[]? ParentInterfaces;    
+        public Type[] ParentInterfaces;    
 
         public ParsedInterface(Type type)
         {
@@ -33,7 +43,7 @@ namespace Analyzer.Parsing
             // Finding interfaces which are only implemented by the class and declares specifically in the class
             ParentInterfaces = type.GetInterfaces();
 
-            if(ParentInterfaces?.Length > 0)
+            if(ParentInterfaces.Length > 0)
             {
                 HashSet<string> removableInterfaceNames = new();
 
