@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -111,6 +111,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["CasingChecker1.dll"];
+            
             Assert.AreEqual(1, result.Verdict);
         }
 
