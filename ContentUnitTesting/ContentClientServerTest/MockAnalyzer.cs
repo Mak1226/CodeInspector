@@ -26,12 +26,12 @@ namespace ContentUnitTesting.ContentClientServerTest
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _dllFilePath;
         private List<string> _dllFilePathCustom;
-        bool _isGraph;
+        int _isGraph;
         public MockAnalyzer()
         {
             _teacherOptions = new Dictionary<int, bool>();
             _dllFilePath = new List<string>();
-            _isGraph = false;
+            _isGraph = 0;
         }
         /// <summary>
         /// Configures the mock analyzer with the specified teacher options.
@@ -50,23 +50,20 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             return _teacherOptions;
         }
-        public void SetRelationshipGraph(bool val)
+        public void SetRelationshipGraph(int val)
         {
-            if(val == true)
-            {
-                _isGraph = true;
-            }
+            _isGraph = val;
         }
         /// <summary>
         /// Placeholder implementation that throws a NotImplementedException.
         /// </summary>
         public byte[] GetRelationshipGraph( List<string> removableNamespaces )
         {
-            if (_isGraph == false)
+            if (_isGraph == 0)
             {
                 return Array.Empty<byte>();
             }
-            else
+            else if(_isGraph == 2)
             {
                 string testDirectory = Directory.GetParent( Environment.CurrentDirectory ).Parent.Parent.FullName;
                 string imagePath = Path.Combine( testDirectory , "TestImage\\test_image.jpg" );
@@ -76,8 +73,12 @@ namespace ContentUnitTesting.ContentClientServerTest
                 // Save the image to the MemoryStream with the desired format (e.g., JPEG)
                 image.Save( ms , ImageFormat.Jpeg );
                 // Convert the MemoryStream to byte[]
-                byte[] byteStream = ms.ToArray(); ;
+                byte[] byteStream = ms.ToArray();
                 return byteStream;
+            }
+            else
+            {
+                return null;
             }
         }
 

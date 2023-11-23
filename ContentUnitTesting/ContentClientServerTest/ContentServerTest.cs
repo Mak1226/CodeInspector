@@ -107,6 +107,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             File.WriteAllText(Path.Combine(tempDirectory, "TestDll1.dll"), "DLL Content 1");
             string encoding = fileHandler.HandleUpload(tempDirectory, "testSessionID");
             contentServer.SendToCloud();
+            _analyzer.SetRelationshipGraph( 1 );
             contentServer.HandleRecieve(encoding, "testClientID2");
             Assert.IsTrue(contentServer.analyzerResult.ContainsKey("File1"));
             Directory.Delete(tempDirectory, true);
@@ -219,7 +220,7 @@ namespace ContentUnitTesting.ContentClientServerTest
             File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
             File.WriteAllText( Path.Combine( tempDirectory , "TestDll2.dll" ) , "DLL Content 2" );
             string encoding = fileHandler.HandleUpload( tempDirectory , "testSessionID" );
-            _analyzer.SetRelationshipGraph( true );
+            _analyzer.SetRelationshipGraph( 2 );
             contentServer.HandleRecieve( encoding , "testClientID" );
             List<string> filePaths = _analyzer.GetDllFilePath();
             List<string> expectedFilePaths = new() { "testSessionID\\" + "TestDll1.dll" , "testSessionID\\" + "TestDll2.dll" };
