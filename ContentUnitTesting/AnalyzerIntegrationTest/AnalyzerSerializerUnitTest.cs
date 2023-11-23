@@ -93,8 +93,6 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             string serializedData = analyserSerializer.Serialize(fileAnalysisDict);
                 Dictionary<string, List<AnalyzerResult>> deserializedResult = analyserSerializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(serializedData);
             
-            
-            
             // Assert
             Assert.AreEqual(fileAnalysisDict.Count, deserializedResult.Count);
 
@@ -104,7 +102,50 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
                 
                 CollectionAssert.AreEqual(fileAnalysisDict[key], deserializedResult[key], $"Lists for key '{key}' are not equal.");
             }
+        }
 
+        [TestMethod]
+        public void TestException()
+        {
+            // Arrange
+            List<string> filePaths = new List<string> { "root/folder1/file2.dll", "root/folder2/file4.dll", "root/folder3/file6.dll" };
+
+            List<List<object>> sampleList1 = new List<List<object>>
+            {
+                new List<object> { "abc123", 1, "No errors" },
+                new List<object> { "xyz456", 0, "Invalid input" },
+                new List<object> { "123def", 2, "Internal server error" },
+                new List<object> { "qwe789", 1, "File not found" }
+
+            };
+
+            List<List<List<object>>> analyzerResultDetails = new List<List<List<object>>>();
+            analyzerResultDetails.Add(sampleList1);
+
+            // Act and Assert
+            Assert.ThrowsException<Exception>(() => GenerateFileAnalysisDict(filePaths, analyzerResultDetails));
+
+        }
+        [TestMethod]
+        public void Serialize_NullObject_ThrowsArgumentNullException()
+        {
+            // Arrange
+            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize<AnalyzerResult>(null));
+        }
+
+        [TestMethod]
+        public void Serialize_NullOrWhiteSpaceSerializedString_ThrowsArgumentException()
+        {
+            // Arrange
+            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(null));
+            Assert.ThrowsException<ArgumentException>(() => serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(""));
+            Assert.ThrowsException<ArgumentException>(() => serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>("   "));
         }
     }
 }

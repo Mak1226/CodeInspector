@@ -9,7 +9,9 @@
  *
  * Description  = Unit tests for IFileHandler
 *****************************************************************************/
+using Content.Encoder;
 using Content.FileHandling;
+using System.Text.Json;
 
 namespace ContentUnitTesting.ContentTest
 {
@@ -87,6 +89,39 @@ namespace ContentUnitTesting.ContentTest
             Directory.Delete(tempDirectory, true);
 
         }
+        [TestMethod]
+        public void HandleReceive_InvalidJson_ReturnsNull()
+        {
+            // Arrange
+            FileHandler fileHandler = new FileHandler();
+            string invalidJson = "invalid json data";
+
+            // Act
+            string? result = fileHandler.HandleRecieve(invalidJson);
+
+            // Assert
+            Assert.IsNull(result, "Expected result to be null for invalid JSON");
+        }
+
+        [TestMethod]
+        public void HandleReceive_WrongEventType_ReturnsNull()
+        {
+            // Arrange
+            FileHandler fileHandler = new FileHandler();
+            Dictionary<string, string> invalidData = new Dictionary<string, string>
+        {
+            { "EventType", "WrongEventType" },
+            { "Data", "some data" }
+        };
+            string encoding = JsonSerializer.Serialize(invalidData);
+
+            // Act
+            string? result = fileHandler.HandleRecieve(encoding);
+
+            // Assert
+            Assert.IsNull(result, "Expected result to be null for wrong event type");
+        }
+
     }
 }
 
