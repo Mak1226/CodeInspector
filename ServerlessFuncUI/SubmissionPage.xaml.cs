@@ -35,11 +35,11 @@ namespace ServerlessFuncUI
     public partial class SubmissionsPage : Page
     {
         private string cur_user;
-        public SubmissionsPage(string sessionId, string userName)
+        public SubmissionsPage(SessionEntity Session)
         {
             InitializeComponent();
-            cur_user = userName;
-            viewModel = new SubmissionsViewModel(sessionId, cur_user);
+            
+            viewModel = new SubmissionsViewModel(Session);
             this.DataContext = viewModel;
             viewModel.PropertyChanged += Listener;
             submissions = new List<SubmissionEntity> { };

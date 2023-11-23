@@ -9,26 +9,32 @@
       Title="ResultPage">
 
     <Grid>
-        <TabControl ItemsSource="{Binding DataList}">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Item1}" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <ListView ItemsSource="{Binding Item2}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Analyzer ID" DisplayMemberBinding="{Binding Item1}" />
-                                <GridViewColumn Header="Verdict" DisplayMemberBinding="{Binding Item2}" />
-                                <GridViewColumn Header="Error Message" DisplayMemberBinding="{Binding Item3}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-</TabControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <ListView ItemsSource="{Binding DataList}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Width="150">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="File Name" DisplayMemberBinding="{Binding Item1}" Width="150"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- ListView displaying details based on selection -->
+        <ListView Grid.Column="1" ItemsSource="{Binding SelectedItem.Item2}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Analyzer ID" DisplayMemberBinding="{Binding Item1}" />
+                    <GridViewColumn Header="Verdict" DisplayMemberBinding="{Binding Item2}" />
+                    <GridViewColumn Header="Error Message" DisplayMemberBinding="{Binding Item3}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
+
 
 </Page>

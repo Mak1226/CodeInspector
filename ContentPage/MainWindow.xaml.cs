@@ -30,7 +30,7 @@ namespace ContentPage
         {
             ICommunicator server = CommunicationFactory.GetServer();
             server.Start(null, null, ID.GetServerID(), "Content");
-            ServerPage serverPage = new ServerPage(server);
+            ServerPage serverPage = new (server, "TestServer");
             MainFrame.Navigate(serverPage);
 
             // TestClient by default

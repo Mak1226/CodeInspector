@@ -75,6 +75,8 @@ namespace ContentUnitTesting.ContentTest
 
             // Save the file paths and content into a dictionary before encoding
             Dictionary<string, string> dataBeforeEncoding = new();
+
+
             foreach (string filePath in filePaths)
             {
                 Trace.WriteLine(filePath);
@@ -82,6 +84,7 @@ namespace ContentUnitTesting.ContentTest
                 //string content = File.ReadAllText( filePath, Encoding.UTF8 );
                 string content = Convert.ToBase64String(File.ReadAllBytes(filePath));
                 string relativeFilePath = Path.GetRelativePath(_testDirectory , filePath );
+                Trace.WriteLine($"Relative Path: {relativeFilePath}");
                 dataBeforeEncoding[relativeFilePath] = content;
             }
 
@@ -152,6 +155,50 @@ namespace ContentUnitTesting.ContentTest
             Directory.Delete(outputFilePath, true);
         }
 
+        [TestMethod]
+        public void GetEncoded_NullFilePaths_ThrowsException()
+        {
+            // Arrange
+            DLLEncoder encoder = new DLLEncoder();
+
+            // Act and Assert
+            Assert.ThrowsException<Exception>(() => encoder.GetEncoded(null, "rootPath", "sessionID"));
+        }
+
+        [TestMethod]
+        public void GetEncoded_EmptyFilePaths_ThrowsException()
+        {
+            // Arrange
+            DLLEncoder encoder = new DLLEncoder();
+
+            // Act and Assert
+            Assert.ThrowsException<Exception>(() => encoder.GetEncoded(new List<string>(), "rootPath", "sessionID"));
+        }
+
+        [TestMethod]
+        public void SaveFiles_NullData_ThrowsArgumentNullException()
+        {
+            // Arrange
+            DLLEncoder encoder = new DLLEncoder();
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentNullException>(() => encoder.SaveFiles(null));
+        }
+        
+        [TestMethod]
+        public void SaveFiles_EmptyPath_ThrowsArgumentNullException()
+        {
+            // Arrange
+            DLLEncoder encoder = new DLLEncoder();
+            Dictionary<string, string> data = new Dictionary<string, string>
+        {
+            { "file1.dll", "encoded_data1" },
+            { "file2.dll", "encoded_data2" }
+        };
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentNullException>(() => encoder.SaveFiles(string.Empty));
+        }
     }
 
 }
