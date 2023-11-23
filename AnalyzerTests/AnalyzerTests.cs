@@ -184,11 +184,6 @@ namespace Analyzer.Tests
         }
 
 
-
-
-
-
-
         [TestMethod]
         public void MultipleDllFiles()
         {
