@@ -1,12 +1,16 @@
 ﻿/******************************************************************************
-* Filename    = InvokeCustomAnalyzer.cs
+* Filename    = AnalyzerFactoryTests.cs
+*
+* Author      = Mangesh Dalvi, Yukta Salunkhe
 * 
-* Author      = Yukta Salunkhe, Mangesh Dalvi
+* Roll No     = 112001010, 112001052
+*
+* Product     = Code Inspector
 * 
 * Project     = AnalyzerTests
 *
-* Description = Test for Invoke Custom Analyzers 
-*****************************************************************************/
+* Description = Test class for testing the functionality of invoking a custom analyzer on student dlls
+******************************************************************************/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,7 +24,9 @@ namespace Analyzer.DynamicAnalyzer.Tests
     {
 
         /* 
-        * TeacherAnalyserCheckingAbstractClassNaming.dll
+        
+        TeacherAnalyserCheckingAbstractClassNaming.dll
+
         using Analyzer.Parsing;
         using Analyzer.Pipeline;
         using System;
@@ -71,6 +77,9 @@ namespace Analyzer.DynamicAnalyzer.Tests
         }
         */
 
+        /// <summary>
+        /// Invoke custom analyzers test with correct abstract class naming
+        /// </summary>
         [TestMethod()]
         public void InvokeCustomAnalyzersTestWithCorrectAbstractClassNaming()
         {
@@ -130,6 +139,9 @@ namespace Analyzer.DynamicAnalyzer.Tests
             }
         }
 
+        /// <summary>
+        /// Invoke custom analyzers test with wrong abstract class naming
+        /// </summary>
         [TestMethod()]
         public void InvokeCustomAnalyzersTestWithWrongAbstractClassNaming()
         {

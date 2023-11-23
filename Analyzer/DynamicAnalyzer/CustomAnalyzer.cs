@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 * Filename    = CustomAnalyzer.cs
 * 
-* Author      = Yukta Salunkhe
+* Author      = Yukta Salunkhe, Mangesh Dalvi
 * 
 * Project     = Analyzer
 *
