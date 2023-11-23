@@ -29,6 +29,32 @@ namespace Analyzer.Pipeline.Tests
     [TestClass()]
     public class TestDispose
     {
+
+        //disposetest.dll is generated from below code
+
+        //public class ViolatingDisposableClass : IDisposable
+        //{
+        //    private IDisposable disposableField = new SomeDisposableObject();
+
+        //    public void DoSomething()
+        //    {
+        //        // Some logic here
+        //    }
+
+        //    public void Dispose()
+        //    {
+        //        // Missing Dispose call for disposableField
+        //    }
+        //}
+
+        //public class SomeDisposableObject : IDisposable
+        //{
+        //    public void Dispose()
+        //    {
+        //        Console.WriteLine( "SomeDisposableObject disposed" );
+        //    }
+        //}
+
         /// <summary>
         /// Test method for DisposableFieldsShouldBeDisposedRule when violation is present.
         /// </summary>
@@ -36,7 +62,7 @@ namespace Analyzer.Pipeline.Tests
         public void TestViolation()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestviolated.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
@@ -62,7 +88,7 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
-        //disposetest.dll is generated from below code
+        //disposetestold.dll is generated from below code
 
         //public class DisposableTestClassWithDispose : IDisposable
         //{
@@ -100,7 +126,7 @@ namespace Analyzer.Pipeline.Tests
         public void TestNoViolation()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestold.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new( path );
