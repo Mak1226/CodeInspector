@@ -46,9 +46,9 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-            Dictionary<string, List<AnalyzerResult>> original = new();
-
-            original["Abstract.dll"] = new List<AnalyzerResult> { 
+            Dictionary<string , List<AnalyzerResult>> original = new()
+            {
+                ["Abstract.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("101", 1, "No violation found."),
                 new AnalyzerResult("102", 0, "Classes ClassLibrary1.BadBase, ClassLibrary1.badabstractclass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
@@ -70,18 +70,19 @@ namespace Analyzer.Tests
                 new AnalyzerResult("118", 1, "No Violation Found"),
                 new AnalyzerResult("119", 1, "methods with a high number of parameters found.")
 
+            }
             };
 
             //Methods having cyclomatic complexity greater than { _maxAllowedComplexity}:\n[NOTE: Switch case complexity is not accurate]\n
 
             // Sort the lists based on AnalyserID
-            foreach (var key in original.Keys)
+            foreach (string key in original.Keys)
             {
                 original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
             }
 
             // Sort the lists based on AnalyserID
-            foreach (var key in result.Keys)
+            foreach (string key in result.Keys)
             {
                 result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
             }
@@ -140,22 +141,23 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-            Dictionary<string, List<AnalyzerResult>> original = new();
-
-            original["Abstract.dll"] = new List<AnalyzerResult> {
+            Dictionary<string , List<AnalyzerResult>> original = new()
+            {
+                ["Abstract.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("200", 1, "Analyser does not exists"),
                 new AnalyzerResult("201", 1, "Analyser does not exists"),
+            }
             };
 
             // Sort the lists based on AnalyserID
-            foreach (var key in original.Keys)
+            foreach (string key in original.Keys)
             {
                 original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
             }
 
             // Sort the lists based on AnalyserID
-            foreach (var key in result.Keys)
+            foreach (string key in result.Keys)
             {
                 result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
             }
@@ -176,7 +178,6 @@ namespace Analyzer.Tests
 
                     Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
                     Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
-                    //Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
                 }
             }
 
@@ -234,22 +235,23 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-            Dictionary<string, List<AnalyzerResult>> original = new();
-
-            original["ACIST.dll"] = new List<AnalyzerResult> {
+            Dictionary<string , List<AnalyzerResult>> original = new()
+            {
+                ["ACIST.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 1, "No violation found"),
                 new AnalyzerResult("103", 0, "BadExample : counter ,GoodExample : counter , are unused private field.")
 
+            }
             };
 
-            foreach (var key in original.Keys)
+            foreach (string key in original.Keys)
             {
                 original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
             }
 
             // Sort the lists based on AnalyserID
-            foreach (var key in result.Keys)
+            foreach (string key in result.Keys)
             {
                 result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
             }
@@ -301,30 +303,31 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-            Dictionary<string, List<AnalyzerResult>> original = new();
-
-            original["ACIST1.dll"] = new List<AnalyzerResult> {
+            Dictionary<string , List<AnalyzerResult>> original = new()
+            {
+                ["ACIST1.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 0, "Classes ACIST1.BadExampleBase, ACIST1.BadExample contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
                 new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
                 new AnalyzerResult("108", 1, "No violations found."),
 
-            };
+            } ,
 
-            original["Depthofinh.dll"] = new List<AnalyzerResult> {
+                ["Depthofinh.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 0, "Classes depthofinh.BaseClass, depthofinh.DerivedClass, depthofinh.DerivedClass2, depthofinh.ViolatingClass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
                 new AnalyzerResult("105", 0, " Classes violating depth of inheritance rule:\r\ndepthofinh.ViolatingClass: Depth - 4"),
                 new AnalyzerResult("108", 1, "No violations found.")
 
-            };
+            } ,
 
-            original["Proxy.dll"] = new List<AnalyzerResult> {
+                ["Proxy.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 1, "No violation found"),
                 new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
                 new AnalyzerResult("108", 1, "No violations found."),
 
+            }
             };
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
@@ -337,13 +340,13 @@ namespace Analyzer.Tests
                 }
             }
 
-            foreach (var key in original.Keys)
+            foreach (string key in original.Keys)
             {
                 original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
             }
 
             // Sort the lists based on AnalyserID
-            foreach (var key in result.Keys)
+            foreach (string key in result.Keys)
             {
                 result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
             }
