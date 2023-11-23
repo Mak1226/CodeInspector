@@ -1,7 +1,4 @@
-﻿/////
-/// Author: 
-/////
-
+﻿
 using Networking.Models;
 namespace Networking.Events
 {

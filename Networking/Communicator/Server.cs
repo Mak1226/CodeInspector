@@ -7,21 +7,21 @@
  * 
  * Project     = Networking
  *
- * Description = 
+ * Description = Implementation of the server-side module for the Analyzer.
  *****************************************************************************/
-
 
 using System.Net.Sockets;
 using System.Net;
 using Networking.Utils;
 using Networking.Models;
 using Networking.Events;
-using System.Diagnostics;
-using System;
 using Networking.Serialization;
 
 namespace Networking.Communicator
 {
+    /// <summary>
+    /// Represents the server-side module for the Analyzer.
+    /// </summary>
     public class Server : ICommunicator
     {
         private bool _stopThread = false;
@@ -37,7 +37,9 @@ namespace Networking.Communicator
         private bool _isStarted = false;
         private string _ipPort = "";
 
-
+        /// <summary>
+        /// Gets the local IPv4 address of the server.
+        /// </summary>
         private string GetLocalIPAddress()
         {
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -63,6 +65,12 @@ namespace Networking.Communicator
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
+        /// <summary>
+        /// Sends serialized data to a destination with specified module name and destination ID.
+        /// </summary>
+        /// <param name="serializedData">Serialized data to be sent.</param>
+        /// <param name="moduleName">The module where the data is to be delivered.</param>
+        /// <param name="destId">The Id of the destination communicator where the data is to be delivered.</param>
         public void Send(string serializedData, string moduleName, string destId)
         {
             if (!_isStarted)
@@ -76,19 +84,32 @@ namespace Networking.Communicator
             );
             _sender.Send(message);
         }
+
+        /// <summary>
+        /// Sends serialized data to a destination with the default module name.
+        /// </summary>
+        /// <param name="serializedData">Serialized data to be sent.</param>
+        /// <param name="destId">The Id of the destination communicator where the data is to be delivered.</param>
         public void Send(string serializedData, string destId)
         {
             if (!_isStarted)
             {
                 throw new Exception("Start server first");
             }
-
             Console.WriteLine("[Server] Send" + serializedData + " " + _moduleName + " " + destId);
             Message message = new(
                 serializedData, _moduleName, destId, _senderId
             );
             _sender.Send(message);
         }
+
+        /// <summary>
+        /// Sends serialized data to a destination with specified module name, destination ID, and sender ID.
+        /// </summary>
+        /// <param name="serializedData">Serialized data to be sent.</param>
+        /// <param name="moduleName">The module where the data is to be delivered.</param>
+        /// <param name="destId">The Id of the destination communicator where the data is to be delivered.</param>
+        /// <param name="senderId">The Id of the sender communicator.</param>
         public void Send(string serializedData, string moduleName, string destId, string senderId)
         {
             if (!_isStarted)
@@ -103,6 +124,13 @@ namespace Networking.Communicator
             _sender.Send(message);
         }
 
+        /// <summary>
+        /// Starts the server and returns it's IP and port number. 
+        /// </summary>
+        /// <param name="destIP">ignored and not used</param>
+        /// <param name="destPort">ignored and not used</param>
+        /// <param name="senderId">The unique Id of the server. This is the Id referred to in Send functions.</param>
+        /// <param name="moduleName">The module where data is to be delivered by default</param>
         public string Start(string? destIP, int? destPort, string senderId, string moduleName)
         {
             if (_isStarted)
@@ -110,7 +138,6 @@ namespace Networking.Communicator
                 Console.WriteLine("[Server] Already started, returning same IP:Port");
                 return _ipPort;
             }
-
             Console.WriteLine("[Server] Start" + destIP + " " + destPort);
             _moduleName = moduleName;
             _senderId = senderId;
@@ -154,6 +181,12 @@ namespace Networking.Communicator
             return _ipPort;
         }
 
+        /// <summary>
+        /// boradcasts message to clients that the server is stopping,
+        /// stops listening to new connections,
+        /// closes all streams
+        /// and stops all threads
+        /// </summary>
         public void Stop()
         {
             if (!_isStarted)
@@ -181,6 +214,11 @@ namespace Networking.Communicator
             Console.WriteLine("[Server] Stopped");
         }
 
+        /// <summary>
+        /// Subscribe a handler <paramref name="eventHandler"/> to a module <paramref name="moduleName"/>
+        /// </summary>
+        /// <param name="eventHandler">The implemented class of the event handler </param>
+        /// <param name="moduleName">The name of module to subscribe</param>
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             if (!_isStarted)
@@ -200,6 +238,9 @@ namespace Networking.Communicator
             }
         }
 
+        /// <summary>
+        /// Accepts incoming client connections and adds them to the dictionary.
+        /// </summary>
         void AcceptConnection()
         {
             string clientID = "A";
@@ -237,6 +278,10 @@ namespace Networking.Communicator
             }
         }
 
+        /// <summary>
+        /// Handles incoming messages by demultiplexing to the required module.
+        /// </summary>
+        /// <param name="message">The received message.</param>
         public void HandleMessage(Message message)
         {
             if (message.DestID == ID.GetServerID())

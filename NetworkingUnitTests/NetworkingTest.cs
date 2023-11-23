@@ -1,11 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestPlatform.TestExecutor;
-using Networking.Communicator;
+﻿using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
 using Networking.Utils;
-using Newtonsoft.Json.Serialization;
 
 namespace NetworkingUnitTests;
 
@@ -73,6 +70,15 @@ public class NetworkingTest
         {
             Assert.AreEqual("Start server first", exception.Message);
         }
+    }
+    [TestMethod]
+    public void ServerDoubleStart()
+    {
+        ICommunicator server = new Server();
+        string ipPort = server.Start( null , null , ID.GetServerID() , ID.GetNetworkingID() );
+        string ipPort1= server.Start( null , null , ID.GetServerID() , ID.GetNetworkingID() );
+        Assert.AreEqual( ipPort,ipPort1);
+        server.Stop();
     }
 
     [TestMethod]
@@ -423,18 +429,18 @@ public class NetworkingTest
         
     }
 
-    //[TestMethod]
-    public void ManyClientsToServer()
-    {
-        int NUMCLIENTS = 3;
-        ICommunicator server = CommunicationFactory.GetServer();
-        string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
-        string ip = ipPort[0];
-        int port = int.Parse(ipPort[1]);
+    ////[TestMethod]
+    //public void ManyClientsToServer()
+    //{
+    //    int NUMCLIENTS = 3;
+    //    ICommunicator server = CommunicationFactory.GetServer();
+    //    string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
+    //    string ip = ipPort[0];
+    //    int port = int.Parse(ipPort[1]);
 
-        Client[] clients = getClientsAndStart(NUMCLIENTS, ip, port, "unitTestClient");
-        // TODO
-    }
+    //    Client[] clients = getClientsAndStart(NUMCLIENTS, ip, port, "unitTestClient");
+    //    // TODO
+    //}
 
     private bool CompareMessages(Message message1, Message message2)
     {

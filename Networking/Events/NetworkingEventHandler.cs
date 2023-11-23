@@ -2,7 +2,7 @@
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
-using Networking.Queues;
+
 
 namespace Networking.Events
 {
@@ -43,12 +43,6 @@ namespace Networking.Events
             }
             return "";
         }
-
-        //private string HandleChatMessage(Message message)
-        //{
-        //    Console.WriteLine("message received in server:" + message.Data);
-        //    return "";
-        //}
 
         private string HandleClientJoined(Message message)
         {

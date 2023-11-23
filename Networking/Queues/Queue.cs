@@ -16,33 +16,10 @@ namespace Networking.Queues
 
         public void Enqueue(Message data, int priority)
         {
-            //bool enqueued = false;
-            //int maxRetries = 3;
-            //int retries = 0;
-
-            //while (!enqueued && retries < maxRetries)
-            //{
-            //    try
-            //    {
                     lock (_lock) // Acquire lock
                     {
                         _queue.Enqueue(data, priority);
-                        //enqueued = true;
                     } // Release lock
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Trace.WriteLine("[Queue] Exception found during enqueue");
-            //        Trace.WriteLine($"{ex.StackTrace}");
-            //        retries++;
-            //    }
-            //}
-
-            //if (!enqueued)
-            //{
-            //    //TODO: get correct exc type
-            //    Trace.WriteLine("[Queue] Unable to enqueue after retries.");
-            //}
         }
 
         public Message Dequeue()
@@ -60,7 +37,6 @@ namespace Networking.Queues
             catch (Exception ex)
             {
                 Trace.WriteLine("[Queue] cant deque"+ex.Message);
-                //Trace.WriteLine($"{ex.StackTrace}");
             }
             return val;
         }
