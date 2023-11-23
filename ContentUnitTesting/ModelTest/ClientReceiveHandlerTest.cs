@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+ * Filename    = ClientReceiveHandlerTest.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyser
+ * 
+ * Project     = ContentUnitTesting
+ *
+ * Description = unit test for ClientReceiveHandler.cs
+ *              
+ *****************************************************************************/
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Content.Model;
 using Networking.Models;
 using Content.Encoder;
@@ -12,7 +24,9 @@ namespace ContentUnitTesting.ModelTest
     [TestClass]
     public class ClientReceiveHandlerTest
     {
-        
+        /// <summary>
+        /// Test the handling of a valid message by the ClientReceiveHandler.
+        /// </summary>
 
         [TestMethod]
         public void HandleMessageRecv_ValidMessage()
