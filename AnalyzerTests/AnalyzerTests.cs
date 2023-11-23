@@ -91,7 +91,7 @@ namespace Analyzer.Tests
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
             {
                 [200] = true,
-                [201] = false,
+                [201] = true,
             };
 
             analyzer.Configure(teacherOptions);
@@ -109,8 +109,8 @@ namespace Analyzer.Tests
 
             original["Abstract.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("200", 1, "Internal error, analyzer failed to execute"),
-                new AnalyzerResult("201", 1, "Internal error, analyzer failed to execute"),
+                new AnalyzerResult("200", 1, "Analyser does not exists"),
+                new AnalyzerResult("201", 1, "Analyser does not exists"),
             };
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
@@ -125,6 +125,9 @@ namespace Analyzer.Tests
 
             //Assert.AreEqual(result.ToString(), original.ToString());
             CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+
+            // check for all values are equal or not
+            CollectionAssert.AreEqual(original["Abstract.dll"], result["Abstract.dll"], new AnalyzerResultComparer());
         }
 
         [TestMethod()]
@@ -137,9 +140,10 @@ namespace Analyzer.Tests
                 [101] = true,
                 [102] = true,
                 [104] = true,
-                [105] = true,
+                [105] = false,
                 [108] = true,
                 [110] = true,
+                [115] = false
             };
 
             analyzer.Configure(teacherOptions);
@@ -178,6 +182,12 @@ namespace Analyzer.Tests
             //Assert.AreEqual(result.ToString(), original.ToString());
             CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
         }
+
+
+
+
+
+
 
         [TestMethod]
         public void MultipleDllFiles()
