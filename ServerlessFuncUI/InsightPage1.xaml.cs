@@ -1,11 +1,11 @@
 ﻿/******************************************************************************
- * Filename    = BarGraphPage.xaml.cs
+ * Filename    = InsightPage1.xaml.cs
  *
  * Author      = Sidharth Chadha
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Bar Graph Page.
+ * Description = Defines the View logic of Insight Page 1
  *****************************************************************************/
 using LiveCharts.Defaults;
 using LiveCharts;
@@ -44,7 +44,7 @@ namespace ServerlessFuncUI
         {
             InitializeComponent();
             cur_Insight = new InsightsApi(InsightPath);
-
+            Trace.WriteLine(" insight page 1 created");
         }
         private async void OnSendButtonClick(object sender, RoutedEventArgs e)
         {
@@ -81,6 +81,7 @@ namespace ServerlessFuncUI
                 }
                 resultListBox.Items.Add(entry.TrimEnd(',', ' '));
             }
+            Trace.WriteLine("result displayed for insight page 1");
         }
 
 

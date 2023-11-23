@@ -1,11 +1,11 @@
 ﻿/******************************************************************************
- * Filename    = BarGraphPage.xaml.cs
+ * Filename    = InsightPage2.xaml.cs
  *
  * Author      = Sidharth Chadha
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Bar Graph Page.
+ * Description = Defines the View logic of Insight Page 2
  *****************************************************************************/
 using LiveCharts.Defaults;
 using LiveCharts;
@@ -46,6 +46,7 @@ namespace ServerlessFuncUI
             this.InitializeComponent();
             _insightsApi = new InsightsApi(InsightPath);
             this.hostname = hostname;
+            Trace.WriteLine("insight page 2 created");
         }
 
         private async void OnGetFailedStudentsClick(object sender, RoutedEventArgs e)
@@ -57,14 +58,13 @@ namespace ServerlessFuncUI
             try
             {
                 var failedStudents = await _insightsApi.GetFailedStudentsGivenTest(hostname, testName);
-
+                Trace.WriteLine("retrieved failed students");
                 // Assuming you want to display the results in a ListView.
                 resultListBox.ItemsSource = failedStudents;
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately (e.g., display an error message).
-                // You might want to log the exception for debugging purposes.
+                MessageBox.Show(ex.Message);
             }
         }
 

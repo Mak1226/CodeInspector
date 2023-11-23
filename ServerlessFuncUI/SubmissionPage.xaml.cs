@@ -5,7 +5,7 @@
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Submissions Page.
+ * Description = Defines the View of the Submissions Page
  *****************************************************************************/
 
 using ServerlessFunc;
@@ -79,12 +79,8 @@ namespace ServerlessFuncUI
                 Trace.WriteLine("[Cloud] No Submissions detected");
                 return;
             }
-
-            /*
-             * Building the UI when there are list of submissions made.
-             * Adding an entry for each submission in the session with 
-             * 4 columns - index, student id, submission time and download button.
-             */
+            // 4 columns - index, student id, submission time and download button.
+            
             for (int i = 0; i < submissions?.Count; i++)
             {
                 Grid grid = new();
@@ -117,7 +113,7 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(sNo, 0);
@@ -131,7 +127,7 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(studentId, 1);
@@ -145,7 +141,7 @@ namespace ServerlessFuncUI
                     VerticalContentAlignment = VerticalAlignment.Center,
                     BorderBrush = new SolidColorBrush(Colors.White),
                     BorderThickness = new Thickness(0, 0, 0, 1),
-                    Foreground = new SolidColorBrush(Colors.White),
+                    Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 16
                 };
                 Grid.SetColumn(submissionTime, 2);
@@ -174,7 +170,8 @@ namespace ServerlessFuncUI
             Trace.WriteLine("[Cloud] Download Button pressed");
             Button caller = (Button)sender;
             int index = Convert.ToInt32(caller.Name.Split('n')[1]);
-            //viewModel.SubmissionToDownload = index;
+            viewModel.SubmissionToDownload = index;
+            MessageBox.Show("Downloaded", "Download Status", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
     }

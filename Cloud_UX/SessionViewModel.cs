@@ -78,6 +78,7 @@ namespace Cloud_UX
         public void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            Trace.WriteLine("Property changed for sessions page");
         }
 
         /// <summary>

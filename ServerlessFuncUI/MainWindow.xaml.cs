@@ -5,7 +5,7 @@
  * 
  * Project     = ServerlessFuncUI
  *
- * Description = Defines the View of the Sessions Page.
+ * Description = Defines the View Logic of the Sessions Page.
  *****************************************************************************/
 
 using System;
@@ -105,6 +105,7 @@ namespace ServerlessFuncUI
                 newButton.Height = 30;
                 newButton.Margin = new Thickness(0, 5, 0, 5);
                 newButton.Name = "Button" + i.ToString();
+                newButton.Background=new SolidColorBrush(Colors.LightSkyBlue);
                 newButton.Content = $"Session  {sessions[i].Id}";
                 newButton.Click += OnButtonClick;
                 Stack.Children.Add(newButton);

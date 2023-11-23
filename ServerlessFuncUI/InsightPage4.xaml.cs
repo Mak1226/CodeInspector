@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+  *Filename = InsightPage4.xaml.cs
+  *
+  *Author = Sidharth Chadha
+  *
+  * Project = ServerlessFuncUI
+  *
+  *Description = Defines the view logic of Insight Page 4 ( bar graph for running averages)
+  **************************************************************************** */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,17 +22,41 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ServerlessFunc;
+using System.ComponentModel;
+using LiveCharts.Wpf;
+using LiveCharts.Defaults;
+using LiveCharts;
+using System.Diagnostics;
 
 namespace ServerlessFuncUI
 {
     /// <summary>
     /// Interaction logic for InsightPage4.xaml
     /// </summary>
-    public sealed partial class InsightPage4 : Page
+    public sealed partial class InsightPage4 : Page, INotifyPropertyChanged
     {
         private readonly InsightsApi _insightsApi;
         public static string InsightPath = "http://localhost:7074/api/insights";
         public string hostname;
+        private ChartValues<ObservableValue> meanValues;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public ChartValues<ObservableValue> MeanValues
+        {
+            get => meanValues;
+            set
+            {
+                meanValues = value;
+                OnPropertyChanged(nameof(MeanValues));
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            Trace.WriteLine("bar graph updated for insight page 4");
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public InsightPage4(string host_name)
         {
             this.InitializeComponent();
@@ -31,6 +64,12 @@ namespace ServerlessFuncUI
 
             // Initialize InsightsApi with the appropriate insightsRoute
             _insightsApi = new InsightsApi(InsightPath);
+            meanValues = new ChartValues<ObservableValue> { new ObservableValue(0) };
+            DataContext = this;
+        }
+        private void CartesianChart_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private async void OnGetStudentAverageClick(object sender, RoutedEventArgs e)
@@ -42,14 +81,18 @@ namespace ServerlessFuncUI
 
                 // Call the RunningAverageOnGivenStudent method from InsightsApi
                 var averageList = await _insightsApi.RunningAverageOnGivenStudent(hostname, studentName);
-
-                // Display the result in the TextBlock
-                resultListBox.Text = "Student Average: " + string.Join(", ", averageList);
+                Trace.WriteLine("averages retrieved for student ");
+                meanValues.Clear();
+                // Create a ColumnSeries and add the average values to it
+                foreach (double average in averageList)
+                {
+                    meanValues.Add(new ObservableValue(average));
+                }
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately (e.g., display an error message)
-                resultListBox.Text = "Error: " + ex.Message;
+                
+                MessageBox.Show(ex.Message);
             }
         }
     }

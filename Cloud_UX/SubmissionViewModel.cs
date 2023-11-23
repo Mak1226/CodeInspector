@@ -45,7 +45,6 @@ namespace Cloud_UX
             {
                 GetSubmissions(session.SessionId, name);
             }
-          //  GetSubmissions(sessionId);
             Trace.WriteLine("[Cloud] Submissions View Model Created");
         }
 
@@ -108,5 +107,14 @@ namespace Cloud_UX
         /// Underlying data model.
         /// </summary>
         private SubmissionsModel _model;
+
+        /// <summary>
+        /// To store which pdf to download.
+        /// Call the corresponding function to download once the value is set.
+        /// </summary>
+        public int SubmissionToDownload
+        {
+            set => _model.DownloadPdf(value);
+        }
     }
 }
