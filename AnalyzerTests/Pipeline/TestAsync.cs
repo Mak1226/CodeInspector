@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+ * Filename    = TestAsync.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = AnalyzerTests
+ *
+ * Description = Unit Tests for AsyncMethodAnalyzer class
+ *****************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -11,12 +23,17 @@ using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
-
+    /// <summary>
+    /// Test class for the AsyncMethodAnalyzer.
+    /// </summary>
     [TestClass()]
-    public class TestControl
+    public class TestAsync
     {
+        /// <summary>
+        /// Test method for multiple asynchronous methods.
+        /// </summary>
         [TestMethod()]
-        public void Test1()
+        public void TestMultipleAsyncMethods()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\ClassLibrary1.dll";
@@ -44,8 +61,12 @@ namespace Analyzer.Pipeline.Tests
             }
 
         }
+
+        /// <summary>
+        /// Test method for no asynchronous methods.
+        /// </summary>
         [TestMethod()]
-        public void Test2()
+        public void TestNoAsync()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";

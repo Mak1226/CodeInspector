@@ -18,7 +18,7 @@
                 <SolidColorBrush Color="LightBlue" />
             </Grid.Background>
 
-            <StackPanel x:Name="InstructorName" Orientation="Horizontal" HorizontalAlignment="Left">
+            <StackPanel x:Name="InstructorName" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,5,5">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Name : " />
                      <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
@@ -45,7 +45,7 @@
                      <Run Text="  Port : " />
                      <Run Text="{Binding ReceivePort, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
-                <Button Content="Logout" Width="50" Height="20" Click="LogoutButtonClick" Margin="5,5,5,5"/>
+                <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
             </StackPanel>
         </Grid>
 
