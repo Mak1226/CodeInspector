@@ -1,4 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+ * Filename    = TestDispose.cs
+ * 
+ * Author      = Arun Sankar
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = AnalyzerTests
+ *
+ * Description = Unit Tests for DisposableFieldsShouldBeDisposedRule class
+ *****************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
 using System.Collections.Generic;
@@ -10,11 +22,17 @@ using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline.Tests
 {
+    /// <summary>
+    /// Test class for the DisposableFieldsShouldBeDisposedRule.
+    /// </summary>
     [TestClass()]
     public class TestDispose
     {
-        [TestMethod()]
-        public void Test1()
+        /// <summary>
+        /// Test method for DisposableFieldsShouldBeDisposedRule when violation is present.
+        /// </summary>
+        /// [TestMethod()]
+        public void TestViolation()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestviolated.dll";
@@ -43,8 +61,11 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
+        /// <summary>
+        /// Test method for DisposableFieldsShouldBeDisposedRule when no violation is present.
+        /// </summary>
         [TestMethod()]
-        public void Test2()
+        public void TestNoViolation()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
@@ -71,6 +92,9 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
+        /// <summary>
+        /// Test method for DisposableFieldsShouldBeDisposedRule when there are multiple disposable fields.
+        /// </summary>
         [TestMethod()]
         public void TestMultipleDisposableFields()
         {
@@ -99,6 +123,9 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
+        /// <summary>
+        /// Test method for DisposableFieldsShouldBeDisposedRule on a DLL with no disposable fields.
+        /// </summary>
         [TestMethod()]
         public void TestRandom()
         {
@@ -127,8 +154,11 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
+        /// <summary>
+        /// Test method for DisposableFieldsShouldBeDisposedRule when there is a derived class.
+        /// </summary>
         [TestMethod()]
-        public void TestAllBranches()
+        public void TestBaseAndDerived()
         {
             // Specify the path to the DLL file
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\branchcoveragedispose.dll";
