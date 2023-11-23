@@ -24,6 +24,17 @@ using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
+    //TestUnused.dll
+    //public class TestClass
+    //{
+    //    public void SomeMethod()
+    //    {
+    //        int x = 42;
+    //        int y = 10;
+    //        int n = x + y;
+    //    }
+    //}
+
     public class LetUsTestVariables
     {
         public static void MethodWithUnusedVariables()

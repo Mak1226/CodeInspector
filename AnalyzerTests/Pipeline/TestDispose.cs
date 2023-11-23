@@ -22,20 +22,47 @@ using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline.Tests
 {
+
     /// <summary>
     /// Test class for the DisposableFieldsShouldBeDisposedRule.
     /// </summary>
     [TestClass()]
     public class TestDispose
     {
+
+        //disposetest.dll is generated from below code
+
+        //public class ViolatingDisposableClass : IDisposable
+        //{
+        //    private IDisposable disposableField = new SomeDisposableObject();
+
+        //    public void DoSomething()
+        //    {
+        //        // Some logic here
+        //    }
+
+        //    public void Dispose()
+        //    {
+        //        // Missing Dispose call for disposableField
+        //    }
+        //}
+
+        //public class SomeDisposableObject : IDisposable
+        //{
+        //    public void Dispose()
+        //    {
+        //        Console.WriteLine( "SomeDisposableObject disposed" );
+        //    }
+        //}
+
         /// <summary>
         /// Test method for DisposableFieldsShouldBeDisposedRule when violation is present.
         /// </summary>
-        /// [TestMethod()]
+        [TestMethod()]
         public void TestViolation()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestviolated.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);
@@ -61,6 +88,37 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
+        //disposetestold.dll is generated from below code
+
+        //public class DisposableTestClassWithDispose : IDisposable
+        //{
+        //    private IDisposable disposableField = new DummyDisposable(); // Disposable field
+
+        //    public void SomeMethod()
+        //    {
+        //        // Accessing the disposable field, but no need for Dispose
+        //        Console.WriteLine( disposableField.ToString() );
+        //    }
+
+        //    public void Dispose()
+        //    {
+        //        // Properly disposing the field
+        //        if (disposableField != null)
+        //        {
+        //            disposableField.Dispose();
+        //        }
+        //    }
+        //}
+
+        //public class DummyDisposable : IDisposable
+        //{
+        //    public void Dispose()
+        //    {
+        //        // Dummy Dispose method
+        //    }
+        //}
+
+
         /// <summary>
         /// Test method for DisposableFieldsShouldBeDisposedRule when no violation is present.
         /// </summary>
@@ -68,7 +126,7 @@ namespace Analyzer.Pipeline.Tests
         public void TestNoViolation()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestold.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new( path );
@@ -91,6 +149,33 @@ namespace Analyzer.Pipeline.Tests
             }
 
         }
+
+        //MultipleDisposableFieldsTestClass.dll is generated from below code
+
+        //public class MultipleDisposableFieldsTestClass : IDisposable
+        //{
+        //    private StreamReader fileReader1; // Disposable field 1
+        //    private StreamReader fileReader2; // Disposable field 2
+
+        //    public MultipleDisposableFieldsTestClass( string filePath1 , string filePath2 )
+        //    {
+        //        fileReader1 = new StreamReader( filePath1 );
+        //        fileReader2 = new StreamReader( filePath2 );
+        //    }
+
+        //    public void ReadFileContents()
+        //    {
+        //        // Reading file contents, but missing Dispose call for both fields
+        //        Console.WriteLine( fileReader1.ReadToEnd() );
+        //        Console.WriteLine( fileReader2.ReadToEnd() );
+        //    }
+
+        //    public void Dispose()
+        //    {
+        //        // Properly disposing both fields
+        //        fileReader1?.Dispose();
+        //        fileReader2?.Dispose();
+        //    }
 
         /// <summary>
         /// Test method for DisposableFieldsShouldBeDisposedRule when there are multiple disposable fields.
@@ -153,6 +238,31 @@ namespace Analyzer.Pipeline.Tests
             }
 
         }
+
+        //branchcoveragedispose.dll is generated from below code
+
+        //public interface ICustomDisposable : IDisposable
+        //{
+        //    void CustomDispose();
+        //}
+
+        //public class BaseDisposable : ICustomDisposable
+        //{
+        //    public void Dispose()
+        //    {
+        //        Console.WriteLine( "BaseDisposable Dispose" );
+        //    }
+
+        //    public void CustomDispose()
+        //    {
+        //        Console.WriteLine( "BaseDisposable CustomDispose" );
+        //    }
+        //}
+
+        //public class DerivedClass : BaseDisposable
+        //{
+        //    // This class directly implements IDisposable through interfaces
+        //}
 
         /// <summary>
         /// Test method for DisposableFieldsShouldBeDisposedRule when there is a derived class.

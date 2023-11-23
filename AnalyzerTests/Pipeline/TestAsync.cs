@@ -23,6 +23,34 @@ using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
+    //ClassLibrary1.dll is generated from the below class
+
+    //public class AsyncMethodTestClass
+    //{
+    //    public async Task AsyncMethod1()
+    //    {
+    //        Console.WriteLine( "Async Method 1 - Start" );
+    //        await Task.Delay( 1000 ); // Simulating asynchronous operation
+    //        Console.WriteLine( "Async Method 1 - End" );
+    //    }
+
+    //    public async Task<int> AsyncMethod2()
+    //    {
+    //        Console.WriteLine( "Async Method 2 - Start" );
+    //        await Task.Delay( 1500 ); // Simulating asynchronous operation
+    //        Console.WriteLine( "Async Method 2 - End" );
+    //        return 42;
+    //    }
+
+    //    public async Task<string> AsyncMethod3( string input )
+    //    {
+    //        Console.WriteLine( $"Async Method 3 - Start with input: {input}" );
+    //        await Task.Delay( 2000 ); // Simulating asynchronous operation
+    //        Console.WriteLine( $"Async Method 3 - End with input: {input}" );
+    //        return $"Result: {input}";
+    //    }
+    //}
+
     /// <summary>
     /// Test class for the AsyncMethodAnalyzer.
     /// </summary>
@@ -68,23 +96,21 @@ namespace Analyzer.Pipeline.Tests
         [TestMethod()]
         public void TestNoAsync()
         {
-            // Specify the path to the DLL file
+            // This consists of just few classes, no class logic, no methods either
             string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\depthofinh.dll";
-            //string path = Assembly.GetExecutingAssembly().Location;
+
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new( path );
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
-            // Create an instance of RemoveUnusedLocalVariablesRule
+            // Create an instance of AsyncMethodAnalyzer
             AsyncMethodAnalyzer analyzer = new( dllFiles );
 
-            // Run the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                //Console.WriteLine(dll.Key);
 
                 AnalyzerResult res = dll.Value;
 
