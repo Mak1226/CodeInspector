@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Utils/Receiver.cs
  *
- * Author      = Shubhang kedia
+ * Author      = VM Sreeram
  *
  * Product     = Analyzer
  * 
@@ -25,13 +25,35 @@ namespace Networking.Utils
     /// </summary>
     public class Receiver
     {
-        private readonly Queue _recvQueue = new();  // Priority queue for received messages
-        private readonly Thread _recvThread;  // Thread for receiving messages
-        private readonly Thread _recvQueueThread;  // Thread for processing received messages
-        private readonly Dictionary<string , NetworkStream> _clientIDToStream;  // Dictionary mapping client IDs to network streams
+        /// <summary>
+        /// Priority queue for received messages
+        /// </summary>
+        private readonly Queue _recvQueue = new();
 
-        private bool _stopThread = false;  // Flag to signal thread to stop
-        private readonly ICommunicator _comm;  // Reference to the communicator interface
+        /// <summary>
+        /// Thread for receiving messages
+        /// </summary>
+        private readonly Thread _recvThread;
+
+        /// <summary>
+        /// Thread for processing received messages
+        /// </summary>
+        private readonly Thread _recvQueueThread;
+
+        /// <summary>
+        /// Dictionary mapping client IDs to network streams
+        /// </summary>
+        private readonly Dictionary<string , NetworkStream> _clientIDToStream;
+
+        /// <summary>
+        /// Flag to signal the threads to stop
+        /// </summary>
+        private bool _stopThread = false;
+
+        /// <summary>
+        /// Reference to the <see cref="ICommunicator"/> interface
+        /// </summary>
+        private readonly ICommunicator _comm;
 
         /// <summary>
         /// Initializes a new instance of the Receiver class.
@@ -62,12 +84,14 @@ namespace Networking.Utils
         {
             Console.WriteLine( "[Receiver] Stop" );
             _stopThread = true;
+
+            // Wait for the threads to terminate
             _recvThread.Join();
             _recvQueueThread.Join();
         }
 
         /// <summary>
-        /// Thread function for receiving messages from network streams.
+        /// Thread function for receiving messages from network streams following the protocol.
         /// </summary>
         private void Receive()
         {
@@ -83,16 +107,14 @@ namespace Networking.Utils
                 {
                     try
                     {
-                        // Check if there is data available in the stream
                         if (item.Value.DataAvailable == true)
                         {
                             ifAval = true;
 
-                            // Read the size of the incoming message
+                            // Read the size of the incoming message as per the protocol
                             byte[] sizeBytes = new byte[sizeof( int )];
                             int sizeBytesRead = item.Value.Read( sizeBytes , 0 , sizeof( int ) );
-                            System.Diagnostics.Trace.Assert( (sizeBytesRead == sizeof( int )) );
-
+                            System.Diagnostics.Trace.Assert( sizeBytesRead == sizeof( int ) );
                             int messageSize = BitConverter.ToInt32( sizeBytes , 0 );
 
                             // Now read the actual message
@@ -106,36 +128,30 @@ namespace Networking.Utils
                                 totalBytesRead += sizeBytesRead;
                             }
 
-                            System.Diagnostics.Trace.Assert( (totalBytesRead == messageSize) );
+                            System.Diagnostics.Trace.Assert( totalBytesRead == messageSize );
 
-                            // Convert received byte array to a string
+                            // Convert received byte array to a string; deserialize the string into a Message object
                             string receivedMessage = Encoding.ASCII.GetString( receiveData );
-
-                            // Deserialize the string into a Message object
                             Message message = Serializer.Deserialize<Message>( receivedMessage );
 
-                            // Check if the message belongs to the Networking module
+                            // If the message belongs to the Networking module, attach the client ID to the payload and update the message data
                             if (message.ModuleName == ID.GetNetworkingID())
                             {
-                                // Deserialize the message data into a Data object
                                 Data data = Serializer.Deserialize<Data>( message.Data );
 
-                                // Check if the event type is client registration
                                 if (data.EventType == EventType.ClientRegister())
                                 {
-                                    // Attach the client ID to the payload and update the message data
                                     data.Payload = item.Key;
-                                    message.Data = Serializer.Serialize<Data>( data );
+                                    message.Data = Serializer.Serialize( data );
                                 }
                             }
 
                             // Enqueue the received message with its priority
-                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) /* fix it */);
+                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ));
                         }
                     }
                     catch (Exception ex)
                     {
-                        // Handle exceptions that might occur during message receiving
                         Console.WriteLine( "Exception in receiver: " + ex.Message );
                     }
                 }
@@ -160,15 +176,13 @@ namespace Networking.Utils
             {
                 if (!_recvQueue.canDequeue())
                 {
-                    // Wait for some time if the queue is empty
+                    // Wait for some time if the queue is empty to avoid busy-waiting
                     Thread.Sleep( 500 );
                     continue;
                 }
 
-                // Get the next message to send
+                // Get the next message to process and process it based on the type of communicator
                 Message message = _recvQueue.Dequeue();
-
-                // Handle the received message based on the type of communicator
                 if (_comm is Client client)
                 {
                     client.HandleMessage( message );

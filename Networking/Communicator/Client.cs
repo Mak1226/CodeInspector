@@ -194,7 +194,14 @@ namespace Networking.Communicator
         {
             if (_eventHandlersMap.ContainsKey( message.ModuleName ))
             {
-                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+                try
+                {
+                    _eventHandlersMap[message.ModuleName].HandleMessageRecv( message );
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine( "[Client] Error in handling message: " + e.Message );
+                }
             }
             else
             {

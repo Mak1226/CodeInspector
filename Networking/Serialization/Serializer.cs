@@ -24,10 +24,18 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to deserialize.</typeparam>
         /// <param name="serializedString">The JSON string to deserialize.</param>
-        /// <returns>The deserialized object.</returns>
+        /// <returns>The deserialized object. default if deserialization failed.</returns>
         public static T Deserialize<T>( string serializedString )
         {
-            T message = JsonSerializer.Deserialize<T>( serializedString );
+            T? message = default;
+            try
+            {
+                message = JsonSerializer.Deserialize<T>( serializedString );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine( "[Serializer] Deserialize failed: " + e );
+            }
             return message;
         }
 
@@ -36,11 +44,19 @@ namespace Networking.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the object to serialize.</typeparam>
         /// <param name="genericObject">The object to serialize.</param>
-        /// <returns>The serialized JSON string.</returns>
+        /// <returns>The serialized JSON string. "failed" if failed</returns>
         public static string Serialize<T>( T genericObject )
         {
-            string message = JsonSerializer.Serialize( genericObject );
-            return message;
+            try
+            {
+                string message = JsonSerializer.Serialize( genericObject );
+                return message;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine( "[Serializer] Serialize failed: " + e );
+            }
+            return "failed";
         }
     }
 }

@@ -10,8 +10,6 @@
  * Description = Defines the structure of a message used in the networking system.
  *****************************************************************************/
 
-using System;
-
 namespace Networking.Models
 {
     /// <summary>
