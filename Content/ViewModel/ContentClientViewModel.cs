@@ -1,15 +1,32 @@
-﻿using Analyzer;
+﻿/******************************************************************************
+ * Filename    = ContentClientViewModel.cs
+ * 
+ * Author      = Jyothiradithya
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Client side ViewModel
+ *****************************************************************************/
+using Analyzer;
 using Content.Model;
 using System.ComponentModel;
 
 namespace Content.ViewModel
 {
+    /// <summary>
+    /// View model for client, deriving off of IContentViewModel
+    /// </summary>
     public class ContentClientViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private readonly ContentClient _contentClient;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
 
+        /// <summary>
+        /// Property change event
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
