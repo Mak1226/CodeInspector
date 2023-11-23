@@ -65,9 +65,9 @@ namespace Analyzer.Pipeline
 
                         string fieldName = fieldReference.Name.ToString();
 
-                        if (unusedFields.Contains( fieldName ))
+                        if (unusedFields.Contains(fieldName))
                         {
-                            unusedFields.Remove( fieldName );
+                            unusedFields.Remove(fieldName);
                         }
                     }
                 }
@@ -84,6 +84,12 @@ namespace Analyzer.Pipeline
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
+
+                if (!((cls.Name[0]>='a' && cls.Name[0]<='z') || (cls.Name[0] >= 'A' && cls.Name[0] <= 'Z') || (cls.Name[0]=='_')))
+                {
+                    continue;
+                }
+
                 List<string> unusedFields = HandleClass(cls);
 
                 if(unusedFields.Count > 0)

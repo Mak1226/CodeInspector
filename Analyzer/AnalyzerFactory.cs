@@ -62,7 +62,6 @@ namespace Analyzer
         /// <returns>An instance of the default analyzer.</returns>
         public static IAnalyzer GetAnalyzer()
         {
-
             IAnalyzer Analyzer = new Analyzer();
             return Analyzer;
         }

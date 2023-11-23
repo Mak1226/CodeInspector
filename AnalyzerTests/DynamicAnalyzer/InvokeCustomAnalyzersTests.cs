@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
-* Filename    = AnalyzerFactoryTests.cs
+* Filename    = InvokeCustomAnalyzersTests.cs
 *
 * Author      = Mangesh Dalvi, Yukta Salunkhe
 * 
