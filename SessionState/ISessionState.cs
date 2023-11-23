@@ -13,5 +13,7 @@ namespace SessionState
         void RemoveStudent( string id );
 
         public int GetStudentsCount();
+
+        public void RemoveAllStudents();
     }
 }

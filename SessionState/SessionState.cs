@@ -11,6 +11,10 @@
 
         public void AddStudent(string id, string name, string ip, int port)
         {
+            if( id == null || id == "" || port <= 0)
+            {
+                return;
+            }
             Student? check = _students.Find(s => s.Id == id);
             if (check == null)
             {
@@ -27,6 +31,10 @@
 
         public void RemoveStudent(string id)
         {
+            if (id == null || id == "")
+            {
+                return;
+            }
             Student? studentToRemove = _students.Find(s => s.Id == id);
             if (studentToRemove != null)
             {
