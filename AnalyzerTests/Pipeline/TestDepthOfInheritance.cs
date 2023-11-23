@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -77,7 +78,7 @@ namespace Analyzer.Pipeline.Tests
 
                 Assert.AreEqual(res.Verdict, 0 );
 
-                Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                Trace.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
             }
 
         }

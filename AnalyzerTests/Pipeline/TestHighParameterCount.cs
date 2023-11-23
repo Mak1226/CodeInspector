@@ -23,7 +23,15 @@ using Analyzer;
 
 namespace AnalyzerTests.Pipeline
 {
-    public class Demo
+    //public class HighParams
+    //{
+    //    public static void HighParameterMethod( int param1 , int param2 , int param3 , int param4 , int param5 , int param6 )
+    //    {
+    //        Console.WriteLine( "Method with high parameter count?" );
+    //    }
+    //}
+
+    public class LowParams
     {
         public static void HighParameterMethod(int param1, int param2, int param3, int param4, int param5)
         {
