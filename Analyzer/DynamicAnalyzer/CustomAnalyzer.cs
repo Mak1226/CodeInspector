@@ -1,4 +1,14 @@
-﻿/*using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = CustomAnalyzer.cs
+* 
+* Author      = Yukta Salunkhe
+* 
+* Project     = Analyzer
+*
+* Description = Represents a custom analyzer for extending analysis logic, it inherits from AnalyzerBase. Teachers can implement specific analysis logic using this class.
+*****************************************************************************/
+
+/*using Analyzer.Parsing;
 using Analyzer.Pipeline;
 
 namespace Analyzer.DynamicAnalyzer
@@ -30,7 +40,6 @@ namespace Analyzer.DynamicAnalyzer
         /// </summary>
         /// <param name="_parsedDLLFile">The ParsedDLLFile to analyze.</param>
         /// <returns>An AnalyzerResult object containing the analysis result.</returns>
-
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile _parsedDLLFile)
         {
             // Write your analyzer logic here
