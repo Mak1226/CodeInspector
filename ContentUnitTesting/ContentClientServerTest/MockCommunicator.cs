@@ -19,7 +19,7 @@ namespace ContentUnitTesting.ContentClientServerTest
     /// </summary>
     internal class MockCommunicator : ICommunicator
     {
-        private string? encoding;
+        private string? _encoding;
         /// <summary>
         /// Sends serialized data to a specified module and destination ID.
         /// </summary>
