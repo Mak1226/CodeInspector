@@ -24,10 +24,14 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Name: " />
                      <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
-                </TextBlock>
+                </TextBlock>-->
+                <StackPanel x:Name="NameStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name :" Margin="10,10,10,10"/>
+                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25"/>
+                </StackPanel>
             </Grid>
             
             <Grid Grid.Row="1">
