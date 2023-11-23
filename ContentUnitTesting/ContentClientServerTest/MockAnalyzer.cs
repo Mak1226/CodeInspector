@@ -18,8 +18,6 @@ namespace ContentUnitTesting.ContentClientServerTest
     /// </summary>
     internal class MockAnalyzer : IAnalyzer
     {
-        private IDictionary<int, bool> teacherOptions;
-        private List<string> dllFilePath;
         /// <summary>
         /// Initializes a new instance of the MockAnalyzer class.
         /// </summary>
@@ -75,13 +73,20 @@ namespace ContentUnitTesting.ContentClientServerTest
         }
 
         /// <summary>
-        /// Placeholder implementation that throws a NotImplementedException.
+        /// Loads the DLL files of custom analyzers in the MockAnalyzer class.
         /// </summary>
+        /// <param name="PathOfDLLFilesOfCustomAnalyzers">
+        /// List of paths to DLL files of custom analyzers.</param>
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
             _dllFilePathCustom = PathOfDLLFilesOfCustomAnalyzers;
         }
 
+        /// <summary>
+        /// Gets the paths of DLL files of custom analyzers in the 
+        /// MockAnalyzer class.
+        /// </summary>
+        /// <returns>List of paths to DLL files of custom analyzers.</returns>
         public List<string> GetDLLOfCustomAnalyzers()
         {
             return _dllFilePathCustom;
