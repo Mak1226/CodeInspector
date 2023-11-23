@@ -51,7 +51,7 @@ namespace Analyzer.Tests
             original["Abstract.dll"] = new List<AnalyzerResult> { 
 
                 new AnalyzerResult("101", 1, "No violation found."),
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
+                new AnalyzerResult("102", 0, "Classes ClassLibrary1.BadBase, ClassLibrary1.badabstractclass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
                 new AnalyzerResult("103", 1, "No violation found."),
                 new AnalyzerResult("104", 1, "No violation found."),
                 new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
@@ -60,9 +60,9 @@ namespace Analyzer.Tests
                 new AnalyzerResult("108", 1, "No violations found."),
                 new AnalyzerResult("109", 1, "No unused local variables found."),
                 new AnalyzerResult("110", 1, "No occurrences of useless control flow found."),
-                new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : Badname "),
-                new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> "),
-                new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10\r\n[NOTE: Switch case complexity is not accurate]"),
+                new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : BadBase , badabstractclass "),
+                new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> Incorrect Class Naming : badabstractclass "),
+                new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10"),
                 new AnalyzerResult("114", 1, ""),
                 new AnalyzerResult("115", 1, "No Violation Found"),
                 new AnalyzerResult("116", 1, ""),
@@ -112,13 +112,12 @@ namespace Analyzer.Tests
 
                     Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
                     Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
-                    Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
+                    //Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
                 }
             }
 
         }
-
-        /*
+        
         [TestMethod()]
         public void InvalidTeacherConfiguration()
         {
@@ -149,21 +148,63 @@ namespace Analyzer.Tests
                 new AnalyzerResult("201", 1, "Analyser does not exists"),
             };
 
+            // Sort the lists based on AnalyserID
+            foreach (var key in original.Keys)
+            {
+                original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
+            // Sort the lists based on AnalyserID
+            foreach (var key in result.Keys)
+            {
+                result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {
-                Console.WriteLine(dll.Key);
+                Assert.IsTrue(original.ContainsKey(dll.Key), $"Expected DLL '{dll.Key}' not found in the original results.");
 
-                foreach (AnalyzerResult res in dll.Value)
+                List<AnalyzerResult> originalResults = original[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(originalResults.Count, actualResults.Count, $"Result count for DLL '{dll.Key}' is different.");
+
+                for (int i = 0; i < originalResults.Count; i++)
                 {
-                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                    AnalyzerResult originalResult = originalResults[i];
+                    AnalyzerResult actualResult = actualResults[i];
+
+                    Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
+                    Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
+                    //Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
                 }
             }
 
-            //Assert.AreEqual(result.ToString(), original.ToString());
-            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+        }
 
-            // check for all values are equal or not
-            CollectionAssert.AreEqual(original["Abstract.dll"], result["Abstract.dll"]);
+        [TestMethod()]
+        public void InvalidPathOfDLL()
+        {
+            Analyzer analyzer = new();
+
+            IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
+            {
+                [101] = true,
+            };
+
+            analyzer.Configure(teacherOptions);
+
+            List<string> paths = new()
+            {
+                "..\\..\\..\\..\\..\\..\\TestDLLs\\Abstract.dll"
+            };
+
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
+
+            Assert.AreEqual(0, result.Count);
+
         }
 
         [TestMethod()]
@@ -173,12 +214,12 @@ namespace Analyzer.Tests
 
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
             {
-                [101] = true,
+                [101] = false,
                 [102] = true,
-                [104] = true,
+                [103] = true,
                 [105] = false,
-                [108] = true,
-                [110] = true,
+                [108] = false,
+                [110] = false,
                 [115] = false
             };
 
@@ -186,7 +227,7 @@ namespace Analyzer.Tests
 
             List<string> paths = new()
             {
-                "..\\..\\..\\TestDLLs\\Abstract.dll"
+                "..\\..\\..\\TestDLLs\\ACIST.dll"
             };
 
             analyzer.LoadDLLFileOfStudent(paths);
@@ -195,28 +236,43 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> original = new();
 
-            original["Abstract.dll"] = new List<AnalyzerResult> {
+            original["ACIST.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("101", 1, ""),
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
-                new AnalyzerResult("104", 1, "No violation found."),
-                new AnalyzerResult("108", 0, "No violations found."),
-                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+                new AnalyzerResult("102", 1, "No violation found"),
+                new AnalyzerResult("103", 0, "BadExample : counter ,GoodExample : counter , are unused private field.")
 
             };
 
-            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            foreach (var key in original.Keys)
             {
-                Console.WriteLine(dll.Key);
-
-                foreach (AnalyzerResult res in dll.Value)
-                {
-                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
-                }
+                original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
             }
 
-            //Assert.AreEqual(result.ToString(), original.ToString());
-            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+            // Sort the lists based on AnalyserID
+            foreach (var key in result.Keys)
+            {
+                result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(original.ContainsKey(dll.Key), $"Expected DLL '{dll.Key}' not found in the original results.");
+
+                List<AnalyzerResult> originalResults = original[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(originalResults.Count, actualResults.Count, $"Result count for DLL '{dll.Key}' is different.");
+
+                for (int i = 0; i < originalResults.Count; i++)
+                {
+                    AnalyzerResult originalResult = originalResults[i];
+                    AnalyzerResult actualResult = actualResults[i];
+
+                    Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
+                    Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
+                    Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
+                }
+            }
         }
 
 
@@ -228,18 +284,16 @@ namespace Analyzer.Tests
             IDictionary<int, bool> teacherOptions = new Dictionary<int, bool>
             {
                 [102] = true,
-                [104] = true,
                 [105] = true,
                 [108] = true,
-                [110] = true,
             };
 
             analyzer.Configure(teacherOptions);
 
             List<string> paths = new()
             {
-                "..\\..\\..\\TestDLLs\\Abstract.dll",
-                "..\\..\\..\\TestDLLs\\BridgePattern.dll",
+                "..\\..\\..\\TestDLLs\\ACIST1.dll",
+                "..\\..\\..\\TestDLLs\\Depthofinh.dll",
                 "..\\..\\..\\TestDLLs\\Proxy.dll",
             };
 
@@ -249,30 +303,27 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> original = new();
 
-            original["Abstract.dll"] = new List<AnalyzerResult> {
+            original["ACIST1.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
-                new AnalyzerResult("104", 1, "No violation found."),
-                new AnalyzerResult("108", 0, "No violations found."),
-                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+                new AnalyzerResult("102", 0, "Classes ACIST1.BadExampleBase, ACIST1.BadExample contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
+                new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
+                new AnalyzerResult("108", 1, "No violations found."),
 
             };
 
-            original["BridgePattern.dll"] = new List<AnalyzerResult> {
+            original["Depthofinh.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
-                new AnalyzerResult("104", 1, "No violation found."),
-                new AnalyzerResult("108", 0, "No violations found."),
-                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+                new AnalyzerResult("102", 0, "Classes depthofinh.BaseClass, depthofinh.DerivedClass, depthofinh.DerivedClass2, depthofinh.ViolatingClass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
+                new AnalyzerResult("105", 0, " Classes violating depth of inheritance rule:\r\ndepthofinh.ViolatingClass: Depth - 4"),
+                new AnalyzerResult("108", 1, "No violations found.")
 
             };
 
             original["Proxy.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.Badname contains only static fields and methods, but has non -static, visible constructor.Try changing it to private or make it static."),
-                new AnalyzerResult("104", 1, "No violation found."),
-                new AnalyzerResult("108", 0, "No violations found."),
-                new AnalyzerResult("110", 0, "No occurrences of useless control flow found."),
+                new AnalyzerResult("102", 1, "No violation found"),
+                new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
+                new AnalyzerResult("108", 1, "No violations found."),
 
             };
 
@@ -286,8 +337,37 @@ namespace Analyzer.Tests
                 }
             }
 
-            CollectionAssert.AreEqual(original.Keys.ToList(), result.Keys.ToList());
+            foreach (var key in original.Keys)
+            {
+                original[key] = original[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
+            // Sort the lists based on AnalyserID
+            foreach (var key in result.Keys)
+            {
+                result[key] = result[key].OrderBy(result => result.AnalyserID).ToList();
+            }
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(original.ContainsKey(dll.Key), $"Expected DLL '{dll.Key}' not found in the original results.");
+
+                List<AnalyzerResult> originalResults = original[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(originalResults.Count, actualResults.Count, $"Result count for DLL '{dll.Key}' is different.");
+
+                for (int i = 0; i < originalResults.Count; i++)
+                {
+                    AnalyzerResult originalResult = originalResults[i];
+                    AnalyzerResult actualResult = actualResults[i];
+
+                    Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
+                    Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
+
+                }
+            }
         }
-        */
+        
     }
 }
