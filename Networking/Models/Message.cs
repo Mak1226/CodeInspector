@@ -8,6 +8,8 @@ namespace Networking.Models
 {
     public class Message
     {
+        private string _v;
+
         public string Data { get; set; }
         public string ModuleName { get; set; }
         public string DestID { get; set; }
@@ -28,6 +30,10 @@ namespace Networking.Models
             SenderID = senderID;
         }
 
+        public Message( string v )
+        {
+            _v = v;
+        }
     }
 
 }
