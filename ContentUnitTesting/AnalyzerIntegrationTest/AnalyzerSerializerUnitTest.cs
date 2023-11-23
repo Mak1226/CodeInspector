@@ -62,7 +62,7 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
                 new List<object> { "abc123", 1, "No errors" },
                 new List<object> { "xyz456", 0, "Invalid input" },
                 new List<object> { "123def", 2, "Internal server error" },
-                new List<object> { "qwe789", 1, "File not found" }
+                new List<object> { "qwe789", 1, "File not found : File 1" }
                 // Add more entries as needed
             };
 

@@ -31,7 +31,7 @@ namespace Content.Encoder
             else if (genericObject.GetType() == typeof(AnalyzerResult))
             {
                 var analyzerResult = genericObject as AnalyzerResult;
-                string serializedAnalyzerResult = $"AnalyzerID:{analyzerResult.AnalyserID}||\nVerdict:{analyzerResult.Verdict}||\nErrorMessage:{analyzerResult.ErrorMessage}\n";
+                string serializedAnalyzerResult = $"AnalyzerID&:{analyzerResult.AnalyserID}||\nVerdict&:{analyzerResult.Verdict}||\nErrorMessage&:{analyzerResult.ErrorMessage}\n";
 
                 return serializedAnalyzerResult;
             }
@@ -68,7 +68,7 @@ namespace Content.Encoder
 
             foreach (string line in lines)
             {
-                string[] parts = line.Split( ":" , StringSplitOptions.RemoveEmptyEntries );
+                string[] parts = line.Split( "&:" , StringSplitOptions.RemoveEmptyEntries );
                 if (parts.Length == 2)
                 {
                     string propertyName = parts[0].Trim();
