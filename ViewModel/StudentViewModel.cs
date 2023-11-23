@@ -28,7 +28,6 @@ namespace ViewModel
 {
     public class StudentViewModel : INotifyPropertyChanged , IEventHandler
     {
-        private readonly ICommunicator _client; // Communicator used to send and receive messages.
 
         /// </summary>
         /// <param name="name">The name of the student.</param>
@@ -36,7 +35,7 @@ namespace ViewModel
         /// <param name="communicator">An optional communicator parameter.</param>
         public StudentViewModel( string name , string id, ICommunicator? communicator = null)
         {
-            _client = communicator ?? CommunicationFactory.GetClient();
+            Client = communicator ?? CommunicationFactory.GetClient();
             StudentName = name;
             StudentRoll = id;
             IpAddress = GetPrivateIp();
@@ -87,13 +86,7 @@ namespace ViewModel
             }
         }
 
-        public ICommunicator Communicator
-        {
-            get 
-            {
-                return _client;
-            } 
-        }
+        public ICommunicator Communicator => Client;
 
         /// <summary>
         /// Property changed event raised when a property is changed on a component.
@@ -109,6 +102,12 @@ namespace ViewModel
         /// Gets the instructor's port.
         /// </summary>
         public string StudentRoll { get; private set; }
+
+        public ICommunicator Client { get; }
+
+        public ICommunicator Client1 => Client;
+
+        public ICommunicator Client2 => Client;
 
         /// <summary>
         /// Gets the private IP address of the host machine.
@@ -173,23 +172,23 @@ namespace ViewModel
             else if (message == "0")
             {
                 IsConnected = false;
-                _client.Stop();
+                Client.Stop();
                 Trace.WriteLine("Disconnected from Instructor");
             }
         }
 
-        /// <summary>
-        /// Disconnects from the instructor.
-        /// </summary>
-        public void DisconnectInstructor()
-        {
-            string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
-            
-            if (InstructorIp != null && InstructorPort != null)
+            /// <summary>
+            /// Disconnects from the instructor.
+            /// </summary>
+            public void DisconnectInstructor()
             {
-                _client.Send(message, "server");
+                string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
+            
+                if (InstructorIp != null && InstructorPort != null)
+                {
+                    Client.Send(message, "server");
+                }
             }
-        }
         /// <summary>
         /// Connects to the instructor.
         /// </summary>
@@ -198,12 +197,12 @@ namespace ViewModel
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
             {
-                string ipPort = _client.Start( InstructorIp , int.Parse( InstructorPort ) , StudentRoll , "Dashboard" );
+                string ipPort = Client.Start( InstructorIp , int.Parse( InstructorPort ) , StudentRoll , "Dashboard" );
                 if(ipPort == "failed")
                 {
                     return false;
                 }
-                _client.Subscribe(this, "Dashboard");
+                Client.Subscribe(this, "Dashboard");
                 Trace.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
@@ -214,7 +213,7 @@ namespace ViewModel
                     OnPropertyChanged(nameof(ReceivePort));
 
                     string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
-                    _client.Send(message, "server");
+                    Client.Send(message, "server");
                     return true;
                 }
                 catch { }
