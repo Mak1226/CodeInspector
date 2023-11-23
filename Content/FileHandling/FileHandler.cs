@@ -25,14 +25,16 @@ namespace Content.FileHandling
     {
         private List<string> _filesList;
         private readonly IFileEncoder _fileEncoder;
+
         /// <summary>
-        /// saves files in //data/
+        /// Constructor for filehandler class. 
         /// </summary>
         public FileHandler()
         {
             _fileEncoder = new DLLEncoder();
             _filesList = new List<string>();
         }
+
         /// <summary>
         /// Retrieves a list of file paths representing the files stored or managed by the file handler.
         /// </summary>
@@ -43,10 +45,12 @@ namespace Content.FileHandling
         }
 
         /// <summary>
-        /// Saves file in data location and calls analyzer query
+        /// Processes file upload, saves the file in the data location, 
+        /// and generates an encoded representation for analysis.
         /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="sessionID"></param>
+        /// <param name="filepath">The path of the file or directory to be uploaded.</param>
+        /// <param name="sessionID">The session ID associated with the upload.</param>
+        /// <returns>The encoded representation of the file data for further analysis.</returns>
         public string HandleUpload(string filepath, string sessionID)
         {
             List<string> dllFiles = new();
@@ -92,10 +96,12 @@ namespace Content.FileHandling
         }
 
         /// <summary>
-        /// To be called with 
+        /// Processes received encoded data, decodes files, 
+        /// and saves them in the specified session path.
         /// </summary>
-        /// <param name="sessionID"></param>
-        /// <returns></returns>
+        /// <param name="encoding">The encoded data to be processed.</param>
+        /// <returns>The session ID associated with the received data, 
+        /// or null if the decoding fails or the event type is not "File".</returns>
         public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;

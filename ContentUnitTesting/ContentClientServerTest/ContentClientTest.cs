@@ -1,20 +1,42 @@
-﻿using Analyzer;
+﻿/******************************************************************************
+ * Filename     = ContentClientTest.cs
+ * 
+ * Author       = Lekshmi
+ *
+ * Product      = Analyzer
+ * 
+ * Project      = ContentUnitTesting
+ *
+ * Description  = Unit Tests for ContentClient
+*****************************************************************************/
+using Analyzer;
 using Content.Encoder;
 using Content.FileHandling;
 using Content.Model;
 
 namespace ContentUnitTesting.ContentClientServerTest
 {
+    /// <summary>
+    /// Class to test file ContentClient.cs
+    /// </summary>
     [TestClass]
     public class ContentClientTest
     {
         MockCommunicator _communicator;
 
+        /// <summary>
+        /// Test initialization method. 
+        /// Creates a new instance of MockCommunicator for each test.
+        /// </summary>
         [TestInitialize]
         public void TestInitializer()
         {
             _communicator = new MockCommunicator();
         }
+
+        /// <summary>
+        /// Tests the file upload functionality of the ContentClient class.
+        /// </summary>
         [TestMethod]
         public void FileSendTest()
         {
@@ -32,6 +54,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             Assert.AreEqual(encoding, _communicator.GetEncoding());
             Directory.Delete(tempDirectory, true);
         }
+
+        /// <summary>
+        /// Tests the file receive functionality of the ContentClient class.
+        /// </summary>
         [TestMethod]
         public void FileReceiveTest()
         {
@@ -51,6 +77,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             contentClient.HandleReceive(encoding);
             Assert.IsTrue(analyzerResultUpdated.ContainsKey("File1"));
         }
+
+        /// <summary>
+        /// Tests the behavior when receiving null data in the ContentClient class.
+        /// </summary>
         [TestMethod]
         public void NullReceiveTest()
         {
