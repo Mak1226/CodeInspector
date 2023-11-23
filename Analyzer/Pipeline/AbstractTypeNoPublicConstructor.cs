@@ -1,4 +1,16 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AbstractTypeNoPublicConstructor.cs
+* 
+* Author      = Sneha Bhattacharjee
+*
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +60,7 @@ namespace Analyzer.Pipeline
                     // Loop over all constructors of that class
                     foreach (ConstructorInfo constructor in allConstructors)
                     {
-                        if (constructor.IsPublic)
+                        if (constructor.IsPublic || constructor.IsFamilyOrAssembly)
                         {
                             abstractTypesWithPublicConstructors.Add(classType);
                             break;
@@ -74,7 +86,7 @@ namespace Analyzer.Pipeline
                 try
                 {
                     // sanity check
-                    errorLog.AppendLine(type.Name.ToString());
+                    errorLog.AppendLine(type.FullName);
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
@@ -96,6 +108,10 @@ namespace Analyzer.Pipeline
             {
                 _verdict = 0;
                 _errorMessage = ErrorMessage(abstractTypesWithPublicConstructor);
+            }
+            else
+            {
+                _errorMessage = "No violation found.";
             }
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
