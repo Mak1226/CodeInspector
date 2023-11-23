@@ -46,7 +46,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {highParameterCountMethods} methods with a high number of parameters."
                 : "No methods with a high number of parameters found.";
             int verdict = highParameterCountMethods > 0 ? 0 : 1;
-            return new AnalyzerResult("new", verdict, errorString);
+            return new AnalyzerResult("119", verdict, errorString);
         }
     }
 }
