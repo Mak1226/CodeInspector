@@ -1,46 +1,56 @@
-﻿/*using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/******************************************************************************
+* Filename    = NotImplementedChecker.cs
+* 
+* Author      = Kaustubh Sapkale
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+using System;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline.Analyzers
 {
-    internal class NotImplementedChecker : BaseAnalyzer
+    /// <summary>
+    /// This class represents an analyzer for counting unimplemented methods in DLL files.
+    /// </summary>
+    public class NotImplementedChecker : AnalyzerBase
     {
+        private string errorMessage;
+        private int verdict;
+        private readonly string analyzerID;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotImplementedChecker"/> class.
         /// </summary>
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        public NotImplementedChecker(ParsedDLLFiles dllFiles) : base(dllFiles)
+        public NotImplementedChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            // The constructor can be used for any necessary setup or initialization.
+            errorMessage = "";
+            verdict = 1;
+            analyzerID = "118";
         }
 
         /// <summary>
-        /// Counts the number of unimplemented methods in the provided DLL files.
+        /// Analyzes the provided DLL files and counts the number of unimplemented methods.
         /// </summary>
-        /// <param name="dllFiles">The parsed DLL files to analyze.</param>
-        /// <returns>The count of unimplemented methods.</returns>
-        public int CountUnimplementedMethods(ParsedDLLFiles dllFiles)
+        /// <param name="parsedDLLFile">The parsed DLL file to analyze.</param>
+        private void Analyze(ParsedDLLFile parsedDLLFile)
         {
-            int unimplementedMethodCount = 0;
-
-            foreach (var classObjMC in dllFiles.classObjListMC)
+            foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (var method in classObjMC.Methods)
+                foreach (var method in cls.MethodsList)
                 {
-                    if (!IsImplemented((MethodDefinition)method))
+                    if (!IsImplemented(method))
                     {
-                        unimplementedMethodCount++;
+                        errorMessage += $"{cls.Name}.{method.Name} ";
+                        verdict = 0;
                     }
                 }
             }
-
-            return unimplementedMethodCount;
         }
 
         /// <summary>
@@ -67,6 +77,14 @@ namespace Analyzer.Pipeline.Analyzers
 
             return true; // Implemented method
         }
+
+        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+        {
+            errorMessage = "";
+            verdict = 1;
+
+            Analyze(parsedDLLFile);
+            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+        }
     }
 }
-*/

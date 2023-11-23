@@ -1,4 +1,13 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = NewLineIteralRule.cs
+* 
+* Author      = Kaustubh Sapkale
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+using System;
 using System.Globalization;
 using System.Text;
 using Mono.Cecil;
