@@ -167,14 +167,11 @@ namespace Analyzer.Pipeline.Tests
         [ExpectedException( typeof( NullReferenceException ) )]
         public void TestException()
         {
-            _parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.FullName != "AbstractClassWithPublicConstructor.AbstractClassWithProtectedInternalConstructor" );
+            _parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceEmpty" );
             List<ParsedDLLFile> parseddllFiles = new() { null };
 
-            AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new( parseddllFiles );
-            Dictionary<string , AnalyzerResult> result = abstractTypeNoPublicConstructor.AnalyzeAllDLLs();
-
-            // If control flow reaches this point, then no exception was raised.
-            Assert.Fail( "Exception was not raised" );
+            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Assert.ThrowsException<NullReferenceException>( () => noEmptyInterface.AnalyzeAllDLLs() );
         }
     }
 }

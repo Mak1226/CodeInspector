@@ -1,10 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/******************************************************************************
+* Filename    = AnalyzerResultTests.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit tests for the AnalyzerResult class.
+******************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Analyzer.Tests
 {
+    /// <summary>
+    /// Unit tests for the AnalyzerResult class.
+    /// </summary>
     [TestClass()]
     public class AnalyzerResultTests
     {
+        /// <summary>
+        /// Tests the equality of AnalyzerResult instances using the Equals method and equality operator.
+        /// </summary>
         [TestMethod]
         public void TestEquality()
         {
@@ -19,6 +39,9 @@ namespace Analyzer.Tests
             Assert.AreNotEqual(result2, result3);
         }
 
+        /// <summary>
+        /// Tests the inequality of AnalyzerResult instances using the inequality operator.
+        /// </summary>
         [TestMethod]
         public void TestInequality()
         {
@@ -33,6 +56,9 @@ namespace Analyzer.Tests
             Assert.IsTrue(result2 != result3);
         }
 
+        /// <summary>
+        /// Tests the Equals method, equality, and inequality operators, and GetHashCode method of the AnalyzerResult class.
+        /// </summary>
         [TestMethod]
         public void AnalyzerResultEqualsAndHashCodeSuccess()
         {
@@ -59,6 +85,10 @@ namespace Analyzer.Tests
             Assert.AreNotEqual(result1.GetHashCode(), result3.GetHashCode());
         }
 
+
+        /// <summary>
+        /// Tests the ToString method of the AnalyzerResult class.
+        /// </summary>
         [TestMethod]
         public void AnalyzerResultToStringSuccess()
         {
@@ -67,6 +97,9 @@ namespace Analyzer.Tests
             Assert.AreEqual("AnalyzerID: Analyzer1, Verdict: 1, ErrorMessage: No errors", resultString);
         }
 
+        /// <summary>
+        /// Tests the equality, inequality, and GetHashCode method of the AnalyzerResult class.
+        /// </summary>
         [TestMethod]
         public void AnalyzerResultCheckIsEqual()
         {

@@ -84,9 +84,9 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new( path );
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
-            NoEmptyInterface noEmptyInterfaces = new( dllFiles );
+            NoVisibleInstanceFields noVisibleInstanceFields = new( dllFiles );
 
-            Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> result = noVisibleInstanceFields.AnalyzeAllDLLs();
             Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
             Assert.AreEqual( 1 , result[dllFile.DLLFileName].Verdict );
         }
@@ -193,6 +193,20 @@ namespace Analyzer.Pipeline.Tests
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
+        }
+
+        [TestMethod()]
+        [ExpectedException( typeof( NullReferenceException ) )]
+        public void TestException()
+        {
+            _parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.FullName != "TestNoVisibleInstanceFields.IsPrivateClass" );
+            List<ParsedDLLFile> parseddllFiles = new() { null };
+
+            NoVisibleInstanceFields nativeFieldsShouldNotBeVisible = new(parseddllFiles);
+            Dictionary<string , AnalyzerResult> result = nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs();
+            //Assert.ThrowsException<NullReferenceException>( () => nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs() );
+
+            Assert.Fail( "Exception was not raised." );
         }
     }
 }
