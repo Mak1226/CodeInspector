@@ -63,7 +63,7 @@ namespace Analyzer.Tests
         public void AnalyzerResultToStringSuccess()
         {
             var result = new AnalyzerResult("Analyzer1", 1, "No errors");
-            var resultString = result.ToString();
+            string resultString = result.ToString();
             Assert.AreEqual("AnalyzerID: Analyzer1, Verdict: 1, ErrorMessage: No errors", resultString);
         }
 

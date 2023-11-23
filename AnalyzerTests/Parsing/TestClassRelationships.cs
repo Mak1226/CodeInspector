@@ -1,4 +1,13 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = TestClassRelationships.cs
+* 
+* Author      = Yukta Salunkhe
+* 
+* Project     = Analyzer
+*
+* Description =  Test class to verify the functionality of retrieving class relationships from given dll file.
+*****************************************************************************/
+using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mono.Cecil;
 using System;
@@ -29,10 +38,7 @@ namespace AnalyzerTests.Pipeline
 
             string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
 
-            //C: \Users\HP\Desktop\software\SoftwareGroupProject\Analyzer\AnalyzerTests\TestDLLs\TypeRelationships.dll
-
             var parsedDllObj = new ParsedDLLFile(path);
-
             DllFileObjs.Add(parsedDllObj);
 
             int classes = 0;
@@ -40,6 +46,7 @@ namespace AnalyzerTests.Pipeline
             {
                 foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
+                    Console.WriteLine(cls.TypeObj.FullName);
                     classes++;
                 }
             }
@@ -56,9 +63,9 @@ namespace AnalyzerTests.Pipeline
             {
                 foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
-                    Debug.WriteLine("\n\n\n\n");
-                    Console.WriteLine("Class: " + cls.Name);
-                    Console.WriteLine("Inheritance: ");
+                    //Debug.WriteLine("\n\n\n\n");
+                    //Console.WriteLine("Class: " + cls.Name);
+                    //Console.WriteLine("Inheritance: ");
                     foreach (string inhCls in cls.InheritanceList)
                     {
                         Console.WriteLine(inhCls);
@@ -68,23 +75,23 @@ namespace AnalyzerTests.Pipeline
                         }
                         InheritanceRel[cls.Name].Add(inhCls);
                     }
-                    Console.WriteLine("------------------------------------");
-                    Console.WriteLine("Composiition: ");
+                    //Console.WriteLine("------------------------------------");
+                    //Console.WriteLine("Composiition: ");
                     foreach (string compCls in cls.CompositionList)
                     {
-                        Console.WriteLine(compCls);
+                        //Console.WriteLine(compCls);
                         if (!CompositionRel.ContainsKey(cls.Name))
                         {
                             CompositionRel[cls.Name] = new List<string>();
                         }
                         CompositionRel[cls.Name].Add(compCls);
                     }
-                    Console.WriteLine("------------------------------------");
+                    //Console.WriteLine("------------------------------------");
 
-                    Console.WriteLine("Aggregation: ");
+                    //Console.WriteLine("Aggregation: ");
                     foreach (string aggCls in cls.AggregationList)
                     {
-                        Console.WriteLine(aggCls);
+                        //Console.WriteLine(aggCls);
                         if (!AggregationRel.ContainsKey(cls.Name))
                         {
                             AggregationRel[cls.Name] = new List<string>();
@@ -92,12 +99,12 @@ namespace AnalyzerTests.Pipeline
                         AggregationRel[cls.Name].Add(aggCls);
                     }
 
-                    Console.WriteLine("------------------------------------");
+                    //Console.WriteLine("------------------------------------");
 
-                    Console.WriteLine("Using: ");
+                    //Console.WriteLine("Using: ");
                     foreach (string useCls in cls.UsingList)
                     {
-                        Console.WriteLine(useCls);
+                        //Console.WriteLine(useCls);
                         if (!UsingRel.ContainsKey(cls.Name))
                         {
                             UsingRel[cls.Name] = new List<string>();
@@ -105,7 +112,7 @@ namespace AnalyzerTests.Pipeline
                         UsingRel[cls.Name].Add(useCls);
 
                     }
-                    Console.WriteLine("------------------------------------");
+                    //Console.WriteLine("------------------------------------");
 
                 }
             }

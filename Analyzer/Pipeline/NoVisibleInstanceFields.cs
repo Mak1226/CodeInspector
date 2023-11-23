@@ -1,4 +1,18 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = NoVisibleInstanceFields.cs
+* 
+* Author      = Sneha Bhattacharjee
+*
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = Class should not have non-private instance field. 
+*               The primary use of a field should be as an implementation detail. 
+*               Fields should be private or internal and should be exposed by using properties. 
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +24,17 @@ using Mono.Cecil;
 using Analyzer.Pipeline;
 using Analyzer;
 using Mono.Cecil.Rocks;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline
 {
-    public class NativeFieldsShouldNotBeVisible : AnalyzerBase
+    public class NoVisibleInstanceFields : AnalyzerBase
     {
         private string _errorMessage;
         private int _verdict;
         private readonly string _analyzerID;
 
-        public NativeFieldsShouldNotBeVisible(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+        public NoVisibleInstanceFields(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessage = "";
             _verdict = 1;
@@ -30,11 +45,11 @@ namespace Analyzer.Pipeline
         {
             List<FieldDefinition> visibleNativeFieldsList = new();
 
-
             foreach (ParsedClassMonoCecil classobj in parsedDLLFile.classObjListMC)
             {
                 TypeDefinition classtype = classobj.TypeObj;
 
+                /*
                 // rule does not apply to interface, enumerations and delegates or to types without fields
                 if (classtype.IsValueType)
                 {
@@ -46,6 +61,7 @@ namespace Analyzer.Pipeline
                     // note: parseddllfiles.classobjlistmc provides only classes
                     continue;
                 }
+                */
 
                 if (!classtype.HasFields)
                 {
@@ -105,15 +121,25 @@ namespace Analyzer.Pipeline
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             List<FieldDefinition> visibleNativeFieldsList = FindVisibleNativeFields(parsedDLLFile);
-            if (visibleNativeFieldsList.Count > 0)
+            try
+            {
+                if (visibleNativeFieldsList.Count > 0)
+                {
+                    _verdict = 0;
+                    _errorMessage = ErrorMessage(visibleNativeFieldsList);
+                }
+                else
+                {
+                    _errorMessage = "No violation found.";
+                }
+            }
+            catch (NullReferenceException ex)
             {
                 _verdict = 0;
-                _errorMessage = ErrorMessage(visibleNativeFieldsList);
+                _errorMessage = "";
+                Trace.WriteLine("NullReferenceException in DLL files " + ex.Message);
             }
-            else
-            {
-                _errorMessage = "No violation found.";
-            }
+            
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
