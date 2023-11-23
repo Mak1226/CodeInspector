@@ -1,6 +1,17 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AvoidConstructorsInStaticTypes.cs
+* 
+* Author      = Yukta Salunkhe
+* 
+* Project     = Analyzer
+*
+* Description = This Analyzer throws error if any class with all static members have a public non-static constructor.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -28,6 +39,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public AvoidConstructorsInStaticTypes( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
+            Trace.WriteLine("Created Instance of Analyzer AvoidConstructorsInStaticTypes");
             _analyzerID = "102";
         }
 
@@ -82,6 +94,7 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
+            Trace.WriteLine("Running Analyzer AvoidConstructorInStaticTypes on " + parsedDLLFile.DLLFileName);
             _errorMessage = "";
             _verdict = 1;
             violatingClasses = new HashSet<ParsedClass>();
@@ -125,6 +138,7 @@ namespace Analyzer.Pipeline
             {
                 _verdict = 1;
                 _errorMessage = "No violation found";
+                Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
                 return new AnalyzerResult( _analyzerID , _verdict , _errorMessage );
             }
 
@@ -143,6 +157,7 @@ namespace Analyzer.Pipeline
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
             AnalyzerResult resultObj = new( _analyzerID , _verdict , _errorMessage );
+            Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
             return resultObj;
         }
     }
