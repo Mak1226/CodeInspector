@@ -69,7 +69,7 @@ namespace Analyzer.Pipeline
         /// <returns>True if the string is in Pascal case, false otherwise.</returns>
         private bool IsPascalCase(string s)
         {
-            if (string.IsNullOrEmpty( s ))
+            if (string.IsNullOrEmpty(s))
             {
                 return false;
             }

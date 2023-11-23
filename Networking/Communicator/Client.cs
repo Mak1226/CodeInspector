@@ -11,7 +11,6 @@
  *               is implemented here.
  *****************************************************************************/
 
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using Networking.Events;
@@ -30,14 +29,15 @@ namespace Networking.Communicator
         private string _moduleName;
         private Sender _sender;
         private Receiver _receiver;
-        public Dictionary<string, NetworkStream> _IDToStream = new();
-        Dictionary<string, string> _senderIDToClientID = new();
+        public Dictionary<string, NetworkStream> _IdToStream = new();
+        readonly Dictionary<string, string> _senderIdToClientId = new();
 
         private string _senderId;
         private NetworkStream _networkStream;
-        private Dictionary<string, IEventHandler> _eventHandlersMap = new();
+        private readonly Dictionary<string, IEventHandler> _eventHandlersMap = new();
 
         private bool _isStarted = false;
+        
 
         /// <summary>
         /// Sends serialized data to destination. 
@@ -48,11 +48,13 @@ namespace Networking.Communicator
         public void Send(string serializedData, string moduleName, string destId) 
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start client first");
+            }
 
             // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
             Console.WriteLine("[Client] Send" + serializedData + " " + moduleName + " " + destId);
-            Message message = new Message(
+            Message message = new(
                 serializedData, moduleName, destId, _senderId
             );
             _sender.Send(message);
@@ -66,10 +68,12 @@ namespace Networking.Communicator
         public void Send(string serializedData, string destId)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start client first");
+            }
 
             Console.WriteLine("[Client] Send" + serializedData + " " + _moduleName + " " + destId);
-            Message message = new Message(
+            Message message = new(
                 serializedData, _moduleName, destId, _senderId
             );
             _sender.Send(message);
@@ -119,17 +123,17 @@ namespace Networking.Communicator
             Console.WriteLine("[Client] Port: " + localEndPoint.Port);
 
             // send message to Networking module of the server to register this client with this Id
-            Data data = new Data(_senderId,EventType.ClientRegister());
-            Message message = new Message(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetServerID(), _senderId);
+            Data data = new(_senderId,EventType.ClientRegister());
+            Message message = new(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetServerID(), _senderId);
 
             _networkStream = tcpClient.GetStream();
-            lock (_IDToStream) { _IDToStream[ID.GetServerID()] = _networkStream; }
+            lock (_IdToStream) { _IdToStream[ID.GetServerID()] = _networkStream; }
 
             // starting the sender and receiver threads
             Console.WriteLine("[Client] Starting sender");
-            _sender = new(_IDToStream,_senderIDToClientID, true);
+            _sender = new(_IdToStream,_senderIdToClientId, true);
             Console.WriteLine("[Client] Starting receiver");
-            _receiver = new(_IDToStream, this);
+            _receiver = new(_IdToStream, this);
             _sender.Send(message);
 
             // subscribing to the Networking module's event handler.
@@ -144,10 +148,12 @@ namespace Networking.Communicator
         public void Stop()
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start client first");
+            }
 
             Console.WriteLine("[Client] Stop");
-            Data data = new Data(EventType.ClientDeregister());
+            Data data = new(EventType.ClientDeregister());
             _sender.Send(new Message(Serializer.Serialize<Data>(data), ID.GetNetworkingID(), ID.GetServerID(), _senderId));
             _sender.Stop();
             _receiver.Stop();
@@ -165,15 +171,20 @@ namespace Networking.Communicator
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start client first");
+            }
 
             Console.WriteLine("[Client] Subscribe "+ moduleName);
 
             if (_eventHandlersMap.ContainsKey(moduleName))
+            {
                 Console.WriteLine("[Client] "+moduleName+" already subscribed");// already subs
+            }
             else
+            {
                 _eventHandlersMap[moduleName] = eventHandler;
-
+            }
         }
 
         /// <summary>
@@ -182,8 +193,17 @@ namespace Networking.Communicator
         /// <param name="message">The received message</param>
         public void HandleMessage(Message message)
         {
-            if(_eventHandlersMap.ContainsKey(message.ModuleName))
-                _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
+            if (_eventHandlersMap.ContainsKey( message.ModuleName ))
+            {
+                try
+                {
+                    _eventHandlersMap[message.ModuleName].HandleMessageRecv( message );
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine( "[Client] Error in handling message: " + e.Message );
+                }
+            }
             else
             {
                  Console.WriteLine("[Client] " + message.ModuleName + " not subscribed");

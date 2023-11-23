@@ -3,7 +3,7 @@
 namespace Analyzer.Pipeline.Tests
 {
     [TestClass]
-    public class MainPipelineTests
+    public class TestMainPipeline
     {
         [TestMethod]
         public void StartShouldRunAnalyzersAndPopulateResults()

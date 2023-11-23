@@ -32,8 +32,10 @@ namespace Dashboard
         private void ErrorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // Start the timer when the window is loaded
-            Timer t = new Timer();
-            t.Interval = 4000; // 4 seconds to see the window
+            Timer t = new()
+            {
+                Interval = 4000 // 4 seconds to see the window
+            };
             t.Elapsed += T_Elapsed;
             t.Start();
         }

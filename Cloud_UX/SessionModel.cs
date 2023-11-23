@@ -18,15 +18,14 @@ namespace Cloud_UX
 {
     public class SessionsModel
     {
-        string[] paths; //string array to store the read content of the url file. 
-        private string analysisUrl = "http://localhost:7074/api/analysis";
-        private string submissionUrl = "http://localhost:7074/api/submission";
-        private string sessionUrl = "http://localhost:7074/api/session";
-        private DownloadApi fileDownloadApi;
+        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
+        private readonly string _submissionUrl = "http://localhost:7074/api/submission";
+        private readonly string _sessionUrl = "http://localhost:7074/api/session";
+        private readonly DownloadApi _fileDownloadApi;
         public SessionsModel()
         {
             Trace.WriteLine("[cloud] New DownloadApi instance created");
-            fileDownloadApi = new DownloadApi(sessionUrl, submissionUrl, analysisUrl);
+            _fileDownloadApi = new DownloadApi(_sessionUrl, _submissionUrl, _analysisUrl);
         }
         /// <summary>
         /// Takes the username and retreive the information from the session table. 
@@ -35,7 +34,7 @@ namespace Cloud_UX
         /// <returns>will return the session entity for given username.</returns>
         public async Task<IReadOnlyList<SessionEntity>> GetSessionsDetails(string userName)
         {
-            IReadOnlyList<SessionEntity>? getEntity = await fileDownloadApi.GetSessionsByHostNameAsync(userName);
+            IReadOnlyList<SessionEntity>? getEntity = await _fileDownloadApi.GetSessionsByHostNameAsync(userName);
             Trace.WriteLine("[cloud] Retrieved all session details for " + userName);
             return getEntity;
         }

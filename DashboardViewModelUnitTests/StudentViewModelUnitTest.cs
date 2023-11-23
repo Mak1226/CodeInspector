@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Filename    = StudentViewModelUnitTest.cs
  *
  * Author      = Prayag Krishna
@@ -19,8 +19,12 @@ namespace DashboardViewModelUnitTests
     [TestClass]
     public class StudentViewModelUnitTest
     {
+        /// <summary>
+        /// Tests the disconnection from the instructor when valid.
+        /// </summary>
+        /// <remarks>Verifies if the communicator sends a message to the server for disconnection.</remarks>
         [TestMethod]
-        public void DisconnectInstructor_WhenValidInstructorIpAndPort_ShouldSendMessageToServer()
+        public void DisconnectInstructorWhenValid()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -33,9 +37,12 @@ namespace DashboardViewModelUnitTests
             // Assert
             mockCommunicator.Verify(x => x.Send(It.IsAny<string>(), "server"), Times.Once);
         }
-
+        /// <summary>
+        /// Tests the connection to the instructor when valid.
+        /// </summary>
+        /// <remarks>Checks if the connection to the instructor is established successfully.</remarks>
         [TestMethod]
-        public void ConnectInstructor_WhenValidInstructorInfoAndStudentRoll_ShouldReturnTrue()
+        public void ConnectInstructorWhenValid()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -49,9 +56,12 @@ namespace DashboardViewModelUnitTests
             // Assert
             Assert.IsTrue(result);
         }
-
+        /// <summary>
+        /// Tests the connection to the instructor when invalid.
+        /// </summary>
+        /// <remarks>Ensures the inability to connect to the instructor with invalid parameters.</remarks>
         [TestMethod]
-        public void ConnectInstructor_WhenInvalidInstructorInfo_ShouldReturnFalse()
+        public void ConnectInstructorWhenInvalid()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -63,8 +73,12 @@ namespace DashboardViewModelUnitTests
             // Assert
             Assert.IsFalse(result);
         }
+        /// <summary>
+        /// Tests setting the instructor's IP address and port.
+        /// </summary>
+        /// <remarks>Checks if the instructor's IP and port are correctly set in the view model.</remarks>
         [TestMethod]
-        public void SetInstructorAddress_WhenCalled_ShouldSetInstructorIpAndPort()
+        public void SetInstructorAddress()
         {
             // Arrange
             var viewModel = new StudentViewModel("John Doe", "123");
@@ -76,9 +90,12 @@ namespace DashboardViewModelUnitTests
             Assert.AreEqual("192.168.1.1", viewModel.InstructorIp);
             Assert.AreEqual("8080", viewModel.InstructorPort);
         }
-
+        /// <summary>
+        /// Tests handling a received message to set the connection status.
+        /// </summary>
+        /// <remarks>Checks if the view model updates the connection status based on the received message.</remarks>
         [TestMethod]
-        public void HandleMessageRecv_WhenMessageIsOne_ShouldSetIsConnectedToTrue()
+        public void HandleMessageRecvSetIsConnectedToTrue()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -90,9 +107,12 @@ namespace DashboardViewModelUnitTests
             // Assert
             Assert.IsTrue(viewModel.IsConnected);
         }
-
+        /// <summary>
+        /// Tests handling a received message to set the disconnection status.
+        /// </summary>
+        /// <remarks>Checks if the view model updates the disconnection status based on the received message.</remarks>
         [TestMethod]
-        public void HandleMessageRecv_WhenMessageIsZero_ShouldSetIsConnectedToFalseAndStopCommunicator()
+        public void HandleMessageRecvSetIsConnectedToFalse()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -105,9 +125,12 @@ namespace DashboardViewModelUnitTests
             Assert.IsFalse(viewModel.IsConnected);
             mockCommunicator.Verify(x => x.Stop(), Times.Once);
         }
-
+        /// <summary>
+        /// Tests disconnecting from the instructor when the instructor's IP and port are null.
+        /// </summary>
+        /// <remarks>Verifies that no communication is attempted when the instructor's IP and port are null.</remarks>
         [TestMethod]
-        public void DisconnectInstructor_WhenInstructorIpAndPortAreNull_ShouldNotSendMessage()
+        public void DisconnectInstructorInstructorIpAndPortAreNull()
         {
             // Arrange
             var mockCommunicator = new Mock<ICommunicator>();
@@ -119,9 +142,12 @@ namespace DashboardViewModelUnitTests
             // Assert
             mockCommunicator.Verify(x => x.Send(It.IsAny<string>(), "server"), Times.Never);
         }
-        
+        /// <summary>
+        /// Tests setting student information.
+        /// </summary>
+        /// <remarks>Checks if the student's name and roll number are correctly set in the view model.</remarks>
         [TestMethod]
-        public void SetStudentInfo_WhenCalled_ShouldSetStudentNameAndRoll()
+        public void SetStudentInfo()
         {
             // Arrange
             var viewModel = new StudentViewModel("Initial Name", "Initial Roll");
@@ -133,23 +159,10 @@ namespace DashboardViewModelUnitTests
             Assert.AreEqual("John Doe", viewModel.StudentName);
             Assert.AreEqual("123", viewModel.StudentRoll);
         }
-        //[TestMethod]
-        //public void InstructorIp_WhenSet_ShouldUpdatePropertyValue()
-        //{
-        //    // Arrange
-        //    var viewModel = new StudentViewModel("John Doe", "123");
-
-        //    //// Act
-        //    //viewModel.ReceivePort = "8080";
-        //    //viewModel.IpAddress = "192.168.1.1";
-        //    viewModel.SetInstructorAddress("192.168.0.1", "8080");
-
-        //    // Assert
-        //    Assert.AreEqual("8080", viewModel.ReceivePort);
-        //    Assert.AreEqual("192.168.1.1", viewModel.IpAddress);
-        //    //Assert.AreEqual("192.168.0.1", viewModel.InstructorIp);
-        //}
-
+        /// <summary>
+        /// Tests the presence of a non-null client communicator.
+        /// </summary>
+        /// <remarks>Verifies that the communicator in the student view model is not null upon instantiation.</remarks>
         [TestMethod]
         public void TestingNonNullClientCommunicator()
         {
@@ -161,13 +174,13 @@ namespace DashboardViewModelUnitTests
         //{
         //    // Arrange
         //    var mockCommunicator = new Mock<ICommunicator>();
-        //    var viewModel = new StudentViewModel("John Doe", "123", mockCommunicator.Object);
-        //    viewModel.SetInstructorAddress("168.1.1", "808000");
-        //    viewModel.SetStudentInfo("John Doe", "123");
+        //    var viewModel = new StudentViewModel( "John Doe" , "123" , mockCommunicator.Object );
+        //    viewModel.SetInstructorAddress( "168.1.1" , "808000" );
+        //    viewModel.SetStudentInfo( "John Doe" , "123" );
 
         //    // Act & Assert
         //    bool result = viewModel.ConnectInstructor();
-        //    Assert.IsFalse(result);
+        //    Assert.IsFalse( result );
         //}
     }
 }

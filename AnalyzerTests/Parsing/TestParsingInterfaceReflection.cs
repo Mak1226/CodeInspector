@@ -9,10 +9,10 @@ namespace AnalyzerTests.Parsing
     [TestClass]
     public class TestParsingInterfaceReflection
     {
-        readonly ParsedInterface IDrawingView_Bridge = new(typeof(TestParsingInterface_BridgePattern.IDrawingView));
-        readonly ParsedInterface IApp_Demo = new(typeof(TestParsingInterface_DemoProject.IApp));
-        readonly ParsedInterface IApp1_Demo = new(typeof(TestParsingInterface_DemoProject.IApp1));
-        readonly ParsedInterface IApp2_Demo = new(typeof(TestParsingInterface_DemoProject.IApp2));
+        public readonly ParsedInterface IDrawingView_Bridge = new(typeof(TestParsingInterface_BridgePattern.IDrawingView));
+        public readonly ParsedInterface IApp_Demo = new(typeof(TestParsingInterface_DemoProject.IApp));
+        public readonly ParsedInterface IApp1_Demo = new(typeof(TestParsingInterface_DemoProject.IApp1));
+        public readonly ParsedInterface IApp2_Demo = new(typeof(TestParsingInterface_DemoProject.IApp2));
 
 
 

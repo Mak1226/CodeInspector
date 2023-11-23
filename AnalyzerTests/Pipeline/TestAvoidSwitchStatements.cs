@@ -3,7 +3,7 @@
 * 
 * Author      = Thanmayee
 * 
-* Project     = Analyzer
+* Project     = AnalyzerTests
 *
 * Description = Test class to verify the functionality of the AvoidSwitchStatementsAnalyzer
 *****************************************************************************/

@@ -1,12 +1,20 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = MainPipeline.cs
+*
+* Author      = Mangesh Dalvi, Nikhitha
+* 
+* Roll No     = 112001010, 112001009
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Represents the main pipeline for orchestrating the analysis process.
+******************************************************************************/
+
+using Analyzer.Parsing;
 using Analyzer.UMLDiagram;
-using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
@@ -178,6 +186,7 @@ namespace Analyzer.Pipeline
             // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
             byte[] bytes = classDiag.Run(removableNamespaces).Result;
+            Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));
             return bytes;
         }
     }
