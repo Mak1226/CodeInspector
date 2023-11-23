@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New upload client created" );
         }
 
         /// <summary>
@@ -61,11 +63,12 @@ namespace ServerlessFunc
                 };
 
                 SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Session data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostSessionAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostSessionAsync] Exception: " + ex );
                 return default;
             }
         }
@@ -88,11 +91,12 @@ namespace ServerlessFunc
                 };
 
                 SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Submission data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostSubmissionAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostSubmissionAsync] Exception: " + ex );
                 return default;
             }
         }
@@ -115,11 +119,12 @@ namespace ServerlessFunc
                 };
 
                 AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
                 return default;
             }
         }

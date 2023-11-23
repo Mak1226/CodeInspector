@@ -41,6 +41,18 @@ namespace Networking.Communicator
         private string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+
+            // prioritizing the returning of private IPv4 in the subnet 10.*.*.*
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork &&
+                    ip.ToString().Length>3 && ip.ToString()[..3] == "10.")
+                {
+                    return ip.ToString();
+                }
+            }
+
+            // otherwise return any valid IPv4
             foreach (var ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
@@ -157,6 +169,7 @@ namespace Networking.Communicator
             _listenThread.Interrupt();
             _serverListener.Stop();
             //_listenThread.Join();
+            _isStarted = false;
             Console.WriteLine("[Server] Stopped");
         }
 
