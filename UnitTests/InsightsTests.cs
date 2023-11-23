@@ -148,29 +148,22 @@ namespace CloudUnitTests
             SubmissionData submissionData5 = GetDummySubmissionData("3", "Student1");
             SubmissionData submissionData6 = GetDummySubmissionData("3", "Student2");
 
-            AnalysisData analysisData1 = GetDummyAnalysisData("1", "Student1", GetAnalysisResult(1, 0));
-            AnalysisData analysisData2 = GetDummyAnalysisData("1", "Student2", GetAnalysisResult(0, 1));
-            AnalysisData analysisData3 = GetDummyAnalysisData("2", "Student1", GetAnalysisResult(1, 0));
-            AnalysisData analysisData4 = GetDummyAnalysisData("2", "Student2", GetAnalysisResult(1, 1));
-            AnalysisData analysisData5 = GetDummyAnalysisData("3", "Student1", GetAnalysisResult(0, 0));
-            AnalysisData analysisData6 = GetDummyAnalysisData("3", "Student2", GetAnalysisResult(1, 0));
+            AnalysisData analysisData1 = GetDummyAnalysisData( "1" , "Student1" , GetAnalysisResult( 1 , 0 ) );
+            AnalysisData analysisData2 = GetDummyAnalysisData( "1" , "Student2" , GetAnalysisResult( 0 , 1 ) );
+            AnalysisData analysisData3 = GetDummyAnalysisData( "2" , "Student1" , GetAnalysisResult( 1 , 0 ) );
+            AnalysisData analysisData4 = GetDummyAnalysisData( "2" , "Student2" , GetAnalysisResult( 1 , 1 ) );
+            AnalysisData analysisData5 = GetDummyAnalysisData( "3" , "Student1" , GetAnalysisResult( 0 , 0 ) );
+            AnalysisData analysisData6 = GetDummyAnalysisData( "3" , "Student2" , GetAnalysisResult( 1 , 0 ) );
 
-            await _uploadClient.PostSessionAsync(sessionData1);
-            await _uploadClient.PostSessionAsync(sessionData2);
-            await _uploadClient.PostSessionAsync(sessionData3);
-
-            await _uploadClient.PostSubmissionAsync(submissionData1);
-            await _uploadClient.PostSubmissionAsync(submissionData2);
-            await _uploadClient.PostSubmissionAsync(submissionData3);
-            await _uploadClient.PostSubmissionAsync(submissionData4);
-            await _uploadClient.PostSubmissionAsync(submissionData5);
-            await _uploadClient.PostSubmissionAsync(submissionData6);
-            await _uploadClient.PostAnalysisAsync(analysisData1);
-            await _uploadClient.PostAnalysisAsync(analysisData2);
-            await _uploadClient.PostAnalysisAsync(analysisData3);
-            await _uploadClient.PostAnalysisAsync(analysisData4);
-            await _uploadClient.PostAnalysisAsync(analysisData5);
-            await _uploadClient.PostAnalysisAsync(analysisData6);
+            await _uploadClient.PostSessionAsync( sessionData1 );
+            await _uploadClient.PostSessionAsync( sessionData2 );
+            await _uploadClient.PostSessionAsync( sessionData3 );
+            await _uploadClient.PostAnalysisAsync( analysisData1 );
+            await _uploadClient.PostAnalysisAsync( analysisData2 );
+            await _uploadClient.PostAnalysisAsync( analysisData3 );
+            await _uploadClient.PostAnalysisAsync( analysisData4 );
+            await _uploadClient.PostAnalysisAsync( analysisData5 );
+            await _uploadClient.PostAnalysisAsync( analysisData6 );
         }
 
         /// <summary>
@@ -295,8 +288,7 @@ namespace CloudUnitTests
         {
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
-            await _downloadClient.DeleteAllSubmissionsAsync();
-            List<Tuple<string, string>> NameToID = new()
+            List<Tuple<string , string>> NameToID = new()
             {
                 Tuple.Create("Test1", "101"),
                 Tuple.Create("Test2", "102")
@@ -308,9 +300,8 @@ namespace CloudUnitTests
             List<string> studentsList = await _insightsClient.UsersWithoutAnalysisGivenSession("1");
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
-            await _downloadClient.DeleteAllSubmissionsAsync();
-            Assert.AreEqual(studentsList.Count, 1);
-            Assert.AreEqual(studentsList[0], "Student2");
+            Assert.AreEqual( studentsList.Count , 1 );
+            Assert.AreEqual( studentsList[0] , "Student2" );
         }
 
         /// <summary>
@@ -335,7 +326,6 @@ namespace CloudUnitTests
 
             await _downloadClient.DeleteAllAnalysisAsync();
             await _downloadClient.DeleteAllSessionsAsync();
-            await _downloadClient.DeleteAllSubmissionsAsync();*/
         }
 
         /// <summary>
