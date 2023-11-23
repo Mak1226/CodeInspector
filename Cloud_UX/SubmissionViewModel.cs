@@ -32,11 +32,20 @@ namespace Cloud_UX
         /// Then dispatch the changes to the view.
         /// <param name="sessionId">Id of the session for which we want the submissions.</param>
         /// </summary>
-        public SubmissionsViewModel(string sessionId, string userName)
+        public SubmissionsViewModel(SessionEntity session)
         {
             _model = new SubmissionsModel();
-            cur_user=userName;
-            GetSubmissions(sessionId);
+            byte[] studentBytes = session.Students;
+            string studentData = System.Text.Encoding.UTF8.GetString(studentBytes);
+
+            // Split the string into a list of strings based on a delimiter (assuming, for example, that each student is separated by a comma)
+            List<string> studentList = studentData.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+
+            foreach (string name in studentList)
+            {
+                GetSubmissions(session.SessionId, name);
+            }
+          //  GetSubmissions(sessionId);
             Trace.WriteLine("[Cloud] Submissions View Model Created");
         }
 
@@ -45,9 +54,9 @@ namespace Cloud_UX
         /// Then dispatch the changes to the view.
         /// <param name="sessionId">Id of the session for which we want the submissions.</param>
         /// </summary>
-        public async void GetSubmissions(string sessionId)
+        public async void GetSubmissions(string sessionId ,string studentName)
         {
-            IReadOnlyList<SubmissionEntity> submissionsList = await _model.GetSubmissions(sessionId, cur_user);
+            IReadOnlyList<SubmissionEntity> submissionsList = await _model.GetSubmissions(sessionId, studentName);
             Trace.WriteLine("[Cloud] Submission details recieved");
             _ = this.ApplicationMainThreadDispatcher.BeginInvoke(
                         DispatcherPriority.Normal,

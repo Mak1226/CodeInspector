@@ -53,9 +53,10 @@ namespace ContentPage
                 //openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
 
                 //System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-                OpenFileDialog ofd = new OpenFileDialog();
-
-                ofd.CheckFileExists = false;
+                OpenFileDialog ofd = new()
+                {
+                    CheckFileExists = false
+                };
                 string defaultFilename = "This folder";
                 ofd.FileName = defaultFilename;
                 DialogResult result = ofd.ShowDialog();
@@ -66,9 +67,13 @@ namespace ContentPage
                     Trace.WriteLine(folderPath);
                     // Pass folder path to Content Client
                     if (Directory.Exists(folderPath.Substring(0, folderPath.Length - 12)))
+                    {
                         _client.HandleUpload(folderPath.Substring(0, folderPath.Length - 12));
+                    }
                     else
+                    {
                         _client.HandleUpload(folderPath);
+                    }
                 }
                 //bool isFolderSelected = false;
                 //string selectedPath = null;

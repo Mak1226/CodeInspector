@@ -3,9 +3,55 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="InsightPage1" Height="500" Width="800">
 
-    <Grid Background="#2C3E50">
-        <!-- Changed background color to a dark shade -->
+
+    <Page.Resources>
+        <!-- Styling settings -->
+        <Style TargetType="TextBlock" x:Key="WhiteTextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,10,5,5"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="WhiteTextBox">
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#D6EBF5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <!-- Adjusted text color for better visibility -->
+            <Setter Property="Margin" Value="0,10,10,5"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="BlueButton">
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#3498DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+
+        <Style TargetType="ListBox" x:Key="ListBoxStyle">
+            <Setter Property="Margin" Value="10,70,10,10"/>
+            <Setter Property="Background" Value="#CDE6C7"/>
+            <Setter Property="Foreground" Value="Black"/>
+            
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="0">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Items.Count, RelativeSource={RelativeSource Self}}" Value="1">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#CDE6C7">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -18,24 +64,20 @@
         </Grid.ColumnDefinitions>
 
         <!-- Information Label -->
-        <Label Content="Enter Session IDs and click 'Send' to get information:" Foreground="White" FontSize="16" Margin="10,10,10,0" HorizontalAlignment="Center"/>
+        <Label Content="Enter Session IDs To Compare :" Foreground="Green" FontSize="16" Margin="10,10,10,0" HorizontalAlignment="Center"/>
 
         <!-- Session ID 1 -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Session ID 1:" Foreground="White" Margin="0,10,5,5"/>
-        <!-- Changed text color to white -->
-        <TextBox x:Name="sessionId1TextBox" Grid.Row="1" Grid.Column="1" Margin="0,10,10,5" Width="300" Height="30" Background="#34495E" Foreground="White"/>
-        <!-- Changed textbox background color and text color -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Session ID 1:" Foreground="Green" FontSize="16" Margin="10,10,10,0" HorizontalAlignment="Center"/>
+        <TextBox x:Name="sessionId1TextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource WhiteTextBox}"/>
 
         <!-- Session ID 2 -->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Session ID 2:" Foreground="White" Margin="0,0,5,5"/>
-        <TextBox x:Name="sessionId2TextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,10,5" Width="300" Height="30" Background="#34495E" Foreground="White"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Session ID 2:" Foreground="Green" FontSize="16" Margin="10,10,10,0" HorizontalAlignment="Center"/>
+        <TextBox x:Name="sessionId2TextBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource WhiteTextBox}"/>
 
         <!-- Send Button -->
-        <Button Grid.Row="3" Grid.ColumnSpan="1" Content="Send" Click="OnSendButtonClick" Margin="0,15,0,0" Width="300" Height="30" Background="#3498DB" Foreground="White"/>
-        <!-- Changed button color and text color -->
+        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Content="Send" Click="OnSendButtonClick"  Style="{StaticResource BlueButton}"/>
 
         <!-- Result ListBox -->
-        <ListBox x:Name="resultListBox" Grid.Row="4" Grid.ColumnSpan="2" Margin="10,70,10,10" Background="#2C3E50" Foreground="White"/>
-        <!-- Changed background color and text color -->
+        <ListBox x:Name="resultListBox" Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource ListBoxStyle}"/>
     </Grid>
 </Page>

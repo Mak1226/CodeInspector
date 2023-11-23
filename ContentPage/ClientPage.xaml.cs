@@ -11,7 +11,7 @@ namespace ContentPage
     /// </summary>
     public partial class ClientPage : Page
     {
-        private ContentClientViewModel viewModel;
+        private readonly ContentClientViewModel _viewModel;
         /// <summary>
         /// Initialses the page
         /// </summary>
@@ -20,11 +20,11 @@ namespace ContentPage
         public ClientPage(ICommunicator client, string sessionID)
         {
             InitializeComponent();
-            viewModel = new ContentClientViewModel(client, sessionID);
-            DataContext = viewModel;
+            _viewModel = new ContentClientViewModel(client, sessionID);
+            DataContext = _viewModel;
 
-            UploadFrame.Navigate(new FileUpload(viewModel));
-            ResultFrame.Navigate(new ResultPage(viewModel));
+            UploadFrame.Navigate(new FileUpload(_viewModel));
+            ResultFrame.Navigate(new ResultPage(_viewModel));
         }
     }
 }

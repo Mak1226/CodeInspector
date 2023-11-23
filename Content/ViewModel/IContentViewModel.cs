@@ -17,5 +17,6 @@ namespace Content.ViewModel
         /// </summary>
         public List<Tuple<string, List<Tuple<string, int, string>>>> DataList { get; }
 
+        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using Analyzer.Parsing;
+﻿using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -19,6 +19,36 @@ namespace AnalyzerTests.Pipeline
         /// <summary>
         /// Test method for a case in which classes don't follow the above mentioned rule.
         /// </summary>
+        /// 
+
+        //CasingChecker.cs
+
+        //namespace badNamespace
+        //{
+        //    public interface iBadInterface
+        //    {
+        //        // ...
+        //    }
+
+        //    public class badClass
+        //    {
+        //        public bool badMethod1(int BadName)
+        //        {
+        //            if (BadName == 0)
+        //            {
+        //                return true;
+        //            }
+
+        //            return true;
+        //        }
+
+        //        public bool badMethod2(int _BadName)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
+
         [TestMethod()]
         public void TestBadExample()
         {
@@ -38,6 +68,34 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(0, result.Verdict);
         }
 
+        //CasingChecker1.cs
+
+        //namespace GoodNamespace
+        //{
+        //    public interface IGoodInterface
+        //    {
+        //        // ...
+        //    }
+
+        //    public class GoodClass
+        //    {
+        //        public bool GoodMethod1(int goodName)
+        //        {
+        //            if (goodName == 0)
+        //            {
+        //                return true;
+        //            }
+
+        //            return true;
+        //        }
+
+        //        public bool GoodMethod2(int _goodName)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
+
         [TestMethod()]
         public void TestGoodExample()
         {
@@ -53,6 +111,7 @@ namespace AnalyzerTests.Pipeline
             Dictionary<string, Analyzer.AnalyzerResult> resultObj = casingChecker.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["CasingChecker1.dll"];
+            
             Assert.AreEqual(1, result.Verdict);
         }
 
