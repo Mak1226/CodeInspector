@@ -39,6 +39,18 @@ namespace ServerlessFunc
         }
 
         /// <summary>
+        /// Initializes a new instance of the InsightsApi class.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+        /// <param name="insightsRoute">The base URL for the Insights API route.</param>
+        public InsightsApi( HttpClient httpClient , string insightsRoute )
+        {
+            _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
+            _insightsRoute = insightsRoute;
+            Trace.WriteLine( "[Cloud] New insights client created" );
+        }
+
+        /// <summary>
         /// Compares two sessions and returns a list of dictionaries containing the comparison results.
         /// </summary>
         /// <param name="sessionId1">The ID of the first session.</param>
