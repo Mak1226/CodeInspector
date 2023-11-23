@@ -110,7 +110,7 @@ namespace Content.Model
                     return;
                 }
 
-                using MemoryStream ms = new();
+                using MemoryStream ms = new(graph);
                 Image image = Image.FromStream( ms );
 
 
