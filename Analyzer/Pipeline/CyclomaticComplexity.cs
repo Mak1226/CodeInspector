@@ -1,4 +1,14 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = CyclomaticComplexity.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;

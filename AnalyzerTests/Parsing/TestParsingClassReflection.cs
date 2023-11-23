@@ -94,7 +94,8 @@ namespace AnalyzerTests.Parsing
 
             // App6: App3,IApp2,IApp  , App3: IApp  (class , interface combination)
             Assert.AreEqual(1, App6Class_Demo.Interfaces.Length);
-            Assert.AreEqual(typeof(TestParsingClass_DemoProject.IApp2), App6Class_Demo.Interfaces[0]);
+            CollectionAssert.AreEquivalent( new Type[1] { typeof(TestParsingClass_DemoProject.IApp2) } , 
+                                            App6Class_Demo.Interfaces);
 
             // App7: IApp, IApp2  - Normal Multiple interfaces implementation case
             Assert.AreEqual(2, App7Class_Demo.Interfaces.Length);
@@ -148,7 +149,9 @@ namespace AnalyzerTests.Parsing
                                       squareClass_Bridge.Fields);
 
             // no field 
-            Assert.AreEqual(0, briefViewClass_Bridge.Fields.Length);
+            Assert.AreEqual(0, App1Class_Demo.Fields.Length);
+
+            Assert.AreEqual(1, briefViewClass_Bridge.Fields.Length);
 
 
             // public + static  : here inherited class fields should not come (i.e. sampleValue21(public) from sampleClass2)
@@ -203,6 +206,7 @@ namespace TestParsingClass_BridgePattern
             get { return SProp; }
             set { SProp = value; }
         }
+
         public List<string> DisplayCircle(double radius)
         {
             List<string> result = new();

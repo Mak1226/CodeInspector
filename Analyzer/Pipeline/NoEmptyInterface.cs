@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline
 {
@@ -99,8 +100,11 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException( "Internal error. Analyzer could not be run." , ex );
+                _verdict = 0;
+                _errorMessage = "";
+                Trace.WriteLine("NullReferenceException in DLL files " + ex.Message);
             }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
