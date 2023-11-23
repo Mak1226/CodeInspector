@@ -1,4 +1,15 @@
-// Created By - Monesh Vanga (112001047)
+/******************************************************************************
+* Filename    = TestPrefixChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit Tests for PrefixChecker.cs
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

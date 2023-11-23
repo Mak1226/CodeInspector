@@ -1,4 +1,15 @@
-// Created By - Monesh Vanga (112001047)
+/******************************************************************************
+* Filename    = TestCasingChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = Unit Tests for CasingChecker.cs
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
