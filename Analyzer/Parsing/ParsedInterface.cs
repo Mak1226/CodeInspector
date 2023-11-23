@@ -1,4 +1,14 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = ParsedInterface.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description = Parses the most used information from the interface object using System.Reflection
+*****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

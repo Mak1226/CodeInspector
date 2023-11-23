@@ -1,6 +1,17 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = InvokeCustomAnalyzer.cs
+* 
+* Author      = 
+* 
+* Project     = Analyzer
+*
+* Description = Utility class for invoking custom analyzers on student DLL files.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -23,6 +34,7 @@ namespace Analyzer.DynamicAnalyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to student DLL files.</param>
         public InvokeCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers, List<string> PathOfDLLFilesOfStudent)
         {
+            Trace.WriteLine("Invoking Custom Analyzers ");
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
@@ -56,6 +68,7 @@ namespace Analyzer.DynamicAnalyzer
             foreach (string customAnalyzer in _pathOfDLLFilesOfCustomAnalyzers)
             {
                 // Load the custom analyzer assembly
+                Trace.WriteLine("Running custom Analyzer ", customAnalyzer);
                 Assembly customAnalyzerAssembly = Assembly.Load(File.ReadAllBytes(customAnalyzer));
                 Type? type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
 
@@ -66,6 +79,7 @@ namespace Analyzer.DynamicAnalyzer
                 MethodInfo? method = type.GetMethod("AnalyzeAllDLLs");
                 object? currentAnalyzerResult = method.Invoke(teacher, null);
 
+                Trace.WriteLine("Analysis completed for all student dlls");
                 //res -> Dictionary<string, AnalyzerResult>
                 //foreach (var item in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
                 //{
