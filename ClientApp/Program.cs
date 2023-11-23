@@ -11,18 +11,21 @@ namespace ClientApp
     {
         static void Main(string[] args)
         {
-
+            
             ICommunicator client = CommunicationFactory.GetClient();
-            string addr = client.Start("127.0.0.1", 12399, "hee","client1");
-            if (addr == "failed")
-                return;
-            client.Subscribe(new ExampleEventHandler(), "client1");
-            client.Subscribe(new ExampleEventHandler(), ID.GetNetworkingBroadcastID());
+            client.Start("192.168.0.102", 12399, "hee","client1");
+            client.Stop();
+            //if (addr == "failed")
+            //    return;
+            //client.Subscribe(new ExampleEventHandler(), "client1");
+            //client.Subscribe(new ExampleEventHandler(), Id.GetNetworkingBroadcastId());
             Console.ReadKey();
-            Data data = new Data("omg1", EventType.ChatMessage());
-            client.Send(Serializer.Serialize<Data>(data), "client1", "hee");
-            Data data1 = new Data("omg2", EventType.ChatMessage());
-            client.Send(Serializer.Serialize<Data>(data1), ID.GetNetworkingBroadcastID(), ID.GetServerID());
+            client.Start( "192.168.0.102" , 12399 , "hee" , "client1" );
+            client.Stop();
+            //Data data = new Data("omg1", EventType.ChatMessage());
+            //client.Send(Serializer.Serialize<Data>(data), "client1", "hee");
+            //Data data1 = new Data("omg2", EventType.ChatMessage());
+            //client.Send(Serializer.Serialize<Data>(data1), Id.GetNetworkingBroadcastId(), Id.GetServerId());
 
             //client.Send("omg2", EventType.ChatMessage(), "hee");
             //client.Send("omg3", EventType.ChatMessage(), "hee");
@@ -37,7 +40,7 @@ namespace ClientApp
             /* server.Send("omg", EventType.ChatMessage(), "A");*/
 
             /*client.Stop();*/
-            client.Stop();
+            
 
         }
     }

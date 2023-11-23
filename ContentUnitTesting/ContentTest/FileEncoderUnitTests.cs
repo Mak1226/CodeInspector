@@ -159,7 +159,7 @@ namespace ContentUnitTesting.ContentTest
         public void GetEncoded_NullFilePaths_ThrowsException()
         {
             // Arrange
-            DLLEncoder encoder = new DLLEncoder();
+            DLLEncoder encoder = new();
 
             // Act and Assert
             Assert.ThrowsException<Exception>(() => encoder.GetEncoded(null, "rootPath", "sessionID"));
@@ -169,7 +169,7 @@ namespace ContentUnitTesting.ContentTest
         public void GetEncoded_EmptyFilePaths_ThrowsException()
         {
             // Arrange
-            DLLEncoder encoder = new DLLEncoder();
+            DLLEncoder encoder = new();
 
             // Act and Assert
             Assert.ThrowsException<Exception>(() => encoder.GetEncoded(new List<string>(), "rootPath", "sessionID"));
@@ -179,7 +179,7 @@ namespace ContentUnitTesting.ContentTest
         public void SaveFiles_NullData_ThrowsArgumentNullException()
         {
             // Arrange
-            DLLEncoder encoder = new DLLEncoder();
+            DLLEncoder encoder = new();
 
             // Act and Assert
             Assert.ThrowsException<ArgumentNullException>(() => encoder.SaveFiles(null));
@@ -189,12 +189,12 @@ namespace ContentUnitTesting.ContentTest
         public void SaveFiles_EmptyPath_ThrowsArgumentNullException()
         {
             // Arrange
-            DLLEncoder encoder = new DLLEncoder();
-            Dictionary<string, string> data = new Dictionary<string, string>
-        {
-            { "file1.dll", "encoded_data1" },
-            { "file2.dll", "encoded_data2" }
-        };
+            DLLEncoder encoder = new();
+            Dictionary<string, string> data = new()
+            {
+                { "file1.dll", "encoded_data1" },
+                { "file2.dll", "encoded_data2" }
+            };
 
             // Act and Assert
             Assert.ThrowsException<ArgumentNullException>(() => encoder.SaveFiles(string.Empty));
