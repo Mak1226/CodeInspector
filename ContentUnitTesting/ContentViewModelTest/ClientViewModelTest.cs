@@ -1,4 +1,15 @@
-﻿using Analyzer;
+﻿/******************************************************************************
+ * Filename     = ClientViewModelTest.cs
+ * 
+ * Author       = Susan
+ *
+ * Product      = Analyzer
+ * 
+ * Project      = ContentUnitTesting
+ *
+ * Description  = Unit tests for ClientViewModel
+*****************************************************************************/
+using Analyzer;
 using Content.ViewModel;
 using ContentUnitTesting.ContentClientServerTest;
 using Content.Model;
@@ -16,6 +27,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             _testDirectory = Directory.GetParent( Environment.CurrentDirectory ).Parent.Parent.FullName;
         }
 
+        /// <summary>
+        /// Test case to verify that the constructor of ContentClientViewModel initializes properties correctly.
+        /// </summary>
         [TestMethod]
         public void Constructor_InitializesProperties()
         {
@@ -30,6 +44,9 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.IsNotNull( viewModel.DataList, "Datalist is initialized properly" );
         }
 
+        /// <summary>
+        /// Test case to handle null AnalyzerResult and ensure DataList returns an empty list.
+        /// </summary>
         [TestMethod]
         public void Null_AnalyzerResult()
         {
@@ -40,6 +57,10 @@ namespace ContentUnitTesting.ContentViewModelTest
             Assert.AreEqual(viewModel.DataList.Count, 0 );
 
         }
+
+        /// <summary>
+        /// Test case to confirm that the DataList property returns an empty list when AnalyzerResults is null.
+        /// </summary>
         [TestMethod]
         public void DataList_PropertyReturnsEmptyListWhenAnalyzerResultsIsNull()
         {
@@ -87,6 +108,9 @@ namespace ContentUnitTesting.ContentViewModelTest
 
         }
 
+        /// <summary>
+        /// Test case to set the SelectedItem property and verify PropertyChanged event is raised.
+        /// </summary>
         [TestMethod]
         public void SetSelectedItem()
         {
@@ -118,6 +142,9 @@ namespace ContentUnitTesting.ContentViewModelTest
 
         }
 
+        /// <summary>
+        /// Test case to handle file upload and ensure the encoding is not null in the communicator.
+        /// </summary>
         [TestMethod]
         public void fileUpload()
         {

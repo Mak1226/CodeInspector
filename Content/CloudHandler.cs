@@ -1,5 +1,15 @@
-﻿using ServerlessFunc;
-using Networking.Serialization;
+﻿/******************************************************************************
+ * Filename    = CloudHandler.cs
+ * 
+ * Author      = Jyothiradithya
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Wrapper class for handling cloud functionality
+ *****************************************************************************/
+using ServerlessFunc;
 using System.Text;
 using Analyzer;
 

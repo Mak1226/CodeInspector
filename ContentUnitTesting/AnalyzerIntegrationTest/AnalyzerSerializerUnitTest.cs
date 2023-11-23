@@ -21,6 +21,17 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
     [TestClass]
     public class AnalyzerSerializerUnitTest
     {
+        /// <summary>
+        /// Generates a dictionary representing file analysis results based on provided file paths and analyzer result details.
+        /// </summary>
+        /// <param name="filePaths">A list of file paths associated with the analysis results.</param>
+        /// <param name="analyzerResultDetails">
+        /// A nested list structure containing analyzer result details for each file, where each inner list represents an individual analysis entry
+        /// with the elements [Analyser ID, Verdict, ErrorMessage].
+        /// </param>
+        /// <returns>A dictionary mapping file paths to lists of AnalyzerResult objects.</returns>
+        /// <exception cref="Exception">Thrown when the number of file paths and analyzer result details do not match.</exception>
+
         private Dictionary<string, List<AnalyzerResult>> GenerateFileAnalysisDict(List<string> filePaths, List<List<List<object>>> analyzerResultDetails)
         {
             Dictionary<string , List<AnalyzerResult>> fileAnalysisDict = new();
@@ -52,6 +63,9 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             return fileAnalysisDict;
         }
 
+        /// <summary>
+        /// Test case to ensure proper serialization and deserialization of analyzer results.
+        /// </summary>
         [TestMethod]
         public void TestAnalyzerSerialization()
         {
@@ -102,6 +116,9 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             }
         }
 
+        /// <summary>
+        /// Test case to validate that an exception is thrown when the number of file paths and analyzer result details does not match.
+        /// </summary>
         [TestMethod]
         public void TestException()
         {
@@ -126,6 +143,10 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             Assert.ThrowsException<Exception>(() => GenerateFileAnalysisDict(filePaths, analyzerResultDetails));
 
         }
+
+        /// <summary>
+        /// Test case to verify that an ArgumentNullException is thrown when attempting to serialize a null object.
+        /// </summary>
         [TestMethod]
         public void Serialize_NullObject_ThrowsArgumentNullException()
         {
@@ -136,6 +157,9 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize<AnalyzerResult>(null));
         }
 
+        /// <summary>
+        /// Test case to verify that ArgumentException is thrown when attempting to deserialize a null or whitespace serialized string.
+        /// </summary>
         [TestMethod]
         public void Serialize_NullOrWhiteSpaceSerializedString_ThrowsArgumentException()
         {

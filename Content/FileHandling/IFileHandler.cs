@@ -32,6 +32,11 @@ namespace Content.FileHandling
         /// <param name="encoding">The XML encoded string of the files</param>
         /// <returns>The session ID of the recieved message. Null if unable to recieve</returns>
         string? HandleRecieve(string encoding);
+
+        /// <summary>
+        /// Get all files provided HandleUpload or HandleRecieve has been called
+        /// </summary>
+        /// <returns>List of paths of each decoded file</returns>
         List<string> GetFiles();
     }
 }

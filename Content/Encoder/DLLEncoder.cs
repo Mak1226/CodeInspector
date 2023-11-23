@@ -9,8 +9,7 @@
  *
  * Description = Class to encode DLL files
  *****************************************************************************/
-using System.Security.Cryptography;
-using System.Text;
+using System.Diagnostics;
 using System.Xml;
 
 namespace Content.Encoder
@@ -29,6 +28,7 @@ namespace Content.Encoder
         /// </summary>
         public DLLEncoder()
         {
+            Trace.WriteLine( "[Content][DLLEncoder.cs] : DLLEncoder Initialized" );
             _data = new Dictionary<string, string>();
             sessionID = string.Empty;
         }
@@ -40,6 +40,7 @@ namespace Content.Encoder
         /// <returns>An XML representation of the DLL data as a string.</returns>
         public string GetEncoded(List<string> filePaths, string rootPath, string sessionID)
         {
+            Trace.WriteLine( "[Content][DLLEncoder.cs] : GetEncoded" );
             this.sessionID = sessionID;
 
             if (filePaths == null || filePaths.Count == 0)
@@ -91,10 +92,13 @@ namespace Content.Encoder
         /// <param name="xmlData">The XML data representing the DLL content as a string.</param>
         public void DecodeFrom(string xmlData)
         {
+            Trace.WriteLine( "[Content][DLLEncoder.cs] : DecodeFrom" );
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xmlData);
 
             XmlNode? root = xmlDocument.SelectSingleNode("Root");
+
+            _data.Clear();
 
             // Decode session ID
             XmlAttribute sessionAttribute = root.Attributes["SessionID"];
@@ -128,7 +132,6 @@ namespace Content.Encoder
         /// Function returns the private variable data. This is only needed for debugging purposes till the SaveFiles function is implemented.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Dictionary<string ,string> GetData()
         {
             return _data;
@@ -140,6 +143,7 @@ namespace Content.Encoder
         /// <param name="path"></param>
         public void SaveFiles(string path)
         {
+            Trace.WriteLine( "[Content][DLLEncoder.cs] : DLLEncoder SaveFiles" );
             if (_data == null)
             {
                 throw new ArgumentNullException( nameof( _data ) , "Data dictionary is not initialized." );
