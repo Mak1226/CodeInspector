@@ -48,11 +48,7 @@ namespace ContentPage
         {
             try
             {
-                //Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-                //openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
-                //openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
-
-                //System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+                
                 OpenFileDialog ofd = new()
                 {
                     CheckFileExists = false
@@ -75,8 +71,7 @@ namespace ContentPage
                         _client.HandleUpload(folderPath);
                     }
                 }
-                //bool isFolderSelected = false;
-                //string selectedPath = null;
+                
             }
             catch (Exception ex)
             {

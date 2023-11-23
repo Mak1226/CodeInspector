@@ -25,6 +25,7 @@ using Networking.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 
 namespace ViewModel
@@ -44,23 +45,37 @@ namespace ViewModel
         /// <param name="communicator">An optional communicator, default is set to the server communicator.</param>
         public InstructorViewModel( string name, string userId, ICommunicator? communicator = null )
         {
+            // Set the username and user ID for the InstructorViewModel
             Name = name;
             UserId = userId;
+
+            // Initialize the session state for tracking students
             _studentSessionState = new StudentSessionState();
+
+            // Set up the communication infrastructure, using the provided communicator or the default server communicator
             Communicator = communicator ?? CommunicationFactory.GetServer();
 
+            // Start the communication process and subscribe the ViewModel to the "Dashboard" channel
             string ipPort = Communicator.Start(null, null, "server", "Dashboard");
             Communicator.Subscribe(this, "Dashboard");
+
+            // Split the received IP and port information
             string[] parts = ipPort.Split(':');
-            if(parts.Length==2)
+
+            // Check if the IP and port information is correctly formatted
+            if (parts.Length==2)
             {
+                // Extract and set the IP address and receiving port
                 IpAddress = parts[0];
                 ReceivePort = parts[1];
-                OnPropertyChanged(nameof(IpAddress));
+
+                // Notify any subscribers about the change in IP address and port
+                OnPropertyChanged( nameof(IpAddress));
                 OnPropertyChanged(nameof(ReceivePort));
             }
             else
             {
+                // Throw an exception if the received IP and port information is not in the expected format
                 throw new Exception( "Invalid Port/Ip returned by communicator" );
             }
         }
@@ -149,23 +164,30 @@ namespace ViewModel
             Trace.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
+                // Trying to decerialize the student info
                 (string?, string?, string?, int, int) result = DeserializeStudnetInfo(serializedStudnet);
                 string? rollNo = result.Item1;
                 string? name = result.Item2;
                 string? ip = result.Item3;
                 int port = result.Item4;
                 int isConnect = result.Item5;
+
+                //Proceding if the required values are not null
                 if (rollNo != null && name != null && ip != null)
                 {
                     if (isConnect == 1)
                     {
+                        //adding student in local data structure
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
+                        //acknowledging student about accepting connection
                         Communicator.Send("1", $"{rollNo}");
                         Trace.WriteLine($"[Instructor View Model] Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
                     }
                     else if (isConnect == 0)
                     {
+                        //removing student in local data structure
                         _studentSessionState.RemoveStudent(rollNo);
+                        //acknowledging student about removing connection
                         Communicator.Send("0", $"{rollNo}");
                         Trace.WriteLine($"[Instructor View Model] Removed student: Roll No - {rollNo}");
                     }

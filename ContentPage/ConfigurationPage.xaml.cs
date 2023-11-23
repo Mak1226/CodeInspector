@@ -1,13 +1,15 @@
 ﻿/******************************************************************************
- * Filename    = ResultPage.xaml.cs
+ * Filename    = ConfigurationPage.xaml.cs
  * 
- * Author      = Sreelekshmi
+ * Author      = Sreelakshmi
  *
  * Product     = Analyzer
  * 
  * Project     = ContentPage
  *
- * Description = Page that visualises result of an analysis
+ * Description =This file contains the code-behind for the ConfigurationPage.xaml. 
+ *               The ConfigurationPage displays configuration options for analyzers
+ *               within the ContentPage project.
  *****************************************************************************/
 
 using System;
@@ -19,7 +21,7 @@ using Content.ViewModel;
 namespace ContentPage
 {
     /// <summary>
-    /// Interaction logic for ResultPage.xaml
+    /// Interaction logic for ConfigurationPage.xaml
     /// </summary>
     public partial class ConfigurationPage : Page
     {
@@ -36,25 +38,34 @@ namespace ContentPage
             _viewModel = viewModel;
             DataContext = viewModel;
         }
+        /// <summary>
+        /// Handles the event when a checkbox associated with an analyzer configuration option is checked.
+        /// Updates the accumulated options dictionary with the checked analyzer ID and triggers the view model
+        /// to configure the analyzer with the updated options.
+        /// </summary>
+        /// <param name="sender">The checkbox element that triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void CheckBoxChecked(object sender, RoutedEventArgs e)
         {
-            // Handle the CheckBox checked event if needed
-            // For example, you might call a method on viewModel
+            
             var checkBox = sender as CheckBox;
 
             if (checkBox?.DataContext is AnalyzerConfigOption analyzerItem && checkBox?.IsChecked == true)
             {
-                // Assuming Configure is a method on viewModel
+                
                 int analyzerId = Convert.ToInt32( analyzerItem.AnalyzerId );
                 _accumulatedOptions[analyzerId] = true;
                 _viewModel.ConfigureAnalyzer( _accumulatedOptions );
-                //        viewModel.ConfigureAnalyzer(new Dictionary<int, bool>
-                //{
-                //    { Convert.ToInt32(analyzerItem.AnalyzerId), true }
-                //}, true);
-                //    }
+               
             }
         }
+        /// <summary>
+        /// Handles the event when a checkbox associated with an analyzer configuration option is unchecked.
+        /// Removes the unchecked analyzer ID from the accumulated options dictionary and triggers the view model
+        /// to configure the analyzer with the updated options.
+        /// </summary>
+        /// <param name="sender">The checkbox element that triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void CheckBoxUnchecked(object sender, RoutedEventArgs e)
         {
             var checkBox = sender as CheckBox;
@@ -67,10 +78,6 @@ namespace ContentPage
                 _viewModel.ConfigureAnalyzer( _accumulatedOptions );
             }
         }
-
-
-
-
 
     }
 

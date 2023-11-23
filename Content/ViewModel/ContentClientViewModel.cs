@@ -16,9 +16,9 @@ namespace Content.ViewModel
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
-        public ContentClientViewModel(ICommunicator client, string sessionID)
+        public ContentClientViewModel(ContentClient contentClient)
         {
-            _contentClient = new ContentClient(client, sessionID);
+            _contentClient = contentClient;
             _contentClient.AnalyzerResultChanged += (result) =>
             {
                 _analyzerResults = result;
