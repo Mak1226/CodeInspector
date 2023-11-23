@@ -179,7 +179,6 @@ public class NetworkingTest
     [TestMethod]
     public void ClientDoubleStart()
     {
-        Queue messages = new();
         ICommunicator server = new Server();
         ICommunicator client = new Client();
         string[] ipPort = server.Start(null, null, ID.GetServerID(), ID.GetNetworkingID()).Split(':');
@@ -249,7 +248,9 @@ public class NetworkingTest
         }
 
         if (messages.canDequeue())
+        {
             Assert.Fail("Message recieved to unsubscribed server");
+        }
 
         client.Stop();
         server.Stop();
@@ -280,7 +281,9 @@ public class NetworkingTest
         }
 
         if (messages.canDequeue())
+        {
             Assert.Fail("Message recieved to unsubscribed client");
+        }
 
         client.Stop();
         server.Stop();
@@ -330,9 +333,9 @@ public class NetworkingTest
         client.Start(ip, port, "testClient1", "unitTestClient");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), ID.GetNetworkingBroadcastID());
         //Message message = new("testMessage", "unitTestServer", ID.GetServerID(), "testClient1");
-        Data data = new Data(EventType.ServerLeft());
+        Data data = new(EventType.ServerLeft());
 
-        Message message = new Message(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID(), ID.GetServerID());
+        Message message = new(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID(), ID.GetServerID());
         //client.Send(message.Data, "unitTestServer", message.DestID);
         server.Stop();
         client.Stop();
@@ -360,7 +363,7 @@ public class NetworkingTest
         string ip = ipPort[0];
         int port = int.Parse(ipPort[1]);
         client.Start(ip, port, "testClient1", "unitTestClient");
-        Data data=new Data("testMessage",EventType.ChatMessage());
+        Data data=new("testMessage",EventType.ChatMessage());
         Message message = new(Serializer.Serialize(data), "unitTestClient", "testClient1", "testClient1");
         client.Subscribe(new GenericEventHandler(messageQueue: messages), "unitTestClient");
         client.Send(message.Data, message.DestID);
@@ -403,11 +406,22 @@ public class NetworkingTest
             }
         }
         if (messages.canDequeue())
+        {
             Assert.Fail("Message received on unsubscribed client");
+        }
+
         client.Stop();
         server.Stop();
     }
 
+    [TestMethod]
+    public void DequeingEmptyQueue()
+    {
+        Queue queue = new();
+        queue.Dequeue();
+        Assert.IsTrue(true);
+        
+    }
 
     //[TestMethod]
     public void ManyClientsToServer()
@@ -419,14 +433,7 @@ public class NetworkingTest
         int port = int.Parse(ipPort[1]);
 
         Client[] clients = getClientsAndStart(NUMCLIENTS, ip, port, "unitTestClient");
-    }
-    [TestMethod]
-    public void DequeingEmptyQueue()
-    {
-        Queue queue = new Queue();
-        queue.Dequeue();
-        Assert.IsTrue(true);
-        
+        // TODO
     }
 
     private bool CompareMessages(Message message1, Message message2)
