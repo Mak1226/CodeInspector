@@ -11,9 +11,15 @@ using Mono.Cecil.Cil;
 
 namespace AnalyzerTests.Pipeline
 {
+    /// <summary>
+    /// Testing the generation of ParsedClassMonoCecil Object
+    /// </summary>
     [TestClass()]
     public class TestParsedMonoCecil
     {
+        /// <summary>
+        /// Testing all memebers of the generated ParsedClassMonoCecil Object
+        /// </summary>
         [TestMethod()]
         public void TestMonoCecilTypes()
         {
@@ -30,7 +36,7 @@ namespace AnalyzerTests.Pipeline
                 //Console.WriteLine(cls.TypeObj.Namespace);
                 if (cls.Name == "BMW" && cls.TypeObj.Namespace == "TestParsedMonoCecil")
                 {
-                    Assert.AreEqual(1,cls.Constructors.Count);
+                    Assert.AreEqual(2,cls.Constructors.Count);
                     Assert.AreEqual("TestParsedMonoCecil.Car", cls.ParentClass.FullName);
                     Assert.AreEqual("TestParsedMonoCecil.IBMWSpec", cls.Interfaces[0].InterfaceType.FullName);
                     Assert.AreEqual(2,cls.MethodsList.Count);
@@ -76,6 +82,7 @@ namespace TestParsedMonoCecil
         public BMW() {
             Console.WriteLine("BMW Car");
         }
+        public BMW(string model) { }
 
         public string Name
         {

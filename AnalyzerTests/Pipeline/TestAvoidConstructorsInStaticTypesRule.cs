@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     /// <summary>
-    /// Test class for testing the analyzer- AvoidConstructorsInStaticTypesRule.
+    /// Test class for testing the analyzer - AvoidConstructorsInStaticTypesRule.
     /// </summary>
     [TestClass()]
     public class TestAvoidConstructorsInStaticTypesRule
@@ -24,6 +24,7 @@ namespace AnalyzerTests.Pipeline
         /// <summary>
         /// Test method for a case in which all classes follow the rule of not having visible non-static constructor 
         /// for classes having only static methods and fields.
+        /// Here constructor is private, while all other mebers are static.
         /// </summary>
         [TestMethod()]
         public void TestGoodExample()
@@ -44,7 +45,7 @@ namespace AnalyzerTests.Pipeline
         }
 
         /// <summary>
-        /// Test method for a case in which classes don't follow the above mentioned rule.
+        /// Test method for a case in which a derived class don't follow the above mentioned rule.
         /// </summary>
         [TestMethod()]
         public void TestBadExample()
@@ -66,7 +67,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual( expectedErrorMsg , result.ErrorMessage );
         }
 
-
+        /// <summary>
+        /// Test method for a case in which all classes violate the rule.
+        /// Here the default constructor added by compiler is public by default, and so violates the rule.
+        /// </summary>
         [TestMethod()]
         public void TestMultipleClassViolations()
         {
@@ -86,6 +90,31 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(expectedErrorMsg, result.ErrorMessage);
         }
 
+        /// <summary>
+        /// Test method for a case in which classes have non-static members
+        /// </summary>
+        [TestMethod()]
+        public void TestNotAllStaticMembersCase()
+        {
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+
+            ParsedDLLFile parsedDLL = new(dllFile);
+
+            parsedDLL.classObjList.RemoveAll(cls => cls.TypeObj.Namespace != "AcistTestCase4");
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
+
+            AvoidConstructorsInStaticTypes avoidConstructorInStaticTypes = new(parseddllFiles);
+            Dictionary<string, AnalyzerResult> resultObj = avoidConstructorInStaticTypes.AnalyzeAllDLLs();
+
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual(1, result.Verdict);
+            string expectedErrorMsg = "No violation found";
+            Assert.AreEqual(expectedErrorMsg, result.ErrorMessage);
+        }
+
+        /// <summary>
+        /// Testing analyzer on multiple dll files
+        /// </summary>
         [TestMethod()]
         public void TestDllsOnAcist()
         {
@@ -113,6 +142,7 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(1, resultObj["BridgePattern.dll"].Verdict);
 
         }
+
 
     }
 }
@@ -197,6 +227,20 @@ namespace AcistTestCase3
     public class Logger
     {
         public static int val = 14;
+    }
+
+    public class WarningLogger : Logger
+    {
+        public static int warningCount = 1;
+        public WarningLogger() { }
+    }
+}
+
+namespace AcistTestCase4
+{
+    public class Logger
+    {
+        public int val = 14;
     }
 
     public class WarningLogger : Logger

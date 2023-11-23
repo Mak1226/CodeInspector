@@ -19,6 +19,9 @@ namespace AnalyzerTests.Pipeline
     [TestClass()]
     public class TestClassRelationships
     {
+        /// <summary>
+        /// Testing all 4 types of relationships existing between classes of TypeRelationships.dl
+        /// </summary>
         [TestMethod()]
         public void CheckRelationshipsList()
         {
@@ -135,6 +138,9 @@ namespace AnalyzerTests.Pipeline
             }
         }
 
+        /// <summary>
+        /// Checking the case where the constructor takes in an object as parameter, but is then assigned to local variable
+        /// </summary>
         [TestMethod()]
         public void CheckParameterInCtorCase()
         {
@@ -160,6 +166,9 @@ namespace AnalyzerTests.Pipeline
             }
         }
 
+        /// <summary>
+        /// Testing the case where an interface is present as parameter of a method in a class.  
+        /// </summary>
         [TestMethod()]
         public void CheckInterfaceParameter()
         {

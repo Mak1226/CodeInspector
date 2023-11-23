@@ -41,7 +41,7 @@ namespace Analyzer.Pipeline
             // Get all methods in the class
             MethodInfo[] methods = cls.TypeObj.GetMethods();
 
-            //if any method or any parameterized constructor is not declared as static, return false immediately.
+            //if any method is not declared as static, return false immediately.
             if (methods.Length != 0)
             {
                 foreach (MethodInfo method in methods)
