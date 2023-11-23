@@ -94,22 +94,6 @@ namespace Analyzer.Pipeline
             return method.Body.Variables[index];
         }
 
-        public static bool IsGeneratedName( VariableReference self )
-        {
-            if (self == null)
-            {
-                return false;
-            }
-
-            string name = string.Empty; 
-            if (string.IsNullOrEmpty( name ))
-            {
-                return true;
-            }
-
-            return (name[0] == '<') || (name.IndexOf( '$' ) != -1);
-        }
-
         /// <summary>
         /// Removes unused local variables from a method and returns the count of removed local variables.
         /// </summary>
@@ -145,12 +129,7 @@ namespace Analyzer.Pipeline
             {
                 if (!used[i])
                 {
-                    VariableDefinition variable = variables[i];
-                    if (IsGeneratedName(variable))
-                    {
-                        //Console.WriteLine( "hi" );
-                        //continue;
-                    }
+                    //VariableDefinition variable = variables[i];
                     unusedLocalsCount += 1;
                 }
             }
