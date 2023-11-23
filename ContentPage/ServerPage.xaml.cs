@@ -1,4 +1,17 @@
-﻿using System.Windows.Controls;
+﻿/******************************************************************************
+ * Filename    = ServerPage.xaml.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyser
+ * 
+ * Project     = ContentPage
+ *
+ * Description = This file contains the code-behind for the ServerPage.xaml.
+ *             
+ *****************************************************************************/
+
+using System.Windows.Controls;
 using Content.ViewModel;
 using Networking.Communicator;
 using System.Windows.Forms;
@@ -43,14 +56,18 @@ namespace ContentPage
             _viewModel.SetSessionID(sessionID);
         }
 
-       
+        /// <summary>
+        /// Loads the ResultPage into the ResultFrame.
+        /// </summary>
         private void LoadResultPage()
         {
             ResultPage resultPage = new (_viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
         }
-
+        /// <summary>
+        /// Loads the ConfigurationPage into the ConfigFrame.
+        /// </summary>
         private void LoadConfigurationPage()
         {
             ConfigurationPage configPage = new (_viewModel);
@@ -58,6 +75,9 @@ namespace ContentPage
             
         }
 
+        /// <summary>
+        /// Event handler for the AnalyzerUploadButton click. Allows uploading DLL files for analysis.
+        /// </summary>
         private void AnalyzerUploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new()
@@ -78,6 +98,9 @@ namespace ContentPage
             }
         }
 
+        /// <summary>
+        /// Event handler for the SendToCloudButton click. Initiates sending data to the cloud.
+        /// </summary>
         private void SendToCloudButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             _viewModel.SendToCloud();

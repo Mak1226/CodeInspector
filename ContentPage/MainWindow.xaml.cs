@@ -1,4 +1,17 @@
-﻿using Networking.Communicator;
+﻿/******************************************************************************
+ * Filename    = FileUpload.xaml.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = ContentPage
+ *
+ * Description = This file contains the code-behind for the MainWindow.xaml.
+ *                  This is for testing by content team
+ *****************************************************************************/
+
+using Networking.Communicator;
 using Networking.Utils;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +27,12 @@ namespace ContentPage
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Event handler for the file upload button click.
+        /// Initializes a client communicator, starts communication, navigates to the FileUpload page, and hides buttons.
+        /// </summary>
+        /// <param name="sender">The button that triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void FileUploadButtonClick(object sender, RoutedEventArgs e)
         {
             ICommunicator client = CommunicationFactory.GetClient();
@@ -26,6 +44,12 @@ namespace ContentPage
             FileUploadButton.Visibility = Visibility.Collapsed;
             ResultPageButton.Visibility = Visibility.Collapsed;
         }
+        /// <summary>
+        /// Event handler for the client page button click.
+        /// Initializes a server communicator, starts communication, navigates to the ClientPage, and hides buttons.
+        /// </summary>
+        /// <param name="sender">The button that triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void ClientPageButtonClick(object sender, RoutedEventArgs e)
         {
             ICommunicator server = CommunicationFactory.GetServer();
