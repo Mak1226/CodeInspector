@@ -36,16 +36,12 @@ namespace ServerlessFuncUI
         {
             try
             {
-                
-                List<double> averageList = await _insightsApi.RunningAverageAcrossSessoins(hostname);
 
-                // Clear existing items and add new average values to the ListView
-                AverageListView.Items.Clear();
-                foreach (var average in averageList)
-                {
-                    AverageListView.Items.Add(average);
-                }
+                List<double> averageList = await _insightsApi.RunningAverageAcrossSessoins(hostname);
+                resultListBox.Text = "iohfew";
             }
+              
+            
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

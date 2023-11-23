@@ -1,4 +1,15 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AvoidSwitchStatements.cs
+* 
+* Author      = Thanmayee
+* 
+* Project     = Analyzer
+*
+* Description = Analyzer to detect the presence of switch statements 
+*****************************************************************************/
+
+
+using Analyzer.Parsing;
 using Mono.Cecil.Cil;
 using Mono.Cecil;
 using System;
@@ -40,7 +51,7 @@ namespace Analyzer.Pipeline
             // If no errors, add a message indicating everything looks fine
             if (string.IsNullOrEmpty(errorMessageString))
             {
-                errorMessageString = "Everything looks fine. No switch statements found.";
+                errorMessageString = "No switch statements found.";
             }
             else
             {

@@ -43,7 +43,7 @@ namespace ServerlessFuncUI
         public InsightPage3(string host_name)
         {
             this.InitializeComponent();
-            this.hostname = hostname;
+            this.hostname = host_name;
             _insightsApi = new InsightsApi(InsightPath);
         }
 
@@ -58,8 +58,6 @@ namespace ServerlessFuncUI
                 // Call the RunningAverageOnGivenTest method from InsightsApi
                 List<double> averageList = await _insightsApi.RunningAverageOnGivenTest(hostname, testName);
 
-                // Handle the results, update the TextBlock with the averages
-               // resultListBlock.Text = "Running Averages:\n";
                 foreach (double average in averageList)
                 {
                     resultListBox.Text += $"{average}\n";
@@ -67,8 +65,6 @@ namespace ServerlessFuncUI
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., network errors, JSON parsing errors)
-                // You might want to display an error message to the user
                 // MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 resultListBox.Text = $"Error: {ex.Message}";
             }

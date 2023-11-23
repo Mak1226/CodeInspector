@@ -5,7 +5,7 @@ namespace Content.Model
 {
     internal class ClientRecieveHandler : IEventHandler
     {
-        private ContentClient _client;
+        private readonly ContentClient _client;
         public ClientRecieveHandler(ContentClient client) 
         {
             _client = client;
