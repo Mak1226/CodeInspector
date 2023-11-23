@@ -3,6 +3,7 @@ using Analyzer.UMLDiagram;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +63,7 @@ namespace Analyzer.Pipeline
             {
                 _parsedDLLFiles.Add(new ParsedDLLFile(file));
             }
-
+            Trace.Write("MainPipeline :  Generating instance of Analyzers\n");
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -81,6 +82,8 @@ namespace Analyzer.Pipeline
             _allAnalyzers[116] = new SwitchStatementDefaultCaseChecker(_parsedDLLFiles);
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[118] = new NativeFieldsShouldNotBeVisible(_parsedDLLFiles);
+            _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
+            Trace.Write("MainPipeline :  Generated\n");
         }
 
         /// <summary>
@@ -89,22 +92,25 @@ namespace Analyzer.Pipeline
         /// <param name="analyzerID">Identifier of the analyzer to run.</param>
         private void RunAnalyzer(int analyzerID)
         {
+            Trace.WriteLine("MainPipeline : Calling analyzer " + analyzerID);
+
             Dictionary<string, AnalyzerResult> currentAnalyzerResult;
 
             try
             {
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
+                Trace.WriteLine("MainPipeline : Succeed analyzer " + analyzerID);
             }
             catch (Exception)
             {
+                Trace.WriteLine("Internal error, analyzer failed to execute " + analyzerID);
                 currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
-
                 string errorMsg = "Internal error, analyzer failed to execute";
 
-                // check analyzerID is present in _allAnalyzers as key
                 if (!_allAnalyzers.ContainsKey(analyzerID))
                 {
                     errorMsg = "Analyser does not exists";
+                    Trace.WriteLine("MainPipeline : Analyser does not exists " + analyzerID);
                 }
 
                 foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
