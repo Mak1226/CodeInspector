@@ -1,4 +1,18 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = AnalyzerFactory.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Factory class for creating analyzers and retrieving configuration options.
+******************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +20,15 @@ using System.Threading.Tasks;
 
 namespace Analyzer
 {
+    /// <summary>
+    /// Factory class for creating analyzers and retrieving configuration options.
+    /// </summary>
     public static class AnalyzerFactory
     {
+        /// <summary>
+        /// Retrieves a list of all available configuration options for analyzers.
+        /// </summary>
+        /// <returns>A list of tuples containing analyzer IDs and their corresponding descriptions.</returns>
         public static List<Tuple<int, string>> GetAllConfigurationOptions()
         {
             List<Tuple<int, string>> analyzers = new()
@@ -25,22 +46,26 @@ namespace Analyzer
                 Tuple.Create(111, "Abstract class naming checker"),
                 Tuple.Create(112, "Casing Checker"),
                 Tuple.Create(113, "Cyclomatic Complexity"),
-                Tuple.Create(114, "New Linelteral Rule"),
+                Tuple.Create(114, "New Line Literal Rule"),
                 Tuple.Create(115, "Prefix checker"),
                 Tuple.Create(116, "Switch Statement default case checker"),
-                Tuple.Create(117, "Avoid goto statements")
+                Tuple.Create(117, "Avoid goto statements"),
+                Tuple.Create(118, "Native fields should not be visible"),
+                Tuple.Create(119, "High parameter count rule")
             };
 
             return analyzers;
         }
-
+        /// <summary>
+        /// Creates an instance of the default analyzer.
+        /// </summary>
+        /// <returns>An instance of the default analyzer.</returns>
         public static IAnalyzer GetAnalyzer()
         {
 
             IAnalyzer Analyzer = new Analyzer();
-
             return Analyzer;
         }
 
     }
-}   
+}

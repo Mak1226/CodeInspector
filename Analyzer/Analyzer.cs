@@ -10,6 +10,14 @@
 * Project     = Analyzer
 *
 * Description = Represents the main Analyzer class responsible for orchestrating the analysis process.
+* 
+* Features:
+* - Configures the Analyzer with teacher options.
+* - Loads DLL files provided by the student for analysis.
+* - Loads DLL files of custom analyzers for additional analysis.
+* - Runs the main analysis pipeline of 19 Analyzers and returns the results.
+* - Generates a relationship graph based on the analysis results with support of removable namespaces.
+* - Runs multiple custom analyzers specified by the teacher on students dll files.
 ******************************************************************************/
 
 using Analyzer.DynamicAnalyzer;
@@ -43,6 +51,11 @@ namespace Analyzer
         /// <param name="TeacherOptions">Dictionary of teacher options.</param>
         public void Configure(IDictionary<int, bool> TeacherOptions)
         {
+            Trace.WriteLine("Teacher Options\n");
+            foreach (KeyValuePair<int , bool> kvp in TeacherOptions)
+            {
+                Trace.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}\n");
+            }
             _teacherOptions = TeacherOptions;
         }
 
@@ -52,6 +65,7 @@ namespace Analyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to DLL files.</param>
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
+            Trace.Write("Analyzer : Loaded students " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
 
@@ -61,6 +75,7 @@ namespace Analyzer
         /// <param name="PathOfDLLFilesOfCustomAnalyzers">List of paths to DLL files of custom analyzers.</param>
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
+            Trace.Write("Analyzer : Loaded custom analyzers " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
         }
 
@@ -70,15 +85,23 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results.</returns>
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            Trace.Write("Analyzers MainPipeline is starting\n");
-
+            Trace.Write("Analyzer : MainPipeline is starting with " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+            Dictionary<string, List<AnalyzerResult>> result = _customAnalyzerPipeline.Start();
+            Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
 
-            Trace.Write("Analyzers MainPipeline is over\n");
+            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
+            {
+                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
+                {
+                    Trace.Write($"Analyzer : Key: {keyValuePair.Key}");
+                    Trace.Write($"  {analyzerResult}\n");
+                }
+            }
 
-            return _customAnalyzerPipeline.Start();
+            return result;
         }
 
         /// <summary>
@@ -88,7 +111,7 @@ namespace Analyzer
         /// <returns>Byte array representing the generated relationship graph.</returns>
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-
+            Trace.Write( "Analyzer : Starting Relationship Graph with " + string.Join( " ", _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces));
             MainPipeline _customAnalyzerPipeline = new();
             _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
@@ -102,7 +125,20 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results from custom analyzers.</returns>
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
         {
-            return new InvokeCustomAnalyzers(_pathOfDLLFilesOfCustomAnalyzers, _pathOfDLLFilesOfStudent).Start();
+            Trace.Write("Analyzer : Invoking custom Analysers " + string.Join( " ", _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " ", _pathOfDLLFilesOfStudent));
+            Dictionary<string , List<AnalyzerResult>> result = new InvokeCustomAnalyzers( _pathOfDLLFilesOfCustomAnalyzers , _pathOfDLLFilesOfStudent ).Start();
+            Trace.Write( "Analyzer : Completed custom Analysers " + string.Join( " " , _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " " , _pathOfDLLFilesOfStudent ) );
+
+            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
+            {
+                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
+                {
+                    Trace.Write( $"Analyzer : Key: {keyValuePair.Key}");
+                    Trace.Write( $"  {analyzerResult}\n" );
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -41,7 +41,25 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New download client created" );
         }
+
+        /// <summary>
+        /// Initializes a new instance of the DownloadApi class.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+        /// <param name="sessionRoute">The base URL for the session endpoint.</param>
+        /// <param name="submissionRoute">The base URL for the submission endpoint.</param>
+        /// <param name="analysisRoute">The base URL for the analysis endpoint.</param>
+        public DownloadApi( HttpClient httpClient , string sessionRoute , string submissionRoute , string analysisRoute )
+        {
+            _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
+            _sessionRoute = sessionRoute;
+            _submissionRoute = submissionRoute;
+            _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New download client created" );
+        }
+
 
         /// <summary>
         /// Retrieves a list of session entities for the specified host username.
@@ -61,6 +79,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Session data by hostname GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -89,6 +108,7 @@ namespace ServerlessFunc
                 };
 
                 byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
+                Trace.WriteLine( "[Cloud] Submission data by username and sessionid GET successful" );
                 return submission;
             }
             catch (Exception ex)
@@ -117,6 +137,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data by username and sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -144,6 +165,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data by sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -162,6 +184,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _sessionRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Session data DELETE successful" );
             }
             catch (Exception ex)
             {
@@ -178,6 +201,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _submissionRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Submission data DELETE successful" );
             }
             catch (Exception ex)
             {
@@ -194,6 +218,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _analysisRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Analysis data DELETE successful" );
             }
             catch (Exception ex)
             {

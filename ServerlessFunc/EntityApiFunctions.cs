@@ -97,7 +97,6 @@ namespace ServerlessFunc
         ILogger log )
         {
             byte[] dllBytes;
-
             var streamReader = new StreamReader( req.Body );
 
             string requestBody = await streamReader.ReadToEndAsync();

@@ -1,6 +1,17 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = AvoidConstructorsInStaticTypes.cs
+* 
+* Author      = Yukta Salunkhe
+* 
+* Project     = Analyzer
+*
+* Description = This Analyzer throws error if any class with all static members have a public non-static constructor.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -20,7 +31,7 @@ namespace Analyzer.Pipeline
         private int _verdict;
 
         // Set to store classes violating the rule
-        public HashSet<ParsedClass> violatingClasses = new();
+        public HashSet<ParsedClass> violatingClasses;
 
         /// <summary>
         /// Initializes a new instance of the AvoidConstructorsWithStaticTypes analyzer with parsed DLL files.
@@ -28,8 +39,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public AvoidConstructorsInStaticTypes( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
-            _errorMessage = "";
-            _verdict = 1;
+            Trace.WriteLine("Created Instance of Analyzer AvoidConstructorsInStaticTypes");
             _analyzerID = "102";
         }
 
@@ -43,7 +53,7 @@ namespace Analyzer.Pipeline
             // Get all methods in the class
             MethodInfo[] methods = cls.TypeObj.GetMethods();
 
-            //if any method or any parameterized constructor is not declared as static, return false immediately.
+            //if any method is not declared as static, return false immediately.
             if (methods.Length != 0)
             {
                 foreach (MethodInfo method in methods)
@@ -84,13 +94,12 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
+            Trace.WriteLine("Running Analyzer AvoidConstructorInStaticTypes on " + parsedDLLFile.DLLFileName);
+            _errorMessage = "";
+            _verdict = 1;
+            violatingClasses = new HashSet<ParsedClass>();
             foreach (ParsedClass cls in parsedDLLFile.classObjList)
             {
-                if (cls.TypeObj.IsEnum || cls.TypeObj.IsInterface || cls.TypeObj.IsSubclassOf( typeof( Delegate ) ))
-                {
-                    continue;
-                }
-
                 if (cls.TypeObj.IsDefined( typeof( CompilerGeneratedAttribute ) , false ))
                 {
                     continue;
@@ -129,6 +138,7 @@ namespace Analyzer.Pipeline
             {
                 _verdict = 1;
                 _errorMessage = "No violation found";
+                Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
                 return new AnalyzerResult( _analyzerID , _verdict , _errorMessage );
             }
 
@@ -136,19 +146,18 @@ namespace Analyzer.Pipeline
             _errorMessage = "Classes ";
             foreach (ParsedClass cls in violatingClasses)
             {
-
                 _errorMessage += cls.TypeObj.FullName;
                 violations--;
                 if (violations != 0)
                 {
                     _errorMessage += ", ";
                 }
-
             }
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
             AnalyzerResult resultObj = new( _analyzerID , _verdict , _errorMessage );
+            Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
             return resultObj;
         }
     }

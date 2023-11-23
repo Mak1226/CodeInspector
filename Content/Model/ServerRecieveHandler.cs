@@ -8,7 +8,7 @@ namespace Content.Model
     /// </summary>
     internal class ServerRecieveHandler : IEventHandler
     {
-        ContentServer _server;
+        readonly ContentServer _server;
 
         /// <summary>
         /// Notifies content server only on recieving an encoded file list

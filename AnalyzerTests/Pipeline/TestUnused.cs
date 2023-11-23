@@ -58,15 +58,12 @@ namespace Analyzer.Pipeline.Tests
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
             {
-                Console.WriteLine(dll.Key);
-
                 AnalyzerResult res = dll.Value;
 
                 Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
-            }
 
-            // Assert that no unused local variables were found
-            //Assert.AreEqual(2, result.Verdict, "Unexpected number of unused local variables.");
+                Assert.AreEqual( 0 , res.Verdict , "There are no unused local variables!" );
+            }
         }
     }
 }

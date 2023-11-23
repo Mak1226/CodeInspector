@@ -25,18 +25,25 @@ namespace Cloud_UX
     public class SubmissionsViewModel :
         INotifyPropertyChanged // Notifies clients that a property value has changed.
     {
-        private string cur_user;
         /// <summary>
         /// Creates an instance of the Submissions ViewModel.
         /// Gets the details of the submissions of the session conducted by the user.
         /// Then dispatch the changes to the view.
         /// <param name="sessionId">Id of the session for which we want the submissions.</param>
         /// </summary>
-        public SubmissionsViewModel(string sessionId, string userName)
+        public SubmissionsViewModel(SessionEntity session)
         {
             _model = new SubmissionsModel();
-            cur_user=userName;
-            GetSubmissions(sessionId);
+            byte[] studentBytes = session.Students;
+            string studentData = System.Text.Encoding.UTF8.GetString(studentBytes);
+
+            // Split the string into a list of strings based on a delimiter (assuming, for example, that each student is separated by a comma)
+            List<string> studentList = studentData.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+
+            foreach (string name in studentList)
+            {
+                GetSubmissions(session.SessionId, name);
+            }
             Trace.WriteLine("[Cloud] Submissions View Model Created");
         }
 
@@ -45,19 +52,19 @@ namespace Cloud_UX
         /// Then dispatch the changes to the view.
         /// <param name="sessionId">Id of the session for which we want the submissions.</param>
         /// </summary>
-        public async void GetSubmissions(string sessionId)
+        public async void GetSubmissions(string sessionId ,string studentName)
         {
-            IReadOnlyList<SubmissionEntity> submissionsList = await _model.GetSubmissions(sessionId, cur_user);
+            IReadOnlyList<SubmissionEntity> submissionsList = await _model.GetSubmissions(sessionId, studentName);
             Trace.WriteLine("[Cloud] Submission details recieved");
-            _ = this.ApplicationMainThreadDispatcher.BeginInvoke(
+            _ = ApplicationMainThreadDispatcher.BeginInvoke(
                         DispatcherPriority.Normal,
                         new Action<IReadOnlyList<SubmissionEntity>>((submissionsList) =>
                         {
                             lock (this)
                             {
-                                this.ReceivedSubmissions = submissionsList;
+                                ReceivedSubmissions = submissionsList;
 
-                                this.OnPropertyChanged("ReceivedSubmissions");
+                                OnPropertyChanged("ReceivedSubmissions");
                             }
                         }),
                         submissionsList);
@@ -98,6 +105,15 @@ namespace Cloud_UX
         /// <summary>
         /// Underlying data model.
         /// </summary>
-        private SubmissionsModel _model;
+        private readonly SubmissionsModel _model;
+
+        /// <summary>
+        /// To store which pdf to download.
+        /// Call the corresponding function to download once the value is set.
+        /// </summary>
+        public int SubmissionToDownload
+        {
+            set => _model.DownloadPdf(value);
+        }
     }
 }

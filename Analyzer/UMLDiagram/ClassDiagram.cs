@@ -58,11 +58,7 @@ namespace Analyzer.UMLDiagram
                 _plantUMLImage = await renderer.RenderAsync(_plantUMLCode.ToString(), OutputFormat.Png);
                 System.Diagnostics.Debug.WriteLine(_plantUMLImage);
                 System.Diagnostics.Debug.Assert(_plantUMLImage != null);
-                // Save the rendered diagram to a file
-                File.WriteAllBytes("out.png", _plantUMLImage.ToArray());
-                // File.WriteAllBytes("C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out.png", _plantUMLImage);
-                // return bytes;
-                Console.WriteLine("PlantUML diagram saved to out.png");
+
                 return _plantUMLImage;
             }
             catch (Exception ex)
@@ -78,12 +74,13 @@ namespace Analyzer.UMLDiagram
         {
             List<ParsedClassMonoCecil> graphParsedClassObj = new();
             List<ParsedInterface> graphParsedInterfaceObj = new();
-
+            _plantUMLCode.Append( "@startuml\r\n" );
             foreach (ParsedClassMonoCecil classObj in _parsedClassList)
             {
                 if (!isPartOfRemovableNamespace(classObj.TypeObj.FullName.Insert(0,"C"), removableNamespaces))
                 {
                     graphParsedClassObj.Add(classObj);
+                    
                     _plantUMLCode.Append($"class {classObj.TypeObj.FullName}{{}}\r\n");
                 }
             }
@@ -96,10 +93,6 @@ namespace Analyzer.UMLDiagram
                     _plantUMLCode.Append($"interface {interfaceObj.TypeObj.FullName}\r\n");
                 }
             }
-
-
-            _plantUMLCode.Append("@startuml\r\n");
-
 
             foreach (ParsedClassMonoCecil classObj in graphParsedClassObj)
             {
@@ -133,7 +126,6 @@ namespace Analyzer.UMLDiagram
             {
                 foreach (Type parent in interfaceObj.ParentInterfaces)
                 {
-                    
                     if(!isPartOfRemovableNamespace(parent.FullName.Insert(0, "I") , removableNamespaces))
                     {
                         _plantUMLCode.AppendLine($"interface {interfaceObj.TypeObj.FullName} implements {parent}");
@@ -163,8 +155,15 @@ namespace Analyzer.UMLDiagram
 
             foreach (string relationName in relationshipList)
             {
-                if (!isPartOfRemovableNamespace(relationName , removableNamespaces))
+                if (!isPartOfRemovableNamespace(relationName, removableNamespaces))
                 {
+                    if (typeFullName.StartsWith( "<>" ) || typeFullName.Contains( "__Anonymous" ) || typeFullName.Contains( "DisplayClass" ))
+                    {
+                        if (RemoveFirstLetter( relationName ).StartsWith( "<>" ) || RemoveFirstLetter( relationName ).Contains( "__Anonymous" ) || RemoveFirstLetter( relationName ).Contains( "DisplayClass" ))
+                        {
+                            _plantUMLCode.Append( relationStatement + $" {typeFullName} {relationSymbol} {RemoveFirstLetter( relationName )}\r\n" );
+                        }
+                    }
                     _plantUMLCode.Append(relationStatement + $" {typeFullName} {relationSymbol} {RemoveFirstLetter(relationName)}\r\n");
                 }
             }
@@ -200,20 +199,41 @@ namespace Analyzer.UMLDiagram
             return type.Remove(0, 1);
         }
 
-        private bool isPartOfRemovableNamespace(string objName , List<string> removableNamespaces)
+        
+        private bool isPartOfRemovableNamespace(string objName, List<string> removableNamespaces)
         {
-            string[] splitted_string = objName.Split(".");
+            string[] splittedString = objName.Split(".");
 
-            if (removableNamespaces != null && removableNamespaces.Contains(splitted_string[0].Remove(0 , 1)))
+            if (removableNamespaces != null && removableNamespaces.Contains( splittedString[0].Remove(0 , 1)))
             {
                 Console.WriteLine(objName);
                 return true;
             }
             else
             {
-                //Console.WriteLine(objName);
                 return false;
             }
         }
+        
+        /*
+        private bool isPartOfRemovableNamespace( string objName , List<string> removableNamespaces )
+        {
+            string[] splittedString = objName.Split( "." );
+
+            if (removableNamespaces != null)
+            {
+
+            }
+            if (removableNamespaces != null && objName.Remove( 0 , 1 ).Contains( removableNamespaces ))
+            {
+                Console.WriteLine( objName );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        */
     }
 }

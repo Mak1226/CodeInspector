@@ -1,11 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.DynamicAnalyzer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+﻿/******************************************************************************
+* Filename    = AnalyzerFactoryTests.cs
+*
+* Author      = Mangesh Dalvi, Yukta Salunkhe
+* 
+* Roll No     = 112001010, 112001052
+*
+* Product     = Code Inspector
+* 
+* Project     = AnalyzerTests
+*
+* Description = Test class for testing the functionality of invoking a custom analyzer on student dlls
+******************************************************************************/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Analyzer.DynamicAnalyzer.Tests
 {
@@ -15,22 +22,80 @@ namespace Analyzer.DynamicAnalyzer.Tests
     [TestClass()]
     public class InvokeCustomAnalyzersTests
     {
+
+        /* 
+        
+        TeacherAnalyserCheckingAbstractClassNaming.dll
+
+        using Analyzer.Parsing;
+        using Analyzer.Pipeline;
+        using System;
+        using System.Reflection;
+
+        namespace Analyzer.DynamicAnalyzer
+        {
+            public class CustomAnalyzer : AnalyzerBase
+            {
+                private readonly string _analyzerID;
+                private string _errorMessage;
+                private int _verdict;
+
+                public CustomAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+                {
+                    _errorMessage = "This is an error message";
+                    _verdict = 0;
+                    _analyzerID = "Teacher"; // update analyzer ID here
+                }
+
+                protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+                {
+                    _verdict = 1;
+                    _errorMessage = "";
+
+                    foreach (ParsedClass classObj in parsedDLLFile.classObjList)
+                    {
+                        if (classObj.TypeObj.GetTypeInfo().IsAbstract && !IsValidAbstractClassName(classObj.TypeObj.Name))
+                        {
+                            _errorMessage += $"{(_verdict == 1 ? "Incorrect Abstract Class Naming : " : ", ")}{classObj.TypeObj.Name}";
+                            _verdict = 0;
+                        }
+                    }
+
+                    if(_verdict == 1)
+                    {
+                        _errorMessage = "All abstract classes are named correctly";
+                    }
+
+                    return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+                }
+
+                private bool IsValidAbstractClassName(string className)
+                {
+                    return className.EndsWith("Base") && char.IsLower(className[0]);
+                }
+            }
+        }
+        */
+
+        /// <summary>
+        /// Invoke custom analyzers test with correct abstract class naming
+        /// </summary>
         [TestMethod()]
-        public void InvokeCustomAnalyzersTest()
+        public void InvokeCustomAnalyzersTestWithCorrectAbstractClassNaming()
         {
             var analyzer = new Analyzer();
 
             // Load student's dll files
             List<string> paths = new()
             {
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\ClassLibrary1.dll" ,
-                "..\\..\\..\\..\\Analyzer\\TestDLLs\\BridgePattern.dll"
+                "..\\..\\..\\TestDLLs\\CasingChecker.dll",
             };
             analyzer.LoadDLLFileOfStudent(paths);
 
             // Load the custom analyzer dll
             List<string> tdlls = new();
-            string path = "C:\\Users\\HP\\Desktop\\software\\Demo\\Test1\\ClassLibrary2\\bin\\Debug\\net6.0\\ClassLibrary2.dll";
+            string path = "..\\..\\..\\TestDLLs\\TeacherAnalyserCheckingAbstractClassNaming.dll";
+
             tdlls.Add(path);
             analyzer.LoadDLLOfCustomAnalyzers(tdlls);
 
@@ -40,17 +105,101 @@ namespace Analyzer.DynamicAnalyzer.Tests
             // Defining the expected result
             Dictionary<string , List<AnalyzerResult>> expected = new()
             {
-                ["ClassLibrary1.dll"] = new List<AnalyzerResult>() ,
-                ["BridgePattern.dll"] = new List<AnalyzerResult>()
+                ["CasingChecker.dll"] = new List<AnalyzerResult>() ,
             };
 
-            expected["ClassLibrary1.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
-            expected["BridgePattern.dll"].Add(new AnalyzerResult("This is an analyzer ID", 0, "This is an error message m"));
+            expected["CasingChecker.dll"].Add(new AnalyzerResult("Teacher", 1, "All abstract classes are named correctly"));
 
-            // Assert that the actual Analyzer result matches with the expected one.
-            Assert.AreEqual(expected["ClassLibrary1.dll"].ToString(), result["ClassLibrary1.dll"].ToString());
-            Assert.AreEqual(expected["BridgePattern.dll"].ToString(), result["BridgePattern.dll"].ToString());
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
 
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            // Assert
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(expected.ContainsKey(dll.Key), $"Unexpected DLL: {dll.Key}");
+
+                List<AnalyzerResult> expectedResults = expected[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(expectedResults.Count, actualResults.Count, $"Mismatched number of results for {dll.Key}");
+
+                for (int i = 0; i < expectedResults.Count; i++)
+                {
+                    Assert.AreEqual(expectedResults[i].AnalyserID, actualResults[i].AnalyserID);
+                    Assert.AreEqual(expectedResults[i].Verdict, actualResults[i].Verdict);
+                    Assert.AreEqual(expectedResults[i].ErrorMessage, actualResults[i].ErrorMessage);
+                }
+            }
         }
+
+        /// <summary>
+        /// Invoke custom analyzers test with wrong abstract class naming
+        /// </summary>
+        [TestMethod()]
+        public void InvokeCustomAnalyzersTestWithWrongAbstractClassNaming()
+        {
+            var analyzer = new Analyzer();
+
+            // Load student's dll files
+            List<string> paths = new()
+            {
+                "..\\..\\..\\TestDLLs\\NotValidAbstractClassNaming.dll",
+            };
+            analyzer.LoadDLLFileOfStudent(paths);
+
+            // Load the custom analyzer dll
+            List<string> tdlls = new();
+            string path = "..\\..\\..\\TestDLLs\\TeacherAnalyserCheckingAbstractClassNaming.dll";
+
+            tdlls.Add(path);
+            analyzer.LoadDLLOfCustomAnalyzers(tdlls);
+
+            // Run the custom Analyzer on student dlls and get the result
+            Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
+
+            // Defining the expected result
+            Dictionary<string, List<AnalyzerResult>> expected = new()
+            {
+                ["NotValidAbstractClassNaming.dll"] = new List<AnalyzerResult>(),
+            };
+
+            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("Teacher", 0, "Incorrect Abstract Class Naming : someClass"));
+
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Console.WriteLine(dll.Key);
+
+                foreach (AnalyzerResult res in dll.Value)
+                {
+                    Console.WriteLine(res.AnalyserID + " " + res.Verdict + " " + res.ErrorMessage);
+                }
+            }
+
+            // Assert
+            foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
+            {
+                Assert.IsTrue(expected.ContainsKey(dll.Key), $"Unexpected DLL: {dll.Key}");
+
+                List<AnalyzerResult> expectedResults = expected[dll.Key];
+                List<AnalyzerResult> actualResults = dll.Value;
+
+                Assert.AreEqual(expectedResults.Count, actualResults.Count, $"Mismatched number of results for {dll.Key}");
+
+                for (int i = 0; i < expectedResults.Count; i++)
+                {
+                    Assert.AreEqual(expectedResults[i].AnalyserID, actualResults[i].AnalyserID);
+                    Assert.AreEqual(expectedResults[i].Verdict, actualResults[i].Verdict);
+                    Assert.AreEqual(expectedResults[i].ErrorMessage, actualResults[i].ErrorMessage);
+                }
+            }
+        }
+
     }
 }

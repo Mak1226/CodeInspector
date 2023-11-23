@@ -1,10 +1,26 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = NoEmptyInterface.cs
+* 
+* Author      = Sneha Bhattacharjee
+*
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = The interface does not declare any members. 
+*               A type implements an interface by providing implementations for the members of the interface. 
+*               An empty interface does not define any members. 
+*               Therefore, it does not define a contract that can be implemented.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Analyzer.Pipeline
 {
@@ -38,7 +54,6 @@ namespace Analyzer.Pipeline
 
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
-                Console.WriteLine(interfaceObj.Name);
                 Type interfaceType = interfaceObj.TypeObj;
 
                 //
@@ -57,15 +72,8 @@ namespace Analyzer.Pipeline
 
             foreach (Type type in emptyInterfaceList)
             {
-                try
-                {
-                    // sanity check
-                    errorLog.AppendLine(type.FullName);
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid Argument ", ex);
-                }
+                // sanity check
+                errorLog.AppendLine(type.FullName);
             }
             return errorLog.ToString();
         }
@@ -76,12 +84,25 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            List<Type> emptyInterfaces = FindEmptyInterfaces(parsedDLLFile);
-            if (emptyInterfaces.Count > 0)
+            List<Type> emptyInterfaces;
+            try
             {
-                _verdict = 0;
-                _errorMessage = ErrorMessage(emptyInterfaces);
+                emptyInterfaces = FindEmptyInterfaces( parsedDLLFile );
+                if (emptyInterfaces.Count > 0)
+                {
+                    _verdict = 0;
+                    _errorMessage = ErrorMessage( emptyInterfaces );
+                }
+                else
+                {
+                    _errorMessage = "No violation found.";
+                }
             }
+            catch (NullReferenceException ex)
+            {
+                throw new NullReferenceException( "Encountered exception while processing." , ex );
+            }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }

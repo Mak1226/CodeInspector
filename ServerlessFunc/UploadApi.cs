@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -41,7 +42,25 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New upload client created" );
         }
+
+        /// <summary>
+        /// Initializes a new instance of the UploadApi class.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+        /// <param name="sessionRoute">The base URL for the session endpoint.</param>
+        /// <param name="submissionRoute">The base URL for the submission endpoint.</param>
+        /// <param name="analysisRoute">The base URL for the analysis endpoint.</param>
+        public UploadApi( HttpClient httpClient , string sessionRoute , string submissionRoute , string analysisRoute )
+        {
+            _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
+            _sessionRoute = sessionRoute;
+            _submissionRoute = submissionRoute;
+            _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New upload client created" );
+        }
+
 
         /// <summary>
         /// Creates a new session and returns the session entity.
@@ -61,11 +80,12 @@ namespace ServerlessFunc
                 };
 
                 SessionEntity entity = System.Text.Json.JsonSerializer.Deserialize<SessionEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Session data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostSessionAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostSessionAsync] Exception: " + ex );
                 return default;
             }
         }
@@ -88,11 +108,12 @@ namespace ServerlessFunc
                 };
 
                 SubmissionEntity entity = JsonSerializer.Deserialize<SubmissionEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Submission data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostSubmissionAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostSubmissionAsync] Exception: " + ex );
                 return default;
             }
         }
@@ -115,11 +136,12 @@ namespace ServerlessFunc
                 };
 
                 AnalysisEntity entity = JsonSerializer.Deserialize<AnalysisEntity>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data POST successful" );
                 return entity;
             }
             catch (Exception ex)
             {
-                Console.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
+                Trace.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
                 return default;
             }
         }

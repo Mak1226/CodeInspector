@@ -1,48 +1,59 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/******************************************************************************
+* Filename    = IAnalyzer.cs
+*
+* Author      = Mangesh Dalvi
+* 
+* Roll No     = 112001010
+*
+* Product     = Code Inspector
+* 
+* Project     = Analyzer
+*
+* Description = Represents the main Analyzer interface responsible for orchestrating the analysis process.
+******************************************************************************/
 
 namespace Analyzer
 {
     /// <summary>
-    /// Interface for analyzing and comparing files.
+    /// Represents the main Analyzer interface responsible for orchestrating the analysis process.
     /// </summary>
     public interface IAnalyzer
     {
         /// <summary>
-        /// Configures the analyzer with options for the teacher and a flag indicating if it's a teacher.
+        /// Configures the Analyzer with teacher options.
         /// </summary>
-        /// <param name="TeacherOptions">A dictionary of teacher-specific options.</param>
-        /// <param name="TeacherFlag">A flag indicating whether the analyzer is being extended by a teacher.</param>
-        public void Configure(IDictionary<int, bool> TeacherOptions);
+        /// <param name="teacherOptions">Dictionary of teacher options.</param>
+        public void Configure(IDictionary<int, bool> teacherOptions);
 
         /// <summary>
-        /// Loads DLL files from the student and teacher for analysis.
+        /// Loads DLL files provided by the student for analysis.
         /// </summary>
-        /// <param name="PathOfDLLFilesOfStudent">A list of file paths for the student's DLL files.</param>
-        /// <param name="PathOfDLLFileOfTeacher">The file path for the teacher's DLL file.</param>
-        public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent);
-
-        public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers);
+        /// <param name="pathOfDLLFilesOfStudent">List of paths to DLL files.</param>
+        public void LoadDLLFileOfStudent(List<string> pathOfDLLFilesOfStudent);
 
         /// <summary>
-        /// Runs the analysis and returns a list of <see cref="AnalyzerResult"/> objects.
+        /// Loads DLL files of custom analyzers for additional analysis.
         /// </summary>
-        /// <returns>
-        /// A list of <see cref="AnalyzerResult"/> objects representing the results of the analysis.
-        /// </returns>
+        /// <param name="pathOfDLLFilesOfCustomAnalyzers">List of paths to DLL files of custom analyzers.</param>
+        public void LoadDLLOfCustomAnalyzers(List<string> pathOfDLLFilesOfCustomAnalyzers);
+
+        /// <summary>
+        /// Runs the main analysis pipeline and returns the results.
+        /// </summary>
+        /// <returns>Dictionary of analysis results.</returns>
         public Dictionary<string, List<AnalyzerResult>> Run();
 
-        // TODO : Decide on return type
-
         /// <summary>
-        /// Generates a relationship graph based on the loaded files.
+        /// Generates a relationship graph based on the analysis results.
         /// </summary>
+        /// <param name="removableNamespaces">List of namespaces to be excluded from the graph.</param>
+        /// <returns>Byte array representing the generated relationship graph.</returns>
         public byte[] GetRelationshipGraph(List<string> removableNamespaces);
 
+        /// <summary>
+        /// Runs custom analyzers specified by the teacher.
+        /// </summary>
+        /// <returns>Dictionary of analysis results from custom analyzers.</returns>
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers();
     }
 }

@@ -49,18 +49,24 @@ namespace Content.FileHandling
         /// <param name="sessionID"></param>
         public string HandleUpload(string filepath, string sessionID)
         {
-            List<string> dllFiles = new List<string>();
+            List<string> dllFiles = new();
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string encoding;
             if (Directory.Exists(filepath))
             {
-                dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
-                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), filepath, sessionID);
-                _filesList = dllFiles.ToList();
+                try
+                {
+                    dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
+                    encoding = _fileEncoder.GetEncoded(dllFiles, filepath, sessionID);
+                }
+                catch
+                {
+                    encoding = "";
+                }
             }
             // Check if the path is a file
-            else if (File.Exists(filepath))
+            else if (File.Exists(filepath) && string.Equals(Path.GetExtension(filepath), ".dll", StringComparison.OrdinalIgnoreCase))
             {
                 dllFiles = new List<string> { filepath };
                 encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
@@ -68,8 +74,7 @@ namespace Content.FileHandling
             }
             else
             {
-                Trace.WriteLine("Not a valid dll or directory with dll");
-                encoding = "";
+                return "";
             }
 
             Trace.Write(encoding);
@@ -94,6 +99,7 @@ namespace Content.FileHandling
         public string? HandleRecieve(string encoding)
         {
             Dictionary<string, string> recvData;
+            _filesList = new List<String>();
             try
             {
                 recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
@@ -115,8 +121,8 @@ namespace Content.FileHandling
 
             _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
-            _filesList = new List<String>();
-            foreach (var file in decodedFiles)
+            _filesList = new List<string>();
+            foreach (KeyValuePair<string , string> file in decodedFiles)
             {
                 _filesList.Add(Path.Combine(sessionPath, file.Key));
             }

@@ -1,3 +1,15 @@
+/******************************************************************************
+* Filename    = PrefixChecker.cs
+*
+* Author      = Monesh Vanga 
+* 
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = An analyzer that checks the correctness of prefixes of interfaces and classes in parsed DLL files.
+*****************************************************************************/
+
 using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
@@ -8,12 +20,8 @@ using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-    /// <summary>
-    /// An analyzer that checks the correctness of type name prefixes in parsed DLL files.
-    /// </summary>
     public class PrefixCheckerAnalyzer : AnalyzerBase
     {
-       
         private string _errorMessage;
         private int _verdict;
         private readonly string _analyzerID;
@@ -38,35 +46,66 @@ namespace Analyzer.Pipeline
         /// <returns>The number of errors found during the analysis.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            _errorMessage = "No Violation Found";
+            _errorMessage = "";
             _verdict = 1;
             int errorCount = 0;
+            int flag = 0;
+            int flag1 = 0;
 
+            //Checks the prefixes of classes
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
             {
                 if (!IsCorrectTypeName(classObj.Name))
                 {
+                    flag++;
                     Console.WriteLine($"Incorrect Class Prefix : {classObj.Name}");
-                    _errorMessage = "Incorrect Class Prefix : " + classObj.Name;
+
+                    //if it is the first mistake
+                    if(flag == 1)
+                    {
+                        _errorMessage += "Incorrect Class Prefix : " + classObj.Name + " ";
+                    }
+
+                    //if it not the first mistake
+                    else
+                    {
+                        _errorMessage += ", " + classObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
 
-            // To check interfaces
+            // To check interfaces prefixes
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
             {
                 if (!IsCorrectInterfaceName(interfaceObj.Name))
                 {
+                    flag1++;
                     Console.WriteLine($"Incorrect Interface Prefix : {interfaceObj.Name}");
-                    _errorMessage = "Incorrect Interface Prefix : " + interfaceObj.Name;
+
+                    //if it is the first mistake
+                    if(flag1 == 1)
+                    {
+                        _errorMessage += "Incorrect Interface Prefix : " + interfaceObj.Name + " ";
+                    }
+
+                    //if it is not the first mistake
+                    else
+                    {
+                        _errorMessage += ", " + interfaceObj.Name + " ";
+                    }
                     errorCount++;
                 }
             }
 
+            //if errors are found
             if (errorCount == 0)
             {
+                _errorMessage = "No Violation Found";
                 _verdict = 1;
             }
+
+            //if errors are not found
             else
             {
                 _verdict = 0;
@@ -86,7 +125,7 @@ namespace Analyzer.Pipeline
             return name.Length > 2 && name[0] == 'I' && char.IsUpper(name[1]);
         }
 
-   /// <summary>
+        /// <summary>
         /// Checks if a type name follows the correct type prefix.
         /// </summary>
         /// <param name="name">The type name to check.</param>
