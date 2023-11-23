@@ -1,4 +1,16 @@
-﻿using Content.ViewModel;
+﻿/******************************************************************************
+ * Filename    = ClientPage.xaml.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyser
+ * 
+ * Project     = ContentPage
+ *
+ * Description = This file contains the code-behind for the ClientPage.xaml.
+ *              
+ *****************************************************************************/
+using Content.ViewModel;
 using Content.Model;
 using Networking.Communicator;
 using System.Windows.Controls;
