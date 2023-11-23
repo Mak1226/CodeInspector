@@ -55,6 +55,8 @@ namespace Content.Model
             analyzerResult = new();
         }
 
+        
+
         /// <summary>
         /// Handles the upload of files from a folder/file to the folder specified for that session.
         /// </summary>
