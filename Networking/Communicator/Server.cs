@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Communicator/Server.cs
  *
- * Author      = 
+ * Author      = Shubhang Kedia
  *
  * Product     = Analyzer
  * 
