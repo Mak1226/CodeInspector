@@ -192,7 +192,7 @@ namespace Analyzer.Parsing
             //Adding the parent class (if exist) in the inheritance list
             if (ParentClass != null)
             {
-                if (!ParentClass.FullName.StartsWith( "System" ))
+                if (!ParentClass.FullName.StartsWith("System"))
                 {
                     InheritanceList.Add( "C" + ParentClass.FullName );
                 }
@@ -201,7 +201,7 @@ namespace Analyzer.Parsing
             //adding all interfaces from which the class inherits, in the inheritance list
             foreach (InterfaceImplementation? iface in Interfaces)
             {
-                if (!iface.InterfaceType.FullName.StartsWith( "System" ))
+                if (!iface.InterfaceType.FullName.StartsWith("System"))
                 {
                     InheritanceList.Add( "I" + iface.InterfaceType.FullName );
                 }
@@ -295,7 +295,7 @@ namespace Analyzer.Parsing
 
                                 // adding to aggregation list, if object is not of generic type and is not in composition list (i.e either the object is assigned to a local variable
                                 // or if not, since we have decided on the priority of composition over aggreagation, we can check if the composition list has that particular class object or not).
-                                if (!objectType.GetType().IsGenericType && !objectType.FullName.StartsWith( "System" ))
+                                if (!objectType.GetType().IsGenericType && !objectType.FullName.StartsWith("System"))
                                 {
                                     if (objectType.IsClass && !SetsContainElement( "C" + objectType.FullName , InheritanceList , CompositionList ))
                                     {
@@ -367,9 +367,10 @@ namespace Analyzer.Parsing
                 foreach (ParameterDefinition? argument in pair.Value)
                 {
                     TypeDefinition? objType = argument.ParameterType.Resolve();
+                    TypeReference objRef = argument.ParameterType;
 
                     //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
-                    if (objType != TypeObj && objType != null && !(objType.GetType().IsGenericType))
+                    if (objType != TypeObj && objType != null && !(objType.GetType().IsGenericType || objRef.IsGenericInstance))
                     {
                         if (pair.Key.IsConstructor)
                         {
