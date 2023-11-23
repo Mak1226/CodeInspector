@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyzer.Pipeline.Analyzers;
 
 namespace Analyzer.Pipeline.Tests
 {
@@ -22,8 +23,8 @@ namespace Analyzer.Pipeline.Tests
 
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
-            SwitchStatementDefaultCaseChecker switchStatementDefaultCaseChecker = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeAllDLLs();
+            NotImplementedChecker notImplementedChecker = new(dllFiles);
+            Dictionary<string, AnalyzerResult> result = notImplementedChecker.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {
@@ -47,8 +48,8 @@ namespace Analyzer.Pipeline.Tests
 
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
-            SwitchStatementDefaultCaseChecker switchStatementDefaultCaseChecker = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeAllDLLs();
+            NotImplementedChecker notImplementedChecker = new(dllFiles);
+            Dictionary<string, AnalyzerResult> result = notImplementedChecker.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {

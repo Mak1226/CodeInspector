@@ -59,15 +59,17 @@ namespace Analyzer.Pipeline
             // methods can be empty (e.g., p/invoke declarations)
             bool defaultcaseflag = false;
             if (!method.HasBody)
+            {
                 return;
+            }
 
-            foreach (var instruction in method.Body.Instructions)
+            foreach (Instruction? instruction in method.Body.Instructions)
             {
                 if (instruction.OpCode == OpCodes.Switch)
                 {
 
                     // Check if there is a default case
-                    foreach (var target in (instruction.Operand as Instruction[]))
+                    foreach (Instruction target in (instruction.Operand as Instruction[]))
                     {
                         if (target.OpCode == OpCodes.Br)
                         {
