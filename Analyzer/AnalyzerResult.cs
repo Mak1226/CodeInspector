@@ -79,5 +79,14 @@ namespace Analyzer
         {
             return HashCode.Combine(AnalyserID, Verdict, ErrorMessage);
         }
+
+        /// <summary>
+        /// Returns a string representation of the current <see cref="AnalyzerResult"/> instance.
+        /// </summary>
+        /// <returns>A string representation of the object.</returns>
+        public override string ToString()
+        {
+            return $"AnalyzerID: {AnalyserID}, Verdict: {Verdict}, ErrorMessage: {ErrorMessage}";
+        }
     }
 }
