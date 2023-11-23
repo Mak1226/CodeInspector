@@ -33,7 +33,7 @@ namespace Dashboard
                 InstructorViewModel viewModel = new(userName,userId);
                 DataContext = viewModel;
 
-                _contentServerPage = new ServerPage ( viewModel.Communicator);
+                _contentServerPage = new ServerPage ( viewModel.Communicator, userId);
                 ResultFrame.Content = _contentServerPage;
             }
             catch (Exception exception)
