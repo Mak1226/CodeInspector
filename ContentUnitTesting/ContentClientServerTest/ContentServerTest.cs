@@ -128,7 +128,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             ContentServer contentServer = new ContentServer(_communicator, _analyzer);
             contentServer.AnalyzerResultChanged = null;
-            contentServer.SetSessionID("TestSessionID");
+            contentServer.SetSessionID("testSessionID");
             IFileHandler fileHandler = new FileHandler();
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);
