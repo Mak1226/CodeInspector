@@ -142,5 +142,19 @@ namespace ContentUnitTesting.ContentClientServerTest
             // No assertions needed, we are testing that the event is not invoked when null
             Directory.Delete(tempDirectory, true);
         }
+        [TestMethod]
+        public void LoadCustomDLLTest()
+        {
+            ContentServer contentServer = new( _communicator , _analyzer , "TestServer" );
+     
+            string tempDirectory = Path.Combine( Path.GetTempPath() , Path.GetRandomFileName() );
+            Directory.CreateDirectory( tempDirectory );
+            File.WriteAllText( Path.Combine( tempDirectory , "TestDll1.dll" ) , "DLL Content 1" );
+
+            contentServer.LoadCustomDLLs(new List<string>() { Path.Combine( tempDirectory , "TestDll1.dll" ) } );
+            Assert.IsTrue( _analyzer.GetDLLOfCustomAnalyzers().SequenceEqual( new List<string>() { Path.Combine( tempDirectory , "TestDll1.dll" ) } ));
+            // No assertions needed, we are testing that the event is not invoked when null
+            Directory.Delete( tempDirectory , true );
+        }
     }
 }

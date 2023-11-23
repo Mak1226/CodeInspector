@@ -6,6 +6,7 @@ namespace ContentUnitTesting.ContentClientServerTest
     {
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _dllFilePath;
+        private List<string> _dllFilePathCustom;
         public MockAnalyzer()
         {
             _teacherOptions = new Dictionary<int, bool>();
@@ -38,9 +39,13 @@ namespace ContentUnitTesting.ContentClientServerTest
 
         public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
-            throw new NotImplementedException();
+            _dllFilePathCustom = PathOfDLLFilesOfCustomAnalyzers;
         }
 
+        public List<string> GetDLLOfCustomAnalyzers()
+        {
+            return _dllFilePathCustom;
+        }
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
         {
             return new Dictionary<string, List<AnalyzerResult>>
