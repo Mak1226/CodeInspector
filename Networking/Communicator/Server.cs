@@ -32,7 +32,7 @@ namespace Networking.Communicator
         private TcpListener _serverListener;
         public Dictionary<string, NetworkStream> _clientIDToStream { get; set; } = new();
         public Dictionary<string, string> _senderIDToClientID { get; set; } = new();
-        private Dictionary<string, IEventHandler> _eventHandlersMap = new();
+        private readonly Dictionary<string, IEventHandler> _eventHandlersMap = new();
         private string _senderId;
         private bool _isStarted = false;
         private string _ipPort = "";
@@ -40,10 +40,10 @@ namespace Networking.Communicator
 
         private string GetLocalIPAddress()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
             // prioritizing the returning of private IPv4 in the subnet 10.*.*.*
-            foreach (var ip in host.AddressList)
+            foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork &&
                     ip.ToString().Length>3 && ip.ToString()[..3] == "10.")
@@ -53,7 +53,7 @@ namespace Networking.Communicator
             }
 
             // otherwise return any valid IPv4
-            foreach (var ip in host.AddressList)
+            foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
@@ -66,10 +66,12 @@ namespace Networking.Communicator
         public void Send(string serializedData, string moduleName, string destId)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start server first");
+            }
 
             Console.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
-            Message message = new Message(
+            Message message = new(
                 serializedData, moduleName, destId, _senderId
             );
             _sender.Send(message);
@@ -77,10 +79,12 @@ namespace Networking.Communicator
         public void Send(string serializedData, string destId)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start server first");
+            }
 
             Console.WriteLine("[Server] Send" + serializedData + " " + _moduleName + " " + destId);
-            Message message = new Message(
+            Message message = new(
                 serializedData, _moduleName, destId, _senderId
             );
             _sender.Send(message);
@@ -88,10 +92,12 @@ namespace Networking.Communicator
         public void Send(string serializedData, string moduleName, string destId, string senderId)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start server first");
+            }
 
             Console.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
-            Message message = new Message(
+            Message message = new(
                 serializedData, moduleName, destId, senderId
             );
             _sender.Send(message);
@@ -151,16 +157,18 @@ namespace Networking.Communicator
         public void Stop()
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start server first");
+            }
 
             Console.WriteLine("[Server] Stop");
             _stopThread = true;
-            Data data = new Data(EventType.ServerLeft());
-            this.Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
-            this.Send(Serializer.Serialize<Data>(data),ID.GetNetworkingID(),ID.GetBroadcastID());
+            Data data = new (EventType.ServerLeft());
+            Send(Serializer.Serialize<Data>(data), ID.GetNetworkingBroadcastID(), ID.GetBroadcastID());
+            Send(Serializer.Serialize<Data>(data),ID.GetNetworkingID(),ID.GetBroadcastID());
             _sender.Stop();
             _receiver.Stop();
-            foreach (var stream in _clientIDToStream.Values)
+            foreach (NetworkStream stream in _clientIDToStream.Values)
             {
                 stream.Close(); // Close the network stream
             }
@@ -176,15 +184,20 @@ namespace Networking.Communicator
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             if (!_isStarted)
+            {
                 throw new Exception("Start server first");
+            }
 
             Console.WriteLine("[Server] Subscribe " + moduleName);
 
             if (_eventHandlersMap.ContainsKey(moduleName))
+            {
                 Console.WriteLine("[Server] "+moduleName+" already subscribed!");// already subs
+            }
             else
+            {
                 _eventHandlersMap[moduleName] = eventHandler;
-
+            }
         }
 
         void AcceptConnection()
@@ -214,7 +227,8 @@ namespace Networking.Communicator
                     NetworkStream stream = client.GetStream();
                     lock (_clientIDToStream) { _clientIDToStream.Add(clientID, stream); }
                 }
-                catch (Exception e) {
+                catch (Exception)
+                {
                     Console.WriteLine("[Server] Failed to get stream!");
                     continue;
                 }
@@ -237,8 +251,9 @@ namespace Networking.Communicator
                 }
             }
             else
+            {
                 Send(message.Data, message.ModuleName, message.DestID, message.SenderID);
-
+            }
         }
     }
 }
