@@ -1,13 +1,30 @@
-﻿using System.Net.Sockets;
+﻿/******************************************************************************
+ * Filename    = Utils/Sender.cs
+ *
+ * Author      = VM Sreeram
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Networking
+ *
+ * Description = The sending functionality of the communicators is implemented
+ *               here.
+ *****************************************************************************/
+
+// TODO: Inherit this class in classes that use this and make the methods protected?
+
+using System.Net.Sockets;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
 
 namespace Networking.Utils
 {
+    /// <summary>
+    /// The class responsible for the sending functionality of the communicators
+    /// </summary>
     public class Sender
     {
-        //TODO: HANDLE THREAD SLEEP
         private Queue _sendQueue = new();
         private Thread _sendThread;
         private bool _isClient;
@@ -15,7 +32,12 @@ namespace Networking.Utils
         Dictionary<string, string> senderIDToClientID;
         private bool _stopThread;
 
-
+        /// <summary>
+        /// Constructor for the sender. Spawns thread that polls from <see cref="_sendQueue"/> and sends it
+        /// </summary>
+        /// <param name="clientIDToStream">The mapping of Client Id (internal) to Networksteam of the client</param>
+        /// <param name="senderIDToClientID">The mapping of the Id of the communicator to the Client Id (internal)</param>
+        /// <param name="isClient">Whether the communicator is Client</param>
         public Sender(Dictionary<string, NetworkStream> clientIDToStream, Dictionary<string, string> senderIDToClientID, bool isClient)
         {
             _stopThread = false;
@@ -30,21 +52,27 @@ namespace Networking.Utils
             _sendThread.Start();
         }
 
+        /// <summary>
+        /// Stops the sender thread
+        /// </summary>
         public void Stop()
         {
 
             Console.WriteLine("[Sender] Stop");
             _stopThread = true;
-            //_sendQueue.Enqueue(new Message(stop: true), 10 /* TODO */);
             _sendThread.Join();
         }
 
+        /// <summary>
+        /// Adds the <paramref name="message"/> to <see cref="_sendQueue"/> for it to be sent
+        /// </summary>
+        /// <param name="message">The message to be sent</param>
         public void Send(Message message)
         {
             // NOTE: destID should be in line with the dict passed 
             _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName)/* TODO */);
         }
-        public bool IfNetworkingMessage()
+        private bool IfNetworkingMessage()
         {
             Message? message = _sendQueue.Peak();
             if (message == null)
@@ -64,6 +92,9 @@ namespace Networking.Utils
             }
         }
 
+        /// <summary>
+        /// The function that polls from the <see cref="_sendQueue"/> and sends the message to appropriate destination
+        /// </summary>
         public void SendLoop()
         {
             while (IfNetworkingMessage()||(!_stopThread)) 
@@ -78,15 +109,12 @@ namespace Networking.Utils
                 // Get the next message to send
                 Message message = _sendQueue.Dequeue();
 
-                // If the message is a stop message, break out of the loop
-
-
                 string serStr = Serializer.Serialize(message);
                 byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
                 int messageSize = messagebytes.Length;
                 try
                 {
-                    if (_isClient == true)
+                    if (_isClient == true)              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                     {
                         clientIDToStream[ID.GetServerID()].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                         clientIDToStream[ID.GetServerID()].Write(messagebytes);
@@ -94,7 +122,7 @@ namespace Networking.Utils
                     }
                     else
                     {
-                        if (message.DestID == ID.GetBroadcastID())
+                        if (message.DestID == ID.GetBroadcastID())      // Broadcast the message to all clients
                         {
                             foreach (KeyValuePair<string, NetworkStream> pair in clientIDToStream)
                             {
@@ -103,7 +131,7 @@ namespace Networking.Utils
                                 pair.Value.Flush();
                             }
                         }
-                        else
+                        else            // Send the message to the appropriate recipient
                         {
                             clientIDToStream[senderIDToClientID[message.DestID]].Write(BitConverter.GetBytes(messageSize), 0, sizeof(int));
                             clientIDToStream[senderIDToClientID[message.DestID]].Write(messagebytes);

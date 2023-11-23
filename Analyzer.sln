@@ -40,7 +40,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloud_UX", "Cloud_UX\Cloud_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingUnitTests", "NetworkingUnitTests\NetworkingUnitTests.csproj", "{330DA808-32E2-4D21-A3A2-439A181EFD3D}"
 EndProject
+<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardViewModelUnitTests", "DashboardViewModelUnitTests\DashboardViewModelUnitTests.csproj", "{959F1E1B-37FE-4BEF-9539-53AAABCE2840}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionStateUnitTesting", "SessionStateUnitTesting\SessionStateUnitTesting.csproj", "{89970912-28DA-4699-A5B5-D0EBC467BD55}"
+>>>>>>> f8a5a48a629ff5defa71a1ba4c7ab85b6982ace4
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,10 +116,17 @@ Global
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{959F1E1B-37FE-4BEF-9539-53AAABCE2840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{959F1E1B-37FE-4BEF-9539-53AAABCE2840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{959F1E1B-37FE-4BEF-9539-53AAABCE2840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{959F1E1B-37FE-4BEF-9539-53AAABCE2840}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{89970912-28DA-4699-A5B5-D0EBC467BD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89970912-28DA-4699-A5B5-D0EBC467BD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89970912-28DA-4699-A5B5-D0EBC467BD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89970912-28DA-4699-A5B5-D0EBC467BD55}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> f8a5a48a629ff5defa71a1ba4c7ab85b6982ace4
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

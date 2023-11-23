@@ -35,6 +35,7 @@ namespace ServerlessFunc
         {
             _entityClient = new HttpClient();
             _insightsRoute = insightsRoute;
+            Trace.WriteLine( "[Cloud] New insights client created" );
         }
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<Dictionary<string , int>> dictionary = JsonSerializer.Deserialize<List<Dictionary<string , int>>>( result , options );
+                Trace.WriteLine( $"[Cloud] CompareTwoSessions successful for {sessionId1} and {sessionId2}" );
                 return dictionary;
             }
             catch (Exception ex)
@@ -84,6 +86,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> studentList = JsonSerializer.Deserialize<List<string>>( result , options );
+                Trace.WriteLine( $"[Cloud] GetFailedStudentsGivenTest successful for {hostname} and {testName}" );
                 return studentList;
             }
             catch (Exception ex)
@@ -112,6 +115,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                Trace.WriteLine( $"[Cloud] RunningAverageOnGivenTest successful for {hostname} and {testName}" );
                 return averageList;
             }
             catch (Exception ex)
@@ -140,6 +144,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                Trace.WriteLine( $"[Cloud] RunningAverageOnGivenStudent successful for {hostname} and {studentName}" );
                 return averageList;
             }
             catch (Exception ex)
@@ -167,6 +172,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
+                Trace.WriteLine( $"[Cloud] RunningAverageAcrossSessoins successful for {hostname}" );
                 return averageList;
             }
             catch (Exception ex)
@@ -194,6 +200,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> studentsList = JsonSerializer.Deserialize<List<string>>( result , options );
+                Trace.WriteLine( $"[Cloud] UsersWithoutAnalysisGivenSession successful for {sessionId}" );
                 return studentsList;
             }
             catch (Exception ex)
@@ -221,6 +228,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 Dictionary<string , int> studentScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
+                Trace.WriteLine( $"[Cloud] GetStudentScoreGivenSession successful for {sessionId}" );
                 return studentScore;
             }
             catch (Exception ex)
@@ -248,6 +256,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 Dictionary<string , int> testScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
+                Trace.WriteLine( $"[Cloud] GetTestScoreGivenSession successful for {sessionId}" );
                 return testScore;
             }
             catch (Exception ex)
@@ -275,6 +284,7 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> bestWorstResult = JsonSerializer.Deserialize<List<string>>( result , options );
+                Trace.WriteLine( $"[Cloud] GetBestWorstGivenSession successful for {sessionId}" );
                 return bestWorstResult;
             }
             catch (Exception ex)
