@@ -88,17 +88,28 @@ namespace Content.Model
             }
 
         }
-
+        /// <summary>
+        /// Configures the analyzer with the specified configuration settings.
+        /// </summary>
+        /// <param name="configuration">The dictionary containing configuration settings.</param>
         public void Configure(IDictionary<int, bool> configuration)
         {
             _analyzer.Configure(configuration);
         }
 
+        /// <summary>
+        /// Loads custom DLLs for additional analyzers.
+        /// </summary>
+        /// <param name="filePaths">The list of file paths for the custom DLLs.</param>
         public void LoadCustomDLLs(List<string> filePaths)
         {
             _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
         }
 
+        /// <summary>
+        /// Sets the session ID and updates the associated analyzer results if available.
+        /// </summary>
+        /// <param name="sessionID">The session ID to be set.</param>
         public void SetSessionID(string? sessionID)
         {
             if (sessionID == null)
@@ -107,14 +118,15 @@ namespace Content.Model
                 return;
             }
 
-
             _sessionID = sessionID;
             if (_sessionAnalysisResultDict.ContainsKey(sessionID)) 
             {
+                // Use existing analyzer results if available for the given session ID.
                 analyzerResult = _sessionAnalysisResultDict[sessionID];
             }
             else
             {
+                // Create a new entry for the session ID if not present.
                 analyzerResult = new();
                 _sessionAnalysisResultDict[sessionID] = analyzerResult;
             }

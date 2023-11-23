@@ -25,12 +25,10 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             throw new NotImplementedException();
         }
-
         public void Stop()
         {
             throw new NotImplementedException();
         }
-
         public void Subscribe(IEventHandler eventHandler, string moduleName)
         {
             return;
