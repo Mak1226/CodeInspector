@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
  * Filename    = Communicator/Server.cs
  *
- * Author      = 
+ * Author      = VM Sreeram
  *
  * Product     = Analyzer
  * 
@@ -40,6 +40,7 @@ namespace Networking.Communicator
         /// <summary>
         /// Gets the local IPv4 address of the server.
         /// </summary>
+
         private string GetLocalIPAddress()
         {
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -290,9 +291,16 @@ namespace Networking.Communicator
                 {
                     _eventHandlersMap[message.ModuleName].HandleMessageRecv(message);
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine("[Server] " + message.ModuleName + " not subscribed");
+                    if (_eventHandlersMap.ContainsKey( message.ModuleName ))
+                    {
+                        Console.WriteLine( "[Server] " + message.ModuleName + " not subscribed" );
+                    }
+                    else
+                    {
+                        Console.WriteLine( "[Server] Error in handling message: " + e.Message );
+                    }
                 }
             }
             else

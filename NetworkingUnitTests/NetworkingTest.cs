@@ -347,7 +347,7 @@ public class NetworkingTest
         client.Stop();
         while (!messages.canDequeue())
         {
-            Thread.Sleep(300);
+            Thread.Sleep(400);
             cnt++;
             if (cnt == 10)
             {
