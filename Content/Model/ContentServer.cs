@@ -69,6 +69,14 @@ namespace Content.Model
             lock (_sessionLock)
             {
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
+
+                Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
+                res[""] = new(); //blank line as separator
+                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
+                {
+                    res[kvp.Key] = res[kvp.Key].Concat(kvp.Value).ToList();
+                }
+
                 _sessionAnalysisResultDict[recievedSessionID] = res;
                 _server.Send(_serializer.Serialize(res), "Content-Results", clientID);
                 if (_sessionID == recievedSessionID)
@@ -84,6 +92,11 @@ namespace Content.Model
         public void Configure(IDictionary<int, bool> configuration)
         {
             _analyzer.Configure(configuration);
+        }
+
+        public void LoadCustomDLLs(List<string> filePaths)
+        {
+            _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
         }
 
         public void SetSessionID(string? sessionID)

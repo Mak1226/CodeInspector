@@ -22,8 +22,7 @@ namespace Content.ViewModel
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
-        //private Tuple<string, List<Tuple<string, int, string>>> dataList;
-
+        private List<string> _uploadedFiles = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -59,6 +58,18 @@ namespace Content.ViewModel
         {
             // Call Analyzer.Configure
             _contentServer.Configure(teacherOptions);
+        }
+
+        public void SetSessionID(string? sessionID)
+        {
+            _contentServer.SetSessionID(sessionID);
+        }
+
+        public void LoadCustomDLLs(List<string> filePaths)
+        {
+            _contentServer.LoadCustomDLLs(filePaths);
+            _uploadedFiles = filePaths;
+            OnPropertyChanged(nameof(UploadedFiles));
         }
 
         /// <summary>
@@ -112,14 +123,16 @@ namespace Content.ViewModel
             set { _configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
         }
 
+
+        public string UploadedFiles
+        {
+            get { return string.Join(",", _uploadedFiles);  }
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void SetSessionID(string? sessionID)
-        {
-            _contentServer.SetSessionID(sessionID);   
-        }
     }
 }
