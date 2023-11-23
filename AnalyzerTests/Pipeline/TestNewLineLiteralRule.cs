@@ -37,7 +37,7 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
             NewLineLiteralRule newLineLiteralRule = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = newLineLiteralRule.AnalyzeSingleDLL();
+            Dictionary<string, AnalyzerResult> result = newLineLiteralRule.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {
@@ -62,7 +62,7 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
             NewLineLiteralRule newLineLiteralRule = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = newLineLiteralRule.AnalyzeSingleDLL();
+            Dictionary<string, AnalyzerResult> result = newLineLiteralRule.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {

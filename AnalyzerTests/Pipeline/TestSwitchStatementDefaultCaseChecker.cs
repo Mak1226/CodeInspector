@@ -23,7 +23,7 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
             SwitchStatementDefaultCaseChecker switchStatementDefaultCaseChecker = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeSingleDLL();
+            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {
@@ -48,7 +48,7 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new(path);
             List<ParsedDLLFile> dllFiles = new() { dllFile };
             SwitchStatementDefaultCaseChecker switchStatementDefaultCaseChecker = new(dllFiles);
-            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeSingleDLL();
+            Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeAllDLLs();
 
             Dictionary<string, AnalyzerResult> original = new()
             {
