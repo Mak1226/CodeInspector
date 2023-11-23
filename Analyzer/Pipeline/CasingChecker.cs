@@ -1,3 +1,8 @@
+// Created By - Monesh Vanga (112001047)
+/// <summary>
+/// An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
+/// </summary>
+
 using System;
 using Analyzer.Parsing;
 using System.Collections.Generic;
@@ -10,12 +15,8 @@ using Mono.Cecil;
 
 namespace Analyzer.Pipeline
 {
-    /// <summary>
-    /// An analyzer that checks the correctness of casing in parsed DLL files.
-    /// </summary>
     public class CasingChecker : AnalyzerBase
     {
-       
         private string _errorMessage;
         private int _verdict;
         private readonly string _analyzerID;
@@ -26,9 +27,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files for analysis.</param>
         public CasingChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
+            // The constructor can be used for any necessary setup or initialization.
             _errorMessage = "";
             _verdict = 1;
-            // The constructor can be used for any necessary setup or initialization.
             _analyzerID = "112";
         }
 
@@ -56,6 +57,7 @@ namespace Analyzer.Pipeline
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
 
+        //method for checking casing
         public bool casecheck(ParsedDLLFile parsedDLLFile)
         {
             // Flag to track if any casing mistake is found
@@ -71,10 +73,14 @@ namespace Analyzer.Pipeline
                     flag1++;
                     hasMistake = true;
                     Console.WriteLine($"Incorrect Namespace Naming : {s}");
+
+                    //if it is the first mistake
                     if(flag1==1)
                     {
                         _errorMessage += "Incorrect Namespace Naming : " + s + " ";
                     }
+
+                    //if it is not the first mistake
                     else
                     {
                         _errorMessage += ", " + s + " ";
@@ -82,6 +88,7 @@ namespace Analyzer.Pipeline
                 }
             }
 
+            //Checking Class names for Pascal Casing
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
                 if(cls.Name[0] != '.')
@@ -138,12 +145,14 @@ namespace Analyzer.Pipeline
             return char.IsLower (name [0]);
         }
 
+        //method for checking parameters casing
         private bool AreParametersCamelCased(MethodDefinition method)
         {
                 int flag = 0;
                    
                 foreach (ParameterDefinition param in method.Parameters)
                 {
+                    //if the parameter starts with underscore
                     if (param.Name[0] != '_')
                     {
                         if (!IsCamelCase( param.Name ))
@@ -154,6 +163,7 @@ namespace Analyzer.Pipeline
                         }
                     }
 
+                    //if the parameter does not start with underscore
                     else
                     {
                         if (!char.IsLower(param.Name[1]))
@@ -165,6 +175,7 @@ namespace Analyzer.Pipeline
                     }
                 }
 
+                //if mistake is found
                 if(flag==1)
                 {
                     return false;

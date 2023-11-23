@@ -1,4 +1,8 @@
-﻿using Analyzer.Parsing;
+﻿// Created By - Monesh Vanga (112001047)
+/// <summary>
+/// Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
+/// </summary>
+using Analyzer.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +12,8 @@ using System.Threading.Tasks;
 
 namespace Analyzer.Pipeline
 {
-    /// <summary>
-    /// Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
-    /// </summary>
     public class AbstractClassNamingChecker : AnalyzerBase
     {
-
         private string _errorMessage;
         private int _verdict;
         private readonly string _analyzerID;
@@ -31,7 +31,7 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Returns 1 if all abstract classes meet the criteria, otherwise 0.
+        /// Gives 1 as verdict if all abstract classes meet the criteria, otherwise 0.
         /// </summary>
         /// <returns>The score for the analyzer.</returns>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
