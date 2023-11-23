@@ -186,6 +186,10 @@ namespace ContentUnitTesting.ContentClientServerTest
             // No assertions needed, we are testing that the event is not invoked when null
             Directory.Delete(tempDirectory, true);
         }
+
+        /// <summary>
+        /// Test to check if DLLs are properly loaded by contentServer
+        /// </summary>
         [TestMethod]
         public void LoadCustomDLLTest()
         {
