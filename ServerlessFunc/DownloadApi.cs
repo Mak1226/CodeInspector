@@ -41,6 +41,7 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
+            Trace.WriteLine( "[Cloud] New download client created" );
         }
 
         /// <summary>
@@ -61,6 +62,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Session data by hostname GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -89,6 +91,7 @@ namespace ServerlessFunc
                 };
 
                 byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
+                Trace.WriteLine( "[Cloud] Submission data by username and sessionid GET successful" );
                 return submission;
             }
             catch (Exception ex)
@@ -117,6 +120,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data by username and sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -144,6 +148,7 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Analysis data by sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
@@ -162,6 +167,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _sessionRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Session data DELETE successful" );
             }
             catch (Exception ex)
             {
@@ -178,6 +184,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _submissionRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Submission data DELETE successful" );
             }
             catch (Exception ex)
             {
@@ -194,6 +201,7 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _analysisRoute );
                 response.EnsureSuccessStatusCode();
+                Trace.WriteLine( "[Cloud] Analysis data DELETE successful" );
             }
             catch (Exception ex)
             {
