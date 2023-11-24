@@ -1,12 +1,26 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = TestParsingDLL.cs
+* 
+* Author      = Nikhitha Atyam
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = UnitTests for Analyzer.Parsing.ParsedDLL.cs 
+*               (checks whether parsing assembly using System.Reflection, Mono.Cecil is correct)
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-
 namespace AnalyzerTests.Parsing
 {
+    /// <summary>
+    /// Checks the parsed class,interface object lists from the parsedDLL object
+    /// </summary>
     [TestClass] 
     public class TestParsingDLL
     {
@@ -17,6 +31,7 @@ namespace AnalyzerTests.Parsing
         [TestMethod]
         public void TestValidParsingTypes()
         {
+            // current DLL is being used
             string currentDLLPath = Assembly.GetExecutingAssembly().Location;   
             ParsedDLLFile parsedDLL = new(currentDLLPath);
             Assert.AreEqual(parsedDLL.DLLFileName, "AnalyzerTests.dll");
@@ -26,16 +41,18 @@ namespace AnalyzerTests.Parsing
             parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.Namespace != "TestParsingDLL_BridgePattern" );
             
 
-            List<string> expectedClassNames = new() { "Shapes" , "Square" , "BriefView" , "DetailedView" , "Circle" };
+            // Check for classObjList of ParsedDLL object
+            List<string> expectedClassNames = new() { "Shapes", "Square", "BriefView", "DetailedView", "Circle" };
             List<string> retrievedClassNames = new();
 
             foreach(ParsedClass parsedClass in parsedDLL.classObjList)
             {
                 retrievedClassNames.Add(parsedClass.TypeObj.Name);
             }
-            CollectionAssert.AreEquivalent( expectedClassNames , retrievedClassNames );
+            CollectionAssert.AreEquivalent( expectedClassNames, retrievedClassNames );
 
 
+            // Check for interfaceObjList of ParsedDLL object
             List<string> expectedInterfaceNames = new() { "IDrawingView" };
             List<string> retrievedInterfaceNames = new();
 
@@ -43,12 +60,27 @@ namespace AnalyzerTests.Parsing
             {
                 retrievedInterfaceNames.Add(parsedInterface.TypeObj.Name);
             }
-            CollectionAssert.AreEquivalent(expectedInterfaceNames , retrievedInterfaceNames);
+            CollectionAssert.AreEquivalent(expectedInterfaceNames, retrievedInterfaceNames);
+
+
+            // Check for classObjListMC of ParsedDLL object
+            List<string> retrievedClassNamesMC = new();
+
+            foreach(ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
+            {
+                retrievedClassNamesMC.Add(parsedClass.TypeObj.Name);
+            }
+            CollectionAssert.AreEquivalent(expectedClassNames , retrievedClassNamesMC);
         }
 
+
+        /// <summary>
+        /// Testing the parsing of DLL completely without filtering
+        /// </summary>
         [TestMethod]
         public void CheckCompleteDLL()
         {
+            // BridgePatternDLL structure is same as "TestParsingDLL_BridgePattern" namespace
             string dllPath = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\BridgePattern.dll";
             ParsedDLLFile parsedDLL = new( dllPath );
 

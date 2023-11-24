@@ -1,51 +1,45 @@
 ﻿/******************************************************************************
-* Filename    = ParsedClassMonoCecil.cs
+* Filename    = ParsedClass.cs
 * 
-* Author      = 
+* Author      = Nikhitha Atyam, Yukta Salunkhe
+* 
+* Product     = Analyzer
 * 
 * Project     = Analyzer
 *
-* Description = Parses most used information from Class Object using Mono.Cecil
+* Description = Parses the most used information from the class object using Mono.Cecil package
 *****************************************************************************/
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 
 namespace Analyzer.Parsing
 {
     /// <summary>
-    /// Parses most used information from Class Object using Mono.Cecil
+    /// Parses most used information from the class object using Mono.Cecil
     /// </summary>
     public class ParsedClassMonoCecil
     {
         public TypeDefinition TypeObj { get; }   // type object to access class related information
         public string Name { get; }      // Name of Class. (Doesn't include namespace name in it)
-        public List<MethodDefinition> Constructors { get; }     // Includes Default Constructors also if created
+        public List<MethodDefinition> Constructors { get; }     // Includes Default Constructors also 
 
         /// <summary>
-        /// Contains interfaces implemented by the class only the ones specifically mentioned 
-        /// Does not include interfaces implemented by the parent class/ implemented interface
+        /// Contains interfaces implemented by the class only the ones at the lower level (direct implementation)
+        /// i.e Does not include interfaces implemented by the parent class/ implemented interface
         /// This is useful for creation of class relational diagram
         /// </summary>
-        public List<InterfaceImplementation> Interfaces { get; }
+        public List<InterfaceImplementation> Interfaces { get; private set; }
 
         public List<MethodDefinition> MethodsList { get; }   // Methods declared only by the class
-        public TypeDefinition? ParentClass;      // ParentClass - does not contain classes starting with System/Microsoft
-        public List<FieldDefinition> FieldsList;
-        public List<PropertyDefinition> PropertiesList;
+        public TypeDefinition? ParentClass;                  // ParentClass - does not contain classes starting with System/Microsoft
+        public List<FieldDefinition> FieldsList;             // Fields declared only in the class
+        public List<PropertyDefinition> PropertiesList;      // Properties declared only in the class
 
 
-        // To store class relationship
+        // To store class relationships
         public HashSet<string> CompositionList { get; }
         public HashSet<string> AggregationList { get; }
         public HashSet<string> UsingList { get; }
@@ -62,6 +56,10 @@ namespace Analyzer.Parsing
             Interfaces = new List<InterfaceImplementation>();
             FieldsList = new List<FieldDefinition>();
             PropertiesList = new List<PropertyDefinition>();
+            InheritanceList = new HashSet<string>();
+            UsingList = new HashSet<string>();
+            CompositionList = new HashSet<string>();
+            AggregationList = new HashSet<string>();
 
             // type.Methods will include constructors of the class & will not give methods of parent class
             foreach (MethodDefinition method in type.Methods)
@@ -90,42 +88,26 @@ namespace Analyzer.Parsing
             }
 
             // Finding interfaces which are only implemented by the class and declared specifically in the class
-            if (type.HasInterfaces)
-            {
-                Interfaces = type.Interfaces.ToList();
+            FindInterfacesImplemented();
 
-                if (ParentClass?.Interfaces != null)
-                {
-                    Interfaces = type.Interfaces.Except( ParentClass.Interfaces ).ToList();
-                }
-
-
-                HashSet<string> removableInterfaceNames = new();
-
-                foreach (InterfaceImplementation i in Interfaces)
-                {
-                    foreach (InterfaceImplementation x in i.InterfaceType.Resolve().Interfaces)
-                    {
-                        removableInterfaceNames.Add( x.InterfaceType.FullName );
-                    }
-                }
-
-                List<InterfaceImplementation> ifaceList = new();
-
-                foreach (InterfaceImplementation iface in Interfaces)
-                {
-                    if (!removableInterfaceNames.Contains( iface.InterfaceType.FullName ))
-                    {
-                        ifaceList.Add( iface );
-                    }
-                }
-
-                Interfaces = ifaceList;
-            }
-
+            // Finding fields and properties declared by the class
             FieldsList = TypeObj.Fields.ToList();
             PropertiesList = TypeObj.Properties.ToList();
 
+            Trace.WriteLine( "Extracting Relationships List for " + type.FullName );
+            //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
+            if (!TypeObj.GetType().IsGenericType)
+            {
+                UpdateInheritanceList();
+                UpdateRelationshipsListFromCtors();
+                UpdateAggregationList();
+                UpdateUsingList();
+            }
+            Trace.WriteLine( "Updated the Relationships List for " + type.FullName );
+            Trace.WriteLine( "ParsedMonoCecil Obj creation Completed for " + type.FullName );
+
+
+            //// This is commented so that it will be used later if required
             //// Properties can come into fields and methods. Currently here trying to remove those fields from fields list (Auto properties)
             //if (PropertiesList.Count > 0)
             //{
@@ -150,30 +132,61 @@ namespace Analyzer.Parsing
             //       FieldsList.Remove(field);
             //    }
             //}
-
-            Trace.WriteLine("Extracting Relationships List for " + type.FullName);
-            //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
-            if (!TypeObj.GetType().IsGenericType)
-            {
-                InheritanceList = new HashSet<string>();
-                UsingList = new HashSet<string>();
-                CompositionList = new HashSet<string>();
-                AggregationList = new HashSet<string>();
-                UpdateInheritanceList();
-                UpdateRelationshipsListFromCtors();
-                UpdateAggregationList();
-                UpdateUsingList();
-            }
-            Trace.WriteLine("Updated the Relationships List for " + type.FullName);
-            Trace.WriteLine("ParsedMonoCecil Obj creation Completed for " + type.FullName);
         }
 
+
+        /// <summary>
+        /// Finding interfaces which are implemented by the class and not implemented by parent class or parent interface
+        /// </summary>
+        private void FindInterfacesImplemented()
+        {
+            if (TypeObj.HasInterfaces)
+            {
+                // Finding all interfaces implemented by a class
+                Interfaces = TypeObj.Interfaces.ToList();
+
+                // Finding interfaces implemented by class & not implemented by parent class
+                if (ParentClass?.Interfaces != null)
+                {
+                    Interfaces = TypeObj.Interfaces.Except( ParentClass.Interfaces ).ToList();
+                }
+
+                // Removing interfaces implemented by parent interfaces
+                HashSet<string> removableInterfaceNames = new();
+
+                foreach (InterfaceImplementation parentIface in Interfaces)
+                {
+                    foreach (InterfaceImplementation parentImplIFace in parentIface.InterfaceType.Resolve().Interfaces)
+                    {
+                        removableInterfaceNames.Add( parentImplIFace.InterfaceType.FullName );
+                    }
+                }
+
+                List<InterfaceImplementation> implIfaceList = new();
+
+                foreach (InterfaceImplementation iface in Interfaces)
+                {
+                    if (!removableInterfaceNames.Contains( iface.InterfaceType.FullName ))
+                    {
+                        implIfaceList.Add( iface );
+                    }
+                }
+
+                Interfaces = implIfaceList;
+            }
+        }
+
+
+        // Finding if an element is part of collection of sets 
         private bool SetsContainElement<T>( T element , params HashSet<T>[] sets )
         {
             return sets.Any( set => set.Contains( element ) );
         }
 
-        //UpdateInhetanceList updates the Inheritance List
+
+        /// <summary>
+        /// UpdateInheritanceList updates the Inheritance List
+        /// </summary>
         private void UpdateInheritanceList()
         {
             //Adding the parent class (if exist) in the inheritance list
@@ -195,8 +208,11 @@ namespace Analyzer.Parsing
             }
         }
 
-        //UpdateRelationShipsFromCtorList updates the Relationships List by analyzing the objects and
-        //their method of instantiation specifically related to the constructor
+
+        /// <summary>
+        /// UpdateRelationShipsFromCtorList updates the Relationships List by analyzing the objects and
+        /// their method of instantiation specifically related to the constructor
+        /// </summary>
         private void UpdateRelationshipsListFromCtors()
         {
             //Composition Relation:
@@ -299,7 +315,10 @@ namespace Analyzer.Parsing
             }
         }
 
-        //UpdateAggreagationList is used to extract out the aggregation relationship existing between the current class and other classes
+
+        /// <summary>
+        /// UpdateAggreagationList is used to extract out the aggregation relationship existing between the current class and other classes
+        /// </summary>
         private void UpdateAggregationList()
         {
             // Aggregation List:
@@ -332,7 +351,10 @@ namespace Analyzer.Parsing
             }
         }
 
-        //UpdateUsingList is used to extract out the using relationship existing between the current class and other classes
+
+        /// <summary>
+        /// UpdateUsingList is used to extract out the using relationship existing between the current class and other classes
+        /// </summary>
         private void UpdateUsingList()
         {
             // Using Class Relationship 
@@ -378,6 +400,11 @@ namespace Analyzer.Parsing
                 }
             }
         }
+
+
+        /// <summary>
+        /// Gets the all parameters information related to all methods in the class
+        /// </summary>
         public Dictionary<MethodDefinition , List<ParameterDefinition>> GetFunctionParameters()
         {
             Dictionary<MethodDefinition , List<ParameterDefinition>>? dict = new();

@@ -1,27 +1,30 @@
 ﻿/******************************************************************************
 * Filename    = ParsedDLLFile.cs
 * 
-* Author      = 
+* Author      = Nikhitha Atyam, Yukta Salunkhe
+* 
+* Product     = Analyzer
 * 
 * Project     = Analyzer
 *
-* Description =  Parses each of the dll files and creating ParsedClass Objects for each class
+* Description = Parses a single dll file and creates parsed class,interfaces objects
 *****************************************************************************/
 
 using Mono.Cecil;
-using System.IO;
 using System.Reflection;
+
 
 namespace Analyzer.Parsing
 {
     /// <summary>
-    /// Parses each of the dll files and creating ParsedClass Objects for each class
+    /// Parses a single dll file and creates parsed class,interfaces objects
     /// </summary>
     public class ParsedDLLFile
     {
         private string _dllPath { get; }
-        public string DLLFileName { get; }
+        public string DLLFileName { get; }      
 
+        // System.Reflection parsed class, interface object lists
         public List<ParsedClass> classObjList = new();
         public List<ParsedInterface> interfaceObjList = new();
 
@@ -29,10 +32,10 @@ namespace Analyzer.Parsing
         public List<ParsedClassMonoCecil> classObjListMC = new();
 
         /// <summary>
-        /// function to parse the dll files
+        /// Parses the DLL file using Reflection & Mono.Cecil
         /// </summary>
-        /// <param name="path"></param>
-        public ParsedDLLFile(string path) // path of dll files
+        /// <param name="path">path of DLL file</param>
+        public ParsedDLLFile(string path) 
         {
             _dllPath = path;
             DLLFileName = Path.GetFileName(path);
@@ -41,6 +44,10 @@ namespace Analyzer.Parsing
             MonoCecilParsingDLL();
         }
 
+
+        /// <summary>
+        /// Parsing the DLL using System.Reflection
+        /// </summary>
         private void ReflectionParsingDLL()
         {
             Assembly assembly = Assembly.Load( File.ReadAllBytes(_dllPath) );
@@ -49,9 +56,11 @@ namespace Analyzer.Parsing
             {
                 Type[] types = assembly.GetTypes();
 
+                // Finding class and interface types in the assembly
                 foreach (Type type in types)
                 {
-                    if (type.Namespace != null)
+                    // Ignoring the types from System & Microsoft packages
+                    if(type.Namespace != null)
                     {
                         if (type.Namespace.StartsWith( "System." ) || type.Namespace.StartsWith( "Microsoft." ) || type.Namespace.StartsWith("Mono.Cecil"))
                         {
@@ -59,7 +68,7 @@ namespace Analyzer.Parsing
                         }
                     }
                     
-                    if (type.IsClass && type.FullName != "<Module>")
+                    if(type.IsClass && type.FullName != "<Module>")
                     {
                         // To avoid structures and delegates
                         if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
@@ -77,6 +86,10 @@ namespace Analyzer.Parsing
             }
         }
 
+
+        /// <summary>
+        /// Parsing the DLL using Mono.Cecil
+        /// </summary>
         private void MonoCecilParsingDLL()
         {
             AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(_dllPath);
@@ -88,16 +101,19 @@ namespace Analyzer.Parsing
 
                 if (mainModule != null)
                 {
+                    // Finding class and interface types in the Main module
                     foreach (TypeDefinition type in mainModule.Types)
                     {
                         if (type.Namespace != null)
                         {
+                            // Ignoring the types from System & Microsoft packages
                             if (type.Namespace.StartsWith( "System" ) || type.Namespace.StartsWith( "Microsoft" ))
                             {
                                 continue;
                             }
                         }
 
+                        // ignoring structures and delegates
                         if (type.IsClass && !type.IsValueType && type.BaseType?.FullName != "System.MulticastDelegate" && type.FullName != "<Module>")
                         {
                             ParsedClassMonoCecil classObj = new( type );
@@ -105,6 +121,8 @@ namespace Analyzer.Parsing
                         }
                     }
                 }
+
+                // Releasing the assembly resources
                 assemblyDef.Dispose();
             }
         }

@@ -1,25 +1,47 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = TestCyclomaticComplexity.cs
+* 
+* Author      = Nikhitha Atyam
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = UnitTests for Analyzer.Pipeline.CyclomaticComplexity.cs 
+*               (checks the complexity of different methods in the DLL)
+*****************************************************************************/
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Analyzer;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
+
 
 namespace AnalyzerTests.Pipeline
 {
+    /// <summary>
+    /// Checks the cyclomatic complexity of different test methods
+    /// </summary>
     [TestClass]
     public class TestCyclomaticComplexity
     {
+        // current DLL details and its parsedDLL object
         public static string currentDLLPath = Assembly.GetExecutingAssembly().Location;
         public static ParsedDLLFile currentParsedDLL = new(currentDLLPath);
         public static CyclomaticComplexity _cyclomaticComplexityAnalyzer;
 
+        // current DLL module to access different test methods
         public static ModuleDefinition currentModule = ModuleDefinition.ReadModule(currentDLLPath);
         public static TypeReference currentTypeReference = currentModule.ImportReference(typeof(SampleComplexityTestCases.SampleComplexityTestClass));
         public static TypeDefinition currentTypeDefintion = currentTypeReference.Resolve();
 
+
+        /// <summary>
+        /// Current DLL will be AnalyzerTests.DLL => So filtering the namespaces where test cases were present
+        /// And creating an cyclomatic analyzer with current parsedLL as input
+        /// </summary>
         [ClassInitialize]
         public static void TestCyclomaticComplexityInitialize(TestContext context)
         {
@@ -30,6 +52,10 @@ namespace AnalyzerTests.Pipeline
             _cyclomaticComplexityAnalyzer = new CyclomaticComplexity(new() {currentParsedDLL});
         }
 
+
+        /// <summary>
+        /// This methods checks complexity of methods having conditional statements like IfElse, NestedIf, Ternary etc..
+        /// </summary>
         [TestMethod]
         public void CheckIfElseComplexity()
         {
@@ -44,6 +70,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(2, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleTernaryMethod));
         }
 
+
+        /// <summary>
+        /// This methods checks complexity of methods having loops
+        /// </summary>
         [TestMethod]
         public void CheckLoopComplexity() 
         {
@@ -54,6 +84,10 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(2, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleWhileLoopMethod));
         }
 
+
+        /// <summary>
+        /// This methods checks complexity of methods having combination of loops and conditional statements
+        /// </summary>
         [TestMethod]
         public void CheckCombinedCasesComplexity()
         {
@@ -64,6 +98,11 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(8, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleCombinedMethod));
         }
 
+
+        /// <summary>
+        /// This methods checks complexity of methods having switch case statement
+        /// But as switch case complexity is not guaranteed. It just checks whether complexity is above/below a certain value
+        /// </summary>
         [TestMethod]
         public void CheckSwitchCaseComplexity()
         {
@@ -78,10 +117,15 @@ namespace AnalyzerTests.Pipeline
             Console.WriteLine(_cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleSwitchMethod2));
         }
 
+
+        /// <summary>
+        /// Rather than checking each method, cyclomatic complexity analyzer tests on a whole DLL and also multiple DLLs
+        /// </summary>
         [TestMethod]
         public void CheckCompleteDLL () 
         {
             string dllPath = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\BridgePattern.dll";
+
             ParsedDLLFile parsedDLL = new( dllPath );
 
             AnalyzerBase cyclomaticComplexityAnalyzer =  new CyclomaticComplexity(new() {parsedDLL, currentParsedDLL});
@@ -90,16 +134,36 @@ namespace AnalyzerTests.Pipeline
             AnalyzerResult bridgeAnalyzerResult = analyzerResultDict[parsedDLL.DLLFileName];
             AnalyzerResult currentAnalyzerResult = analyzerResultDict[currentParsedDLL.DLLFileName];
 
-            Assert.AreEqual(1, bridgeAnalyzerResult.Verdict);
-            Assert.AreEqual( 0 , currentAnalyzerResult.Verdict );
+            Assert.AreEqual(1, bridgeAnalyzerResult.Verdict);   // no violation found
+            Assert.AreEqual(0, currentAnalyzerResult.Verdict);  // violations found i.e. complexity > 10 for some method
 
             Console.WriteLine(bridgeAnalyzerResult.ErrorMessage);
             Console.WriteLine(currentAnalyzerResult.ErrorMessage);
+        }
+
+
+        /// <summary>
+        /// This method is just to check the complexity of all methods in the Analyzer module
+        /// Currently there exists methods crossing max allowed value of cyclomatic complexity
+        /// </summary>
+        [TestMethod]
+        public void CheckAnalyzerDLL()
+        {
+            string dllPath = "..\\..\\..\\..\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll";
+            ParsedDLLFile parsedDLL = new( dllPath );
+            AnalyzerBase cyclomaticComplexityAnalyzer = new CyclomaticComplexity( new() { parsedDLL } );
+
+            Dictionary<string , AnalyzerResult> analyzerResultDict = cyclomaticComplexityAnalyzer.AnalyzeAllDLLs();
+            AnalyzerResult parsedDLLAnalyzerResult = analyzerResultDict[parsedDLL.DLLFileName];
+            Console.WriteLine( parsedDLLAnalyzerResult.ErrorMessage);
+
+            Assert.AreEqual(0 , parsedDLLAnalyzerResult.Verdict);
         }
     }
 }
 
 
+// TEST CASES FOR CYCLOMATIC COMPLEXITY
 namespace SampleComplexityTestCases
 {
     public class SampleComplexityTestClass
