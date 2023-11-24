@@ -37,7 +37,6 @@ namespace AnalyzerTests.Pipeline
             List<ParsedDLLFile> DllFileObjs = new();
 
             string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
-            //string path = "C:\\Users\\lenovo\\Desktop\\Software\\Analyzer\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll";
             var parsedDllObj = new ParsedDLLFile(path);
             DllFileObjs.Add(parsedDllObj);
 
@@ -52,7 +51,7 @@ namespace AnalyzerTests.Pipeline
             }
 
             //check diff Relationship Lists
-            //Assert.AreEqual(5, classes);
+            Assert.AreEqual( 5 , classes );
 
             Dictionary<string, List<string>> InheritanceRel = new();
             Dictionary<string, List<string>> CompositionRel = new();
@@ -68,7 +67,7 @@ namespace AnalyzerTests.Pipeline
                     //Console.WriteLine( "Inheritance: " );
                     foreach (string inhCls in cls.InheritanceList)
                     {
-                        Console.WriteLine(inhCls);
+                        //Console.WriteLine(inhCls);
                         if (!InheritanceRel.ContainsKey(cls.Name))
                         {
                             InheritanceRel[cls.Name] = new List<string>();
