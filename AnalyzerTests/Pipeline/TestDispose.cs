@@ -30,7 +30,7 @@ namespace Analyzer.Pipeline.Tests
     public class TestDispose
     {
 
-        //disposetest.dll is generated from below code
+        //disposetestviolated.dll is generated from below code
 
         //public class ViolatingDisposableClass : IDisposable
         //{
@@ -62,7 +62,7 @@ namespace Analyzer.Pipeline.Tests
         public void TestViolation()
         {
             // Specify the path to the DLL file
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetest.dll";
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\disposetestviolated.dll";
 
             // Create a list of DLL paths
             ParsedDLLFile dllFile = new(path);

@@ -1,4 +1,13 @@
-﻿using System;
+﻿/******************************************************************************
+* Filename    = SwitchStatementDefaultCaseChecker.cs
+* 
+* Author      = Kaustubh Sapkale
+* 
+* Project     = Analyzer
+*
+* Description = 
+*****************************************************************************/
+using System;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Analyzer.Parsing;
@@ -50,15 +59,17 @@ namespace Analyzer.Pipeline
             // methods can be empty (e.g., p/invoke declarations)
             bool defaultcaseflag = false;
             if (!method.HasBody)
+            {
                 return;
+            }
 
-            foreach (var instruction in method.Body.Instructions)
+            foreach (Instruction? instruction in method.Body.Instructions)
             {
                 if (instruction.OpCode == OpCodes.Switch)
                 {
 
                     // Check if there is a default case
-                    foreach (var target in (instruction.Operand as Instruction[]))
+                    foreach (Instruction target in (instruction.Operand as Instruction[]))
                     {
                         if (target.OpCode == OpCodes.Br)
                         {
@@ -85,6 +96,12 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             CheckSwitchStatements(parsedDLLFile);
+
+            if(_verdict==1)
+            {
+                _errorMessage = "No violation found";
+            }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
