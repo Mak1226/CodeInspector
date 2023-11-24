@@ -183,7 +183,6 @@ namespace Analyzer.Pipeline
         /// <returns>Byte array representing the generated class diagram.</returns>
         public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
-            // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
             byte[] bytes = classDiag.Run(removableNamespaces).Result;
             Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));
