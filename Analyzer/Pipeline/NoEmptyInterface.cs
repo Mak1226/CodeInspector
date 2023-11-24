@@ -14,29 +14,24 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
 using System.Diagnostics;
+using System.Text;
 
 namespace Analyzer.Pipeline
 {
     /// <summary>
-    ///
+    /// Given the list of all interfaces, find those which are empty.
     /// </summary>
     public class NoEmptyInterface : AnalyzerBase
     {
-        private string _errorMessage;
-        private int _verdict;
-        private readonly string _analyzerID;
+        private string _errorMessage;   // Output message returned by the analyzer.
+        private int _verdict;   // Verdict if the analyzer has passed or failed.
+        private readonly string _analyzerID;    // Unique ID for the analyzer.
 
         /// <summary>
-        ///
+        /// Initializes a new instance of the <see cref="NoEmptyInterface"/> analyzer with parsed DLL files.
         /// </summary>
-        /// <param name="dllFiles"></param>
+        /// <param name="dllFiles">List of ParsedDLL files to analyze.</param>
         public NoEmptyInterface(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessage = "";
@@ -45,9 +40,10 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        ///
+        /// Finds empty interfaces in the DLL.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of empty interfaces.</returns>
+        /// <param name="parsedDLLFile">DLL file to be analyzed.</param>
         public List<Type> FindEmptyInterfaces(ParsedDLLFile parsedDLLFile)
         {
             List<Type> emptyInterfaceList = new();
@@ -56,42 +52,48 @@ namespace Analyzer.Pipeline
             {
                 Type interfaceType = interfaceObj.TypeObj;
 
-                //
                 if (interfaceObj.Methods.Length == 0)
                 {
                     emptyInterfaceList.Add(interfaceType);
                 }
             }
-
             return emptyInterfaceList;
         }
 
+        /// <summary>
+        /// Helper function to form the error message.
+        /// </summary>
+        /// <param name="emptyInterfaceList">List of all violating types.</param>
+        /// <returns>String with all the violating types.</returns>
         private string ErrorMessage(List<Type> emptyInterfaceList)
         {
-            var errorLog = new System.Text.StringBuilder("The following Interfaces are empty:\r\n");
+            StringBuilder errorLog = new("The following interfaces are empty:\r\n");
 
             foreach (Type type in emptyInterfaceList)
             {
-                // sanity check
                 errorLog.AppendLine(type.FullName);
             }
             return errorLog.ToString();
         }
 
+
         /// <summary>
-        /// 
+        /// Analyzes each DLL file for interfaces with no contract
+        /// And reports if the DLL violates the above.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="parsedDLLFile">Parsed DLL file.</param>
+        /// <returns><see cref="AnalyzerResult"/> containing the analysis results.</returns>
+        /// <exception cref="NullReferenceException">If the file object is null.</exception>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             List<Type> emptyInterfaces;
             try
             {
-                emptyInterfaces = FindEmptyInterfaces( parsedDLLFile );
+                emptyInterfaces = FindEmptyInterfaces(parsedDLLFile);
                 if (emptyInterfaces.Count > 0)
                 {
                     _verdict = 0;
-                    _errorMessage = ErrorMessage( emptyInterfaces );
+                    _errorMessage = ErrorMessage(emptyInterfaces);
                 }
                 else
                 {
@@ -100,7 +102,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException( "Encountered exception while processing." , ex );
+                throw new NullReferenceException("Encountered exception while processing.", ex);
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

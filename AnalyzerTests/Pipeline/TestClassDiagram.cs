@@ -268,10 +268,8 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out8.png" , imageBytes );
+                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out9.png" , imageBytes );
             }
         }
-
-
     }
 }
