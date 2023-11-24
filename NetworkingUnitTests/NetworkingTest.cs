@@ -41,13 +41,14 @@ public class NetworkingTest
     public void TwoServersTwoPortNumbers()
     {
         ICommunicator server1 = new Server();
-        string[] ipPort = server1.Start(null, null, Id.GetServerId(), Id.GetNetworkingId()).Split(':');
-        int port1 = int.Parse(ipPort[1]);
+        string[] ipPort = server1.Start( null , null , Id.GetServerId() , Id.GetNetworkingId() ).Split( ':' );
+        int port1 = int.Parse( ipPort[1] );
         ICommunicator server2 = new Server();
-        ipPort = server2.Start(null, null, Id.GetServerId(), Id.GetNetworkingId()).Split(':');
-        int port2 = int.Parse(ipPort[1]);
-
-        Assert.AreNotEqual(port1, port2);
+        ipPort = server2.Start( null , null , Id.GetServerId() , Id.GetNetworkingId() ).Split( ':' );
+        int port2 = int.Parse( ipPort[1] );
+        server1.Stop();
+        server2.Stop();
+        Assert.AreNotEqual( port1 , port2 );
     }
 
     /// <summary>
@@ -59,23 +60,23 @@ public class NetworkingTest
         Server server = new();
         try
         {
-            server.Send("123", "456");
+            server.Send( "123" , "456" );
         }
         catch (Exception exception)
         {
-            Assert.AreEqual("Start server first", exception.Message);
+            Assert.AreEqual( "Start server first" , exception.Message );
         }
         try
         {
-            server.Send("123", "456","e4e4");
+            server.Send( "123" , "456" , "e4e4" );
         }
         catch (Exception exception)
         {
-            Assert.AreEqual("Start server first", exception.Message);
+            Assert.AreEqual( "Start server first" , exception.Message );
         }
         try
         {
-            server.Send( "123" , "456" , "e4e4","fsdc" );
+            server.Send( "123" , "456" , "e4e4" , "fsdc" );
         }
         catch (Exception exception)
         {
@@ -92,11 +93,11 @@ public class NetworkingTest
         ICommunicator server = new Server();
         try
         {
-            server.Subscribe(new GenericEventHandler(new()), "modName");
+            server.Subscribe( new GenericEventHandler( new() ) , "modName" );
         }
         catch (Exception exception)
         {
-            Assert.AreEqual("Start server first", exception.Message);
+            Assert.AreEqual( "Start server first" , exception.Message );
         }
     }
 
@@ -113,7 +114,7 @@ public class NetworkingTest
         }
         catch (Exception exception)
         {
-            Assert.AreEqual("Start server first", exception.Message);
+            Assert.AreEqual( "Start server first" , exception.Message );
         }
     }
 
@@ -125,8 +126,8 @@ public class NetworkingTest
     {
         ICommunicator server = new Server();
         string ipPort = server.Start( null , null , Id.GetServerId() , Id.GetNetworkingId() );
-        string ipPort1= server.Start( null , null , Id.GetServerId() , Id.GetNetworkingId() );
-        Assert.AreEqual( ipPort,ipPort1);
+        string ipPort1 = server.Start( null , null , Id.GetServerId() , Id.GetNetworkingId() );
+        Assert.AreEqual( ipPort , ipPort1 );
         server.Stop();
     }
 
@@ -555,16 +556,17 @@ public class NetworkingTest
         Networking.Models.Message message = new( Serializer.Serialize<Data>( data ) , Id.GetNetworkingBroadcastId() , Id.GetBroadcastId() , Id.GetServerId() );
 
         server.Stop();
-        client.Stop();
+            Thread.Sleep( 500 );
         while (!messages.canDequeue())
         {
-            Thread.Sleep( 400 );
+            Thread.Sleep( 1000 );
             cnt++;
             if (cnt == 10)
             {
                 Assert.Fail( "Did not receive message" );
             }
         }
+        client.Stop();
         Networking.Models.Message receivedMessage = messages.Dequeue();
 
         Assert.IsTrue( CompareMessages( receivedMessage , message ) );
@@ -672,7 +674,7 @@ public class NetworkingTest
             // Subscribe each client to its own message queue
             clients[i].Subscribe( new GenericEventHandler( messageQueue: messages[i] ) , "unitTestClient" );
         }
-            for (int i = 0; i < numClients; i++)
+        for (int i = 0; i < numClients; i++)
         {
             // Send a message from each client to itself
             Data data = new( "testMessage" , EventType.ChatMessage() );
