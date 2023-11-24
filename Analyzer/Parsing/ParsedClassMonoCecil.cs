@@ -56,6 +56,10 @@ namespace Analyzer.Parsing
             Interfaces = new List<InterfaceImplementation>();
             FieldsList = new List<FieldDefinition>();
             PropertiesList = new List<PropertyDefinition>();
+            InheritanceList = new HashSet<string>();
+            UsingList = new HashSet<string>();
+            CompositionList = new HashSet<string>();
+            AggregationList = new HashSet<string>();
 
             // type.Methods will include constructors of the class & will not give methods of parent class
             foreach (MethodDefinition method in type.Methods)
@@ -94,10 +98,6 @@ namespace Analyzer.Parsing
             //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
             if (!TypeObj.GetType().IsGenericType)
             {
-                InheritanceList = new HashSet<string>();
-                UsingList = new HashSet<string>();
-                CompositionList = new HashSet<string>();
-                AggregationList = new HashSet<string>();
                 UpdateInheritanceList();
                 UpdateRelationshipsListFromCtors();
                 UpdateAggregationList();

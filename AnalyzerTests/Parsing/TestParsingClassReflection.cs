@@ -1,5 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/******************************************************************************
+* Filename    = TestParsingClassReflection.cs
+* 
+* Author      = Nikhitha Atyam
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = UnitTests for Analyzer.Parsing.ParsedClass.cs 
+*               (checks the parsed members from the class object using System.Reflection)
+*****************************************************************************/
+
 using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
