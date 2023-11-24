@@ -1,4 +1,16 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = ClassDiagram.cs
+* 
+* Author      = Sneha Bhattacharjee, Nikhitha Atyam
+*
+* Product     = Analyzer
+* 
+* Project     = Analyzer
+*
+* Description = UML Class relationsip diagram rendered using PlantUML.
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using PlantUml.Net;
 using System;
 using System.Collections.Generic;
@@ -47,15 +59,11 @@ namespace Analyzer.UMLDiagram
             var factory = new RendererFactory();
             IPlantUmlRenderer renderer = factory.CreateRenderer(new PlantUmlSettings());
 
-            // Create the PlantUML diagram code
-            // string plantUmlCode = "@startuml\r\nclass Car {}\r\n\r\nclass Engine\r\n\r\nCar *-- Engine : contains\r\nEngine <-- Car2\r\n@enduml";
-            //string plantUmlCode = "@startuml\r\n\r\n!define hasAttributes \r\n!define hasMethods \r\n\r\nclass MyClass {\r\n    !if (hasAttributes)\r\n    - field1: int\r\n    - field2: string\r\n    !endif\r\n\r\n    !if (hasMethods)\r\n    + method1()\r\n    + method2()\r\n    !endif\r\n}\r\n\r\n@enduml\r\n";
-
             try
             {
                 System.Diagnostics.Debug.WriteLine(_plantUMLCode.ToString());
 
-                string emptyDiagramUMLString = "@startuml\r\n\r\n@enduml";
+                string emptyDiagramUMLString = "@startuml\r\nhide empty members\r\nskinparam groupInheritance 2\r\nskinparam groupAggregation 2\r\nskinparam groupComposition 2\r\n@enduml";
 
                 if(_plantUMLCode.ToString() != emptyDiagramUMLString)
                 {
@@ -77,14 +85,12 @@ namespace Analyzer.UMLDiagram
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
         private void CodeStr(List<string> removableNamespaces)
         {
             List<ParsedClassMonoCecil> graphParsedClassObj = new();
             List<ParsedInterface> graphParsedInterfaceObj = new();
-            _plantUMLCode.Append( "@startuml\r\n" );
+            _plantUMLCode.Append( "@startuml\r\nhide empty members\r\nskinparam groupInheritance 2\r\nskinparam groupAggregation 2\r\nskinparam groupComposition 2\r\n" );
             foreach (ParsedClassMonoCecil classObj in _parsedClassList)
             {
                 if (!isPartOfRemovableNamespace(classObj.TypeObj.FullName.Insert(0,"C"), removableNamespaces))
@@ -144,12 +150,6 @@ namespace Analyzer.UMLDiagram
             }
 
             _plantUMLCode.Append("\r\n@enduml");
-            // _plantUMLCode = new("@startuml\r\nclass Car{}\r\nCar<--Engine\r\n@enduml");
-            // _plantUMLCode = new("@startuml\r\nclass BridgePattern.Circle {}\r\nclass BridgePattern.DetailedView {}\r\nclass BridgePattern.BriefView {}\r\nclass BridgePattern.Shapes {}\r\nclass BridgePattern.Square {}\r\nBridgePattern.Circle --> BridgePattern.IDrawingView\r\nBridgePattern.Circle extends BridgePattern.Shapes\r\nBridgePattern.DetailedView extends BridgePattern.IDrawingView\r\nBridgePattern.BriefView extends BridgePattern.IDrawingView\r\nBridgePattern.Shapes --> BridgePattern.IDrawingView\r\nBridgePattern.Square --> BridgePattern.IDrawingView\r\nBridgePattern.Square extends BridgePattern.Shapes\r\n\r\n@enduml\r\n\r\n");
-
-
-            //_plantUMLCode = new("@startuml\r\nclass BridgePattern.Circle{}\r\nclass BridgePattern.DetailedView{}\r\nclass BridgePattern.BriefView{}\r\nclass BridgePattern.Shapes{}\r\nclass BridgePattern.Square{} \r\n interface BridgePattern.IDrawingView{}\r\n BridgePattern.Circle --> BridgePattern.IDrawingView\r\nBridgePattern.Circle extends BridgePattern.Shapes\r\nBridgePattern.DetailedView implements BridgePattern.IDrawingView\r\nBridgePattern.BriefView implements BridgePattern.IDrawingView\r\nBridgePattern.Shapes --> BridgePattern.IDrawingView\r\nBridgePattern.Square --> BridgePattern.IDrawingView\r\nBridgePattern.Square extends BridgePattern.Shapes\r\n\r\n@enduml\r\n\r\n");
-            // _plantUMLCode = new("@startuml\r\nclass BridgePattern.Circle{}\r\nclass BridgePattern.DetailedView{}\r\ninterface BridgePattern.IDrawingView\r\nclass BridgePattern.BriefView{}\r\nclass BridgePattern.Shapes{}\r\nclass BridgePattern.Square{}\r\nclass BridgePattern.Circle extends BridgePattern.Shapes\r\nBridgePattern.Circle --> BridgePattern.IDrawingView\r\nclass BridgePattern.DetailedView implements BridgePattern.IDrawingView\r\n@enduml");
             System.Diagnostics.Debug.Assert(_plantUMLCode != null);
         }
 
@@ -172,12 +172,6 @@ namespace Analyzer.UMLDiagram
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
         private bool CheckIfInterface(string type)
         {
             if (type.StartsWith('I'))
@@ -201,23 +195,6 @@ namespace Analyzer.UMLDiagram
         {
             return type.Remove(0, 1);
         }
-
-        /*
-        private bool isPartOfRemovableNamespace(string objName, List<string> removableNamespaces)
-        {
-            string[] splittedString = objName.Split(".");
-
-            if (removableNamespaces != null && removableNamespaces.Contains( splittedString[0].Remove(0 , 1)))
-            {
-                Console.WriteLine(objName);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        */
 
         // checks if the given namespace name in present in the removable namespace list
         private bool isPartOfRemovableNamespace( string objName , List<string> removableNamespaces )

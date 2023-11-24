@@ -196,17 +196,11 @@ namespace Analyzer.Pipeline.Tests
         }
 
         [TestMethod()]
-        [ExpectedException( typeof( NullReferenceException ) )]
         public void TestException()
         {
-            _parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.FullName != "TestNoVisibleInstanceFields.IsPrivateClass" );
             List<ParsedDLLFile> parseddllFiles = new() { null };
-
             NoVisibleInstanceFields nativeFieldsShouldNotBeVisible = new(parseddllFiles);
-            Dictionary<string , AnalyzerResult> result = nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs();
-            //Assert.ThrowsException<NullReferenceException>( () => nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs() );
-
-            Assert.Fail( "Exception was not raised." );
+            Assert.ThrowsException<NullReferenceException>( () => nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs() );
         }
     }
 }
