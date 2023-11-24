@@ -13,27 +13,25 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
-using Analyzer.Pipeline;
-using Analyzer;
-using Mono.Cecil.Rocks;
 using System.Diagnostics;
 
 namespace Analyzer.Pipeline
 {
+    /// <summary>
+    /// Instance ields inside a class must not be visible outside.
+    /// </summary>
     public class NoVisibleInstanceFields : AnalyzerBase
     {
-        private string _errorMessage;
-        private int _verdict;
-        private readonly string _analyzerID;
+        private string _errorMessage;   // Output message returned by the analyzer.
+        private int _verdict;   // Verdict if the analyzer has passed or failed.
+        private readonly string _analyzerID;    // Unique ID for the analyzer.
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoVisibleInstanceFields"/> analyzer with parsed DLL files.
+        /// </summary>
+        /// <param name="dllFiles">List of ParsedDLL files to analyze.</param>
         public NoVisibleInstanceFields(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessage = "";
@@ -41,6 +39,11 @@ namespace Analyzer.Pipeline
             _analyzerID = "118";
         }
 
+        /// <summary>
+        /// Finds all visible instance fields in that DLL.
+        /// </summary>
+        /// <param name="parsedDLLFile">DLL file to be analyzed.</param>
+        /// <returns>List of violating fields in the DLL.</returns>
         private List<FieldDefinition> FindVisibleNativeFields(ParsedDLLFile parsedDLLFile)
         {
             List<FieldDefinition> visibleNativeFieldsList = new();
@@ -63,7 +66,7 @@ namespace Analyzer.Pipeline
                 }
                 */
 
-                // By default, this rule only looks at externally visible types
+                // By default, this rule only looks at externally visible types.
                 if (!classtype.IsPublic)
                 {
                     continue;
@@ -71,15 +74,17 @@ namespace Analyzer.Pipeline
 
                 foreach (FieldDefinition field in classtype.Fields)
                 {
-                    // IsFamilyOrAssembly for protected internal
-                    // IsFamily           for protected
-                    // IsAssembly         for internal
-                    if (field.IsPrivate || (field.IsAssembly && !field.IsFamilyOrAssembly))
+                    // IsFamilyOrAssembly for protected internal.
+                    // IsFamily           for protected.
+                    // IsAssembly         for internal.
+                    if (field.IsPrivate || 
+                        (field.IsAssembly && !field.IsFamilyOrAssembly))
                     {
                         continue;
                     }
                     else
                     {
+                        // IsInitOnly for readonly.
                         if (field.IsPublic && field.IsInitOnly)
                         {
                             continue;
@@ -94,18 +99,29 @@ namespace Analyzer.Pipeline
             return visibleNativeFieldsList;
         }
 
+        /// <summary>
+        /// Helper function to form the error message.
+        /// </summary>
+        /// <param name="visibleNativeFieldsList">List of all violating types.</param>
+        /// <returns>String with all the violating types.</returns>
         private string ErrorMessage(List<FieldDefinition> visibleNativeFieldsList)
         {
-            var errorLog = new System.Text.StringBuilder("The following native fields are visible:");
+            StringBuilder errorLog = new ("The following native fields are visible:");
 
             foreach (FieldDefinition field in visibleNativeFieldsList)
             {
-                errorLog.AppendLine( field.FullName );
-
+                errorLog.AppendLine(field.FullName);
             }
             return errorLog.ToString();
         }
 
+        /// <summary>
+        /// Analyzes each DLL file for externally visible instance fields
+        /// And reports if the DLL violates the above.
+        /// </summary>
+        /// <param name="parsedDLLFile">Parsed DLL file.</param>
+        /// <returns><see cref="AnalyzerResult"/> containing the analysis results.</returns>
+        /// <exception cref="NullReferenceException">If the file object is null.</exception>
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             List<FieldDefinition> visibleNativeFieldsList = FindVisibleNativeFields(parsedDLLFile);
@@ -123,7 +139,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException( "Encountered exception while processing." , ex );
+                throw new NullReferenceException("Encountered exception while processing.", ex);
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

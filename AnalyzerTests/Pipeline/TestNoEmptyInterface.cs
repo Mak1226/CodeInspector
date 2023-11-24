@@ -22,31 +22,49 @@ using System.Threading.Tasks;
 
 namespace NoEmptyInterface
 {
+    /// <summary>
+    /// Empty interface.
+    /// </summary>
     public interface IInterfaceEmpty
     {
 
     }
 
+    /// <summary>
+    /// Non empty interface.
+    /// </summary>
     public interface IInterfaceNotEmpty
     {
         public void ContractImplement();
     }
 
+    /// <summary>
+    /// Empty interface that inherits from an empty interface.
+    /// </summary>
     public interface IEmptyInterfaceInheritEmptyInterface : IInterfaceEmpty
     {
 
     }
 
+    /// <summary>
+    /// Non Empty interface that inherits from an non empty interface.
+    /// </summary>
     public interface IInterfaceInheritNotEmptyInterface : IInterfaceNotEmpty
     {
         public void ContractImplement2();
     }
 
+    /// <summary>
+    /// Empty interface that inherits from an non empty interface.
+    /// </summary>
     public interface IEmptyInterfaceInheritNonEmptyInterface : IInterfaceNotEmpty
     {
 
     }
 
+    /// <summary>
+    /// Non Empty interface that inherits from an empty interface.
+    /// </summary>
     public interface IInterfaceInheritEmptyInterface : IInterfaceEmpty
     {
         public void ContractImplement2();
@@ -55,17 +73,40 @@ namespace NoEmptyInterface
 
 namespace Analyzer.Pipeline.Tests
 {
+    /// <summary>
+    /// Unit tests for NoEmptyInterface analyzer.
+    /// </summary>
     [TestClass()]
     public class TestNoEmptyInterface
     {
         private readonly string _dllFile;
         private readonly ParsedDLLFile _parsedDLL;
+        /// <summary>
+        /// Loads the current file and all its types.
+        /// </summary>
         public TestNoEmptyInterface()
         {
             _dllFile = Assembly.GetExecutingAssembly().Location;
             _parsedDLL = new( _dllFile );
         }
 
+        /*
+        namespace NoEmptyInterfaces1
+        {
+            public class Class1 : IInterfaceEmpty
+            {
+                private readonly int _sampleVar;
+                public Class1() 
+                {
+                    _sampleVar = 1;
+                }
+
+            }
+        }
+         */
+        /// <summary>
+        /// Fails since empty interface exists.
+        /// </summary>
         [TestMethod()]
         public void TestEmptyInterfacePresent()
         {
@@ -81,6 +122,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since empty interface exists.
+        /// <see cref = "NoEmptyInterface.IInterfaceEmpty"/>
+        /// </summary>
         [TestMethod()]
         public void TestEmptyInterfaceExists()
         {
@@ -94,6 +139,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since no empty interface.
+        /// <see cref = "NoEmptyInterface.IInterfaceNotEmpty"/>
+        /// </summary>
         [TestMethod()]
         public void TestNoEmptyInterfaceExists()
         {
@@ -107,6 +156,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since empty interface exists.
+        /// <see cref = "NoEmptyInterface.IEmptyInterfaceInheritEmptyInterface"/>
+        /// </summary>
         [TestMethod()]
         public void TestEmptyInterfaceInheritEmptyInterface()
         {
@@ -121,6 +174,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since no empty interface.
+        /// <see cref = "NoEmptyInterface.IInterfaceInheritNotEmptyInterface"/>
+        /// </summary>
         [TestMethod()]
         public void TestInterfaceInheritNotEmptyInterface()
         {
@@ -135,6 +192,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since empty interface exists.
+        /// <see cref = "NoEmptyInterface.IEmptyInterfaceInheritNonEmptyInterface"/>
+        /// </summary>
         [TestMethod()]
         public void TestEmptyInterfaceInheritNonEmptyInterface()
         {
@@ -149,6 +210,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since empty interface exists.
+        /// <see cref = "NoEmptyInterface.IInterfaceInheritEmptyInterface"/>
+        /// </summary>
         [TestMethod()]
         public void TestInterfaceInheritEmptyInterface()
         {
@@ -163,6 +228,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Testing Exception when parsed file object is null.
+        /// <exception cref="NullReferenceException"> was thrown.
+        /// </summary>
         [TestMethod()]
         public void TestException()
         {

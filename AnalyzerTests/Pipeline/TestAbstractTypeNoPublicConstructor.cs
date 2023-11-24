@@ -23,6 +23,9 @@ using System.Reflection;
 
 namespace AbstractClassWithPublicConstructor
 {
+    /// <summary>
+    /// Abstract Class With Public Constructor.
+    /// </summary>
     public abstract class AbstractClassWithPublicConstructor
     {
         private readonly int _sampleVar;
@@ -38,6 +41,9 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 
+    /// <summary>
+    /// Abstract Class With Protected Constructor.
+    /// </summary>
     public abstract class AbstractClassWithProtectedConstructor
     {
         private readonly int _sampleVar;
@@ -48,6 +54,9 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 
+    /// <summary>
+    /// Abstract Class With Internal Constructor.
+    /// </summary>
     public abstract class AbstractClassWithInternalConstructor
     {
         private readonly int _sampleVar;
@@ -59,6 +68,10 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 
+    /// <summary>
+    /// Internal Abstract Class With Public Constructor.
+    /// Not an externally visible type.
+    /// </summary>
     internal abstract class InternalAbstractClassWithPublicConstructor
     {
         private readonly int _sampleVar;
@@ -70,24 +83,39 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 
+    /// <summary>
+    /// Abstract Class With No Explicitly Defined Constructor.
+    /// Empty private constructor will be created at compile time.
+    /// </summary>
     public abstract class AbstractClassWithNoDefaultConstructor
     {
         private readonly int _sampleVar;
         private readonly int _sampleVar2;
     }
 
+    /// <summary>
+    /// Internal Abstract Class With No Explicitly Defined Constructor.
+    /// Empty private constructor will be created at compile time.
+    /// </summary>
     internal abstract class InternalAbstractClassWithNoDefaultConstructor
     {
         private readonly int _sampleVar;
         private readonly int _sampleVar2;
     }
 
+    /// <summary>
+    /// Public Class With No Explicitly Defined Constructor.
+    /// Empty public constructor will be created at compile time.
+    /// </summary>
     public class PublicClassWithNoDefaultConstructor
     {
         private readonly int _sampleVar;
         private readonly int _sampleVar2;
     }
 
+    /// <summary>
+    /// Public Abstract Class With empty public constructor.
+    /// </summary>
     public abstract class AbstractClassWithEmptyConstructor
     {
         private readonly int _sampleVar;
@@ -98,6 +126,10 @@ namespace AbstractClassWithPublicConstructor
         }
     }
 
+    /// <summary>
+    /// Abstract class with protected internal constructor.
+    /// protected internal is a visible instance type.
+    /// </summary>
     public abstract class AbstractClassWithProtectedInternalConstructor
     {
         private readonly int _sampleVar;
@@ -111,17 +143,26 @@ namespace AbstractClassWithPublicConstructor
 
 namespace Analyzer.Pipeline.Tests
 {
+    /// <summary>
+    /// Unit tests for AbstractTypeNoPublicConstructor analyzer.
+    /// </summary>
     [TestClass()]
     public class TestAbstractTypeNoPublicConstructor
     {
         private readonly string _dllFile;
         private readonly ParsedDLLFile _parsedDLL;
+        /// <summary>
+        /// Loads the current file and all its types.
+        /// </summary>
         public TestAbstractTypeNoPublicConstructor()
         {
             _dllFile = Assembly.GetExecutingAssembly().Location;
             _parsedDLL = new( _dllFile );
         }
 
+        /// <summary>
+        /// Fails since abstract type with a public constructor.
+        /// </summary>
         [TestMethod()]
         public void TestAbstractConstructorPresent()
         {
@@ -137,6 +178,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(0, result[dLLFile.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Fails since abstract type with a public constructor.
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithPublicConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithPublicConstructor()
         {
@@ -150,6 +195,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since protected and internal constructors are allowed.
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithProtectedConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithProtectedConstructor()
         {
@@ -163,6 +212,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since protected and internal constructors are allowed.
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithInternalConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithInternalConstructor()
         {
@@ -176,6 +229,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since class is still abstract.
+        /// <see cref = "AbstractClassWithPublicConstructor.InternalAbstractClassWithPublicConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestInternalAbstractClassWithPublicConstructor()
         {
@@ -189,6 +246,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since default private constructor gets created at compile time.
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithNoDefaultConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithNoDefaultConstructor()
         {
@@ -202,6 +263,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Still an abstract class, but private constructor.
+        /// <see cref = "AbstractClassWithPublicConstructor.InternalAbstractClassWithNoDefaultConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestInternalAbstractClassWithNoDefaultConstructor()
         {
@@ -215,6 +280,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes since not abstract class.
+        /// <see cref = "AbstractClassWithPublicConstructor.PublicClassWithNoDefaultConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestPublicClassWithNoDefaultConstructor()
         {
@@ -228,6 +297,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since explicitly defined public constructor.
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithEmptyConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithEmptyConstructor()
         {
@@ -241,6 +314,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails since constructor is not private or internal
+        /// <see cref = "AbstractClassWithPublicConstructor.AbstractClassWithProtectedInternalConstructor"/>
+        /// </summary>
         [TestMethod()]
         public void TestAbstractClassWithProtectedInternalConstructor()
         {
@@ -254,6 +331,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Testing Exception when parsed file object is null.
+        /// <exception cref="NullReferenceException"> was thrown.
+        /// </summary>
         [TestMethod()]
         public void TestException()
         {
