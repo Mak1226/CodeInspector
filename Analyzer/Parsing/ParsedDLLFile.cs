@@ -53,7 +53,7 @@ namespace Analyzer.Parsing
                 {
                     if (type.Namespace != null)
                     {
-                        if (type.Namespace.StartsWith( "System." ) || type.Namespace.StartsWith( "Microsoft." ))
+                        if (type.Namespace.StartsWith( "System." ) || type.Namespace.StartsWith( "Microsoft." ) || type.Namespace.StartsWith("Mono.Cecil"))
                         {
                             continue;
                         }
