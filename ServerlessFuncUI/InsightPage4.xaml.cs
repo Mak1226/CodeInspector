@@ -84,9 +84,12 @@ namespace ServerlessFuncUI
                 Trace.WriteLine("averages retrieved for student ");
                 _meanValues.Clear();
                 // Create a ColumnSeries and add the average values to it
-                foreach (double average in averageList)
-                {
-                    _meanValues.Add(new ObservableValue(average));
+                if(averageList != null) 
+                { 
+                    foreach (double average in averageList)
+                    {
+                        _meanValues.Add(new ObservableValue(average));
+                    }
                 }
             }
             catch (Exception ex)
