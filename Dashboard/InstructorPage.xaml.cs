@@ -56,6 +56,10 @@ namespace Dashboard
                 // Create and set up the ServerPage
                 _contentServerPage = new ServerPage ( viewModel.Communicator, userId);
                 ResultFrame.Content = _contentServerPage;
+
+                //Create and ste up the Cloud Page
+                SessionsPage _cloudPage = new (userId);
+                CloudFrame.Content = _cloudPage;
             }
             catch (Exception exception)
             {
@@ -79,6 +83,8 @@ namespace Dashboard
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Navigate to the AuthenticationPage when the logout button is clicked
+            InstructorViewModel? viewModel = DataContext as InstructorViewModel;
+            viewModel?.Logout();
             NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
         }
 

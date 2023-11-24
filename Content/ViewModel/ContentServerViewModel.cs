@@ -7,7 +7,7 @@
  * 
  * Project     = Content
  *
- * Description = Network subscriber for handling client recieve
+ * Description = Server side viewModel
  *****************************************************************************/
 using Analyzer;
 using Content.Model;
