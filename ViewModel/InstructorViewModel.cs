@@ -129,9 +129,6 @@ namespace ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
-
-        private static Dispatcher Dispatcher => Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
-
         /// <summary>
         /// Deserializes student information from a serialized string.
         /// </summary>
@@ -161,7 +158,7 @@ namespace ViewModel
         /// <returns>True if the student is successfully added, false otherwise.</returns>
         private bool AddStudnet(string serializedStudnet)
         {
-            Trace.WriteLine($"One message received {serializedStudnet}");
+            Trace.WriteLine($"[Instructor View Model] One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
                 // Trying to decerialize the student info
@@ -198,6 +195,47 @@ namespace ViewModel
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Logs out the instructor, disconnecting all students.
+        /// </summary>
+        public void Logout()
+        {
+            DisconnectAllStudents();
+
+            // Waiting for some time for messages to be send
+            Thread.Sleep( 2000 );
+            // Stopping the communicator before logging out
+            Communicator.Stop();
+        }
+
+        /// <summary>
+        /// Disconnects all students currently connected.
+        /// </summary>
+        public void DisconnectAllStudents()
+        {
+            Trace.WriteLine( $"[Instructor View Model] Disconnecting all students." );
+            
+            // Retrieving the list of all students from the session state
+            List<Student> _studentList = new( _studentSessionState.GetAllStudents() );
+
+            // Iterating through each student in the list and sending a disconnection message
+            foreach ( Student student in _studentList )
+            {
+                try
+                {
+                    // Sending a disconnection message to the student using the Communicator
+                    Communicator.Send( "0" , $"{student.Id}" );
+                    Trace.WriteLine( $"[Instructor View Model] Disconnection message send to student {student.Id}" );
+                }
+                catch
+                {
+                    // Logging if the disconnection message fails to send to a student
+                    Trace.WriteLine( $"[Instructor View Model] Disconnection message to student {student.Id} failed." );
+                }
+            }
+            _studentSessionState.RemoveAllStudents();
         }
 
         /// <summary>
