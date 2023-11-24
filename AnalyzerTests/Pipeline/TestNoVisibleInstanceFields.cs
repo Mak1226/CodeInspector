@@ -65,17 +65,38 @@ namespace TestNoVisibleInstanceFields
 
 namespace Analyzer.Pipeline.Tests
 {
+    /// <summary>
+    /// Unit tests for NoVisibleInstanceFields analyzer.
+    /// </summary>
     [TestClass()]
     public class TestNoVisibleInstanceFields
     {
         private readonly string _dllFile;
         private readonly ParsedDLLFile _parsedDLL;
+        /// <summary>
+        /// Loads the current file and all its types.
+        /// </summary>
         public TestNoVisibleInstanceFields()
         {
             _dllFile = Assembly.GetExecutingAssembly().Location;
             _parsedDLL = new(_dllFile);
         }
 
+        /*
+        namespace NativeFieldsShouldNotBeVisible1
+        {
+            public class PublicClassWithNoField
+            {
+                public void PublicMethod()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+        */
+        /// <summary>
+        /// Public class with no fields.
+        /// </summary>
         [TestMethod()]
         public void TestHasPublicTypeWithNoFields()
         {
@@ -91,6 +112,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[dllFile.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Fails because contains public field in public class.
+        /// <see cref = "TestNoVisibleInstanceFields.PublicClassWithPublicField"/>
+        /// </summary>
         [TestMethod()]
         public void TestPublicClassWithPublicField()
         {
@@ -104,6 +129,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(0, result[_parsedDLL.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Fails because contains protected field in public class.
+        /// <see cref = "TestNoVisibleInstanceFields.HasProtectedNativeField"/>
+        /// </summary>
         [TestMethod()]
         public void TestHasProtectedNativeField()
         {
@@ -117,6 +146,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(0, result[_parsedDLL.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Passes because internal field in public class.
+        /// <see cref = "TestNoVisibleInstanceFields.HasInternalNativeField"/>
+        /// </summary>
         [TestMethod()]
         public void TestHasInternalNativeField()
         {
@@ -130,6 +163,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(1, result[_parsedDLL.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Passes because public readonly field in public class.
+        /// <see cref = "TestNoVisibleInstanceFields.HasPublicReadonlyNativeField"/>
+        /// </summary>
         [TestMethod()]
         public void TestHasPublicReadonlyNativeField()
         {
@@ -143,6 +180,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(1, result[_parsedDLL.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Fails because contains public field in public class.
+        /// <see cref = "TestNoVisibleInstanceFields.HasPublicNativeFieldArray"/>
+        /// </summary>
         [TestMethod()]
         public void TestHasPublicNativeFieldArray()
         {
@@ -156,6 +197,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual(0, result[_parsedDLL.DLLFileName].Verdict);
         }
 
+        /// <summary>
+        /// Passses because private fields only.
+        /// <see cref = "TestNoVisibleInstanceFields.HasPrivateNativeField"/>
+        /// </summary>
         [TestMethod()]
         public void TestHasPrivateNativeField()
         {
@@ -169,6 +214,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes because class contains public property and not instance field.
+        /// <see cref = "TestNoVisibleInstanceFields.ClassHasProperty"/>
+        /// </summary>
         [TestMethod()]
         public void TestClassHasProperty()
         {
@@ -182,6 +231,10 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// Passes because class is private.
+        /// <see cref = "TestNoVisibleInstanceFields.IsPrivateClass"/>
+        /// </summary>
         [TestMethod()]
         public void TestIsPrivateClass()
         {
@@ -195,6 +248,12 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
+        /// <summary>
+        /// /// <summary>
+        /// Testing Exception when parsed file object is null.
+        /// <exception cref="NullReferenceException"> was thrown.
+        /// </summary>
+        /// </summary>
         [TestMethod()]
         public void TestException()
         {
