@@ -219,7 +219,7 @@ namespace AnalyzerTests.Pipeline
         {
             List<string> DllFilePaths = new()
             {
-                "..\\..\\..\\TestDLLs\\.dll"
+                "..\\..\\..\\TestDLLs\\AnalyzerTests.dll"
             };
 
             List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
