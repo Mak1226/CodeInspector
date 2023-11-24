@@ -50,7 +50,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out1.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out1.png" , imageBytes );
             }
         }
 
@@ -77,7 +77,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out2.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out2.png" , imageBytes );
             }
         }
 
@@ -104,7 +104,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out3.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out3.png" , imageBytes );
             }
         }
 
@@ -131,7 +131,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out4.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out4.png" , imageBytes );
             }
         }
 
@@ -158,7 +158,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out5.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out5.png" , imageBytes );
             }
         }
 
@@ -185,7 +185,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out6.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out6.png" , imageBytes );
             }
         }
 
@@ -212,7 +212,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out7.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out7.png" , imageBytes );
             }
         }
 
@@ -240,36 +240,36 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out8.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out8.png" , imageBytes );
             }
         }
 
-        [TestMethod()]
-        public void TestSamples()
-        {
-            List<string> DllFilePaths = new()
-            {
-                "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\software\\Analyzer\\Dashboard\\bin\\Debug\\net6.0-windows\\System.Memory.Data.dll"
-            //"..\\..\\..\\..\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll"
-            };
+        //[TestMethod()]
+        //public void TestSamples()
+        //{
+        //    List<string> DllFilePaths = new()
+        //    {
+        //        "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\software\\Analyzer\\Dashboard\\bin\\Debug\\net6.0-windows\\System.Memory.Data.dll"
+        //    //"..\\..\\..\\..\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll"
+        //    };
 
-            List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
+        //    List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
 
-            ClassDiagram classDiag = new( dllFiles );
+        //    ClassDiagram classDiag = new( dllFiles );
 
-            List<string> removableNamespaces = new() { };
+        //    List<string> removableNamespaces = new() { };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+        //    byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
 
-            Console.WriteLine( imageBytes );
-            Console.WriteLine( imageBytes.Length );
-            Assert.IsNotNull( imageBytes );
-            Assert.AreNotEqual( imageBytes.Length , 0 );
+        //    Console.WriteLine( imageBytes );
+        //    Console.WriteLine( imageBytes.Length );
+        //    Assert.IsNotNull( imageBytes );
+        //    Assert.AreNotEqual( imageBytes.Length , 0 );
 
-            if (imageBytes != null && imageBytes.Length > 0)
-            {
-                File.WriteAllBytes( "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\out9.png" , imageBytes );
-            }
-        }
+        //    if (imageBytes != null && imageBytes.Length > 0)
+        //    {
+        //        File.WriteAllBytes( "..\\UMLDiagramResults\\out9.png" , imageBytes );
+        //    }
+        //}
     }
 }

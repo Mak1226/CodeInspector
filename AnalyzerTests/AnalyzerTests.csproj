@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="UMLDiagramResults\" />
     <Folder Include="TestDLLs\" />
   </ItemGroup>
 
