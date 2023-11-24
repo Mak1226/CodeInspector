@@ -1,28 +1,52 @@
-﻿using Analyzer.Parsing;
+﻿/******************************************************************************
+* Filename    = TestParsingInterfaceReflection.cs
+* 
+* Author      = Nikhitha Atyam
+* 
+* Product     = Analyzer
+* 
+* Project     = AnalyzerTests
+*
+* Description = UnitTests for Analyzer.Parsing.ParsedInterface.cs 
+*               (checks the parsed members from the interface object using System.Reflection)
+*****************************************************************************/
+
+using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Reflection;
 
 
 namespace AnalyzerTests.Parsing
 {
+    /// <summary>
+    /// Checks whether parsed attributes of interface object are per requirements 
+    /// so that other modules like analyzers and class diagram work correctly
+    /// </summary>
     [TestClass]
     public class TestParsingInterfaceReflection
     {
+        // parsed interface objects required for checking the correctness of parsed attributes of interface object
         public readonly ParsedInterface IDrawingView_Bridge = new(typeof(TestParsingInterface_BridgePattern.IDrawingView));
         public readonly ParsedInterface IApp_Demo = new(typeof(TestParsingInterface_DemoProject.IApp));
         public readonly ParsedInterface IApp1_Demo = new(typeof(TestParsingInterface_DemoProject.IApp1));
         public readonly ParsedInterface IApp2_Demo = new(typeof(TestParsingInterface_DemoProject.IApp2));
 
 
+        /// <summary>
+        /// Checks the basic attributes parsed of parsedInterface
+        /// </summary>
         [TestMethod]
         public void CheckBasicFields()
         {
+            // TypeObj and Name Check
             Assert.AreEqual(typeof(TestParsingInterface_BridgePattern.IDrawingView), IDrawingView_Bridge.TypeObj);
             Assert.AreEqual("IDrawingView", IDrawingView_Bridge.Name);
         }
 
 
+        /// <summary>
+        /// Tests for methods declared only in the interface
+        /// </summary>
         [TestMethod]
         public void CheckMethods()
         {
@@ -45,6 +69,10 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for interfaces implemented by a interface
+        /// Interfaces list should be following requirements as per class diagram in different cases
+        /// </summary>
         [TestMethod]
         public void CheckInterfacesImplemented()
         {
@@ -66,7 +94,7 @@ namespace AnalyzerTests.Parsing
 }
 
 
-
+// TEST CASE NAMESPACES FOR TESTING PARSEDINTERFACE
 namespace TestParsingInterface_BridgePattern
 {
     public interface IDrawingView

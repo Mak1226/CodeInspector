@@ -18,9 +18,14 @@ using System.Reflection;
 
 namespace AnalyzerTests.Parsing
 {
+    /// <summary>
+    /// Checks whether parsed attributes of class object are per requirements 
+    /// so that other modules like analyzers and class diagram work correctly
+    /// </summary>
     [TestClass]
     public class TestParsingClassReflection
     {
+        // parsed class objects required for checking the correctness of parsed attributes of class object
         public readonly ParsedClass squareClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Square));
         public readonly ParsedClass shapesClass_Bridge = new(typeof(TestParsingClass_BridgePattern.Shapes));
         public readonly ParsedClass briefViewClass_Bridge = new(typeof(TestParsingClass_BridgePattern.BriefView));
@@ -41,14 +46,21 @@ namespace AnalyzerTests.Parsing
         public readonly ParsedClass CalculatorClass_Demo2 = new(typeof(TestParsingClass_DemoProject2.Calculator_OverloadCase));
 
 
+        /// <summary>
+        /// Checks the basic attributes parsed of parsedClass
+        /// </summary>
         [TestMethod]
-        public void CheckBasicFields()
+        public void CheckBasicAttributes()
         {
+            // TypeObj and Name Check
             Assert.AreEqual(typeof(TestParsingClass_BridgePattern.Square), squareClass_Bridge.TypeObj);
             Assert.AreEqual("Square", squareClass_Bridge.Name);
         }
 
 
+        /// <summary>
+        /// Test for parent class
+        /// </summary>
         [TestMethod]
         public void CheckParentClass()
         {
@@ -63,6 +75,9 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for constructors (default constructors should also be checked)
+        /// </summary>
         [TestMethod]
         public void CheckConstructors()
         {
@@ -74,6 +89,10 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for interfaces implemented by a class
+        /// Interfaces list should be following requirements as per class diagram in different cases
+        /// </summary>
         [TestMethod]
         public void CheckInterfacesImplemented()
         {
@@ -113,10 +132,14 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for methods declared only in the class
+        /// </summary>
         [TestMethod]
         public void CheckMethods()
         {
             // General Case: Counting number of declared only methods with no inheritance / interface implementation
+            // Note: Properties got added
             Assert.AreEqual(11, SampleClass1_Demo2.Methods.Length);
 
             // Case: Class when implementing interface
@@ -136,8 +159,6 @@ namespace AnalyzerTests.Parsing
                                                              },
                                            CalculatorClass_Demo2.Methods);
 
-
-
             // Overriding Case
             Assert.AreEqual(1, squareClass_Bridge.Methods.Length);
             Assert.AreEqual(typeof(TestParsingClass_BridgePattern.Square).GetMethod("Display"), squareClass_Bridge.Methods[0]);
@@ -147,6 +168,9 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for fields declared only in the class
+        /// </summary>
         [TestMethod]
         public void CheckFields()
         {
@@ -162,8 +186,9 @@ namespace AnalyzerTests.Parsing
             // no field 
             Assert.AreEqual(0, App1Class_Demo.Fields.Length);
 
+            // Will change according to implementation of fields followed
+            // i.e. Allowing/Disallowing of Auto Implemented Properties
             Assert.AreEqual(1, briefViewClass_Bridge.Fields.Length);
-
 
             // public + static  : here inherited class fields should not come (i.e. sampleValue21(public) from sampleClass2)
             CollectionAssert.AreEquivalent(new FieldInfo[2] {
@@ -174,6 +199,9 @@ namespace AnalyzerTests.Parsing
         }
 
 
+        /// <summary>
+        /// Tests for properties declared only in the class
+        /// </summary>
         [TestMethod]
         public void CheckProperties()
         {
@@ -199,7 +227,7 @@ namespace AnalyzerTests.Parsing
 }
 
 
-
+// TEST CASE NAMESPACES FOR TESTING PARSEDCLASS
 namespace TestParsingClass_BridgePattern
 {
     public interface IDrawingView
