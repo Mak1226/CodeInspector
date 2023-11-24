@@ -250,6 +250,7 @@ namespace AnalyzerTests.Pipeline
             List<string> DllFilePaths = new()
             {
                 "C:\\Users\\sneha\\OneDrive\\Desktop\\Sem_7\\software\\Analyzer\\Dashboard\\bin\\Debug\\net6.0-windows\\System.Memory.Data.dll"
+            //"..\\..\\..\\..\\Analyzer\\bin\\Debug\\net6.0\\Analyzer.dll"
             };
 
             List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile( DllFilePaths[0] ) };
