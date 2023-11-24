@@ -254,11 +254,9 @@ namespace Analyzer.Pipeline.Tests
             Assert.AreEqual( 0 , result[_parsedDLL.DLLFileName].Verdict );
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
+        [TestMethod()]
         public void TestException()
         {
-            _parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.FullName != "AbstractClassWithPublicConstructor.AbstractClassWithProtectedInternalConstructor" );
             List<ParsedDLLFile> parseddllFiles = new() { null };
 
             AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new( parseddllFiles );

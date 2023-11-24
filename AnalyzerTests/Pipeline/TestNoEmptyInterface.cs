@@ -164,10 +164,8 @@ namespace Analyzer.Pipeline.Tests
         }
 
         [TestMethod()]
-        [ExpectedException( typeof( NullReferenceException ) )]
         public void TestException()
         {
-            _parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceEmpty" );
             List<ParsedDLLFile> parseddllFiles = new() { null };
 
             NoEmptyInterface noEmptyInterface = new( parseddllFiles );
