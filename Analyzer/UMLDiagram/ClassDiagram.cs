@@ -29,7 +29,10 @@ namespace Analyzer.UMLDiagram
         private readonly List<ParsedInterface> _parsedInterfaceList;
 
 
-        // Collecting all the classes and interfaces from the collection of parsedDLLs
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClassDiagram"/> analyzer with parsed DLL files.
+        /// </summary>
+        /// <param name="dllFiles">List of ParsedDLL files to analyze.</param>
         public ClassDiagram(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _plantUMLCode = new StringBuilder();
@@ -49,7 +52,7 @@ namespace Analyzer.UMLDiagram
         /// <summary>
         /// Provides image bytes of class diagram
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Byte array that forms the image.</returns>
         public async Task<byte[]> Run(List<string> removableNamespaces)
         {
             CodeStr(removableNamespaces);
@@ -84,9 +87,9 @@ namespace Analyzer.UMLDiagram
 
 
         /// <summary>
-        /// Generates the plantUML code(string) in the required format from the class relationships
+        /// Generates the plantUML code(string) in the required format from the class relationships.
         /// </summary>
-        /// <param name="removableNamespaces">Namespaces which should not be included in the classDiagram</param>
+        /// <param name="removableNamespaces">Namespaces which should not be included in the classDiagram.</param>
         private void CodeStr(List<string> removableNamespaces)
         {
             // Class objects list and interface objects list as they will be different in the graph due to removable namespaces
@@ -99,7 +102,7 @@ namespace Analyzer.UMLDiagram
             // Adding all the classes which are not part of removable Namespaces to the the diagram
             foreach (ParsedClassMonoCecil classObj in _parsedClassList)
             {
-                if (!isPartOfRemovableNamespace(classObj.TypeObj.FullName.Insert(0,"C"), removableNamespaces))
+                if (!IsPartOfRemovableNamespace(classObj.TypeObj.FullName.Insert(0,"C"), removableNamespaces))
                 {
                     graphParsedClassObj.Add(classObj);
                     
@@ -110,7 +113,7 @@ namespace Analyzer.UMLDiagram
             // Adding all the interfaces which are not part of removable Namespaces to the the diagram
             foreach (ParsedInterface interfaceObj in _parsedInterfaceList)
             {
-                if (!isPartOfRemovableNamespace(interfaceObj.TypeObj.FullName.Insert(0,"I"), removableNamespaces))
+                if (!IsPartOfRemovableNamespace(interfaceObj.TypeObj.FullName.Insert(0,"I"), removableNamespaces))
                 {
                     graphParsedInterfaceObj.Add(interfaceObj);
                     _plantUMLCode.Append($"interface {interfaceObj.TypeObj.FullName}\r\n");
@@ -134,7 +137,7 @@ namespace Analyzer.UMLDiagram
                 // For ParentClasses => Inheritance symbol and For Parent Interfaces => Implements symbol for a class object
                 foreach (string inheritedFrom in inheritanceList)
                 {
-                    if (CheckIfInterface(inheritedFrom) && !isPartOfRemovableNamespace(inheritedFrom , removableNamespaces))
+                    if (CheckIfInterface(inheritedFrom) && !IsPartOfRemovableNamespace(inheritedFrom , removableNamespaces))
                     {
                         _plantUMLCode.AppendLine($"class {classObj.TypeObj.FullName} implements {RemoveFirstLetter(inheritedFrom)}");
                     }
@@ -142,7 +145,6 @@ namespace Analyzer.UMLDiagram
                     {
                         _plantUMLCode.AppendLine($"class {classObj.TypeObj.FullName} extends {RemoveFirstLetter(inheritedFrom)}");
                     }
-
                 }
 
                 // adding composition relationships to diagram code
@@ -154,7 +156,7 @@ namespace Analyzer.UMLDiagram
             {
                 foreach (Type parent in interfaceObj.ParentInterfaces)
                 {
-                    if(!isPartOfRemovableNamespace(parent.FullName.Insert(0, "I") , removableNamespaces))
+                    if(!IsPartOfRemovableNamespace(parent.FullName.Insert(0, "I") , removableNamespaces))
                     {
                         _plantUMLCode.AppendLine($"interface {interfaceObj.TypeObj.FullName} implements {parent}");
                     }
@@ -168,7 +170,7 @@ namespace Analyzer.UMLDiagram
 
 
         /// <summary>
-        /// Adding the relationship between relationSymbol and elements of relationshipList with a symbol of "typeFullName"
+        /// Adding the relationship between relationSymbol and elements of relationshipList with a symbol of "typeFullName".
         /// </summary>
         /// <param name="relationSymbol">Left side of plantuml relation</param>
         /// <param name="relationshipList">Elements of this list will form right side of plantuml relation</param>
@@ -179,15 +181,19 @@ namespace Analyzer.UMLDiagram
 
             foreach (string relationName in relationshipList)
             {
-                if (!isPartOfRemovableNamespace(relationName, removableNamespaces))
+                if (!IsPartOfRemovableNamespace(relationName, removableNamespaces))
                 {
                     _plantUMLCode.Append(relationStatement + $" {typeFullName} {relationSymbol} {RemoveFirstLetter(relationName)}\r\n");
                 }
             }
         }
 
-
-        // Checking if given name is Interface or not as names in class relationship lists starts with either "I" or "C"
+        /// <summary>
+        /// Checking if given name is Interface or not as names in class relationship lists starts with either "I" or "C".
+        /// </summary>
+        /// <param name="type">Name of type.</param>
+        /// <returns>If the string begins with I.</returns>
+        /// <exception cref="ArgumentException">If the type name is not in the right format.</exception>
         private bool CheckIfInterface(string type)
         {
             if (type.StartsWith('I'))
@@ -198,20 +204,28 @@ namespace Analyzer.UMLDiagram
             {
                 return false;
             }
-
             throw new ArgumentException($"{type} is not in the correct format.");
         }
 
 
-        // Removing the first letter of a string
+        /// <summary>
+        /// Removing the first letter of a string.
+        /// </summary>
+        /// <param name="type">The string to remove the first letter from.</param>
+        /// <returns>The new string with first letter removed.</returns>
         private string RemoveFirstLetter(string type)
         {
             return type.Remove(0, 1);
         }
 
 
-        // checks if the given object is part of removable namespaces
-        private bool isPartOfRemovableNamespace( string objName , List<string> removableNamespaces )
+        /// <summary>
+        /// Checks if the given object is part of removable namespaces.
+        /// </summary>
+        /// <param name="objName">Fullname of the class object to be displayed.</param>
+        /// <param name="removableNamespaces">List of namespaces that should be removed.</param>
+        /// <returns></returns>
+        private bool IsPartOfRemovableNamespace(string objName, List<string> removableNamespaces)
         {
             // string[] splittedString = objName.Split( "." );
             bool check = false;
@@ -230,9 +244,7 @@ namespace Analyzer.UMLDiagram
                     }
                 }
             }
-
             return check;
         }
-        
     }
 }
