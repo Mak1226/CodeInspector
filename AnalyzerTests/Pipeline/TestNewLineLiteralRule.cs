@@ -79,24 +79,5 @@ namespace Analyzer.Pipeline.Tests
 
         }
 
-        //[TestMethod]
-        //public void Test2()
-        //{
-        //    string path = "..\\..\\..\\TestDLLs\\SwitchStatementwithoutDC.dll";
-
-        //    ParsedDLLFile dllFile = new(path);
-        //    List<ParsedDLLFile> dllFiles = new() { dllFile };
-        //    SwitchStatementDefaultCaseChecker switchStatementDefaultCaseChecker = new(dllFiles);
-        //    Dictionary<string, AnalyzerResult> result = switchStatementDefaultCaseChecker.AnalyzeSingleDLL();
-
-        //    Dictionary<string, AnalyzerResult> original = new()
-        //    {
-        //        ["114"] = new AnalyzerResult("114", 0, "BasicSwitchCase.temp")
-        //    };
-
-        //    Assert.AreEqual(original.ToString(), result.ToString());
-
-        //}
-
     }
 }

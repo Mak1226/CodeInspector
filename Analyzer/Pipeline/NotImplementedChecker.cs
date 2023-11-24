@@ -19,9 +19,9 @@ namespace Analyzer.Pipeline.Analyzers
     /// </summary>
     public class NotImplementedChecker : AnalyzerBase
     {
-        private string errorMessage;
-        private int verdict;
-        private readonly string analyzerID;
+        private string _errorMessage;
+        private int _verdict;
+        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotImplementedChecker"/> class.
@@ -29,9 +29,9 @@ namespace Analyzer.Pipeline.Analyzers
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public NotImplementedChecker(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
-            errorMessage = "";
-            verdict = 1;
-            analyzerID = "118";
+            _errorMessage = "";
+            _verdict = 1;
+            _analyzerID = "120";
         }
 
         /// <summary>
@@ -42,12 +42,12 @@ namespace Analyzer.Pipeline.Analyzers
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
-                foreach (var method in cls.MethodsList)
+                foreach (MethodDefinition method in cls.MethodsList)
                 {
                     if (!IsImplemented(method))
                     {
-                        errorMessage += $"{cls.Name}.{method.Name} ";
-                        verdict = 0;
+                        _errorMessage += $"{cls.Name}.{method.Name} ";
+                        _verdict = 0;
                     }
                 }
             }
@@ -80,11 +80,16 @@ namespace Analyzer.Pipeline.Analyzers
 
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
-            errorMessage = "";
-            verdict = 1;
+            _errorMessage = "";
+            _verdict = 1;
 
             Analyze(parsedDLLFile);
-            return new AnalyzerResult(analyzerID, verdict, errorMessage);
+
+            if (_verdict == 1)
+            {
+                _errorMessage = "No violation found";
+            }
+            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }
 }

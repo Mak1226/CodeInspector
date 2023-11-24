@@ -96,6 +96,12 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             CheckSwitchStatements(parsedDLLFile);
+
+            if(_verdict==1)
+            {
+                _errorMessage = "No violation found";
+            }
+
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
         }
     }

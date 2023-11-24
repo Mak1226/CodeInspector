@@ -12,12 +12,6 @@
 * Description = Factory class for creating analyzers and retrieving configuration options.
 ******************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Analyzer
 {
     /// <summary>
@@ -51,7 +45,8 @@ namespace Analyzer
                 Tuple.Create(116, "Switch Statement default case checker"),
                 Tuple.Create(117, "Avoid goto statements"),
                 Tuple.Create(118, "Native fields should not be visible"),
-                Tuple.Create(119, "High parameter count rule")
+                Tuple.Create(119, "High parameter count rule"),
+                Tuple.Create(120, "Not implement checker"),
             };
 
             return analyzers;

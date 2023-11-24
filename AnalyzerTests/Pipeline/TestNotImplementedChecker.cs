@@ -28,7 +28,7 @@ namespace Analyzer.Pipeline.Tests
 
             Dictionary<string, AnalyzerResult> original = new()
             {
-                ["118"] = new AnalyzerResult("118", 1, "")
+                ["118"] = new AnalyzerResult("118", 1, "No violation found" )
             };
             foreach (KeyValuePair<string, AnalyzerResult> dll in result)
             {
