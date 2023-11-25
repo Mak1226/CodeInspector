@@ -19,25 +19,10 @@ namespace ClientApp
             client.Subscribe( new ExampleEventHandler(clients), Id.GetNetworkingBroadcastId());
             client.Subscribe( new ExampleEventHandler(clients) , moduleName );
             Console.ReadKey();
-            client.Stop();
-            Data data = new ( "omg1" , EventType.ChatMessage() );
+            Data data = new ( "what's up cuuuuh" , EventType.ChatMessage() );
             client.Send( Serializer.Serialize<Data>( data ) , Id.GetBroadcastId());
-            //Data data1 = new Data("omg2", EventType.ChatMessage());
-            //client.Send(Serializer.Serialize<Data>(data1), Id.GetNetworkingBroadcastId(), Id.GetServerId());
-
-            //client.Send("omg2", EventType.ChatMessage(), "hee");
-            //client.Send("omg3", EventType.ChatMessage(), "hee");
-            //client.Send("omg4", EventType.ChatMessage(), "hee");
-            //client.Send("omg5", EventType.ChatMessage(), "hee");
-            //client.Send("omg6", EventType.ChatMessage(), "hee");
-            /*ICommunicator client = CommunicationFactory.GetClient();
-            string[] address = addr.Split(':');
-            client.Start(address[0], int.Parse(address[1]), "clientA");
-            client.Send("hello", EventType.ChatMessage(), "clientA");*/
             Console.ReadKey();
-            /* server.Send("omg", EventType.ChatMessage(), "A");*/
-
-            /*client.Stop();*/
+            client.Stop();
             
 
         }
