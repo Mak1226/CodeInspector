@@ -10,9 +10,6 @@ namespace DashboardUnitTests
     [TestClass]
     public class AuthenticationTest
     {
-
-        //    }
-        //}
         [TestMethod]
         public async Task AuthenticationViewModelUnitTest()
         {

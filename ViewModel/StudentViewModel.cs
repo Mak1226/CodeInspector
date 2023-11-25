@@ -28,11 +28,12 @@ namespace ViewModel
 {
     public class StudentViewModel : INotifyPropertyChanged , IEventHandler
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StudentViewModel"/> class.
         /// </summary>
         /// <param name="name">The name of the student.</param>
         /// <param name="id">The ID of the student.</param>
-        /// <param name="communicator">An optional communicator parameter.</param>
+        /// <param name="communicator">The communicator interface parameter.</param>
         public StudentViewModel( string name , string id, ICommunicator? communicator = null)
         {
             Client = communicator ?? CommunicationFactory.GetClient();
@@ -53,19 +54,14 @@ namespace ViewModel
         public string? IpAddress { get; private set; }
 
         /// <summary>
-        /// Gets the instructor's IP address.
+        /// Gets the instructor's ip
         /// </summary>
         public string? InstructorIp { get; private set; }
 
         /// <summary>
-        /// Gets the instructor's ip
-        /// </summary>
+        /// Gets the instructor's port
+        /// </summary> 
         public string? InstructorPort { get; private set; }
-
-        /// <summary>
-        /// Gets the instructor port
-        /// </summary>
-        /// 
 
         private bool _isConnected = false;
 
@@ -89,26 +85,19 @@ namespace ViewModel
         public ICommunicator Communicator => Client;
 
         /// <summary>
-        /// Property changed event raised when a property is changed on a component.
+        /// Handles the property changed event raised on a component.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Handles the property changed event raised on a component.
-        /// </summary>
         public string StudentName { get; private set; }
 
-        /// <summary>
-        /// Gets the instructor's port.
-        /// </summary>
         public string StudentRoll { get; private set; }
 
         public ICommunicator Client { get; }
 
         /// <summary>
-        /// Gets the private IP address of the host machine.
-        /// </summary>
         /// <param name="property">The name of the property</param>
+        /// </summary>
         private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
