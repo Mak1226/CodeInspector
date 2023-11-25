@@ -14,7 +14,7 @@ using Moq;
 using System;
 using ViewModel;
 using Networking.Communicator;
-namespace DashboardViewModelUnitTests
+namespace DashboardUnitTests
 {
     [TestClass]
     public class StudentViewModelUnitTest

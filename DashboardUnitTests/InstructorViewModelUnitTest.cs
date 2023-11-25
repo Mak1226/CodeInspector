@@ -22,7 +22,7 @@ using ViewModel;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace InstructorViewModelUnitTests
+namespace DashboardUnitTests
 {
     /// <summary>
     /// Test class for the InstructorViewModel class.
