@@ -5,7 +5,7 @@
 using Dashboard;
 
 
-namespace DashboardViewModelUnitTests
+namespace DashboardUnitTests
 {
     [TestClass]
     public class AuthenticationTest
