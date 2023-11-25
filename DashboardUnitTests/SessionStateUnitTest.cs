@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
- * Filename    = UnitTest1.cs
+ * Filename    = SessionStateUnitTest.cs
  *
  * Author      = Aravind Somaraj
  *
@@ -13,7 +13,7 @@ using SessionState;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace SessionStateUnitTesting
+namespace DashboardUnitTests
 {
     /// <summary>
     /// Unit Tests for SessionState
