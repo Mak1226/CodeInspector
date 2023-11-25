@@ -50,7 +50,8 @@ namespace Analyzer.Tests
                 [116] = true,
                 [117] = true,
                 [118] = true,
-                [119] = true
+                [119] = true,
+                [120] = true
             };
 
             analyzer.Configure(teacherOptions);
@@ -68,27 +69,28 @@ namespace Analyzer.Tests
             {
                 ["Abstract.dll"] = new List<AnalyzerResult> {
 
-                new AnalyzerResult("101", 1, "No violation found."),
-                new AnalyzerResult("102", 0, "Classes ClassLibrary1.BadBase, ClassLibrary1.badabstractclass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
-                new AnalyzerResult("103", 1, "No violation found."),
-                new AnalyzerResult("104", 1, "No violation found."),
-                new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
-                new AnalyzerResult("106", 1, "No readonly array fields found."),
-                new AnalyzerResult("107", 1, "No switch statements found."),
-                new AnalyzerResult("108", 1, "No violations found."),
-                new AnalyzerResult("109", 1, "No unused local variables found."),
-                new AnalyzerResult("110", 1, "No occurrences of useless control flow found."),
-                new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : BadBase , badabstractclass "),
-                new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> Incorrect Class Naming : badabstractclass "),
-                new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10"),
-                new AnalyzerResult("114", 1, ""),
-                new AnalyzerResult("115", 1, "No Violation Found"),
-                new AnalyzerResult("116", 1, ""),
-                new AnalyzerResult("117", 1, "No goto statements found."),
-                new AnalyzerResult("118", 1, "No Violation Found"),
-                new AnalyzerResult("119", 1, "methods with a high number of parameters found.")
+                    new AnalyzerResult("101", 1, "No violation found."),
+                    new AnalyzerResult("102", 0, "Classes ClassLibrary1.BadBase, ClassLibrary1.badabstractclass contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static."),
+                    new AnalyzerResult("103", 1, "No violation found."),
+                    new AnalyzerResult("104", 1, "No violation found."),
+                    new AnalyzerResult("105", 1, "Depth of inheritance rule followed by all classes."),
+                    new AnalyzerResult("106", 1, "No readonly array fields found."),
+                    new AnalyzerResult("107", 1, "No switch statements found."),
+                    new AnalyzerResult("108", 1, "No violations found."),
+                    new AnalyzerResult("109", 1, "No unused local variables found."),
+                    new AnalyzerResult("110", 1, "No occurrences of useless control flow found."),
+                    new AnalyzerResult("111", 0, "Incorrect Abstract Class Naming : BadBase , badabstractclass "),
+                    new AnalyzerResult("112", 0, "Incorrect Class Naming : <Module> Incorrect Class Naming : badabstractclass "),
+                    new AnalyzerResult("113", 1, "No methods have cyclomatic complexity greater than 10"),
+                    new AnalyzerResult("114", 1, "No violation found"),
+                    new AnalyzerResult("115", 1, "No Violation Found"),
+                    new AnalyzerResult("116", 1, "No violation found"),
+                    new AnalyzerResult("117", 1, "No goto statements found."),
+                    new AnalyzerResult("118", 1, "No Violation Found"),
+                    new AnalyzerResult("119", 1, "methods with a high number of parameters found."),
+                    new AnalyzerResult("120", 1, "No violation found")
 
-            }
+                }
             };
 
             //Methods having cyclomatic complexity greater than { _maxAllowedComplexity}:\n[NOTE: Switch case complexity is not accurate]\n
@@ -131,7 +133,6 @@ namespace Analyzer.Tests
 
                     Assert.AreEqual(originalResult.AnalyserID, actualResult.AnalyserID, $"AnalyserID mismatch for DLL '{dll.Key}' at index {i}.");
                     Assert.AreEqual(originalResult.Verdict, actualResult.Verdict, $"Verdict mismatch for DLL '{dll.Key}' at index {i}.");
-                    //Assert.AreEqual(originalResult.ErrorMessage, actualResult.ErrorMessage, $"ErrorMessage mismatch for DLL '{dll.Key}' at index {i}.");
                 }
             }
 

@@ -160,6 +160,35 @@ namespace Analyzer.Pipeline.Tests
             _parsedDLL = new( _dllFile );
         }
 
+        /*
+        namespace AbstractTypeNoPublicConstructor1
+        {
+            public abstract class AbstractClass
+            {
+                private readonly int _sampleVar;
+                private int _sampleVar2;
+                public AbstractClass()
+                {
+                    _sampleVar = 100;
+                }
+
+                private void SampleFunction(int sampleVar)
+                {
+                    _sampleVar2 = sampleVar + _sampleVar;
+                }
+            }
+
+            public class Program
+            {
+                public static void Main() 
+                {
+                    var path = Assembly.GetExecutingAssembly().Location;
+                    Assembly assembly = Assembly.LoadFrom(path);
+                }
+            }
+        }
+        */
+
         /// <summary>
         /// Fails since abstract type with a public constructor.
         /// </summary>

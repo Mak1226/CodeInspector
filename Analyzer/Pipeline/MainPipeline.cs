@@ -13,6 +13,7 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
+using Analyzer.Pipeline.Analyzers;
 using Analyzer.UMLDiagram;
 using System.Diagnostics;
 
@@ -99,6 +100,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
+            _allAnalyzers[120] = new NotImplementedChecker(_parsedDLLFiles);
             Trace.Write("MainPipeline : All Analyzers Generated\n");
         }
 

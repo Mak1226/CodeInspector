@@ -209,9 +209,9 @@ namespace Networking.Communicator
             }
 
             Trace.WriteLine("[Server] Stopped _sender and _receiver");
-            _listenThread.Interrupt();
             _serverListener.Stop();
-            //_listenThread.Join();
+            //_listenThread.Interrupt();
+            _listenThread.Join();
             _isStarted = false;
             Trace.WriteLine("[Server] Stopped");
         }

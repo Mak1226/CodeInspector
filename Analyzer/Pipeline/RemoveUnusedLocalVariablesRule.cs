@@ -26,7 +26,7 @@ using System.Globalization;
 namespace Analyzer.Pipeline
 {
     /// <summary>
-    /// This class represents an analyzer for removing unused local variables in methods using Mono.Cecil.
+    /// This class represents an analyzer for detecting unused, unassigned local variables in methods using Mono.Cecil.
     /// </summary>
     public class RemoveUnusedLocalVariablesRule : AnalyzerBase
     {
@@ -46,13 +46,12 @@ namespace Analyzer.Pipeline
         protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
             int totalUnusedLocals = 0;
-            List<string> unusedVariableNames = new();
 
             foreach (ParsedClassMonoCecil classObj in parsedDLLFile.classObjListMC)
             {
                 foreach (MethodDefinition method in classObj.TypeObj.Methods)
                 {
-                    int unusedLocalsCount = RemoveUnusedLocalVariables( method , unusedVariableNames );
+                    int unusedLocalsCount = RemoveUnusedLocalVariables(method);
                     //Console.WriteLine( "Unused" );
                     totalUnusedLocals += unusedLocalsCount;
                 }
@@ -107,12 +106,12 @@ namespace Analyzer.Pipeline
         }
 
         /// <summary>
-        /// Removes unused local variables from a method and returns the count of removed local variables.
+        /// Detects unused local variables from a method and returns its count.
         /// </summary>
         /// <param name="method">The method to analyze and remove unused local variables from.</param>
         /// <param name="unusedVariableNames">A list to store the names of unused variables.</param>
         /// <returns>The count of unused local variables removed from the method.</returns>
-        private static int RemoveUnusedLocalVariables( MethodDefinition method , List<string> unusedVariableNames )
+        private static int RemoveUnusedLocalVariables(MethodDefinition method)
         {
             const int DefaultLength = (16 << 3);
 

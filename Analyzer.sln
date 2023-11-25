@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingUnitTests", "Netw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardUnitTests", "DashboardUnitTests\DashboardUnitTests.csproj", "{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Packaging", "Packaging\Packaging.vdproj", "{099E46C2-407E-465D-B120-727168636305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,8 @@ Global
 		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{099E46C2-407E-465D-B120-727168636305}.Debug|Any CPU.ActiveCfg = Debug
+		{099E46C2-407E-465D-B120-727168636305}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

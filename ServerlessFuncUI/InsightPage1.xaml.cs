@@ -58,7 +58,10 @@ namespace ServerlessFuncUI
                 List<Dictionary<string, int>> result = await cur_Insight.CompareTwoSessions(sessionId1, sessionId2);
 
                 // Display the result in the ListBox
-                DisplayResult(result);
+                if (result is not null) 
+                { 
+                    DisplayResult(result);
+                }
             }
             catch (Exception ex)
             {
