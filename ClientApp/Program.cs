@@ -9,21 +9,19 @@ namespace ClientApp
 {
     class ServerApp
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
+            string clientId = "hee";
+            string moduleName = "EgModule";
+            HashSet<string> clients=new ();
             ICommunicator client = CommunicationFactory.GetClient();
-            client.Start("192.168.0.102", 12399, "hee","client1");
-            client.Stop();
-            //if (addr == "failed")
-            //    return;
-            //client.Subscribe(new ExampleEventHandler(), "client1");
-            //client.Subscribe(new ExampleEventHandler(), Id.GetNetworkingBroadcastId());
+            client.Start( "10.128.2.85" , 12399, clientId,moduleName);
+            client.Subscribe( new ExampleEventHandler(clients), Id.GetNetworkingBroadcastId());
+            client.Subscribe( new ExampleEventHandler(clients) , moduleName );
             Console.ReadKey();
-            client.Start( "192.168.0.102" , 12399 , "hee" , "client1" );
             client.Stop();
-            //Data data = new Data("omg1", EventType.ChatMessage());
-            //client.Send(Serializer.Serialize<Data>(data), "client1", "hee");
+            Data data = new ( "omg1" , EventType.ChatMessage() );
+            client.Send( Serializer.Serialize<Data>( data ) , Id.GetBroadcastId());
             //Data data1 = new Data("omg2", EventType.ChatMessage());
             //client.Send(Serializer.Serialize<Data>(data1), Id.GetNetworkingBroadcastId(), Id.GetServerId());
 
