@@ -4,7 +4,13 @@
              xmlns:local="clr-namespace:Dashboard"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <Style x:Key="TitleText" TargetType="TextBlock">
+
+        <FontFamily x:Key="ProtoMonoRegular">./Fonts/ProtoMono-Regular.ttf#Proto Mono</FontFamily>
+        <FontFamily x:Key="ProtoMonoMedium">./Fonts/ProtoMono-Medium.ttf#Proto Mono Med</FontFamily>
+        <FontFamily x:Key="ProtoMonoSemiBold">./Fonts/ProtoMono-SemiBold.ttf#Proto Mono SemBd</FontFamily>
+        <FontFamily x:Key="ProtoMonoSemiBoldShadow">./Fonts/ProtoMono-SemiBoldShadow.ttf#Proto Mono SemBd Shadow</FontFamily>
+
+        <Style x:Key="TitleText" TargetType="TextBlock">
             <Setter Property="FontSize" Value="36" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="TextAlignment" Value="Center" />
