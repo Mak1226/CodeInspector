@@ -45,6 +45,7 @@ namespace Dashboard
             InitializeComponent();
             UserName = userName;
             UserId = userEmail;
+            UserImage = userPicture;
             DataContext = this; // Set the DataContext to this instance
         }
 
@@ -59,6 +60,11 @@ namespace Dashboard
         public string UserId { get; init; }
 
         /// <summary>
+        /// Gets the user image of the instructor.
+        /// </summary>
+        public string UserImage { get; init; }
+
+        /// <summary>
         /// Handles the click event for the Instructor button.
         /// Navigates to the InstructorPage.
         /// </summary>
@@ -66,7 +72,7 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            InstructorPage instructorPage = new( UserName,UserId );
+            InstructorPage instructorPage = new( UserName,UserId,UserImage );
             NavigationService?.Navigate( instructorPage );
         }
 

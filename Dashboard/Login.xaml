@@ -41,14 +41,14 @@
                 </TextBlock>-->
                 <StackPanel x:Name="NameStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name:" Margin="10,10,10,10" />
-                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25" FontFamily="{StaticResource ProtoMonoSemiBold}"/>
+                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25" />
                 </StackPanel>
             </Grid>
             
             <Grid Grid.Row="1">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="User Id: " />  
-                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold" FontFamily="{StaticResource ProtoMonoSemiBold}"/>
+                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold" FontFamily="Null"/>
                 </TextBlock>
             </Grid>
 

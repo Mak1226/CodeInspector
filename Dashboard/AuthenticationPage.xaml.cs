@@ -53,8 +53,8 @@ namespace Dashboard
 
         private void ShowErrorWindow(string errorMessage)
 {
-    var errorWindow = new ErrorWindow(errorMessage);
-    errorWindow.ShowDialog();
+        var errorWindow = new ErrorWindow(errorMessage);
+        errorWindow.ShowDialog();
 }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
