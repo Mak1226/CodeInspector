@@ -17,6 +17,7 @@ using Analyzer;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Diagnostics;
+using Networking.Serialization;
 
 namespace Content.Model
 {
@@ -28,9 +29,7 @@ namespace Content.Model
     {
         readonly ICommunicator _server;
         readonly string _hostSessionID;
-        readonly IFileHandler _fileHandler;
         readonly IAnalyzer _analyzer;
-        readonly AnalyzerResultSerializer _serializer;
 
         string? _sessionID;
         string? _fileEncoding;
@@ -62,9 +61,7 @@ namespace Content.Model
             _hostSessionID = sessionID;
             ServerRecieveHandler recieveHandler = new (this);
             this._server.Subscribe( recieveHandler , "Content-Files");
-            _fileHandler = new FileHandler();
             this._analyzer = _analyzer;
-            _serializer = new AnalyzerResultSerializer();
             analyzerResult = new();
             _sessionAnalysisResultDict = new();
         }
@@ -78,20 +75,30 @@ namespace Content.Model
         {
             Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Started" );
             _fileEncoding = encodedFiles;
+            IFileHandler _fileHandler = new FileHandler();
+            ISerializer _serializer = new AnalyzerResultSerializer();
+
             // Save files to user session directory and collect sessionID
             string? recievedSessionID = _fileHandler.HandleRecieve(encodedFiles);
             if (recievedSessionID == null)
             {
-                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: receivedSessionID is null" );
+                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: unable to recieve" );
+                _server.Send( "Faliure" , "Content-Messages" , clientID );
                 return; // FileHandler failed
             }
-            // Analyse DLL files
-            _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
-            Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Loaded Student DLL files" );
+            else
+            {
+                Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive: Recieved sessionID {recievedSessionID}" );
+                _server.Send( "Success" , "Content-Messages" , clientID );
+            }
+
             // Save analysis results 
             lock (_sessionLock)
             {
                 Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Inside SessionLock" );
+                // Analyse DLL files
+                _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
+                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Loaded Student DLL files" );
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
                 Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
                 foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
@@ -118,12 +125,18 @@ namespace Content.Model
                     return;
                 }
 
-                using MemoryStream ms = new(graph);
-                Image image = Image.FromStream( ms );
-
-
                 // Save the image as PNG
-                image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
+                try
+                {
+                    using MemoryStream ms = new(graph);
+                    Image image = Image.FromStream( ms );
+                    image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
+                    Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                }
+                catch ( Exception ex )
+                {
+                    Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
+                }
                 Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Done" );
             }
 

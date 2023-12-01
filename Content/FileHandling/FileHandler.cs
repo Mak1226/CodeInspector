@@ -139,8 +139,16 @@ namespace Content.FileHandling
             _fileEncoder.DecodeFrom(encoding);
             string sessionID = _fileEncoder.sessionID;
             string sessionPath = sessionID;
+            try
+            {
+                _fileEncoder.SaveFiles(sessionPath);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine( $"[Content][FileHandler.cs] HandleRecieve: Unable to write file. {e}" );
+                return null;
+            }
 
-            _fileEncoder.SaveFiles(sessionPath);
             Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
             Trace.WriteLine( "[Content][FileHandler.cs] HandleReceive: Decoded Files" );
             _filesList = new List<string>();
