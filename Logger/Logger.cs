@@ -18,20 +18,19 @@ namespace Logger
         private readonly bool _logCallerFile;
         private readonly bool _logCallerFunction;
 
-        private readonly string _logFilePath;
-
         public Logger(
             string teamName, 
             LogLevel level = LogLevel.DEBUG, 
-            bool logCallerFile = true, 
-            bool logCallerFunction = true,
+            bool logCallerFile = false, 
+            bool logCallerFunction = false,
             string logFilePath = "Analyzer.log")
         {
             _teamName = teamName;
             _level = level;
             _logCallerFile = logCallerFile;
             _logCallerFunction = logCallerFunction;
-            _logFilePath = logFilePath;
+
+            LogWriter.SubscribeLogger(); // Initialize thread for writing log
         }
 
         public void Debug(string message) => Log(message, LogLevel.DEBUG);
@@ -46,7 +45,7 @@ namespace Logger
             {
                 return; //Log mask
             }
-            string logMessage = $"[{nameof( level )}][{DateTime.Now}]";
+            string logMessage = $"[{nameof(level)}][{DateTime.Now}][{_teamName}]";
             if (_logCallerFile)
             {
                 logMessage += $"[{GetCallerFile()}]";
@@ -56,21 +55,7 @@ namespace Logger
                 logMessage += $"[{GetCallerFunction()}]";
             }
 
-            WriteToLogFile(logMessage);
-        }
-
-        private void WriteToLogFile( string logMessage )
-        {
-            try
-            {
-                using StreamWriter writer = new(_logFilePath, true );
-                writer.WriteLine( logMessage );
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine( $"Error writing to log file: {ex.Message}" );
-                Trace.WriteLine( logMessage );
-            }
+            LogWriter.WriteLog(logMessage);
         }
 
         private static string GetCallerFunction()
