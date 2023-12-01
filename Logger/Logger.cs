@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
-namespace Logger
+namespace Logging
 {
     public enum LogLevel
     {
@@ -15,64 +16,72 @@ namespace Logger
     /// Simple logger that can log 5 levels, and logs team name
     /// Writing to file is done by a <see cref="LogWriter"/> thread
     /// </summary>
-    public class Logger
+    public static class Logger
     {
-        private readonly string _teamName;
+        private static LogLevel s_logLevel = 0;
 
         /// <summary>
         /// Start a new logger instance with given team name
         /// </summary>
         /// <param name="teamName">Name of team to be logged</param>
-        public Logger(string teamName)
+        static Logger()
         {
-            _teamName = teamName;
-
-            LogWriter.SubscribeLogger(); // Initialize thread for writing log
+            LogWriter.StartThread(); // Initialize thread for writing log
         }
 
         /// <summary>
         /// Write a log of level DEBUG.
         /// </summary>
         /// <param name="message"></param>
-        public void Debug(string message) => Log(message, LogLevel.DEBUG);
+        public static void Debug(string message) => Log(message, LogLevel.DEBUG);
         /// <summary>
         /// Write a log of level INFO.
         /// </summary>
         /// <param name="message"></param>
-        public void Inform(string message) => Log(message, LogLevel.INFO );
+        public static void Inform(string message) => Log(message, LogLevel.INFO );
         /// <summary>
         /// Write a log of level WARNING.
         /// </summary>
         /// <param name="message"></param>
-        public void Warn(string message) => Log(message , LogLevel.WARNING );
+        public static void Warn(string message) => Log(message , LogLevel.WARNING );
         /// <summary>
         /// Write a log of level ERROR.
         /// </summary>
         /// <param name="message"></param>
-        public void Error(string message) => Log(message , LogLevel.ERROR );
+        public static void Error(string message) => Log(message , LogLevel.ERROR );
         /// <summary>
         /// Write a log of level CRITICAL.
         /// </summary>
         /// <param name="message"></param>
-        public void Critical( string message ) => Log( message , LogLevel.CRITICAL );
+        public static void Critical( string message ) => Log( message , LogLevel.CRITICAL );
 
         /// <summary>
-        /// Write a log of given level
+        /// Write a log of the given level.
+        /// Log Format : [Level][time][namespace] message
         /// </summary>
+        /// <param name="level"><see cref="LogLevel"/></param>
         /// <param name="message"></param>
-        /// <param name="level"></param>
-        public void Log(string message, LogLevel level) 
+        public static void Log(string message, LogLevel level)
         {
+            if (level < s_logLevel)
+            {
+                return; // Mask log levels
+            }
+
             try
             {
-                string logMessage = $"[{LogLevelName(level)}][{DateTime.Now}][{_teamName}]";
+                //Fetch namespace of caller
+                MethodBase method = new StackFrame(2).GetMethod();
+                string teamName = method?.DeclaringType?.Namespace ?? "Unknown" ?? "Unknown";
+
+                string logMessage = $"[{LogLevelName( level )}][{DateTime.Now}][{teamName}]";
                 logMessage += " ";
                 logMessage += message;
-                LogWriter.WriteLog(logMessage, level);
+                LogWriter.WriteLog(logMessage);
             }
             catch (Exception e)
             {
-                Trace.TraceError( $"Logger for {_teamName} and message {message} failed with error {e}" );
+                Trace.TraceError( $"Logging message {message} failed with error {e}" );
             }
         }
 
@@ -95,7 +104,7 @@ namespace Logger
         /// <param name="level"></param>
         public static void SetLogLevel(LogLevel level)
         {
-            LogWriter.SetLogLevel(level);
+            s_logLevel = level;
         }
 
 

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Logger
+namespace Logging
 {
     /// <summary>
     /// Threaded writer for log messages
@@ -9,7 +9,6 @@ namespace Logger
     {
         private static Thread? s_writer;
         static string s_logFilePath = "Analyzer.log";
-        static LogLevel s_logLevel = 0;
 
         static readonly Queue<string> s_logs = new();
         static readonly ManualResetEvent s_queueNotEmpty = new(false);
@@ -18,7 +17,7 @@ namespace Logger
         /// <summary>
         /// Start the writer thread if not already started
         /// </summary>
-        internal static void SubscribeLogger()
+        internal static void StartThread()
         {
             if (s_writer == null)
             {
@@ -62,31 +61,17 @@ namespace Logger
         }
 
         /// <summary>
-        /// Set level of allowed log
-        /// </summary>
-        /// <param name="logLevel"></param>
-        internal static void SetLogLevel(LogLevel logLevel)
-        {
-            s_logLevel = logLevel;
-        }
-
-        /// <summary>
         /// Write to log file a message.
         /// Internally adds the message to log queue for the thread to pop
         /// </summary>
         /// <param name="message"></param>
         /// <param name="level"></param>
         /// <exception cref="NullReferenceException">If writer thread is null (ie. not initiallized)</exception>
-        internal static void WriteLog(string message, LogLevel level)
+        internal static void WriteLog(string message)
         {
             if (s_writer == null)
             {
-                throw new NullReferenceException( "No logger subscribed" );
-            }
-
-            if (level < s_logLevel)
-            {
-                return;
+                throw new NullReferenceException( "Writer not initialized" );
             }
 
             lock (s_queueLock)
