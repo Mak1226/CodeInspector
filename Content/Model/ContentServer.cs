@@ -18,6 +18,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using Networking.Serialization;
+using Logging;
 
 namespace Content.Model
 {
@@ -56,7 +57,6 @@ namespace Content.Model
         /// <param name="_analyzer">Analyzer</param>
         public ContentServer(ICommunicator _server, IAnalyzer _analyzer, string sessionID)
         {
-            Trace.WriteLine( "[Content][ContentServer.cs] ContentServer: Initialized ContentServer" );
             this._server = _server;
             _hostSessionID = sessionID;
             ServerRecieveHandler recieveHandler = new (this);
@@ -64,6 +64,7 @@ namespace Content.Model
             this._analyzer = _analyzer;
             analyzerResult = new();
             _sessionAnalysisResultDict = new();
+            Logger.Inform( "[ContentServer.cs] ContentServer: Initialized ContentServer" );
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Content.Model
         /// <param name="clientID">Unique ID of client</param>
         public void HandleRecieve(string encodedFiles, string? clientID)
         {
-            Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Started" );
+            Logger.Inform( "[ContentServer.cs] HandleReceive: Started" );
             _fileEncoding = encodedFiles;
             IFileHandler _fileHandler = new FileHandler();
             ISerializer _serializer = new AnalyzerResultSerializer();
@@ -82,23 +83,23 @@ namespace Content.Model
             string? recievedSessionID = _fileHandler.HandleRecieve(encodedFiles);
             if (recievedSessionID == null)
             {
-                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: unable to recieve" );
+                Logger.Warn( "[ContentServer.cs] HandleReceive: unable to recieve" );
                 _server.Send( "Faliure" , "Content-Messages" , clientID );
                 return; // FileHandler failed
             }
             else
             {
-                Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive: Recieved sessionID {recievedSessionID}" );
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Recieved sessionID {recievedSessionID}" );
                 _server.Send( "Success" , "Content-Messages" , clientID );
             }
 
             // Save analysis results 
             lock (_sessionLock)
             {
-                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Inside SessionLock" );
+                Logger.Debug( "[ContentServer.cs] HandleReceive: Inside SessionLock" );
                 // Analyse DLL files
                 _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
-                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Loaded Student DLL files" );
+                Logger.Debug( "[ContentServer.cs] HandleReceive: Loaded Student DLL files" );
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
                 Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
                 foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
@@ -112,7 +113,7 @@ namespace Content.Model
                 _server.Send(serializedResults, "Content-Results", clientID);
                 if (_sessionID == recievedSessionID)
                 {
-                    Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: SessionIDs match" );
+                    Logger.Debug($"[ContentServer.cs] HandleReceive: SessionIDs match ({_sessionID})");
                     analyzerResult = res;
                     // Notification for viewModel
                     AnalyzerResultChanged?.Invoke(analyzerResult);
@@ -121,7 +122,7 @@ namespace Content.Model
                 byte[] graph = _analyzer.GetRelationshipGraph(new());
                 if (graph == null || graph.Length == 0)
                 {
-                    Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
+                    Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
                     return;
                 }
 
@@ -131,14 +132,14 @@ namespace Content.Model
                     using MemoryStream ms = new(graph);
                     Image image = Image.FromStream( ms );
                     image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
-                    Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                    Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
                 }
                 catch ( Exception ex )
                 {
-                    Trace.WriteLine( $"[Content][ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
+                    Logger.Error( $"[ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
                 }
-                Trace.WriteLine( "[Content][ContentServer.cs] HandleReceive: Done" );
             }
+            Logger.Inform( "[ContentServer.cs] HandleReceive: Done" );
 
         }
         /// <summary>
@@ -147,10 +148,10 @@ namespace Content.Model
         /// <param name="configuration">The dictionary containing configuration settings.</param>
         public void Configure(IDictionary<int, bool> configuration)
         {
-            Trace.WriteLine( "[Content][ContentServer.cs] Configure: Started" );
+            Logger.Inform( "[ContentServer.cs] Configure: Started" );
             _configuration = configuration;
             _analyzer.Configure(configuration);
-            Trace.WriteLine( "[Content][ContentServer.cs] Configure: Done" );
+            Logger.Inform( "[ContentServer.cs] Configure: Done" );
         }
 
         /// <summary>
@@ -159,9 +160,9 @@ namespace Content.Model
         /// <param name="filePaths">The list of file paths for the custom DLLs.</param>
         public void LoadCustomDLLs(List<string> filePaths)
         {
-            Trace.WriteLine( "[Content][ContentServer.cs] LoadCustomDLLs: Started" );
+            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Started" );
             _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
-            Trace.WriteLine( "[Content][ContentServer.cs] LoadCustomDLLs: Done" );
+            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Done" );
         }
 
         /// <summary>
@@ -170,11 +171,11 @@ namespace Content.Model
         /// <param name="sessionID">The session ID to be set.</param>
         public void SetSessionID(string? sessionID)
         {
-            Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: started" );
+            Logger.Inform( $"[ContentServer.cs] SetSessionID: started. SessionID {sessionID}" );
             if (sessionID == null)
             {
 
-                Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: sessionID is null" );
+                Logger.Warn( "[ContentServer.cs] SetSessionID: sessionID is null" );
                 _sessionID = null;
                 return;
             }
@@ -182,20 +183,20 @@ namespace Content.Model
             _sessionID = sessionID;
             if (_sessionAnalysisResultDict.ContainsKey(sessionID)) 
             {
-                Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: Already sessionID present" );
+                Logger.Debug( "[ContentServer.cs] SetSessionID: Already sessionID present" );
                 // Use existing analyzer results if available for the given session ID.
                 analyzerResult = _sessionAnalysisResultDict[sessionID];
             }
             else
             {
 
-                Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: new SessionID" );
+                Logger.Debug( "[ContentServer.cs] SetSessionID: new SessionID" );
                 // Create a new entry for the session ID if not present.
                 analyzerResult = new();
                 _sessionAnalysisResultDict[sessionID] = analyzerResult;
             }
             AnalyzerResultChanged?.Invoke(analyzerResult);
-            Trace.WriteLine( "[Content][ContentServer.cs] SetSessionID: done" );
+            Logger.Inform( "[ContentServer.cs] SetSessionID: done" );
         }
 
         /// <summary>
@@ -204,7 +205,7 @@ namespace Content.Model
         public void SendToCloud()
         {
 
-            Trace.WriteLine( "[Content][ContentServer.cs] SentToCloud: started" );
+            Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
             Task.Run(() 
                 => cloudHandler.PostSessionAsync(_hostSessionID, _configuration, _sessionAnalysisResultDict.Keys.ToList()));
@@ -212,7 +213,7 @@ namespace Content.Model
                 => cloudHandler.PostSubmissionAsync(_hostSessionID, _fileEncoding));
             Task.Run(()
                 => cloudHandler.PostSubmissionAsync(_hostSessionID, _resultEncoding));
-            Trace.WriteLine( "[Content][ContentServer.cs] SentToCloud: done" );
+            Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
 
     }

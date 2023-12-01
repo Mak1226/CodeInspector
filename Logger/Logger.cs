@@ -74,9 +74,10 @@ namespace Logging
                 MethodBase method = new StackFrame(2).GetMethod();
                 string teamName = method?.DeclaringType?.Namespace ?? "Unknown" ?? "Unknown";
 
-                string logMessage = $"[{LogLevelName( level )}][{DateTime.Now}][{teamName}]";
-                logMessage += " ";
-                logMessage += message;
+                string logMessage = $"[{LogLevelName( level )}]".PadRight(10) +
+                    $"[{DateTime.Now}]" +
+                    $"[{teamName}]" +
+                    $" {message}";
                 LogWriter.WriteLog(logMessage);
             }
             catch (Exception e)
