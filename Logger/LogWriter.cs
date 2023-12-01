@@ -5,8 +5,9 @@ namespace Logger
 {
     internal static class LogWriter
     {
-        static Thread? s_writer;
+        private static Thread? s_writer;
         static string s_logFilePath = "Analyzer.log";
+        static LogLevel s_logLevel = 0;
 
         static readonly Queue<string> s_logs = new();
         static readonly ManualResetEvent s_queueNotEmpty = new(false);
@@ -14,7 +15,14 @@ namespace Logger
 
         internal static void SubscribeLogger()
         {
-            s_writer ??= new(new ThreadStart(WriterThread));
+            if (s_writer == null)
+            {
+                s_writer = new( new ThreadStart( WriterThread ) )
+                {
+                    IsBackground = true
+                };
+                s_writer.Start();
+            }
         }
 
         internal static void WriterThread()
@@ -41,11 +49,21 @@ namespace Logger
             s_logFilePath = logFilePath;
         }
 
-        internal static void WriteLog(string message)
+        internal static void SetLogLevel(LogLevel logLevel)
+        {
+            s_logLevel = logLevel;
+        }
+
+        internal static void WriteLog(string message, LogLevel level)
         {
             if (s_writer == null)
             {
                 throw new NullReferenceException( "No logger subscribed" );
+            }
+
+            if (level < s_logLevel)
+            {
+                return;
             }
 
             lock (s_queueLock)

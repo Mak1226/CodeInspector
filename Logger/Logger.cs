@@ -11,24 +11,14 @@ namespace Logger
         ERROR,
         CRITICAL
     }
+
     public class Logger
     {
         private readonly string _teamName;
-        private readonly LogLevel _level;
-        private readonly bool _logCallerFile;
-        private readonly bool _logCallerFunction;
 
-        public Logger(
-            string teamName, 
-            LogLevel level = LogLevel.DEBUG, 
-            bool logCallerFile = false, 
-            bool logCallerFunction = false,
-            string logFilePath = "Analyzer.log")
+        public Logger(string teamName)
         {
             _teamName = teamName;
-            _level = level;
-            _logCallerFile = logCallerFile;
-            _logCallerFunction = logCallerFunction;
 
             LogWriter.SubscribeLogger(); // Initialize thread for writing log
         }
@@ -41,35 +31,27 @@ namespace Logger
 
         public void Log(string message, LogLevel level) 
         {
-            if (level < _level)
-            {
-                return; //Log mask
-            }
-            string logMessage = $"[{nameof(level)}][{DateTime.Now}][{_teamName}]";
-            if (_logCallerFile)
-            {
-                logMessage += $"[{GetCallerFile()}]";
-            }
-            if (_logCallerFunction)
-            {
-                logMessage += $"[{GetCallerFunction()}]";
-            }
-
-            LogWriter.WriteLog(logMessage);
+            string logMessage = $"[{LogLevelName(level)}][{DateTime.Now}][{_teamName}]";
+            logMessage += " ";
+            logMessage += message;
+            LogWriter.WriteLog(logMessage, level);
         }
 
-        private static string GetCallerFunction()
+        public static void SetGlobalLogFile(string logFilePath)
         {
-            StackTrace stackTrace = new();
-            MethodBase? method = stackTrace.GetFrame( 2 )?.GetMethod();
-            return method?.Name ?? "UnknownFunction";
+            LogWriter.SetLogFile(logFilePath);
         }
 
-        private static string GetCallerFile()
+        public static void SetLogLevel(LogLevel level)
         {
-            StackTrace stackTrace = new();
-            StackFrame? frame = stackTrace.GetFrame( 2 );
-            return frame?.GetMethod()?.DeclaringType?.FullName ?? "UnknownFile";
+            LogWriter.SetLogLevel(level);
         }
+
+
+        public static string? LogLevelName( LogLevel level )
+        {
+            return Enum.GetName( typeof(LogLevel) , level );
+        }
+
     }
 }
