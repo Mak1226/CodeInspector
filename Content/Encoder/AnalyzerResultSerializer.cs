@@ -11,8 +11,8 @@
 *****************************************************************************/
 using Analyzer;
 using Networking.Serialization;
-using System.Diagnostics;
 using System.Text.Json;
+using Logging;
 
 namespace Content.Encoder
 {
@@ -24,7 +24,7 @@ namespace Content.Encoder
     {
         public string Serialize<T>(T genericObject)
         {
-            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : Seriailize" );
+            Logger.Debug( "[AnalyzerResultSerializer.cs] : Seriailize" );
             if (genericObject == null)
             {
                 throw new ArgumentNullException(nameof(genericObject));
@@ -61,7 +61,7 @@ namespace Content.Encoder
         }
         private T DeserializeAnalyzerResult<T>(string serializedString)
         {
-            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : DeserializeAnalyzerResult" );
+            Logger.Debug( "[AnalyzerResultSerializer.cs] : DeserializeAnalyzerResult" );
             // Implement custom deserialization logic for AnalyzerResult
             string[] lines = serializedString.Split("||\n", StringSplitOptions.RemoveEmptyEntries);
 
@@ -102,7 +102,7 @@ namespace Content.Encoder
         }
         public T Deserialize<T>(string serializedString)
         {
-            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : Deserialize" );
+            Logger.Inform( "[AnalyzerResultSerializer.cs] : Deserialize" );
             if (string.IsNullOrWhiteSpace(serializedString))
             {
                 throw new ArgumentException("Serialized string is null or empty.", nameof(serializedString));
