@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
-using System.Threading;
 
 namespace Logger
 {
+    /// <summary>
+    /// Threaded writer for log messages
+    /// </summary>
     internal static class LogWriter
     {
         private static Thread? s_writer;
@@ -13,6 +15,9 @@ namespace Logger
         static readonly ManualResetEvent s_queueNotEmpty = new(false);
         static readonly object s_queueLock = new();
 
+        /// <summary>
+        /// Start the writer thread if not already started
+        /// </summary>
         internal static void SubscribeLogger()
         {
             if (s_writer == null)
@@ -25,6 +30,9 @@ namespace Logger
             }
         }
 
+        /// <summary>
+        /// Writer thread function. Pops log message queue and writes to log file if queue is non empty.
+        /// </summary>
         internal static void WriterThread()
         {
             while (true)
@@ -44,16 +52,31 @@ namespace Logger
             }
         }
 
+        /// <summary>
+        /// Set path of log file
+        /// </summary>
+        /// <param name="logFilePath"></param>
         internal static void SetLogFile(string logFilePath)
         {
             s_logFilePath = logFilePath;
         }
 
+        /// <summary>
+        /// Set level of allowed log
+        /// </summary>
+        /// <param name="logLevel"></param>
         internal static void SetLogLevel(LogLevel logLevel)
         {
             s_logLevel = logLevel;
         }
 
+        /// <summary>
+        /// Write to log file a message.
+        /// Internally adds the message to log queue for the thread to pop
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="level"></param>
+        /// <exception cref="NullReferenceException">If writer thread is null (ie. not initiallized)</exception>
         internal static void WriteLog(string message, LogLevel level)
         {
             if (s_writer == null)
