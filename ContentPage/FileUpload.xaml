@@ -14,6 +14,8 @@
         <Button
             x:Name="UploadButton"
             Click="UploadButton_Click"
-            Content="Choose a file to upload" />
+            Content="Choose a file to upload" 
+            Width="150" Height="40"
+            />
     </StackPanel>
 </Page>
