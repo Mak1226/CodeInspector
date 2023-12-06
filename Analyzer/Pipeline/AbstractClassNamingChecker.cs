@@ -74,7 +74,7 @@ namespace Analyzer.Pipeline
                 return false;
             }
 
-            return char.IsLower( s[0]);
+            return char.IsUpper( s[0]);
         }
 
         /// <summary>
