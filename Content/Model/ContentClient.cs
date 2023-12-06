@@ -27,7 +27,14 @@ namespace Content.Model
         readonly IFileHandler _fileHandler;
         readonly string _sessionID;
         readonly AnalyzerResultSerializer _serializer;
-
+        public enum StatusType
+        {
+            NONE,
+            WAITING,
+            SUCCESS,
+            FAILURE
+        }
+        StatusType _status;
         /// <summary>
         /// Output of analysis
         /// </summary>
@@ -38,6 +45,26 @@ namespace Content.Model
         /// </summary>
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
+        internal void ContentMessageInfo( string data )
+        {
+            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Started " );
+            if (data == "Success")
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Sucess Message " );
+                _status = StatusType.SUCCESS;
+            }
+            else if(data == "Failure")
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Failure Message " );
+                _status = StatusType.FAILURE;
+            }
+            else
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Invalid Message " );
+            }
+            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Done " );
+        }
+
         /// <summary>
         /// Initializes a new instance of the ContentClient class.
         /// </summary>
@@ -46,11 +73,11 @@ namespace Content.Model
             _client = client;
             ClientRecieveHandler recieveHandler = new (this);
             _client.Subscribe(recieveHandler, "Content-Results");
-
+            _client.Subscribe(recieveHandler , "Content-Messages" );
             _fileHandler = new FileHandler();
             _sessionID = sessionID;
             _serializer = new AnalyzerResultSerializer();
-
+            _status = StatusType.NONE;
             analyzerResult = new();
             Logger.Inform( "[ContentClient.cs] ContentClient: Initialized ContentClient" );
         }
@@ -65,6 +92,7 @@ namespace Content.Model
         public void HandleUpload(string folderPath)
         {
             Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );
+            _status = StatusType.WAITING;
             string encoding = _fileHandler.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
             Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );

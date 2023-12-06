@@ -37,7 +37,14 @@ namespace Content.Model
         /// <returns></returns>
         public string HandleMessageRecv(Message message)
         {
-            _client.HandleReceive(message.Data);
+            if (message.ModuleName != "Content-Messages")
+            {
+                _client.HandleReceive( message.Data );
+            }
+            else
+            {
+                _client.ContentMessageInfo( message.Data );
+            }
             return "";
         }
     }
