@@ -23,6 +23,7 @@ namespace Content.ViewModel
         private readonly ContentClient _contentClient;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
+        private ContentClient.StatusType _status;
 
         /// <summary>
         /// Property change event
@@ -40,6 +41,11 @@ namespace Content.ViewModel
                 _analyzerResults = result;
                 OnPropertyChanged(nameof(_analyzerResults));
                 OnPropertyChanged(nameof(DataList));
+            };
+            _contentClient.ClientStatusChanged += ( status ) =>
+            {
+                _status = status;
+                OnPropertyChanged(nameof(Status));
             };
             _analyzerResults = _contentClient.analyzerResult;
         }
@@ -91,6 +97,15 @@ namespace Content.ViewModel
                 _selectedItem = value;
                 OnPropertyChanged(nameof(SelectedItem));
             }
+        }
+
+        /// <summary>
+        /// Get the status of the client w.r.t the last data sent to server.
+        /// </summary>
+        public string Status
+        {
+            get => _status.ToString();
+            set { throw new FieldAccessException();  }
         }
 
         private void OnPropertyChanged(string propertyName)

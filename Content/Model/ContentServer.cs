@@ -19,6 +19,7 @@ using System.Drawing.Imaging;
 using System.Diagnostics;
 using Networking.Serialization;
 using Logging;
+using System.Text.Json;
 
 namespace Content.Model
 {
@@ -28,6 +29,8 @@ namespace Content.Model
     /// </summary>
     public class ContentServer
     {
+        static readonly string s_configurationPath = "teacher_configuration.json";
+
         readonly ICommunicator _server;
         readonly string _hostSessionID;
         readonly IAnalyzer _analyzer;
@@ -35,7 +38,34 @@ namespace Content.Model
         string? _sessionID;
         string? _fileEncoding;
         string? _resultEncoding;
-        IDictionary<int, bool> _configuration;
+
+        IDictionary<int , bool> _configuration;
+        internal IDictionary<int, bool> Configuration
+        {
+            get
+            {
+                if (_configuration == null) 
+                {
+                    if (File.Exists( s_configurationPath ))
+                    {
+                        string json = File.ReadAllText( s_configurationPath );
+                        IDictionary<int , bool>? result = JsonSerializer.Deserialize<IDictionary<int , bool>>( json );
+                        if (result != null )
+                        {
+                            return result;
+                        }
+                    }
+                }
+                return new Dictionary<int , bool>();
+            }
+
+            set
+            {
+                _configuration = value;
+                string json = JsonSerializer.Serialize( _configuration );
+                File.WriteAllText( s_configurationPath , json );
+            }
+        }
 
         /// <summary>
         /// Delegate Function called when <see cref="analyzerResult"/> is changed
@@ -62,6 +92,7 @@ namespace Content.Model
             ServerRecieveHandler recieveHandler = new (this);
             this._server.Subscribe( recieveHandler , "Content-Files");
             this._analyzer = _analyzer;
+            this._analyzer.Configure(Configuration);
             analyzerResult = new();
             _sessionAnalysisResultDict = new();
             Logger.Inform( "[ContentServer.cs] ContentServer: Initialized ContentServer" );
@@ -149,7 +180,7 @@ namespace Content.Model
         public void Configure(IDictionary<int, bool> configuration)
         {
             Logger.Inform( "[ContentServer.cs] Configure: Started" );
-            _configuration = configuration;
+            Configuration = configuration;
             _analyzer.Configure(configuration);
             Logger.Inform( "[ContentServer.cs] Configure: Done" );
         }

@@ -45,25 +45,11 @@ namespace Content.Model
         /// </summary>
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
-        internal void ContentMessageInfo( string data )
-        {
-            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Started " );
-            if (data == "Success")
-            {
-                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Sucess Message " );
-                _status = StatusType.SUCCESS;
-            }
-            else if(data == "Failure")
-            {
-                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Failure Message " );
-                _status = StatusType.FAILURE;
-            }
-            else
-            {
-                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Invalid Message " );
-            }
-            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Done " );
-        }
+        /// <summary>
+        /// Invoked when client status changes
+        /// </summary>
+        public Action<StatusType>? ClientStatusChanged;
+
 
         /// <summary>
         /// Initializes a new instance of the ContentClient class.
@@ -82,6 +68,33 @@ namespace Content.Model
             Logger.Inform( "[ContentClient.cs] ContentClient: Initialized ContentClient" );
         }
 
+        internal void ContentMessageInfo( string data )
+        {
+            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Started " );
+            if (data == "Success")
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Sucess Message " );
+                SetStatus(StatusType.SUCCESS);
+            }
+            else if(data == "Failure")
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Failure Message " );
+                SetStatus(StatusType.FAILURE);
+            }
+            else
+            {
+                Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Invalid Message " );
+            }
+            Logger.Inform( "[ContentClient.cs] ContentMessageInfo: Done " );
+        }
+
+        private void SetStatus(StatusType status)
+        {
+            _status = status;
+            ClientStatusChanged?.Invoke(_status);
+            Logger.Debug( $"[ContentClient.cs] SetStatus: {_status}" );
+        }
+
         
 
         /// <summary>
@@ -92,7 +105,7 @@ namespace Content.Model
         public void HandleUpload(string folderPath)
         {
             Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );
-            _status = StatusType.WAITING;
+            SetStatus(StatusType.WAITING);
             string encoding = _fileHandler.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
             Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );

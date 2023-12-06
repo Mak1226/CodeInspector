@@ -58,13 +58,19 @@ namespace Content.ViewModel
 
             // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
             _configOptionsList = new List<AnalyzerConfigOption>();
+            IDictionary<int , bool> serverConfigs = _contentServer.Configuration;
             foreach (Tuple<int , string> option in AnalyzerFactory.GetAllConfigurationOptions())
             {
+                bool isSelected = false;
+                if (serverConfigs.ContainsKey(option.Item1))
+                { 
+                    isSelected = serverConfigs[option.Item1];
+                }
                 _configOptionsList.Add(new AnalyzerConfigOption
                 {
                     AnalyzerId = option.Item1,
                     Description = option.Item2,
-                    IsSelected = false // Set the default value for IsSelected as needed
+                    IsSelected = isSelected // Set the default value for IsSelected as needed
                 });
             }
             _analyzerResults = _contentServer.analyzerResult;
