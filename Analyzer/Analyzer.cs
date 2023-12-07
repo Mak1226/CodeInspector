@@ -23,6 +23,7 @@
 using Analyzer.DynamicAnalyzer;
 using Analyzer.Pipeline;
 using System.Diagnostics;
+using Logging;
 
 namespace Analyzer
 {
@@ -60,7 +61,7 @@ namespace Analyzer
             Trace.WriteLine("Teacher Options\n");
             foreach (KeyValuePair<int , bool> kvp in TeacherOptions)
             {
-                Trace.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}\n");
+                Logger.Inform( "[Analyzer.cs] Configure: Teacher Options " + kvp.Key + " " + kvp.Value );
             }
             _teacherOptions = TeacherOptions;
         }
@@ -71,7 +72,7 @@ namespace Analyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to DLL files.</param>
         public void LoadDLLFileOfStudent(List<string> PathOfDLLFilesOfStudent)
         {
-            Trace.Write("Analyzer : Loaded students " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
+            Logger.Inform( "[Analyzer.cs] LoadDLLFileOfStudent: Loaded students " + string.Join( " " , _pathOfDLLFilesOfStudent));
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
 
@@ -91,11 +92,11 @@ namespace Analyzer
                     InvokeCustomAnalyzers customAnalyzer = new(new List<string> { path });
                     _customAnalyzers[_customAnalyzersID] = customAnalyzer;
                     _allConfigurationOptions.Add(Tuple.Create(_customAnalyzersID++, path));
-                    Trace.Write( "Analyzer : Loaded custom analyzers " + path + "\n" );
+                    Logger.Inform("[Analyzer.cs] LoadDLLOfCustomAnalyzers: Loaded custom analyzers " + path);
                 }
                 catch
                 {
-                    Trace.Write( "Analyzer : Failed to Load custom analyzers " + path + "\n" );
+                    Logger.Debug("[Analyzer.cs] LoadDLLOfCustomAnalyzers: Failed to Load custom analyzers " + path);
                 }
             }
 
@@ -108,12 +109,12 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results.</returns>
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
-            Trace.Write("Analyzer : MainPipeline is starting with " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
+            Logger.Inform( "[Analyzer.cs] Run: Started" + string.Join( " " , _pathOfDLLFilesOfStudent ) );
             MainPipeline _mainAnalyzerPipeline = new();
             _mainAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
             _mainAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
             Dictionary<string, List<AnalyzerResult>> result = _mainAnalyzerPipeline.Start();
-            Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
+            Logger.Inform( "[Analyzer.cs] Run: Completed main analyzer" + string.Join( " " , _pathOfDLLFilesOfStudent ) );
 
             Dictionary<string , List<AnalyzerResult>> customAnalyzerResults = RnuCustomAnalyzers();
 
@@ -123,8 +124,8 @@ namespace Analyzer
             {
                 foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
                 {
-                    Trace.Write($"Analyzer : Key: {keyValuePair.Key}");
-                    Trace.Write($"  {analyzerResult}\n");
+                    Logger.Inform($"Analyzer : Key: {keyValuePair.Key}");
+                    Logger.Inform($"Analyzer : {analyzerResult}");
                 }
             }
 
@@ -138,12 +139,20 @@ namespace Analyzer
         /// <returns>Byte array representing the generated relationship graph.</returns>
         public byte[] GetRelationshipGraph(List<string> removableNamespaces)
         {
-            Trace.Write( "Analyzer : Starting Relationship Graph with " + string.Join( " ", _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces));
-            MainPipeline _customAnalyzerPipeline = new();
-            _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
-            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
-
-            return _customAnalyzerPipeline.GenerateClassDiagram(removableNamespaces);
+            try
+            {
+                Logger.Inform( "[Analyzer.cs] GetRelationshipGraph: Started" + string.Join( " " , _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces ) );
+                MainPipeline _customAnalyzerPipeline = new();
+                _customAnalyzerPipeline.AddDLLFiles( _pathOfDLLFilesOfStudent );
+                _customAnalyzerPipeline.AddTeacherOptions( _teacherOptions );
+                Logger.Inform( "[Analyzer.cs] GetRelationshipGraph: Completed main analyzer" + string.Join( " " , _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces ) );
+                return _customAnalyzerPipeline.GenerateClassDiagram( removableNamespaces );
+            }
+            catch
+            {
+                Logger.Debug("[Analyzer.cs] GetRelationshipGraph: Failed main analyzer" + string.Join( " " , _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces)); 
+                return default;
+            }
         }
 
         /// <summary>
@@ -166,10 +175,10 @@ namespace Analyzer
                         Dictionary<string , List<AnalyzerResult>> currentResult = current.Start();
                         UpdateAnalyzerId( currentResult , analyzer.Key );
                         result = MergeDictionaries( result , currentResult );
-                        Trace.Write("Analyzer : Completed custom analyzer " + analyzer.Key +" "+ string.Join(" ", _pathOfDLLFilesOfStudent));
+                        Logger.Inform( "[Analyzer.cs] RunCustomAnalyzers: Completed custom analyzer " + analyzer.Key + " " + string.Join( " " , _pathOfDLLFilesOfStudent ) );
                     } catch
                     {
-                        Trace.Write("Analyzer : Failed custom analyzer " + analyzer.Key);
+                        Logger.Debug( "[Analyzer.cs] RunCustomAnalyzers: Failed custom analyzer " + analyzer.Key + " " + string.Join( " " , _pathOfDLLFilesOfStudent ) );
                     }
                 }
             }
@@ -223,6 +232,12 @@ namespace Analyzer
             }
 
             return mergedDictionary;
+
+            // write lambda for writing console writeline
+
+            Action action = () => { Console.WriteLine( "Hello World" ); };  
+
+
         }
     }
 }
