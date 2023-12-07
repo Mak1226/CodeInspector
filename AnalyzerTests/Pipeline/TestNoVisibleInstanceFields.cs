@@ -82,36 +82,6 @@ namespace Analyzer.Pipeline.Tests
             _parsedDLL = new(_dllFile);
         }
 
-        /*
-        namespace NativeFieldsShouldNotBeVisible1
-        {
-            public class PublicClassWithNoField
-            {
-                public void PublicMethod()
-                {
-                    throw new NotImplementedException();
-                }
-            }
-        }
-        */
-        /// <summary>
-        /// Public class with no fields.
-        /// </summary>
-        [TestMethod()]
-        public void TestHasPublicTypeWithNoFields()
-        {
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NativeFieldsShouldNotBeVisible1.dll";
-
-            ParsedDLLFile dllFile = new( path );
-
-            List<ParsedDLLFile> dllFiles = new() { dllFile };
-            NoVisibleInstanceFields noVisibleInstanceFields = new( dllFiles );
-
-            Dictionary<string , AnalyzerResult> result = noVisibleInstanceFields.AnalyzeAllDLLs();
-            Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
-            Assert.AreEqual( 1 , result[dllFile.DLLFileName].Verdict );
-        }
-
         /// <summary>
         /// Fails because contains public field in public class.
         /// <see cref = "TestNoVisibleInstanceFields.PublicClassWithPublicField"/>

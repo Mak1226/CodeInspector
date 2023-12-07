@@ -38,7 +38,8 @@ namespace AnalyzerTests.Pipeline
         {
             List<string> DllFilePaths = new()
             {
-                "..\\..\\..\\TestDLLs\\BridgePattern.dll"
+                // ExamplarDLLs.BridgePattern
+                 "..\\..\\..\\TestDLLs\\Analyzer.dll"
             };
 
             List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile(DllFilePaths[0]) };
@@ -56,7 +57,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out1.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out1.svg" , imageBytes );
             }
         }
 

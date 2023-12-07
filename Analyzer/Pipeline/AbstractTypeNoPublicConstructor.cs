@@ -17,6 +17,7 @@ using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
 using System.Text;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -110,9 +111,10 @@ namespace Analyzer.Pipeline
                     _errorMessage = "No violation found.";
                 }
             }
-            catch (NullReferenceException ex)
+            catch (Exception ex)
             {
-                throw new NullReferenceException("Encountered exception while processing.", ex);
+                Logger.Debug( $"[Analyzer][AbstractTypeNoPublicConstructor] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message);
+                throw;
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

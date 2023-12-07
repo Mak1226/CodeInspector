@@ -106,7 +106,7 @@ namespace Analyzer.Pipeline
         /// <returns>String with all the violating types.</returns>
         private string ErrorMessage(List<FieldDefinition> visibleNativeFieldsList)
         {
-            StringBuilder errorLog = new ("The following native fields are visible:");
+            StringBuilder errorLog = new ("The following native fields are visible:\r\n");
 
             foreach (FieldDefinition field in visibleNativeFieldsList)
             {
@@ -139,7 +139,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException("Encountered exception while processing.", ex);
+                throw;
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);

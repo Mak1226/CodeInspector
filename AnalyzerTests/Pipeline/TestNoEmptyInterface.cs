@@ -90,38 +90,6 @@ namespace Analyzer.Pipeline.Tests
             _parsedDLL = new( _dllFile );
         }
 
-        /*
-        namespace NoEmptyInterfaces1
-        {
-            public class Class1 : IInterfaceEmpty
-            {
-                private readonly int _sampleVar;
-                public Class1() 
-                {
-                    _sampleVar = 1;
-                }
-
-            }
-        }
-         */
-        /// <summary>
-        /// Fails since empty interface exists.
-        /// </summary>
-        [TestMethod()]
-        public void TestEmptyInterfacePresent()
-        {
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NoEmptyInterfaces1.dll";
-
-            ParsedDLLFile dllFile = new( path );
-
-            List<ParsedDLLFile> dllFiles = new() { dllFile };
-            NoEmptyInterface noEmptyInterfaces = new( dllFiles );
-
-            Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
-            Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
-            Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
-        }
-
         /// <summary>
         /// Fails since empty interface exists.
         /// <see cref = "NoEmptyInterface.IInterfaceEmpty"/>

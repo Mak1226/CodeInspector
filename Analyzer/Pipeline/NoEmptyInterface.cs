@@ -102,7 +102,7 @@ namespace Analyzer.Pipeline
             }
             catch (NullReferenceException ex)
             {
-                throw new NullReferenceException("Encountered exception while processing.", ex);
+                throw;
             }
 
             return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
