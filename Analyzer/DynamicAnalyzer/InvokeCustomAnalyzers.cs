@@ -20,7 +20,7 @@ namespace Analyzer.DynamicAnalyzer
     public class InvokeCustomAnalyzers
     {
         public List<string> _pathOfDLLFilesOfCustomAnalyzers;
-        public List<string> _pathOfDLLFilesOfStudent;
+        public List<string>? _pathOfDLLFilesOfStudent;
 
         /// <summary>
         /// Initializes a new instance of the InvokeCustomAnalyzers class.
@@ -34,17 +34,27 @@ namespace Analyzer.DynamicAnalyzer
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
 
+        public InvokeCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
+        {
+            Trace.WriteLine("Invoking Custom Analyzers");
+            _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
+        }
+
+        public void AddStudentDllFiles(List<string> PathOfDLLFilesOfStudent)
+        {
+            _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
+        }
+
         /// <summary>
         /// Invokes each of the custom analyzers on the student dlls.
         /// </summary>
         /// <returns>A dictionary containing the analysis results for each student DLL file.</returns>
-
         public Dictionary<string, List<AnalyzerResult>> Start()
         {
             //Parses and stores all the student dll files in a list
             List<ParsedDLLFile> studentParsedDlls = new();
 
-            foreach (string studentDll in _pathOfDLLFilesOfStudent)
+            foreach (string studentDll in _pathOfDLLFilesOfStudent )
             {
                 ParsedDLLFile studentParsedDll = new(studentDll);
                 studentParsedDlls.Add(studentParsedDll);
