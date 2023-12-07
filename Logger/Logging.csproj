@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Networking\Networking.csproj" />
-  </ItemGroup>
-
 </Project>

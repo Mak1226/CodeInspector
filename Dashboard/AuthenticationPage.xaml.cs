@@ -24,6 +24,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Logging;
 
 namespace Dashboard
 {
@@ -38,48 +39,54 @@ namespace Dashboard
 
             try
             {
-                // Create the ViewModel and set as data context.
+                Logger.Inform( "[Authenticator Page] Initialized" );
                 AuthenticationViewModel viewModel = new();
                 DataContext = viewModel;
-
             }
             catch (Exception exception)
             {
-                // If an exception occurs during ViewModel creation, show an error message and shutdown the application.
-                _ = MessageBox.Show(exception.Message);
-                Application.Current.Shutdown();
+                Logger.Error( $"Exception during ViewModel creation: {exception.Message}" );
+                ShowErrorAndShutdown( exception.Message );
             }
         }
 
-        private void ShowErrorWindow(string errorMessage)
-{
-        var errorWindow = new ErrorWindow(errorMessage);
-        errorWindow.ShowDialog();
-}
+        private void ShowErrorAndShutdown( string errorMessage )
+        {
+            Logger.Error( $"Application shutdown due to error: {errorMessage}" );
+            MessageBox.Show( errorMessage );
+            Application.Current.Shutdown();
+        }
 
-        private async void Login_Click(object sender, RoutedEventArgs e)
+        private async void Login_Click( object sender , RoutedEventArgs e )
         {
             AuthenticationViewModel viewModel = (AuthenticationViewModel)DataContext;
+
             try
             {
                 AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
 
-                Debug.WriteLine("Printing from page");
-                Debug.WriteLine(authenticationResult.UserName);
-                Debug.WriteLine(authenticationResult.UserEmail);
-                Debug.WriteLine(authenticationResult.UserImage);
+                if(authenticationResult.UserEmail == null)
+                {
+                    ShowErrorWindow( "Authentication Failed, try again!" );
+                    Application.Current.Shutdown();
+                }
+
+                // Log authentication information
+                Logger.Inform( "User authenticated successfully:" );
+                Logger.Inform( $"UserName: {authenticationResult.UserName}" );
+                Logger.Inform( $"UserEmail: {authenticationResult.UserEmail}" );
+                Logger.Inform( $"UserImage: {authenticationResult.UserImage}" );
 
                 Application.Current.MainWindow.Activate();
 
-                var loginPage = new Login(authenticationResult.UserName, authenticationResult.UserEmail, authenticationResult.UserImage);
-                NavigationService?.Navigate(loginPage);
+                var loginPage = new Login( authenticationResult.UserName , authenticationResult.UserEmail , authenticationResult.UserImage );
+                NavigationService?.Navigate( loginPage );
             }
             catch (Exception ex)
             {
-                ShowErrorWindow("Login request using OAuth cancelled before completion, try again!");
-                Application.Current.Shutdown();
+                Logger.Error( $"Login request using OAuth failed: {ex.Message}" );
+                ShowErrorAndShutdown( "Login request using OAuth cancelled before completion, try again!" );
             }
-
         }
     }
 }

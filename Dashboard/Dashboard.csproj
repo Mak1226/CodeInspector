@@ -63,6 +63,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContentPage\ContentPage.csproj" />
+    <ProjectReference Include="..\Logger\Logging.csproj" />
     <ProjectReference Include="..\ServerlessFuncUI\ServerlessFuncUI.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>

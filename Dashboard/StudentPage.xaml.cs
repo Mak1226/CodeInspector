@@ -25,6 +25,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ContentPage;
 using ViewModel;
+using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -56,6 +58,7 @@ namespace Dashboard
                         ContentFrame.Content = clientPage;
                     }
                 }
+                Logger.Inform($"[StudentPage] Created viewModel {RuntimeHelpers.GetHashCode( viewModel )}");
                 //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
             catch (Exception exception)
@@ -70,9 +73,10 @@ namespace Dashboard
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.DisconnectInstructor();
-            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
 
+            viewModel?.DisconnectFromInstructor();
+            AuthenticationPage authenticationPage = new();
+            NavigationService?.Navigate( authenticationPage );
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace Dashboard
             // Show a message box indicating an attempt to connect to the specified IP address and port.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
 
-            bool? isConnected = viewModel?.ConnectInstructor();
+            bool? isConnected = viewModel?.ConnectToInstructor();
             if(isConnected != null && viewModel != null)
             {
                 if ( isConnected.Value )
@@ -108,7 +112,7 @@ namespace Dashboard
         {
             //Attempting to disconnect from the instructor
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.DisconnectInstructor();
+            viewModel?.DisconnectFromInstructor();
         }
     }
 }

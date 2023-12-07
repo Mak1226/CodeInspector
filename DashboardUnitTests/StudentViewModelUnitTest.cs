@@ -32,7 +32,7 @@ namespace DashboardUnitTests
             viewModel.SetInstructorAddress("192.168.1.1", "8080");
 
             // Act
-            viewModel.DisconnectInstructor();
+            viewModel.DisconnectFromInstructor();
 
             // Assert
             mockCommunicator.Verify(x => x.Send(It.IsAny<string>(), "server"), Times.Once);
@@ -51,7 +51,7 @@ namespace DashboardUnitTests
             viewModel.SetInstructorAddress("192.168.1.1", "8080");
 
             // Act
-            bool result = viewModel.ConnectInstructor();
+            bool result = viewModel.ConnectToInstructor();
 
             // Assert
             Assert.IsTrue(result);
@@ -68,7 +68,7 @@ namespace DashboardUnitTests
             var viewModel = new StudentViewModel("John Doe", "123", mockCommunicator.Object);
 
             // Act
-            bool result = viewModel.ConnectInstructor();
+            bool result = viewModel.ConnectToInstructor();
 
             // Assert
             Assert.IsFalse(result);
@@ -137,7 +137,7 @@ namespace DashboardUnitTests
             var viewModel = new StudentViewModel("John Doe", "123", mockCommunicator.Object);
 
             // Act
-            viewModel.DisconnectInstructor();
+            viewModel.DisconnectFromInstructor();
 
             // Assert
             mockCommunicator.Verify(x => x.Send(It.IsAny<string>(), "server"), Times.Never);

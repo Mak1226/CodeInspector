@@ -18,6 +18,7 @@ using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
+using Logging;
 
 namespace Networking.Utils
 {
@@ -55,6 +56,8 @@ namespace Networking.Utils
         /// Reference to the <see cref="ICommunicator"/> interface
         /// </summary>
         private readonly ICommunicator _comm;
+        private readonly ManualResetEvent _queueEvent = new ( false );
+        private readonly object _lock = new ();
 
         /// <summary>
         /// Initializes a new instance of the Receiver class.
@@ -63,7 +66,7 @@ namespace Networking.Utils
         /// <param name="comm">Communicator interface for handling received messages.</param>
         public Receiver( Dictionary<string , NetworkStream> clientIdToStream , ICommunicator comm )
         {
-            Trace.WriteLine( "[Receiver] Init" );
+            Logger.Log( "[Receiver] Init" , LogLevel.INFO);
             _clientIdToStream = clientIdToStream;
             _recvThread = new Thread( Receive )
             {
@@ -83,9 +86,9 @@ namespace Networking.Utils
         /// </summary>
         public void Stop()
         {
-            Trace.WriteLine( "[Receiver] Stop" );
+            Logger.Log( "[Receiver] Stop" , LogLevel.INFO );
             _stopThread = true;
-
+            _queueEvent.Set();
             // Wait for the threads to terminate
             _recvThread.Join();
             _recvQueueThread.Join();
@@ -96,7 +99,7 @@ namespace Networking.Utils
         /// </summary>
         private void Receive()
         {
-            Trace.WriteLine( "[Receiver] Receive starts" );
+            Logger.Log( "[Receiver] Receive starts" , LogLevel.INFO );
 
             // Continue receiving messages until the thread is signaled to stop
             while (!_stopThread)
@@ -118,7 +121,7 @@ namespace Networking.Utils
                             System.Diagnostics.Trace.Assert( sizeBytesRead == sizeof( int ) );
                             int messageSize = BitConverter.ToInt32( sizeBytes , 0 );
 
-                            // Now read the actual message
+                            // Now read the actual message  
                             byte[] receiveData = new byte[messageSize];
                             int totalBytesRead = 0;
 
@@ -146,14 +149,17 @@ namespace Networking.Utils
                                     message.Data = Serializer.Serialize( data );
                                 }
                             }
-
-                            // Enqueue the received message with its priority
-                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ));
+                            lock (_lock)
+                            {
+                                // Enqueue the received message with its priority
+                                _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) );
+                                _queueEvent.Set();
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine( "Exception in receiver: " + ex.Message );
+                        Logger.Log( "Exception in receiver: " + ex.Message , LogLevel.ERROR );
                     }
                 }
 
@@ -164,7 +170,7 @@ namespace Networking.Utils
                 }
             }
 
-            Trace.WriteLine( "[Receiver] Receive stops" );
+            Logger.Log( "[Receiver] Receive stops" , LogLevel.INFO );
         }
 
 
@@ -175,22 +181,38 @@ namespace Networking.Utils
         {
             while (!_stopThread)
             {
-                if (!_recvQueue.canDequeue())
+                //if (!_recvQueue.canDequeue())
+                //{
+                //    // Wait for some time if the queue is empty to avoid busy-waiting
+                //    Thread.Sleep( 500 );
+                //    continue;
+                //}
+                _queueEvent.WaitOne();
+                if(_stopThread )
                 {
-                    // Wait for some time if the queue is empty to avoid busy-waiting
-                    Thread.Sleep( 500 );
-                    continue;
+                    break;
                 }
-
-                // Get the next message to process and process it based on the type of communicator
-                Message message = _recvQueue.Dequeue();
-                if (_comm is Client client)
+                lock(_lock)
                 {
-                    client.HandleMessage( message );
-                }
-                else if (_comm is Server server)
-                {
-                    server.HandleMessage( message );
+                    if (!_recvQueue.canDequeue())
+                    {
+                        continue;
+                        throw new Exception("Exception in receiver, queue is empty");
+                    }
+                    // Get the next message to process and process it based on the type of communicator
+                    Message message = _recvQueue.Dequeue();
+                    if (_comm is Client client)
+                    {
+                        client.HandleMessage( message );
+                    }
+                    else if (_comm is Server server)
+                    {
+                        server.HandleMessage( message );
+                    }
+                    if(!_recvQueue.canDequeue())
+                    {
+                        _queueEvent.Reset();
+                    }
                 }
             }
         }
