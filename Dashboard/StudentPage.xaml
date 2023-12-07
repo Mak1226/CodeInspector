@@ -38,6 +38,11 @@
             </Grid>
             <Grid Grid.Column="1">
                 <StackPanel x:Name="LogoutStack" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Ellipse Height="27" Width="27" Margin="3,3,3,3">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding StudentImage, Mode=OneWay}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
                     <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
                 </StackPanel>
             </Grid>
@@ -66,7 +71,7 @@
                 <StackPanel x:Name="ConnectionStack" Orientation="Horizontal" HorizontalAlignment="Right">
                     
                     <!--Connection Status-->
-                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,5,5,5" FontWeight="Bold">
+                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,7,5,5" FontWeight="Bold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="Disconnected" />

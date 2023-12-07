@@ -84,7 +84,7 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void StudentButton_Click( object sender , RoutedEventArgs e )
         {
-            StudentPage studentPage = new(UserName,UserId);
+            StudentPage studentPage = new(UserName,UserId,UserImage);
             NavigationService?.Navigate( studentPage );
         }
     }

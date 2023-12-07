@@ -39,6 +39,7 @@ namespace Dashboard
     {
         private readonly ServerPage _contentServerPage;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InstructorPage"/> class.
         /// </summary>
@@ -49,6 +50,7 @@ namespace Dashboard
             InitializeComponent();
             try
             {
+
                 // Create and set up the ViewModel
                 InstructorViewModel viewModel = new(userName,userId,userImage);
                 DataContext = viewModel;
@@ -69,13 +71,7 @@ namespace Dashboard
             }
         }
 
-        /// <summary>
-        /// Event handler for when the page is unloaded.
-        /// </summary>
-        private void InstructorPage_Unloaded( object sender , RoutedEventArgs e )
-        {
-            
-        }
+
 
         /// <summary>
         /// Event handler for the logout button click.
