@@ -12,6 +12,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
+using Analyzer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     //ClassLibrary1.dll is generated from the below class
 
@@ -74,7 +75,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             AsyncMethodAnalyzer analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

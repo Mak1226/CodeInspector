@@ -30,7 +30,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;   // Output message returned by the analyzer.
         private int _verdict;   // Verdict if the analyzer has passed or failed.
-        private readonly string _analyzerID;    // Unique ID for the analyzer.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractTypeNoPublicConstructor"/> analyzer with parsed DLL files.
@@ -40,7 +39,8 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "101";
+            analyzerID = "101";
+            Logger.Inform( $"[Analyzer][AbstractTypeNoPublicConstructor.cs] Created instance of analyzer AbstractTypeNoPublicConstructor" );
         }
 
         /// <summary>
@@ -50,6 +50,7 @@ namespace Analyzer.Pipeline
         /// <returns>List of all abstract types that have public constructors.</returns>
         private List<Type> FindAbstractTypeWithPublicConstructor(ParsedDLLFile parsedDLLFile) 
         {
+            Logger.Inform( $"[Analyzer][AbstractTypeNoPublicConstructor.cs] FindAbstractTypeWithPublicConstructor: Running analyzer on {parsedDLLFile.DLLFileName} " );
             List<Type> abstractTypesWithPublicConstructors = new();  // List which stores all abstract types that have public constructors.
             // Loop over all classes in the provided DLLs.
             foreach (ParsedClass classObj in parsedDLLFile.classObjList)
@@ -113,11 +114,11 @@ namespace Analyzer.Pipeline
             }
             catch (Exception ex)
             {
-                Logger.Debug( $"[Analyzer][AbstractTypeNoPublicConstructor] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message);
+                Logger.Error( $"[Analyzer][AbstractTypeNoPublicConstructor.cs] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message);
                 throw;
             }
-
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            Logger.Debug( $"[Analyzer][AbstractTypeNoPublicConstructor.cs] AnalyzeSingleDLL: Successfully finished analyzing {parsedDLLFile.DLLFileName} " );
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }

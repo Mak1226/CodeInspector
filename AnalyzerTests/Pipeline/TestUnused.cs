@@ -20,9 +20,10 @@ using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
+using Analyzer;
 
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     //TestUnused.dll
     //public class TestClass
@@ -84,7 +85,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -116,7 +117,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

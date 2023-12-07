@@ -25,13 +25,12 @@ namespace Analyzer.Pipeline
     {
         private List<string> _errorMessages;
         private int _verdict;
-        private readonly string _analyzerID;
 
         public AvoidSwitchStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessages = new List<string>();
             _verdict = 1;
-            _analyzerID = "107";
+            analyzerID = "107";
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Analyzer.Pipeline
                 _verdict = 0;
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, errorMessageString);
+            return new AnalyzerResult(analyzerID, _verdict, errorMessageString);
         }
 
         /// <summary>

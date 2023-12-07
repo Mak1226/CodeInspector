@@ -22,12 +22,11 @@ namespace Analyzer.Pipeline
     public class AvoidGotoStatementsAnalyzer : AnalyzerBase
     {
         private readonly List<string> _errorMessages;
-        private readonly string _analyzerID;
 
         public AvoidGotoStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessages = new List<string>();
-            _analyzerID = "117";
+            analyzerID = "117";
         }
 
         /// <summary>
@@ -41,13 +40,13 @@ namespace Analyzer.Pipeline
             // If no errors, add a message indicating everything looks fine
             if (_errorMessages.Count == 0)
             {
-                return new AnalyzerResult(_analyzerID, 1, "No goto statements found.");
+                return new AnalyzerResult(analyzerID, 1, "No goto statements found.");
             }
 
             // Create an error message string with the names of classes that have errors
             string errorMessageString = $"Goto statements found in classes: {string.Join(", ", _errorMessages)}.";
 
-            return new AnalyzerResult(_analyzerID, 0, errorMessageString);
+            return new AnalyzerResult(analyzerID, 0, errorMessageString);
         }
 
         /// <summary>

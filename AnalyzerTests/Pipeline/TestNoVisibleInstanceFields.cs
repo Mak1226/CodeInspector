@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Parsing;
 using System.Reflection;
+using Analyzer.Pipeline;
+using Analyzer;
 
 namespace TestNoVisibleInstanceFields
 {
@@ -60,10 +62,15 @@ namespace TestNoVisibleInstanceFields
     {
         public int native;
     }
+
+    public class HasConstantValue
+    {
+        public const int Value = 1;
+    }
         
 }
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Unit tests for NoVisibleInstanceFields analyzer.
@@ -230,6 +237,23 @@ namespace Analyzer.Pipeline.Tests
             List<ParsedDLLFile> parseddllFiles = new() { null };
             NoVisibleInstanceFields nativeFieldsShouldNotBeVisible = new(parseddllFiles);
             Assert.ThrowsException<NullReferenceException>( () => nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs() );
+        }
+
+        /// <summary>
+        /// Passes because class has const value.
+        /// <see cref = "TestNoVisibleInstanceFields.HasConstantValue"/>
+        /// </summary>
+        [TestMethod()]
+        public void TestHasConstantValue()
+        {
+            _parsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.FullName != "TestNoVisibleInstanceFields.HasConstantValue" );
+            List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
+
+            NoVisibleInstanceFields nativeFieldsShouldNotBeVisible = new( parseddllFiles );
+            Dictionary<string , AnalyzerResult> result = nativeFieldsShouldNotBeVisible.AnalyzeAllDLLs();
+
+            Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
+            Assert.AreEqual( 1 , result[_parsedDLL.DLLFileName].Verdict );
         }
     }
 }

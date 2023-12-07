@@ -20,8 +20,9 @@ using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
+using Analyzer;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     public class BaseClass
     {
@@ -65,7 +66,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DepthOfInheritance analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             Dictionary<Type , int> depthMap = analyzer.CalculateDepthOfInheritance( dllFile );

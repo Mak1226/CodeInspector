@@ -30,6 +30,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public DepthOfInheritance(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
+            analyzerID = "105";
             // The constructor can be used for any necessary setup or initialization.
             // In this case, it sets the parsedDLLFiles field with the provided DLL files.
         }
@@ -108,10 +109,10 @@ namespace Analyzer.Pipeline
                     errorMessageBuilder.AppendLine($"{classType.FullName}: Depth - {depth}");
                 }
 
-                return new AnalyzerResult("105", 0 , errorMessageBuilder.ToString());
+                return new AnalyzerResult(analyzerID, 0 , errorMessageBuilder.ToString());
             }
             // No violations, return a success result
-            return new AnalyzerResult("105", 1 , "Depth of inheritance rule followed by all classes.");
+            return new AnalyzerResult(analyzerID, 1 , "Depth of inheritance rule followed by all classes.");
         }
     }
 }

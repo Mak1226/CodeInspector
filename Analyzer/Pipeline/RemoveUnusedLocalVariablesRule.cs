@@ -36,6 +36,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public RemoveUnusedLocalVariablesRule( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
+            analyzerID = "109";
             // The constructor sets the parsedDLLFiles field with the provided DLL files.
         }
 
@@ -61,7 +62,7 @@ namespace Analyzer.Pipeline
                 ? $"There are {totalUnusedLocals} unused local variables"
                 : "No unused local variables found.";
             int verdict = totalUnusedLocals > 0 ? 0 : 1;
-            return new AnalyzerResult( "109" , verdict , errorString );
+            return new AnalyzerResult(analyzerID , verdict , errorString );
         }
 
         /// <summary>

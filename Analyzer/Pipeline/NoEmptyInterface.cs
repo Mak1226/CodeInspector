@@ -14,6 +14,7 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
+using Logging;
 using System.Diagnostics;
 using System.Text;
 
@@ -26,7 +27,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;   // Output message returned by the analyzer.
         private int _verdict;   // Verdict if the analyzer has passed or failed.
-        private readonly string _analyzerID;    // Unique ID for the analyzer.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NoEmptyInterface"/> analyzer with parsed DLL files.
@@ -36,7 +36,9 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "104";
+            analyzerID = "104";
+            Logger.Inform( $"[Analyzer][NoEmptyInterface.cs] Created instance of analyzer NoEmptyInterface" );
+
         }
 
         /// <summary>
@@ -46,6 +48,8 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile">DLL file to be analyzed.</param>
         public List<Type> FindEmptyInterfaces(ParsedDLLFile parsedDLLFile)
         {
+            Logger.Inform( $"[Analyzer][NoEmptyInterface.cs] FindEmptyInterfaces: Running analyzer on {parsedDLLFile.DLLFileName} " );
+
             List<Type> emptyInterfaceList = new();
 
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
@@ -97,15 +101,17 @@ namespace Analyzer.Pipeline
                 }
                 else
                 {
-                    _errorMessage = "No violation found.";
+                    _errorMessage = "No violation found.\r\n";
                 }
             }
-            catch (NullReferenceException ex)
+            catch (Exception ex)
             {
+                Logger.Error( $"[Analyzer][NoEmptyInterface.cs] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message );
                 throw;
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            Logger.Debug( $"[Analyzer][NoEmptyInterface.cs] AnalyzeSingleDLL: Successfully finished analyzing {parsedDLLFile.DLLFileName} " );
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }

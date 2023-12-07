@@ -48,7 +48,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { };
 
-            byte[] imageBytes = classDiag.Run(removableNamespaces).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes(removableNamespaces).Result;
 
             Console.WriteLine(imageBytes);
             Console.WriteLine(imageBytes.Length);
@@ -78,7 +78,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -87,7 +87,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out2.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out2.svg" , imageBytes );
             }
         }
 
@@ -108,7 +108,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer", "Mono.Cecil" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -117,7 +117,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out3.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out3.svg" , imageBytes );
             }
         }
 
@@ -138,7 +138,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "AnalyzerTests.Pipeline" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -147,7 +147,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out4.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out4.svg" , imageBytes );
             }
         }
 
@@ -168,7 +168,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Analyzer.Pipeline" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -177,7 +177,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out5.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out5.svg" , imageBytes );
             }
         }
 
@@ -198,7 +198,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -207,7 +207,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out6.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out6.svg" , imageBytes );
             }
         }
 
@@ -229,7 +229,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil.Instruction" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -238,7 +238,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out7.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out7.svg" , imageBytes );
             }
         }
 
@@ -260,7 +260,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil.Instruction" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -269,7 +269,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out8.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out8.svg" , imageBytes );
             }
         }
 
@@ -290,7 +290,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -299,7 +299,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out9.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out9.svg" , imageBytes );
             }
         }
 
@@ -320,7 +320,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "TypeRelationships" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -329,7 +329,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out10.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out10.svg" , imageBytes );
             }
         }
     }

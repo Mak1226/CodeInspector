@@ -13,12 +13,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Analyzer.Parsing;
-using System.IO;
+using Analyzer;
 using System.Reflection;
 
 namespace AbstractClassWithPublicConstructor
@@ -141,7 +137,7 @@ namespace AbstractClassWithPublicConstructor
     }
 }
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Unit tests for AbstractTypeNoPublicConstructor analyzer.

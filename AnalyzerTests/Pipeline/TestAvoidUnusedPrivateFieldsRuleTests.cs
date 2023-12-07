@@ -15,9 +15,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using Analyzer.Parsing;
+using Analyzer.Pipeline;
 using Mono.Cecil;
+using Analyzer;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Test class for test TestClassWithUnusedPrivateFields

@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
+using Logging;
 using PlantUml.Net;
 using System.Text;
 
@@ -53,8 +54,9 @@ namespace Analyzer.UMLDiagram
         /// Provides image bytes of class diagram
         /// </summary>
         /// <returns>Byte array that forms the image.</returns>
-        public async Task<byte[]> Run(List<string> removableNamespaces)
+        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces)
         {
+            Logger.Inform( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Started creating bytes for image" );
             CreateStringForRendering(removableNamespaces);
             var factory = new RendererFactory();
             IPlantUmlRenderer renderer = factory.CreateRenderer(new PlantUmlSettings());
@@ -76,15 +78,16 @@ namespace Analyzer.UMLDiagram
                 }
                 else
                 {
+                    Logger.Debug( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Successfully created bytes for image" );
                     return Array.Empty<byte>();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Couldn't render image ", ex);
+                Logger.Error( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Exception while rendering image " + ex.Message );
+                throw;
             }
         }
-
 
         /// <summary>
         /// Generates the plantUML code(string) in the required format from the class relationships.
@@ -162,6 +165,7 @@ namespace Analyzer.UMLDiagram
                     }
                 }
             }
+            Logger.Inform( "[Analyzer][ClassDiagram.cs] CreateStringForRendering: Removed namespaces" );
 
             // End of plantUMLCode
             _plantUMLCode.Append("\r\n@enduml");
