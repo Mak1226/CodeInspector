@@ -33,28 +33,38 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            
+            <!-- One way mode required? -->
             <Grid Grid.Row="0">
+                <Ellipse Height="35" Width="35" Margin="182,15,182,0">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding UserImage}" />
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+            <Grid Grid.Row="1">
                 <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Name: " />
                      <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>-->
                 <StackPanel x:Name="NameStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name:" Margin="10,10,10,10" />
-                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25" />
+                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </StackPanel>
             </Grid>
             
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="2">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="User Id: " />  
                      <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold" FontFamily="Null"/>
                 </TextBlock>
             </Grid>
 
-            <Grid Grid.Row="2">
-                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,15,236,29" />
-                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,15,75,29" />
+            <Grid Grid.Row="3">
+                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,0,236,0" />
+                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,0,75,0" />
             </Grid>
 
         </Grid>

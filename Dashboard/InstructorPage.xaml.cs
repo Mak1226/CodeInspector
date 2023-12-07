@@ -70,14 +70,6 @@ namespace Dashboard
         }
 
         /// <summary>
-        /// Event handler for when the page is unloaded.
-        /// </summary>
-        private void InstructorPage_Unloaded( object sender , RoutedEventArgs e )
-        {
-            
-        }
-
-        /// <summary>
         /// Event handler for the logout button click.
         /// </summary>
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
