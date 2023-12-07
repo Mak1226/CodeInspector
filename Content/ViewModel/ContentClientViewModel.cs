@@ -24,6 +24,8 @@ namespace Content.ViewModel
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
 
+        private bool _isDarkMode;
+
         /// <summary>
         /// Property change event
         /// </summary>
@@ -105,6 +107,23 @@ namespace Content.ViewModel
         public void HandleUpload(string path)
         {
             _contentClient.HandleUpload(path);
+
+        }
+
+        /// <summary>
+        /// Function to check if the app is in dark mode or light mode
+        /// </summary>
+        public bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set
+            {
+                if (_isDarkMode != value)
+                {
+                    _isDarkMode = value;
+                    OnPropertyChanged( nameof( IsDarkMode ) );
+                }
+            }
         }
     }
 }

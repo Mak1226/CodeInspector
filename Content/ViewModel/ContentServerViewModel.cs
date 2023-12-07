@@ -35,6 +35,9 @@ namespace Content.ViewModel
         private List<AnalyzerConfigOption> _configOptionsList;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
         private List<string> _uploadedFiles = new();
+        private bool _isDarkMode;
+
+        
 
         /// <summary>
         /// Property change event
@@ -173,6 +176,22 @@ namespace Content.ViewModel
         /// Binding to show which all files are uploaded
         /// </summary>
         public string UploadedFiles => string.Join( "," , _uploadedFiles );
+
+        /// <summary>
+        /// Function to check if the app is in dark mode or light mode
+        /// </summary>
+        public bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set
+            {
+                if (_isDarkMode != value)
+                {
+                    _isDarkMode = value;
+                    OnPropertyChanged( nameof( IsDarkMode ) );
+                }
+            }
+        }
 
         private void OnPropertyChanged(string propertyName)
         {

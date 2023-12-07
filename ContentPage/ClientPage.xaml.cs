@@ -15,6 +15,7 @@ using Content.Model;
 using Networking.Communicator;
 using System.Diagnostics;
 using System.Windows.Controls;
+using System.Windows; 
 
 
 namespace ContentPage
@@ -37,6 +38,7 @@ namespace ContentPage
             InitializeComponent();
             _viewModel = new ContentClientViewModel(new ContentClient(client, sessionID));
             DataContext = _viewModel;
+           
             Trace.WriteLine( "Navigating to FileUpload and ResultPage" );
             UploadFrame.Navigate(new FileUpload(_viewModel));
             ResultFrame.Navigate(new ResultPage(_viewModel));
