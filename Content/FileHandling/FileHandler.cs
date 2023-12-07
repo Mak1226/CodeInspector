@@ -105,7 +105,8 @@ namespace Content.FileHandling
             encoding = Serializer.Serialize( sendData );
 
             _filesList = dllFiles;
-            Logger.Debug( $"[FileHandler.cs] HandleUpload: {encoding}" );
+            //Logger.Debug( $"[FileHandler.cs] HandleUpload: {encoding}" ); This takes 80% of the log
+            Logger.Debug( $"[FileHandler.cs] HandleUpload: {string.Join(',', _filesList)}" );
             Logger.Inform( "[FileHandler.cs] HandleUpload: Done" );
             return encoding;
         }

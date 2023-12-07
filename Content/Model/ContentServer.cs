@@ -35,8 +35,6 @@ namespace Content.Model
         readonly IAnalyzer _analyzer;
 
         string? _sessionID;
-        string? _fileEncoding;
-        string? _resultEncoding;
 
         IDictionary<int , bool> _configuration;
         internal IDictionary<int , bool> Configuration
@@ -117,7 +115,6 @@ namespace Content.Model
         public void HandleRecieve( string encodedFiles , string? clientID )
         {
             Logger.Inform( "[ContentServer.cs] HandleReceive: Started" );
-            _fileEncoding = encodedFiles;
             IFileHandler _fileHandler = new FileHandler();
             ISerializer _serializer = new AnalyzerResultSerializer();
 
@@ -141,12 +138,11 @@ namespace Content.Model
                 Logger.Debug( "[ContentServer.cs] HandleReceive: Inside SessionLock" );
                 // Analyse DLL files
                 _analyzer.LoadDLLFileOfStudent( _fileHandler.GetFiles() );
-                Logger.Debug( $"[ContentServer.cs] HandleReceive: Loaded Student DLL files at {_fileHandler.GetFiles()}" );
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Loaded Student DLL files" );
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
 
                 _sessionAnalysisResultDict[recievedSessionID] = res;
                 string serializedResults = _serializer.Serialize( res );
-                _resultEncoding = serializedResults;
                 _server.Send( serializedResults , "Content-Results" , clientID );
                 Logger.Debug( $"[ContentServer.cs] HandleReceive: Sending result {serializedResults}" );
                 if (_sessionID == recievedSessionID)
@@ -244,12 +240,18 @@ namespace Content.Model
 
             Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
-            Task.Run( ()
-                => cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() ) );
-            Task.Run( ()
-                => cloudHandler.PostSubmissionAsync( _hostSessionID , _fileEncoding ) );
-            Task.Run( ()
-                => cloudHandler.PostSubmissionAsync( _hostSessionID , _resultEncoding ) );
+            Logger.Debug( $"[ContentServer.cs] SentToCloud : Session :: {_hostSessionID}" );
+            _ = cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            foreach (KeyValuePair<string , Dictionary<string , List<AnalyzerResult>>> kvp in _sessionAnalysisResultDict)
+            {
+                Logger.Debug( $"[ContentServer.cs] SentToCloud : Analysis :: {kvp.Key}" );
+                _ = cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
+
+                IFileHandler fileHandler = new FileHandler();
+                string encoding = fileHandler.HandleUpload(kvp.Key, kvp.Key);
+                Logger.Debug( $"[ContentServer.cs] SentToCloud : Submission :: {kvp.Key}" );
+                _ = cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
+            }
             Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
 
