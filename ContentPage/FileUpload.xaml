@@ -14,7 +14,11 @@
         <Button
             x:Name="UploadButton"
             Click="UploadButton_Click"
+            Width="150" Height="40"
             Content="Choose a file to upload" />
-        <TextBlock Text="{Binding Status}" Background="{Binding StatusColor}" TextAlignment="Center"></TextBlock>
+        <TextBlock 
+            Text="{Binding Status}" 
+            Background="{Binding StatusColor}"
+            TextAlignment="Center"/>
     </StackPanel>
 </Page>

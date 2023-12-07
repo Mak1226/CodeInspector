@@ -189,11 +189,10 @@ namespace Content.Model
         /// Loads custom DLLs for additional analyzers.
         /// </summary>
         /// <param name="filePaths">The list of file paths for the custom DLLs.</param>
-        public void LoadCustomDLLs(List<string> filePaths)
+        public List<Tuple<int, string>> LoadCustomDLLs(List<string> filePaths)
         {
-            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Started" );
-            _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
-            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Done" );
+            Logger.Inform( $"[ContentServer.cs] LoadCustomDLLs {filePaths}" );
+            return _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
         }
 
         /// <summary>

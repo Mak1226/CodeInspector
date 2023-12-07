@@ -33,6 +33,7 @@ namespace Content.ViewModel
         private readonly ContentServer _contentServer;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
+        //private List<AnalyzerConfigOption> _teacherConfigOptionsList;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
         private List<string> _uploadedFiles = new();
 
@@ -73,6 +74,7 @@ namespace Content.ViewModel
                     IsSelected = isSelected // Set the default value for IsSelected as needed
                 });
             }
+            //_teacherConfigOptionsList = new List<AnalyzerConfigOption>();
             _analyzerResults = _contentServer.analyzerResult;
         }
 
