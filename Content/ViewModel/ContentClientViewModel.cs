@@ -46,6 +46,7 @@ namespace Content.ViewModel
             {
                 _status = status;
                 OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(StatusColor));
             };
             _analyzerResults = _contentClient.analyzerResult;
         }
@@ -104,8 +105,37 @@ namespace Content.ViewModel
         /// </summary>
         public string Status
         {
-            get => _status.ToString();
+            get
+            {
+                return _status switch
+                {
+                    ContentClient.StatusType.NONE => "Upload files to send to the instructor",
+                    ContentClient.StatusType.WAITING => "Waiting for response from instructor",
+                    ContentClient.StatusType.SUCCESS => "Files successfully analyzed",
+                    ContentClient.StatusType.FAILURE => "Failed to analyze files. Please re-send",
+                    _ => "Unknown error",
+                };
+            }
             set { throw new FieldAccessException();  }
+        }
+
+        /// <summary>
+        /// Get the color of the status block
+        /// </summary>
+        public string StatusColor
+        {
+            get
+            {
+                return _status switch
+                {
+                    ContentClient.StatusType.NONE => "LightGray",
+                    ContentClient.StatusType.WAITING => "AliceBlue",
+                    ContentClient.StatusType.SUCCESS => "LimeGreen",
+                    ContentClient.StatusType.FAILURE => "Red",
+                    _ => "Unknown error",
+                };
+            }
+            set { throw new FieldAccessException(); }
         }
 
         private void OnPropertyChanged(string propertyName)

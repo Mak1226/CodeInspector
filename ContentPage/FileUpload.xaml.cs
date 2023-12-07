@@ -36,6 +36,7 @@ namespace ContentPage
         {
             Trace.WriteLine( "Initializing FileUpload" );
             _client = client;
+            DataContext = client;
             InitializeComponent();
         }
 
