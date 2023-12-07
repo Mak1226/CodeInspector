@@ -17,8 +17,14 @@
     <None Remove="Fonts\ProtoMono-SemiBold.ttf" />
     <None Remove="Fonts\ProtoMono-SemiBoldShadow.ttf" />
     <None Remove="Image\Analyzer.png" />
+    <None Remove="Image\backgrnd.jpg" />
+    <None Remove="Image\bettergoogle.png" />
     <None Remove="Image\close.png" />
     <None Remove="Image\google.png" />
+    <None Remove="Image\logo.png" />
+    <None Remove="Image\name_trans.png" />
+    <None Remove="Image\no_name_trans.png" />
+    <None Remove="Image\supergoog.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +52,10 @@
     <Content Include="Fonts\ProtoMono-SemiBoldShadow.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Image\backgrnd.jpg" />
+    <Resource Include="Image\bettergoogle.png" />
+    <Resource Include="Image\name_trans.png" />
+    <Content Include="Image\no_name_trans.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +79,10 @@
     <Resource Include="Image\google.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Image\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\supergoog.jpg" />
   </ItemGroup>
 
 </Project>

@@ -37,11 +37,12 @@ namespace ViewModel
         /// <param name="name">The name of the student.</param>
         /// <param name="id">The ID of the student.</param>
         /// <param name="communicator">The communicator interface parameter.</param>
-        public StudentViewModel( string name , string id, ICommunicator? communicator = null)
+        public StudentViewModel( string name , string id , string userImage , ICommunicator? communicator = null)
         {
             Client = communicator ?? CommunicationFactory.GetClient();
             StudentName = name;
             StudentRoll = id;
+            StudentImage = userImage;
             IpAddress = GetPrivateIp();
 
             Logger.Inform( $"[StudentViewModel] ViewModel created with name: {name}, id: {id}, Ip: {IpAddress}" );
@@ -94,10 +95,20 @@ namespace ViewModel
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Gets the name of the student.
+        /// </summary>
         public string StudentName { get; private set; }
 
+        /// <summary>
+        /// Gets the user ID of the student.
+        /// </summary>
         public string StudentRoll { get; private set; }
 
+        /// <summary>
+        /// Gets the user image of the student.
+        /// </summary>
+        public string StudentImage { get; init; }
         public ICommunicator Client { get; }
 
         /// <summary>
