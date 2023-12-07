@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using System.Diagnostics;
+using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -105,6 +106,43 @@ namespace Analyzer.Parsing
             }
             Trace.WriteLine( "Updated the Relationships List for " + type.FullName );
             Trace.WriteLine( "ParsedMonoCecil Obj creation Completed for " + type.FullName );
+
+
+            // Properties,events handlers will be coming to methods list when used GetMethods() as described above
+            List<EventDefinition> events = new();
+            if(TypeObj?.Events != null)
+            {
+                events = TypeObj.Events.ToList();
+            }
+
+            if (PropertiesList.Count > 0 || events.Count > 0)
+            {
+                List<MethodDefinition> methodInfos = new(MethodsList);
+                List<string> propertiesNames = new( PropertiesList.Select( property => property.Name ) );
+                List<string> eventHandlersNames = new( events.Select( eventInfo => eventInfo.Name ) );
+
+                foreach (MethodDefinition method in MethodsList)
+                {
+                    string methodName = method.Name;
+
+                    if ((methodName.StartsWith( "get_" ) || methodName.StartsWith( "set_" )) && propertiesNames.Contains( methodName.Substring( 4 , methodName.Length - 4 ) ))
+                    {
+                        methodInfos.Remove( method );
+                    }
+
+                    if (methodName.StartsWith( "add_" ) && eventHandlersNames.Contains( methodName.Substring( 4 , methodName.Length - 4 ) ))
+                    {
+                        methodInfos.Remove( method );
+                    }
+
+                    if (methodName.StartsWith( "remove_" ) && eventHandlersNames.Contains( methodName.Substring( 7 , methodName.Length - 7 ) ))
+                    {
+                        methodInfos.Remove( method );
+                    }
+                }
+
+                MethodsList = methodInfos;
+            }
 
 
             //// This is commented so that it will be used later if required

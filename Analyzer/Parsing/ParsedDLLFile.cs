@@ -67,8 +67,8 @@ namespace Analyzer.Parsing
                             continue;
                         }
                     }
-                    
-                    if(type.IsClass && type.FullName != "<Module>")
+
+                    if (type.IsClass && type.FullName != "<Module>")
                     {
                         // To avoid structures and delegates
                         if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))
@@ -125,6 +125,11 @@ namespace Analyzer.Parsing
                 // Releasing the assembly resources
                 assemblyDef.Dispose();
             }
+        }
+
+        private bool IsCompilerGenerated( Type type )
+        {
+            return type.GetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>() != null;
         }
     }
 }

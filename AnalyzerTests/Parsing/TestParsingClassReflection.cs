@@ -223,6 +223,27 @@ namespace AnalyzerTests.Parsing
             // no property case
             Assert.AreEqual(0, SampleClass3_Demo2.Properties.Length);
         }
+
+
+        // can be removed later
+        [TestMethod]
+        public void NoUseSampleMethod()
+        {
+            Console.WriteLine(SampleClass1_Demo2.Properties[0].Name);
+            Console.WriteLine( SampleClass1_Demo2.Properties[0].GetType().Name);
+            Console.WriteLine( SampleClass1_Demo2.Methods[0].Name );
+            Console.WriteLine( SampleClass1_Demo2.Methods[0].IsSpecialName);
+
+            Console.WriteLine( SampleClass4_Demo2.Properties[0].Name );
+            Console.WriteLine( SampleClass4_Demo2.Properties[0].GetType().Name );
+
+            Console.WriteLine( "=============" );
+            foreach(var member in briefViewClass_Bridge.TypeObj.GetMembers())
+            {
+                Console.WriteLine( member.Name );
+                Console.WriteLine( member.MemberType );
+            }
+        }
     }
 }
 

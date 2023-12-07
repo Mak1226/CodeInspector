@@ -107,7 +107,7 @@ namespace TestParsedMonoCecil
 
     public class BMW : Car, IBMWSpec
     {
-        private string _name = "BMW";
+        private readonly string _name = "BMW";
         public int seatCapacity;
         public BMW()
         {
@@ -117,7 +117,11 @@ namespace TestParsedMonoCecil
 
         public string Name
         {
-            get { return _name; }
+            get 
+            {
+                Console.WriteLine();
+                return _name; 
+            }
         }
         public void Drive()
         {
