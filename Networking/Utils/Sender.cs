@@ -16,6 +16,7 @@ using System.Diagnostics;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
+using Logging;
 
 namespace Networking.Utils
 {
@@ -67,7 +68,7 @@ namespace Networking.Utils
             _stopThread = false;
             _senderIdToClientId=senderIdToClientId;
             _isClient = isClient;
-            Trace.WriteLine("[Sender] Init");
+            Logger.Log("[Sender] Init",LogLevel.INFO);
             _clientIdToStream = clientIdToStream;
             _sendThread = new Thread(SendLoop)
             {
@@ -82,7 +83,7 @@ namespace Networking.Utils
         public void Stop()
         {
 
-            Trace.WriteLine("[Sender] Stop");
+            Logger.Log("[Sender] Stop" , LogLevel.INFO );
             _stopThread = true;
             _queueEvent.Set();
             _sendThread.Join();
@@ -142,7 +143,7 @@ namespace Networking.Utils
                 }
             }
             catch(Exception e) {
-                Trace.WriteLine( "Exception in Sender:SendToDest " +e.Message);
+                Logger.Log( "Exception in Sender:SendToDest " +e.Message , LogLevel.ERROR );
             }
 
         }
@@ -203,8 +204,7 @@ namespace Networking.Utils
                     }
                     catch (Exception e)
                     {
-                        Trace.WriteLine( "Cannot send message to " + message.DestId );
-                        Trace.WriteLine( e.Message );
+                        Logger.Log( "Cannot send message to " + message.DestId +"due to error "+ e.Message , LogLevel.ERROR );
                     }
                     if (!_sendQueue.canDequeue())
                     {
