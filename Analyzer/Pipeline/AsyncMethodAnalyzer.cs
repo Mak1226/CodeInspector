@@ -11,7 +11,6 @@
  *****************************************************************************/
 
 using Analyzer.Parsing;
-using System.Collections.Generic;
 using Mono.Cecil;
 
 namespace Analyzer.Pipeline

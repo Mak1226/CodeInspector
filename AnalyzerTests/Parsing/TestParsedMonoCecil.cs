@@ -8,16 +8,9 @@
 * Description = Testing the generation of ParsedClassMonoCecil Object
 *****************************************************************************/
 
+using System.Reflection;
 using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
 
 namespace AnalyzerTests.Pipeline
 {

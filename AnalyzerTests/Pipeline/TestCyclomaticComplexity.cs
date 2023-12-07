@@ -11,11 +11,11 @@
 *               (checks the complexity of different methods in the DLL)
 *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
+using Analyzer;
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
-using Analyzer;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mono.Cecil;
 
 

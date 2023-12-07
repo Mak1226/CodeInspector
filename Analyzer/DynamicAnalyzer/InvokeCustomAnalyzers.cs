@@ -8,9 +8,8 @@
 * Description = Utility class for invoking custom analyzers on student DLL files.
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using System.Diagnostics;
 using System.Reflection;
+using Analyzer.Parsing;
 using Logging;
 
 namespace Analyzer.DynamicAnalyzer

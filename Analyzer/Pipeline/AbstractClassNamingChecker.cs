@@ -10,13 +10,8 @@
 * Description = Analyzer to check whether abstract classes are Pascal cased and have a 'Base' suffix or not.
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

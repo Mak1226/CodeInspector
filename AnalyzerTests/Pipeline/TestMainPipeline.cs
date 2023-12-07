@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
+﻿using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AnalyzerTests.Pipeline
 {

@@ -11,16 +11,8 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using Analyzer.Pipeline;
 using Analyzer.UMLDiagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PlantUml.Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {

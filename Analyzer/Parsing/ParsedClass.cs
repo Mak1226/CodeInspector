@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using System.Reflection;
+using Logging;
 
 
 namespace Analyzer.Parsing
@@ -43,6 +44,7 @@ namespace Analyzer.Parsing
         /// <param name="type">class object when parsed using System.reflection</param>
         public ParsedClass(Type type)
         {
+            Logger.Inform("[ParsedClass.cs] ParsedClass: Started for " + type.Name);
             TypeObj = type;
             Name = type.Name;
             Interfaces = Array.Empty<Type>();
@@ -94,6 +96,7 @@ namespace Analyzer.Parsing
 
             //    Fields = fields.ToArray();
             //}
+            Logger.Inform( "[ParsedClass.cs] ParsedClass: Ended for " + type.Name );
         }
 
 

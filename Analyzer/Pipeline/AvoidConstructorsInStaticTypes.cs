@@ -8,10 +8,10 @@
 * Description = This Analyzer throws error if any class with all static members have a public non-static constructor.
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using Logging;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Analyzer.Parsing;
+using Logging;
 
 
 namespace Analyzer.Pipeline

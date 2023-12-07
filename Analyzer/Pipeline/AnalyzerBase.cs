@@ -12,7 +12,6 @@
 * Description = A base class providing a common structure for various analyzers.
 ******************************************************************************/
 
-using System.Diagnostics;
 using Analyzer.Parsing;
 using Logging;
 

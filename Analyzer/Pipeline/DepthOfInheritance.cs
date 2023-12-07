@@ -10,12 +10,8 @@
  * Description = Class that implements Depth Of Inheritance Check Analyser
  *****************************************************************************/
 
-using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

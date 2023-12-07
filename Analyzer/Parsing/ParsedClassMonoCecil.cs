@@ -10,10 +10,9 @@
 * Description = Parses the most used information from the class object using Mono.Cecil package
 *****************************************************************************/
 
-using System.Diagnostics;
+using Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
 
 namespace Analyzer.Parsing
 {
@@ -47,7 +46,7 @@ namespace Analyzer.Parsing
 
         public ParsedClassMonoCecil(TypeDefinition type)
         {
-            Trace.WriteLine("Creating ParsedMonoCecil Obj for " + type.FullName);
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Creating ParsedMonoCecil Obj for " + type.FullName );
             TypeObj = type;
             Name = type.Name;
 
@@ -94,7 +93,7 @@ namespace Analyzer.Parsing
             FieldsList = TypeObj.Fields.ToList();
             PropertiesList = TypeObj.Properties.ToList();
 
-            Trace.WriteLine( "Extracting Relationships List for " + type.FullName );
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Extracting Relationships List for " + type.FullName); 
             //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
             if (!TypeObj.GetType().IsGenericType)
             {
@@ -103,8 +102,9 @@ namespace Analyzer.Parsing
                 UpdateAggregationList();
                 UpdateUsingList();
             }
-            Trace.WriteLine( "Updated the Relationships List for " + type.FullName );
-            Trace.WriteLine( "ParsedMonoCecil Obj creation Completed for " + type.FullName );
+
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Updated the Relationships List for " + type.FullName );
+            Logger.Inform( "[ParsedClassMonoCecil.cs] ParsedMonoCecil Obj creation Completed for " + type.FullName );
 
 
             //// This is commented so that it will be used later if required
@@ -356,7 +356,7 @@ namespace Analyzer.Parsing
         /// </summary>
         private void UpdateAggregationList()
         {
-            Trace.WriteLine( "Aggregation" );
+            Logger.Inform( "[ParsedClassMonoCecil.cs] UpdateAggregationList started");
 
             // Aggregation List:
             // Cases1: If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
@@ -451,7 +451,7 @@ namespace Analyzer.Parsing
                     }
                     catch (Exception ex) 
                     {
-                        Trace.WriteLine( ex.Message );
+                        Logger.Debug( "[ParsedClassMonoCecil.cs] UpdateUsingList: " + ex.Message );
                         continue;
                     }
                 }

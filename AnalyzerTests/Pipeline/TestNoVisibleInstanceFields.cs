@@ -10,16 +10,11 @@
 * Description = Unit Tests for NoVisibleInstanceFields.cs
 *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Parsing;
 using System.Reflection;
-using Analyzer.Pipeline;
 using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestNoVisibleInstanceFields
 {

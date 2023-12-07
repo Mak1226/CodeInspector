@@ -10,12 +10,11 @@
 * Description = Unit Tests for AbstractTypeNoPublicConstructor.cs
 *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using Analyzer.Parsing;
-using Analyzer;
 using System.Reflection;
+using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AbstractClassWithPublicConstructor
 {

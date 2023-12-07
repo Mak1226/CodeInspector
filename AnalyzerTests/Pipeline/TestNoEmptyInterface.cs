@@ -10,16 +10,10 @@
 * Description = Unit Tests for NoEmptyInterface.cs
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using Analyzer;
-using Analyzer.Pipeline;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Analyzer;
+using Analyzer.Parsing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NoEmptyInterface
 {

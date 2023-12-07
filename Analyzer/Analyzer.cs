@@ -20,9 +20,9 @@
 * - Runs multiple custom analyzers specified by the teacher on students dll files.
 ******************************************************************************/
 
+using System.Diagnostics;
 using Analyzer.DynamicAnalyzer;
 using Analyzer.Pipeline;
-using System.Diagnostics;
 using Logging;
 
 namespace Analyzer
