@@ -162,18 +162,18 @@ namespace ViewModel
             }
         }
 
-            /// <summary>
-            /// Disconnects from the instructor.
-            /// </summary>
-            public void DisconnectInstructor()
-            {
-                string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
+        /// <summary>
+        /// Disconnects from the instructor.
+        /// </summary>
+        public void DisconnectInstructor()
+        {
+            string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
             
-                if (InstructorIp != null && InstructorPort != null)
-                {
-                    Client.Send(message, "server");
-                }
+            if (InstructorIp != null && InstructorPort != null)
+            {
+                Client.Send(message, "server");
             }
+        }
         /// <summary>
         /// Connects to the instructor.
         /// </summary>
