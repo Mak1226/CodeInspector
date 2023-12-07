@@ -11,23 +11,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ServerlessFunc;
 using Cloud_UX;
-using System.Diagnostics;
-using System.Collections;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ServerlessFunc;
 
 namespace ServerlessFuncUI
 {
@@ -44,28 +33,28 @@ namespace ServerlessFuncUI
         public InsightPage4 insight_page_4;
         public InsightPage5 insight_page_5;
         public InsightPage6 insight_page_6;
-        public SessionsPage(string _HostName)
+        public SessionsPage( string _HostName )
         {
             InitializeComponent();
             userName = _HostName;
-            _viewModel = new SessionsViewModel(userName);
+            _viewModel = new SessionsViewModel( userName );
             DataContext = _viewModel;
             _viewModel.PropertyChanged += Listener;
             sessions = new List<SessionEntity> { };
-            Trace.WriteLine("[Cloud] Session View created Successfully");
+            Trace.WriteLine( "[Cloud] Session View created Successfully" );
             insight_page_1 = new InsightPage1();
-            insight_page_2 = new InsightPage2(userName);
-            insight_page_3 = new InsightPage3(userName);
-            insight_page_4 = new InsightPage4(userName);
-            insight_page_5 = new InsightPage5(userName);
+            insight_page_2 = new InsightPage2( userName );
+            insight_page_3 = new InsightPage3( userName );
+            insight_page_4 = new InsightPage4( userName );
+            insight_page_5 = new InsightPage5( userName );
             insight_page_6 = new InsightPage6();
 
 
-            Trace.WriteLine("Bargraph page created");
+            Trace.WriteLine( "Bargraph page created" );
             SubmissionsPage.Content = insight_page_1;
 
         }
-     
+
         private readonly SessionsViewModel _viewModel;
 
         public IReadOnlyList<SessionEntity>? sessions;
@@ -75,21 +64,21 @@ namespace ServerlessFuncUI
         /// <summary>
         /// OnPropertyChange handler to handle the change of sessions variable.
         /// </summary>
-        private void Listener(object sender, PropertyChangedEventArgs e)
+        private void Listener( object sender , PropertyChangedEventArgs e )
         {
             sessions = _viewModel.ReceivedSessions;
-            
+
             if (sessions?.Count == 0)
             {
                 Label label = new()
                 {
-                    Content = "No Sessions Conducted",
-                    Foreground = new SolidColorBrush(Colors.White),
-                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    Content = "No Sessions Conducted" ,
+                    Foreground = new SolidColorBrush( Colors.White ) ,
+                    HorizontalContentAlignment = HorizontalAlignment.Center ,
                     FontSize = 16
                 };
-                Stack.Children.Add(label);
-                Trace.WriteLine("[Cloud] No Sessions Conducted by " + UserName);
+                Stack.Children.Add( label );
+                Trace.WriteLine( "[Cloud] No Sessions Conducted by " + UserName );
 
                 return;
             }
@@ -98,7 +87,7 @@ namespace ServerlessFuncUI
              * Building the UI when there are list of sessions conducted. 
              * Adding Buttons for each session the host has conducted.
              */
-            Trace.WriteLine("[Cloud] Sessions data received to view");
+            Trace.WriteLine( "[Cloud] Sessions data received to view" );
             for (int i = 0; i < sessions?.Count; i++)
             {
                 Button newButton = new()
@@ -107,11 +96,11 @@ namespace ServerlessFuncUI
                     Margin = new Thickness( 0 , 5 , 0 , 5 ) ,
                     Name = "Button" + i.ToString() ,
                     Background = new SolidColorBrush( Colors.LightSkyBlue ) ,
-                    Content = $"Session  {sessions[i].Id}"
+                    Content = $"Session  {sessions[i].SessionId}"
                 };
                 newButton.Click += OnButtonClick;
-                Stack.Children.Add(newButton);
-                Trace.WriteLine("[Cloud] Adding Button for the " + (i + 1) + "th Session");
+                Stack.Children.Add( newButton );
+                Trace.WriteLine( "[Cloud] Adding Button for the " + (i + 1) + "th Session" );
             }
 
         }
@@ -119,26 +108,26 @@ namespace ServerlessFuncUI
         /// <summary>
         /// Handler to the sessions button press
         /// </summary>
-        private void OnButtonClick(object sender, RoutedEventArgs e)
+        private void OnButtonClick( object sender , RoutedEventArgs e )
         {
-            Trace.WriteLine("[Cloud] Session Button pressed");
+            Trace.WriteLine( "[Cloud] Session Button pressed" );
             Button caller = (Button)sender;
-            int index = Convert.ToInt32(caller.Name.Split('n')[1]);
+            int index = Convert.ToInt32( caller.Name.Split( 'n' )[1] );
 
             // Getting the Corresponding Submissions of the selected sessions and showing it in the place provided
-            SubmissionsPage submissionsPage = new(sessions[index]);
-            Trace.WriteLine("[Cloud] SubmissionsPage created");
+            SubmissionsPage submissionsPage = new( sessions[index] );
+            Trace.WriteLine( "[Cloud] SubmissionsPage created" );
             SubmissionsPage.Content = submissionsPage;
         }
 
-        private void RefreshButtonClick(object sender, RoutedEventArgs e)
+        private void RefreshButtonClick( object sender , RoutedEventArgs e )
         {
-            Trace.WriteLine("[Cloud] Session Refresh Button pressed");
-            _viewModel.GetSessions(UserName);
+            Trace.WriteLine( "[Cloud] Session Refresh Button pressed" );
+            _viewModel.GetSessions( UserName );
             _viewModel.PropertyChanged += Listener;
         }
 
-        private void RotateGraph(int add)
+        private void RotateGraph( int add )
         {
             if (add == -1)
             {
@@ -148,12 +137,12 @@ namespace ServerlessFuncUI
                     SubmissionsPage.Content = insight_page_6;
 
                 }
-                else if(iterator == 1)
+                else if (iterator == 1)
                 {
                     iterator = 0;
                     SubmissionsPage.Content = insight_page_1;
                 }
-                else if(iterator==2)
+                else if (iterator == 2)
                 {
                     iterator = 1;
                     SubmissionsPage.Content = insight_page_2;
@@ -191,19 +180,19 @@ namespace ServerlessFuncUI
                     iterator = 2;
                     SubmissionsPage.Content = insight_page_3;
                 }
-                else if(iterator==2)
+                else if (iterator == 2)
                 {
                     iterator = 3;
                     SubmissionsPage.Content = insight_page_4;
 
                 }
-                else if(iterator == 3)
+                else if (iterator == 3)
                 {
                     iterator = 4;
                     SubmissionsPage.Content = insight_page_5;
 
                 }
-                else if(iterator == 4)
+                else if (iterator == 4)
                 {
                     iterator = 5;
                     SubmissionsPage.Content = insight_page_6;
@@ -220,14 +209,14 @@ namespace ServerlessFuncUI
 
         }
 
-        private void LeftButtonClick(object sender, RoutedEventArgs e)
+        private void LeftButtonClick( object sender , RoutedEventArgs e )
         {
-            RotateGraph(-1);
+            RotateGraph( -1 );
         }
 
-        private void RightButtonClick(object sender, RoutedEventArgs e)
+        private void RightButtonClick( object sender , RoutedEventArgs e )
         {
-            RotateGraph(1);
+            RotateGraph( 1 );
         }
 
 
