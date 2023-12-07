@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
@@ -143,6 +144,29 @@ namespace ServerlessFunc
             {
                 Trace.WriteLine( "[UploadApi.PostAnalysisAsync] Exception: " + ex );
                 return default;
+            }
+        }
+
+        public async Task<int> GetSessionCountByHostNameAsync( string hostUsername )
+        {
+            try
+            {
+                HttpResponseMessage response = await _entityClient.GetAsync( _sessionRoute + $"/{hostUsername}" );
+                response.EnsureSuccessStatusCode();
+                string result = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true ,
+                };
+
+                IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
+                Trace.WriteLine( "[Cloud] Sessioncount by hostname GET successful" );
+                return entities.Count;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                return default; // or throw a custom exception, return a default value, or handle it as needed
             }
         }
     }

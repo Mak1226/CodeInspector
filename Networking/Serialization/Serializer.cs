@@ -12,6 +12,7 @@
 
 using System.Text.Json;
 using System.Diagnostics;
+using Logging;
 
 namespace Networking.Serialization
 {
@@ -35,7 +36,7 @@ namespace Networking.Serialization
             }
             catch (Exception e)
             {
-                Trace.WriteLine( "[Serializer] Deserialize failed: " + e.Message );
+                Logger.Log( "[Serializer] Deserialize failed: " + e.Message,LogLevel.ERROR );
             }
             return message;
         }
