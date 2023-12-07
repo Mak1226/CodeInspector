@@ -1,22 +1,20 @@
 ﻿<Page x:Class="Dashboard.AuthenticationPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Dashboard"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-       Background="#9EDDFF" 
- Height="500" 
-     Width="800">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Dashboard"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800"
+    Background="#9EDDFF" 
+    Height="500" 
+    Width="800">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-
 
         <Image Source="/Image/Analyzer.png" />
 
@@ -25,12 +23,10 @@
                 <TextBlock Text="Analyzer" Foreground="#0C356A" Style="{StaticResource TitleText}" FontFamily="Segoe Script" />
 
 
-                <TextBlock Text="Welcome to Analyzer" Foreground="#0C356A" Style="{StaticResource NormalText}" />
+                <TextBlock Text="Welcome to Analyzer" Foreground="#0C356A" Style="{StaticResource NormalText}" FontFamily="{StaticResource ProtoMonoSemiBold}"/>
 
 
                 <Grid>
-                    <!-- Your other content here -->
-
                     <!-- Centered Horizontal Line -->
                     <Line X1="60" Y1="0" X2="180" Y2="0" Stroke="Black" StrokeThickness="0.5" VerticalAlignment="Center" />
                     <TextBlock Text=".. " Foreground="#878787" Style="{StaticResource NormalText}" />
@@ -41,15 +37,10 @@
                     <Button Style="{StaticResource buttonCircle}">
                         <Image Source="/Image/google.png" Width="20" Height="20" />
                     </Button>
-                    <Button Content="Sign in with Google" Margin="0 10 0 15" Foreground="black" Click="Login_Click" Background="white"   />
-
+                    <Button Content="Sign in with Google" Margin="0 10 0 15" Foreground="#0C356A" Click="Login_Click" Background="white" FontFamily="{StaticResource ProtoMonoRegular}"/>
                 </StackPanel>
-
             </StackPanel>
         </Border>
-
-
-
 
     </Grid>
 </Page>

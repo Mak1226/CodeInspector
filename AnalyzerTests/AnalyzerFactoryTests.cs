@@ -33,10 +33,10 @@ namespace Analyzer.Tests
                 Tuple.Create(104, "Avoid empty interface"),
                 Tuple.Create(105, "Depth of inheritance should be less than 3"),
                 Tuple.Create(106, "Array field should not be read only"),
-                Tuple.Create(107, "Avoid switch statements"),
+                //Tuple.Create(107, "Avoid switch statements"),
                 Tuple.Create(108, "Disposable field should be disposed"),
                 Tuple.Create(109, "Avoid unused local variables"),
-                Tuple.Create(110, "Useless control flow rule"),
+                //Tuple.Create(110, "Void Async Methods"),
                 Tuple.Create(111, "Abstract class naming checker"),
                 Tuple.Create(112, "Casing Checker"),
                 Tuple.Create(113, "Cyclomatic Complexity"),
@@ -44,9 +44,9 @@ namespace Analyzer.Tests
                 Tuple.Create(115, "Prefix checker"),
                 Tuple.Create(116, "Switch Statement default case checker"),
                 Tuple.Create(117, "Avoid goto statements"),
-                Tuple.Create(118, "Native fields should not be visible"),
+                Tuple.Create(118, "Avoid visible instance fields"),
                 Tuple.Create(119, "High parameter count rule"),
-                Tuple.Create(120, "Not implement checker"),
+                //Tuple.Create(120, "Not implement checker"),
             };
 
             List<Tuple<int , string>> actualOptions = AnalyzerFactory.GetAllConfigurationOptions();

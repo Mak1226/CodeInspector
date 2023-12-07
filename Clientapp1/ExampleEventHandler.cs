@@ -1,9 +1,10 @@
-﻿using Networking.Events;
+﻿using System.Text;
+using Networking.Events;
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
 
-namespace ClientApp
+namespace Clientapp1
 {
     public class ExampleEventHandler : IEventHandler
     {
@@ -61,7 +62,7 @@ namespace ClientApp
         {
             Data data = Serializer.Deserialize<Data>(message.Data);
 
-            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + data.Payload + " in call back function");
+            Console.WriteLine("[HandleChatMessage, cl] Recieved ChatMessage" + Encoding.UTF8.GetByteCount(data.Payload) + " in call back function");
             return "";
         }
     }

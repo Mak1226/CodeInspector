@@ -16,6 +16,7 @@ using System.Diagnostics;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
+using Logging;
 
 namespace Networking.Utils
 {
@@ -53,6 +54,8 @@ namespace Networking.Utils
         /// Flag to signal the <see cref="_sendThread"/> to stop.
         /// </summary>
         private bool _stopThread;
+        private readonly ManualResetEvent _queueEvent = new( false );
+        private readonly object _lock = new();
 
         /// <summary>
         /// Constructor for the sender. Spawns thread that polls from <see cref="_sendQueue"/> and sends it
@@ -65,7 +68,7 @@ namespace Networking.Utils
             _stopThread = false;
             _senderIdToClientId=senderIdToClientId;
             _isClient = isClient;
-            Trace.WriteLine("[Sender] Init");
+            Logger.Log("[Sender] Init",LogLevel.INFO);
             _clientIdToStream = clientIdToStream;
             _sendThread = new Thread(SendLoop)
             {
@@ -80,8 +83,9 @@ namespace Networking.Utils
         public void Stop()
         {
 
-            Trace.WriteLine("[Sender] Stop");
+            Logger.Log("[Sender] Stop" , LogLevel.INFO );
             _stopThread = true;
+            _queueEvent.Set();
             _sendThread.Join();
         }
 
@@ -91,7 +95,11 @@ namespace Networking.Utils
         /// <param name="message">The message to be sent</param>
         public void Send(Message message)
         {
-            _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName));
+            lock (_lock)
+            {
+                _sendQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) );
+                _queueEvent.Set();
+            }
         }
 
         /// <summary>
@@ -120,8 +128,24 @@ namespace Networking.Utils
         /// <param name="messageSize">The length of the bytes of the message</param>
         private static void SendToDest(NetworkStream stream, byte[] message, int messageSize)
         {
-            stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
-            stream.Write( message );                                                    // sending the message itself
+            try
+            {
+                stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
+                                                                                            //stream.Write( message );                                                    // sending the message itself
+                int chunkSize = 1024 * 1024; // 1MB chunk size
+                int totalBytesSent = 0;
+
+                while (totalBytesSent < message.Length)
+                {
+                    int bytesToSend = Math.Min( chunkSize , message.Length - totalBytesSent );
+                    stream.Write( message , totalBytesSent , bytesToSend );
+                    totalBytesSent += bytesToSend;
+                }
+            }
+            catch(Exception e) {
+                Logger.Log( "Exception in Sender:SendToDest " +e.Message , LogLevel.ERROR );
+            }
+
         }
 
         /// <summary>
@@ -132,47 +156,60 @@ namespace Networking.Utils
             // Continue sending messages, if to be sent, until the thread is signaled to stop
             while (IfNetworkingMessage() || (!_stopThread))             // Temporaily halt stopping when the next-to-be-dequeued message is directed to `networking` or `networkingBroadcast`.
             {
-                if (!_sendQueue.canDequeue())
+                //if (!_sendQueue.canDequeue())
+                //{
+                //    // wait for some time to avoid busy-waiting
+                //    Thread.Sleep(500);
+                //    continue;
+                //}
+                _queueEvent.WaitOne();
+                lock (_lock)
                 {
-                    // wait for some time to avoid busy-waiting
-                    Thread.Sleep(500);
-                    continue;
-                }
-
-                // Get the next message to send
-                Message message = _sendQueue.Dequeue();
-
-                // Serialize the message; convert to Bytes; get its length
-                string serStr = Serializer.Serialize(message);
-                byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
-                int messageSize = messagebytes.Length;
-
-                // Try to send the message
-                try
-                {
-                    if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
+                    if (!_sendQueue.canDequeue())
                     {
-                        SendToDest( _clientIdToStream[Id.GetServerId()] , messagebytes , messageSize );
+                        continue;
+                        throw new Exception( "Exception in sender, queue is empty" );
                     }
-                    else
+
+                    // Get the next message to send
+                    Message message = _sendQueue.Dequeue();
+
+                    // Serialize the message; convert to Bytes; get its length
+                    //string serStr = Serializer.Serialize( message );
+                    byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes( Serializer.Serialize( message ) );
+
+                    int messageSize = messagebytes.Length;
+
+                    // Try to send the message
+                    try
                     {
-                        if (message.DestId == Id.GetBroadcastId())      // Broadcast the message to all clients
+                        if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                         {
-                            foreach (KeyValuePair<string, NetworkStream> pair in _clientIdToStream)
+                            SendToDest( _clientIdToStream[Id.GetServerId()] , messagebytes , messageSize );
+                        }
+                        else
+                        {
+                            if (message.DestId == Id.GetBroadcastId())      // Broadcast the message to all clients
                             {
-                                SendToDest( pair.Value , messagebytes , messageSize );
+                                foreach (KeyValuePair<string , NetworkStream> pair in _clientIdToStream)
+                                {
+                                    SendToDest( pair.Value , messagebytes , messageSize );
+                                }
+                            }
+                            else                                            // Send the message to the appropriate recipient
+                            {
+                                SendToDest( _clientIdToStream[_senderIdToClientId[message.DestId]] , messagebytes , messageSize );
                             }
                         }
-                        else                                            // Send the message to the appropriate recipient
-                        {
-                            SendToDest( _clientIdToStream[_senderIdToClientId[message.DestId]] , messagebytes , messageSize );
-                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine("Cannot send message to "+ message.DestId);
-                    Trace.WriteLine(e.Message);    
+                    catch (Exception e)
+                    {
+                        Logger.Log( "Cannot send message to " + message.DestId +"due to error "+ e.Message , LogLevel.ERROR );
+                    }
+                    if (!_sendQueue.canDequeue())
+                    {
+                        _queueEvent.Reset();
+                    }
                 }
             }
         }
