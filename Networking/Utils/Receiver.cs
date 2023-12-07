@@ -55,6 +55,8 @@ namespace Networking.Utils
         /// Reference to the <see cref="ICommunicator"/> interface
         /// </summary>
         private readonly ICommunicator _comm;
+        private readonly ManualResetEvent _queueEvent = new ( false );
+        private readonly object _lock = new ();
 
         /// <summary>
         /// Initializes a new instance of the Receiver class.
@@ -85,7 +87,7 @@ namespace Networking.Utils
         {
             Trace.WriteLine( "[Receiver] Stop" );
             _stopThread = true;
-
+            _queueEvent.Set();
             // Wait for the threads to terminate
             _recvThread.Join();
             _recvQueueThread.Join();
@@ -146,9 +148,12 @@ namespace Networking.Utils
                                     message.Data = Serializer.Serialize( data );
                                 }
                             }
-
-                            // Enqueue the received message with its priority
-                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ));
+                            lock (_lock)
+                            {
+                                // Enqueue the received message with its priority
+                                _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) );
+                                _queueEvent.Set();
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -175,22 +180,38 @@ namespace Networking.Utils
         {
             while (!_stopThread)
             {
-                if (!_recvQueue.canDequeue())
+                //if (!_recvQueue.canDequeue())
+                //{
+                //    // Wait for some time if the queue is empty to avoid busy-waiting
+                //    Thread.Sleep( 500 );
+                //    continue;
+                //}
+                _queueEvent.WaitOne();
+                if(_stopThread )
                 {
-                    // Wait for some time if the queue is empty to avoid busy-waiting
-                    Thread.Sleep( 500 );
-                    continue;
+                    break;
                 }
-
-                // Get the next message to process and process it based on the type of communicator
-                Message message = _recvQueue.Dequeue();
-                if (_comm is Client client)
+                lock(_lock)
                 {
-                    client.HandleMessage( message );
-                }
-                else if (_comm is Server server)
-                {
-                    server.HandleMessage( message );
+                    if (!_recvQueue.canDequeue())
+                    {
+                        continue;
+                        throw new Exception("Exception in receiver, queue is empty");
+                    }
+                    // Get the next message to process and process it based on the type of communicator
+                    Message message = _recvQueue.Dequeue();
+                    if (_comm is Client client)
+                    {
+                        client.HandleMessage( message );
+                    }
+                    else if (_comm is Server server)
+                    {
+                        server.HandleMessage( message );
+                    }
+                    if(!_recvQueue.canDequeue())
+                    {
+                        _queueEvent.Reset();
+                    }
                 }
             }
         }

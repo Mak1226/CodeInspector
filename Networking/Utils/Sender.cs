@@ -53,6 +53,8 @@ namespace Networking.Utils
         /// Flag to signal the <see cref="_sendThread"/> to stop.
         /// </summary>
         private bool _stopThread;
+        private readonly ManualResetEvent _queueEvent = new( false );
+        private readonly object _lock = new();
 
         /// <summary>
         /// Constructor for the sender. Spawns thread that polls from <see cref="_sendQueue"/> and sends it
@@ -82,6 +84,7 @@ namespace Networking.Utils
 
             Trace.WriteLine("[Sender] Stop");
             _stopThread = true;
+            _queueEvent.Set();
             _sendThread.Join();
         }
 
@@ -91,7 +94,11 @@ namespace Networking.Utils
         /// <param name="message">The message to be sent</param>
         public void Send(Message message)
         {
-            _sendQueue.Enqueue(message, Priority.GetPriority(message.ModuleName));
+            lock (_lock)
+            {
+                _sendQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) );
+                _queueEvent.Set();
+            }
         }
 
         /// <summary>
@@ -132,47 +139,60 @@ namespace Networking.Utils
             // Continue sending messages, if to be sent, until the thread is signaled to stop
             while (IfNetworkingMessage() || (!_stopThread))             // Temporaily halt stopping when the next-to-be-dequeued message is directed to `networking` or `networkingBroadcast`.
             {
-                if (!_sendQueue.canDequeue())
+                //if (!_sendQueue.canDequeue())
+                //{
+                //    // wait for some time to avoid busy-waiting
+                //    Thread.Sleep(500);
+                //    continue;
+                //}
+                _queueEvent.WaitOne();
+                lock (_lock)
                 {
-                    // wait for some time to avoid busy-waiting
-                    Thread.Sleep(500);
-                    continue;
-                }
-
-                // Get the next message to send
-                Message message = _sendQueue.Dequeue();
-
-                // Serialize the message; convert to Bytes; get its length
-                string serStr = Serializer.Serialize(message);
-                byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes(serStr);
-                int messageSize = messagebytes.Length;
-
-                // Try to send the message
-                try
-                {
-                    if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
+                    if (!_sendQueue.canDequeue())
                     {
-                        SendToDest( _clientIdToStream[Id.GetServerId()] , messagebytes , messageSize );
+                        continue;
+                        throw new Exception( "Exception in sender, queue is empty" );
                     }
-                    else
+
+                    // Get the next message to send
+                    Message message = _sendQueue.Dequeue();
+
+                    // Serialize the message; convert to Bytes; get its length
+                    string serStr = Serializer.Serialize( message );
+                    byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes( serStr );
+                    int messageSize = messagebytes.Length;
+
+                    // Try to send the message
+                    try
                     {
-                        if (message.DestId == Id.GetBroadcastId())      // Broadcast the message to all clients
+                        if (_isClient == true)                              // All messages from the client is sent to the Server. If the destination is not Server, the message will be sent to the right recipient from the Server
                         {
-                            foreach (KeyValuePair<string, NetworkStream> pair in _clientIdToStream)
+                            SendToDest( _clientIdToStream[Id.GetServerId()] , messagebytes , messageSize );
+                        }
+                        else
+                        {
+                            if (message.DestId == Id.GetBroadcastId())      // Broadcast the message to all clients
                             {
-                                SendToDest( pair.Value , messagebytes , messageSize );
+                                foreach (KeyValuePair<string , NetworkStream> pair in _clientIdToStream)
+                                {
+                                    SendToDest( pair.Value , messagebytes , messageSize );
+                                }
+                            }
+                            else                                            // Send the message to the appropriate recipient
+                            {
+                                SendToDest( _clientIdToStream[_senderIdToClientId[message.DestId]] , messagebytes , messageSize );
                             }
                         }
-                        else                                            // Send the message to the appropriate recipient
-                        {
-                            SendToDest( _clientIdToStream[_senderIdToClientId[message.DestId]] , messagebytes , messageSize );
-                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine("Cannot send message to "+ message.DestId);
-                    Trace.WriteLine(e.Message);    
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine( "Cannot send message to " + message.DestId );
+                        Trace.WriteLine( e.Message );
+                    }
+                    if (!_sendQueue.canDequeue())
+                    {
+                        _queueEvent.Reset();
+                    }
                 }
             }
         }
