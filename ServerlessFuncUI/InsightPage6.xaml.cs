@@ -29,8 +29,9 @@ namespace ServerlessFuncUI
             InitializeComponent();
 
             // Create an instance of the InsightsApi class with the API endpoint
-            _insightsApi = new InsightsApi( "http://localhost:7074/api/insights" );
-        }
+            //_insightsApi = new InsightsApi( "http://localhost:7074/api/insights" );
+            _insightsApi = new InsightsApi( "https://serverlessfunc20231121082343.azurewebsites.net/api/insights" );
+    }
 
         /// <summary>
         /// Event handler for the "Get Students Without Analysis" button click.
