@@ -90,6 +90,11 @@ namespace Networking.Events
         /// <returns>A null string</returns>
         private string HandleClientRegister(Message message)
         {
+            if(((Server)_communicator)._senderIdToClientId.ContainsKey(message.SenderId))
+            {
+                Data data = new( EventType.ClientKicked() );
+                _communicator.Send( Serializer.Serialize( data ) , Id.GetNetworkingBroadcastId() , message.SenderId );        
+            }
             lock(((Server)_communicator)._senderIdToClientId)
             {
                 Data data=Serializer.Deserialize<Data>(message.Data);
