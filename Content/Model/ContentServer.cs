@@ -140,18 +140,14 @@ namespace Content.Model
                 Logger.Debug( "[ContentServer.cs] HandleReceive: Inside SessionLock" );
                 // Analyse DLL files
                 _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
-                Logger.Debug( "[ContentServer.cs] HandleReceive: Loaded Student DLL files" );
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Loaded Student DLL files at {_fileHandler.GetFiles()}" );
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
-                Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
-                {
-                    res[kvp.Key] = res[kvp.Key].Concat(kvp.Value).ToList();
-                }
 
                 _sessionAnalysisResultDict[recievedSessionID] = res;
                 string serializedResults = _serializer.Serialize(res);
                 _resultEncoding = serializedResults;
                 _server.Send(serializedResults, "Content-Results", clientID);
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Sending result {serializedResults}" );
                 if (_sessionID == recievedSessionID)
                 {
                     Logger.Debug($"[ContentServer.cs] HandleReceive: SessionIDs match ({_sessionID})");
