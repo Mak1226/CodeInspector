@@ -29,12 +29,12 @@ namespace AnalyzerTests.Pipeline
     {
         // current DLL details and its parsedDLL object
         public static string currentDLLPath = Assembly.GetExecutingAssembly().Location;
-        public static ParsedDLLFile currentParsedDLL = new(currentDLLPath);
+        public static ParsedDLLFile currentParsedDLL = new( currentDLLPath );
         public static CyclomaticComplexity _cyclomaticComplexityAnalyzer;
 
         // current DLL module to access different test methods
-        public static ModuleDefinition currentModule = ModuleDefinition.ReadModule(currentDLLPath);
-        public static TypeReference currentTypeReference = currentModule.ImportReference(typeof(SampleComplexityTestCases.SampleComplexityTestClass));
+        public static ModuleDefinition currentModule = ModuleDefinition.ReadModule( currentDLLPath );
+        public static TypeReference currentTypeReference = currentModule.ImportReference( typeof( SampleComplexityTestCases.SampleComplexityTestClass ) );
         public static TypeDefinition currentTypeDefintion = currentTypeReference.Resolve();
 
 
@@ -43,13 +43,13 @@ namespace AnalyzerTests.Pipeline
         /// And creating an cyclomatic analyzer with current parsedLL as input
         /// </summary>
         [ClassInitialize]
-        public static void TestCyclomaticComplexityInitialize(TestContext context)
+        public static void TestCyclomaticComplexityInitialize( TestContext context )
         {
-            currentParsedDLL.classObjList.RemoveAll(cls => cls.TypeObj.Namespace != "SampleComplexityTestCases");
-            currentParsedDLL.interfaceObjList.RemoveAll(iface => iface.TypeObj.Namespace != "SampleComplexityTestCases");
-            currentParsedDLL.classObjListMC.RemoveAll(cls => cls.TypeObj.Namespace != "SampleComplexityTestCases" );
+            currentParsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "SampleComplexityTestCases" );
+            currentParsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.Namespace != "SampleComplexityTestCases" );
+            currentParsedDLL.classObjListMC.RemoveAll( cls => cls.TypeObj.Namespace != "SampleComplexityTestCases" );
 
-            _cyclomaticComplexityAnalyzer = new CyclomaticComplexity(new() {currentParsedDLL});
+            _cyclomaticComplexityAnalyzer = new CyclomaticComplexity( new() { currentParsedDLL } );
         }
 
 
@@ -60,14 +60,14 @@ namespace AnalyzerTests.Pipeline
         public void CheckIfElseComplexity()
         {
             MethodDefinition sampleIfElseMethod = currentTypeDefintion.Methods.First( method => method.Name == "IfElseMethod" );
-            Assert.AreEqual(2 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleIfElseMethod));
+            Assert.AreEqual( 2 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleIfElseMethod ) );
 
 
-            MethodDefinition sampleNestedIfElseMethod = currentTypeDefintion.Methods.First(method => method.Name == "NestedIfElseMethod");
-            Assert.AreEqual(3 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleNestedIfElseMethod));
+            MethodDefinition sampleNestedIfElseMethod = currentTypeDefintion.Methods.First( method => method.Name == "NestedIfElseMethod" );
+            Assert.AreEqual( 3 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleNestedIfElseMethod ) );
 
-            MethodDefinition sampleTernaryMethod = currentTypeDefintion.Methods.First(method => method.Name == "TernaryOperatorMethod");
-            Assert.AreEqual(2, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleTernaryMethod));
+            MethodDefinition sampleTernaryMethod = currentTypeDefintion.Methods.First( method => method.Name == "TernaryOperatorMethod" );
+            Assert.AreEqual( 2 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleTernaryMethod ) );
         }
 
 
@@ -75,13 +75,13 @@ namespace AnalyzerTests.Pipeline
         /// This methods checks complexity of methods having loops
         /// </summary>
         [TestMethod]
-        public void CheckLoopComplexity() 
+        public void CheckLoopComplexity()
         {
             MethodDefinition sampleForLoopMethod = currentTypeDefintion.Methods.First( method => method.Name == "ForLoopMethod" );
-            Assert.AreEqual(2, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleForLoopMethod));
+            Assert.AreEqual( 2 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleForLoopMethod ) );
 
             MethodDefinition sampleWhileLoopMethod = currentTypeDefintion.Methods.First( method => method.Name == "WhileLoopMethod" );
-            Assert.AreEqual(2, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleWhileLoopMethod));
+            Assert.AreEqual( 2 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleWhileLoopMethod ) );
         }
 
 
@@ -91,11 +91,11 @@ namespace AnalyzerTests.Pipeline
         [TestMethod]
         public void CheckCombinedCasesComplexity()
         {
-            MethodDefinition sampleIfElseAndLoopMethod = currentTypeDefintion.Methods.First(method => method.Name == "LoopAndIfElseMethod1");
-            Assert.AreEqual(4, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleIfElseAndLoopMethod));
+            MethodDefinition sampleIfElseAndLoopMethod = currentTypeDefintion.Methods.First( method => method.Name == "LoopAndIfElseMethod1" );
+            Assert.AreEqual( 4 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleIfElseAndLoopMethod ) );
 
-            MethodDefinition sampleCombinedMethod = currentTypeDefintion.Methods.First(method => method.Name == "CombinedIFLoopTernaryMethod");
-            Assert.AreEqual(8, _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleCombinedMethod));
+            MethodDefinition sampleCombinedMethod = currentTypeDefintion.Methods.First( method => method.Name == "CombinedIFLoopTernaryMethod" );
+            Assert.AreEqual( 8 , _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleCombinedMethod ) );
         }
 
 
@@ -106,15 +106,15 @@ namespace AnalyzerTests.Pipeline
         [TestMethod]
         public void CheckSwitchCaseComplexity()
         {
-            MethodDefinition sampleSwitchMethod1 = currentTypeDefintion.Methods.First(method => method.Name == "SampleSwitchMethod1" );
-            Assert.IsTrue(_cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleSwitchMethod1) < 10);
-            Console.WriteLine("Actual - 9");
-            Console.WriteLine(_cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleSwitchMethod1));
+            MethodDefinition sampleSwitchMethod1 = currentTypeDefintion.Methods.First( method => method.Name == "SampleSwitchMethod1" );
+            Assert.IsTrue( _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleSwitchMethod1 ) < 10 );
+            Console.WriteLine( "Actual - 9" );
+            Console.WriteLine( _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleSwitchMethod1 ) );
 
-            MethodDefinition sampleSwitchMethod2 = currentTypeDefintion.Methods.First(method => method.Name == "SampleSwitchMethod2" );
-            Assert.IsTrue(_cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleSwitchMethod2) > 10);
-            Console.WriteLine("Actual - 11");
-            Console.WriteLine(_cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity(sampleSwitchMethod2));
+            MethodDefinition sampleSwitchMethod2 = currentTypeDefintion.Methods.First( method => method.Name == "SampleSwitchMethod2" );
+            Assert.IsTrue( _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleSwitchMethod2 ) > 10 );
+            Console.WriteLine( "Actual - 11" );
+            Console.WriteLine( _cyclomaticComplexityAnalyzer.GetMethodCyclomaticComplexity( sampleSwitchMethod2 ) );
         }
 
 
@@ -122,23 +122,23 @@ namespace AnalyzerTests.Pipeline
         /// Rather than checking each method, cyclomatic complexity analyzer tests on a whole DLL and also multiple DLLs
         /// </summary>
         [TestMethod]
-        public void CheckCompleteDLL () 
+        public void CheckCompleteDLL()
         {
             string dllPath = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\BridgePattern.dll";
 
             ParsedDLLFile parsedDLL = new( dllPath );
 
-            AnalyzerBase cyclomaticComplexityAnalyzer =  new CyclomaticComplexity(new() {parsedDLL, currentParsedDLL});
+            AnalyzerBase cyclomaticComplexityAnalyzer = new CyclomaticComplexity( new() { parsedDLL , currentParsedDLL } );
 
-            Dictionary<string, AnalyzerResult> analyzerResultDict = cyclomaticComplexityAnalyzer.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> analyzerResultDict = cyclomaticComplexityAnalyzer.AnalyzeAllDLLs();
             AnalyzerResult bridgeAnalyzerResult = analyzerResultDict[parsedDLL.DLLFileName];
             AnalyzerResult currentAnalyzerResult = analyzerResultDict[currentParsedDLL.DLLFileName];
 
-            Assert.AreEqual(1, bridgeAnalyzerResult.Verdict);   // no violation found
-            Assert.AreEqual(0, currentAnalyzerResult.Verdict);  // violations found i.e. complexity > 10 for some method
+            Assert.AreEqual( 1 , bridgeAnalyzerResult.Verdict );   // no violation found
+            Assert.AreEqual( 0 , currentAnalyzerResult.Verdict );  // violations found i.e. complexity > 10 for some method
 
-            Console.WriteLine(bridgeAnalyzerResult.ErrorMessage);
-            Console.WriteLine(currentAnalyzerResult.ErrorMessage);
+            Console.WriteLine( bridgeAnalyzerResult.ErrorMessage );
+            Console.WriteLine( currentAnalyzerResult.ErrorMessage );
         }
 
 
@@ -155,9 +155,9 @@ namespace AnalyzerTests.Pipeline
 
             Dictionary<string , AnalyzerResult> analyzerResultDict = cyclomaticComplexityAnalyzer.AnalyzeAllDLLs();
             AnalyzerResult parsedDLLAnalyzerResult = analyzerResultDict[parsedDLL.DLLFileName];
-            Console.WriteLine( parsedDLLAnalyzerResult.ErrorMessage);
+            Console.WriteLine( parsedDLLAnalyzerResult.ErrorMessage );
 
-            Assert.AreEqual(0 , parsedDLLAnalyzerResult.Verdict);
+            Assert.AreEqual( 0 , parsedDLLAnalyzerResult.Verdict );
         }
     }
 }
@@ -172,13 +172,13 @@ namespace SampleComplexityTestCases
         {
             int x = 0;
 
-            if(x == 0)
+            if (x == 0)
             {
-                Console.WriteLine(x);
+                Console.WriteLine( x );
             }
             else
             {
-                Console.WriteLine(x + 1);
+                Console.WriteLine( x + 1 );
             }
         }
 
@@ -187,17 +187,17 @@ namespace SampleComplexityTestCases
         {
             int x = 0;
 
-            if(x != 1)
+            if (x != 1)
             {
-                Console.WriteLine(x + 1);
+                Console.WriteLine( x + 1 );
 
-                if(x != 2)
+                if (x != 2)
                 {
-                    Console.WriteLine(x + 2);
+                    Console.WriteLine( x + 2 );
                 }
                 else
                 {
-                    Console.WriteLine(x);
+                    Console.WriteLine( x );
                 }
             }
         }
@@ -205,35 +205,35 @@ namespace SampleComplexityTestCases
 
         public void ForLoopMethod()
         {
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine(i);
+                Console.WriteLine( i );
             }
         }
 
-        public void WhileLoopMethod() 
+        public void WhileLoopMethod()
         {
             int x = 2;
-            while(x < 10)
+            while (x < 10)
             {
-                Console.WriteLine("Hello");
+                Console.WriteLine( "Hello" );
                 ForLoopMethod();
                 x++;
             }
-            Console.WriteLine("3");
+            Console.WriteLine( "3" );
         }
 
         public void LoopAndIfElseMethod1()
         {
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine(i);
+                Console.WriteLine( i );
 
-                if(i == 2)
+                if (i == 2)
                 {
                     int y;
 
-                    if(i > 1)
+                    if (i > 1)
                     {
                         y = i + 1;
                     }
@@ -242,7 +242,7 @@ namespace SampleComplexityTestCases
                         y = i - 1;
                     }
 
-                    Console.WriteLine(y);
+                    Console.WriteLine( y );
                 }
             }
         }
@@ -252,34 +252,34 @@ namespace SampleComplexityTestCases
             int x = 9;
             int y = (x > 1) ? x - 1 : x - 2;
 
-            Console.WriteLine(y);
+            Console.WriteLine( y );
         }
 
         public void CombinedIFLoopTernaryMethod()
         {
             int x = 4;
 
-            if(x == 1)
+            if (x == 1)
             {
                 int y = ((x + 1) > 3) ? 4 : 5;
-                Console.WriteLine(y);
+                Console.WriteLine( y );
             }
-            else if(x == 2)
+            else if (x == 2)
             {
 
             }
-            else if(x == 3)
+            else if (x == 3)
             {
 
             }
-            else if(x == 4)
+            else if (x == 4)
             {
-                for(int i = 0; i <4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     int z = i;
-                    while(z < 3)
+                    while (z < 3)
                     {
-                        Console.WriteLine(z);
+                        Console.WriteLine( z );
                         z++;
                     }
                 }
@@ -289,40 +289,40 @@ namespace SampleComplexityTestCases
         public void SampleSwitchMethod1()
         {
             int option = 9;
-            switch(option)
+            switch (option)
             {
                 case 100:
-                    Console.WriteLine("Option 1 selected");
+                    Console.WriteLine( "Option 1 selected" );
                     break;
 
                 case 200:
-                    Console.WriteLine("Option 2 selected");
+                    Console.WriteLine( "Option 2 selected" );
                     break;
 
                 case 3:
-                    Console.WriteLine("Option 3 selected");
+                    Console.WriteLine( "Option 3 selected" );
                     break;
 
                 case 400:
-                    Console.WriteLine("Option 4 selected");
+                    Console.WriteLine( "Option 4 selected" );
                     if (option + 2 == 5)
                     {
-                        Console.WriteLine("Random");
+                        Console.WriteLine( "Random" );
                     }
                     else
                     {
-                        Console.WriteLine("Random2");
+                        Console.WriteLine( "Random2" );
                     }
                     break;
 
                 case 5:
-                    Console.WriteLine("Option 5 selected");
+                    Console.WriteLine( "Option 5 selected" );
                     break;
 
                 default:
                     int x = 1;
                     int y = x < 2 ? 2 : 3;
-                    Console.WriteLine($"Invalid option selected - {y}");
+                    Console.WriteLine( $"Invalid option selected - {y}" );
                     break;
             }
         }
@@ -330,7 +330,7 @@ namespace SampleComplexityTestCases
         public void SampleSwitchMethod2()
         {
             int x = 0;
-            switch(x)
+            switch (x)
             {
                 case 0:
                 case 3:
