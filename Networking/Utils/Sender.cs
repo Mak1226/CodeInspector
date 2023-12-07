@@ -128,7 +128,17 @@ namespace Networking.Utils
         private static void SendToDest(NetworkStream stream, byte[] message, int messageSize)
         {
             stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
-            stream.Write( message );                                                    // sending the message itself
+            //stream.Write( message );                                                    // sending the message itself
+            int chunkSize = 1024 * 1024; // 1MB chunk size
+            int totalBytesSent = 0;
+
+            while (totalBytesSent < message.Length)
+            {
+                int bytesToSend = Math.Min( chunkSize , message.Length - totalBytesSent );
+                stream.Write( message , totalBytesSent , bytesToSend );
+                totalBytesSent += bytesToSend;
+            }
+
         }
 
         /// <summary>
