@@ -44,13 +44,13 @@ namespace Dashboard
         /// </summary>
         /// <param name="userName">The username of the instructor.</param>
         /// <param name="userId">The user ID of the instructor.</param>
-        public InstructorPage( string userName , string userId )
+        public InstructorPage( string userName , string userId, string userImage )
         {
             InitializeComponent();
             try
             {
                 // Create and set up the ViewModel
-                InstructorViewModel viewModel = new(userName,userId);
+                InstructorViewModel viewModel = new(userName,userId,userImage);
                 DataContext = viewModel;
 
                 // Create and set up the ServerPage

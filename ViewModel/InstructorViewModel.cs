@@ -43,11 +43,12 @@ namespace ViewModel
         /// <param name="name">The Name of the instructor.</param>
         /// <param name="userId">The user ID of the instructor.</param>
         /// <param name="communicator">An optional communicator, default is set to the server communicator.</param>
-        public InstructorViewModel( string name, string userId, ICommunicator? communicator = null )
+        public InstructorViewModel( string name, string userId, string userImage, ICommunicator? communicator = null )
         {
             // Set the username and user ID for the InstructorViewModel
             Name = name;
             UserId = userId;
+            UserImage = userImage;
 
             // Initialize the session state for tracking students
             _studentSessionState = new StudentSessionState();
@@ -70,7 +71,7 @@ namespace ViewModel
                 ReceivePort = parts[1];
 
                 // Notify any subscribers about the change in IP address and port
-                OnPropertyChanged( nameof(IpAddress));
+                OnPropertyChanged(nameof(IpAddress));
                 OnPropertyChanged(nameof(ReceivePort));
             }
             else
@@ -104,6 +105,11 @@ namespace ViewModel
         /// Gets the user ID of the instructor.
         /// </summary>
         public string UserId { get; init; }
+
+        /// <summary>
+        /// Gets the user image of the instructor.
+        /// </summary>
+        public string UserImage { get; init; }
 
         /// <summary>
         /// Gets the receiving port for the instructor.

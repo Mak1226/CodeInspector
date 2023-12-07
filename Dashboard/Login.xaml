@@ -9,6 +9,17 @@
       Title="Login">
 
     <Grid>
+        <Grid.Resources>
+            <!-- Define a default style for controls within the Grid -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource ProtoMonoMedium}" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource ProtoMonoRegular}" />
+            </Style>
+        </Grid.Resources>
+        
         <Grid.Background>
             <SolidColorBrush Color="LightSalmon" />
         </Grid.Background>
@@ -29,21 +40,21 @@
                      <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>-->
                 <StackPanel x:Name="NameStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name :" Margin="10,10,10,10"/>
-                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name:" Margin="10,10,10,10" />
+                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25" />
                 </StackPanel>
             </Grid>
             
             <Grid Grid.Row="1">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="User Id: " />  
-                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold"/>
+                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold" FontFamily="Null"/>
                 </TextBlock>
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,15,236,29"/>
-                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,15,75,29"/>
+                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,15,236,29" />
+                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,15,75,29" />
             </Grid>
 
         </Grid>
