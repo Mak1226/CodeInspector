@@ -67,41 +67,44 @@ namespace ServerlessFuncUI
         private void Listener( object sender , PropertyChangedEventArgs e )
         {
             sessions = _viewModel.ReceivedSessions;
-
-            if (sessions?.Count == 0)
+            if (e.PropertyName == "ReceivedSessions")
             {
-                Label label = new()
+                if (sessions?.Count == 0)
                 {
-                    Content = "No Sessions Conducted" ,
-                    Foreground = new SolidColorBrush( Colors.White ) ,
-                    HorizontalContentAlignment = HorizontalAlignment.Center ,
-                    FontSize = 16
-                };
-                Stack.Children.Add( label );
-                Trace.WriteLine( "[Cloud] No Sessions Conducted by " + UserName );
+                    Label label = new()
+                    {
+                        Content = "No Sessions Conducted" ,
+                        Foreground = new SolidColorBrush( Colors.White ) ,
+                        HorizontalContentAlignment = HorizontalAlignment.Center ,
+                        FontSize = 16
+                    };
+                    Stack.Children.Add( label );
+                    Trace.WriteLine( "[Cloud] No Sessions Conducted by " + UserName );
 
-                return;
-            }
+                    return;
+                }
 
-            /*
-             * Building the UI when there are list of sessions conducted. 
-             * Adding Buttons for each session the host has conducted.
-             */
-            Trace.WriteLine( "[Cloud] Sessions data received to view" );
-            for (int i = 0; i < sessions?.Count; i++)
-            {
-                Button newButton = new()
+                /*
+                 * Building the UI when there are list of sessions conducted. 
+                 * Adding Buttons for each session the host has conducted.
+                 */
+                Trace.WriteLine( "[Cloud] Sessions data received to view" );
+                for (int i = 0; i < sessions?.Count; i++)
                 {
-                    Height = 30 ,
-                    Margin = new Thickness( 0 , 5 , 0 , 5 ) ,
-                    Name = "Button" + i.ToString() ,
-                    Background = new SolidColorBrush( Colors.LightSkyBlue ) ,
-                    Content = $"Session  {sessions[i].SessionId}"
-                };
-                newButton.Click += OnButtonClick;
-                Stack.Children.Add( newButton );
-                Trace.WriteLine( "[Cloud] Adding Button for the " + (i + 1) + "th Session" );
+                    Button newButton = new()
+                    {
+                        Height = 30 ,
+                        Margin = new Thickness( 0 , 5 , 0 , 5 ) ,
+                        Name = "Button" + i.ToString() ,
+                        Background = new SolidColorBrush( Colors.LightSkyBlue ) ,
+                        Content = $"Session  {sessions[i].SessionId}"
+                    };
+                    newButton.Click += OnButtonClick;
+                    Stack.Children.Add( newButton );
+                    Trace.WriteLine( "[Cloud] Adding Button for the " + (i + 1) + "th Session" );
+                }
             }
+            
 
         }
 
@@ -120,11 +123,11 @@ namespace ServerlessFuncUI
             SubmissionsPage.Content = submissionsPage;
         }
 
-        private void RefreshButtonClick( object sender , RoutedEventArgs e )
+        public async void RefreshButtonClick( object sender , RoutedEventArgs e )
         {
             Trace.WriteLine( "[Cloud] Session Refresh Button pressed" );
-            _viewModel.GetSessions( UserName );
-            _viewModel.PropertyChanged += Listener;
+            Stack.Children.Clear();
+            await _viewModel.GetSessions( userName );
         }
 
         private void RotateGraph( int add )
