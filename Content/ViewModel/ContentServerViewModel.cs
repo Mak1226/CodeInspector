@@ -33,7 +33,6 @@ namespace Content.ViewModel
         private readonly ContentServer _contentServer;
         private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
-        //private List<AnalyzerConfigOption> _teacherConfigOptionsList;
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
         private List<string> _uploadedFiles = new();
 
@@ -58,24 +57,29 @@ namespace Content.ViewModel
             };
 
             // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
-            _configOptionsList = new List<AnalyzerConfigOption>();
+            _configOptionsList = TupleListToAnalyzerConfigOptionsList(AnalyzerFactory.GetAllConfigurationOptions());
+            _analyzerResults = _contentServer.analyzerResult;
+        }
+
+        private List<AnalyzerConfigOption> TupleListToAnalyzerConfigOptionsList(List<Tuple<int, string>> configOptions)
+        {
+            List<AnalyzerConfigOption> newList = new();
             IDictionary<int , bool> serverConfigs = _contentServer.Configuration;
-            foreach (Tuple<int , string> option in AnalyzerFactory.GetAllConfigurationOptions())
+            foreach (Tuple<int , string> option in configOptions)
             {
                 bool isSelected = false;
-                if (serverConfigs.ContainsKey(option.Item1))
-                { 
+                if (serverConfigs.ContainsKey( option.Item1 ))
+                {
                     isSelected = serverConfigs[option.Item1];
                 }
-                _configOptionsList.Add(new AnalyzerConfigOption
+                newList.Add( new AnalyzerConfigOption
                 {
-                    AnalyzerId = option.Item1,
-                    Description = option.Item2,
+                    AnalyzerId = option.Item1 ,
+                    Description = option.Item2 ,
                     IsSelected = isSelected // Set the default value for IsSelected as needed
-                });
+                } );
             }
-            //_teacherConfigOptionsList = new List<AnalyzerConfigOption>();
-            _analyzerResults = _contentServer.analyzerResult;
+            return newList;
         }
 
         ///-----------Reactor functions-----------------------
@@ -105,7 +109,10 @@ namespace Content.ViewModel
         /// <param name="filePaths">paths to the custom analyzer DLLs</param>
         public void LoadCustomDLLs(List<string> filePaths)
         {
-            _contentServer.LoadCustomDLLs(filePaths);
+            List<Tuple<int , string>> teacherConfigs = _contentServer.LoadCustomDLLs(filePaths);
+
+            ConfigOptionsList = TupleListToAnalyzerConfigOptionsList(teacherConfigs);
+
             _uploadedFiles = filePaths;
             OnPropertyChanged(nameof(UploadedFiles));
         }

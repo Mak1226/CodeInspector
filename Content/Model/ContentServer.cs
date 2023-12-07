@@ -52,11 +52,21 @@ namespace Content.Model
                         IDictionary<int , bool>? result = JsonSerializer.Deserialize<IDictionary<int , bool>>( json );
                         if (result != null )
                         {
-                            return result;
+                            _configuration = result;
+
+                            // Filter out custom analyzers
+                            List<int> keysToRemove = _configuration.Keys.Where( x => x >= 200 ).ToList();
+                            foreach ( int keyToRemove in keysToRemove )
+                            {
+                                _configuration.Remove( keyToRemove );
+                            }
+
+                            return _configuration;
                         }
                     }
+                    return new Dictionary<int,bool>();
                 }
-                return new Dictionary<int , bool>();
+                return _configuration;
             }
 
             set
