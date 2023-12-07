@@ -24,7 +24,6 @@
     <None Remove="Image\logo.png" />
     <None Remove="Image\name_trans.png" />
     <None Remove="Image\no_name_trans.png" />
-    <None Remove="Image\supergoog.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,7 +81,6 @@
     <Resource Include="Image\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\supergoog.jpg" />
   </ItemGroup>
 
 </Project>

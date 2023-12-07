@@ -67,7 +67,7 @@ namespace Dashboard
 
                 if(authenticationResult.UserEmail == null)
                 {
-                    ShowErrorWindow( "Authentication Failed, try again!" );
+                    ShowErrorAndShutdown( "Authentication Failed, try again!" );
                     Application.Current.Shutdown();
                 }
 
