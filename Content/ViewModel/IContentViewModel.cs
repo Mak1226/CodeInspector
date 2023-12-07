@@ -1,5 +1,4 @@
 ﻿
-using Analyzer;
 using System.ComponentModel;
 
 namespace Content.ViewModel
@@ -17,6 +16,9 @@ namespace Content.ViewModel
         /// </summary>
         public List<Tuple<string, List<Tuple<string, int, string>>>> DataList { get; }
 
+        /// <summary>
+        /// Two way binding for tab selection in view
+        /// </summary>
         public Tuple<string, List<Tuple<string, int, string>>> SelectedItem { get; set; }
     }
 }

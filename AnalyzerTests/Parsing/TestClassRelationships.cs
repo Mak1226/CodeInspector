@@ -37,7 +37,6 @@ namespace AnalyzerTests.Pipeline
             List<ParsedDLLFile> DllFileObjs = new();
 
             string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
-
             var parsedDllObj = new ParsedDLLFile(path);
             DllFileObjs.Add(parsedDllObj);
 
@@ -52,7 +51,7 @@ namespace AnalyzerTests.Pipeline
             }
 
             //check diff Relationship Lists
-            Assert.AreEqual(5, classes);
+            Assert.AreEqual( 5 , classes );
 
             Dictionary<string, List<string>> InheritanceRel = new();
             Dictionary<string, List<string>> CompositionRel = new();
@@ -63,35 +62,35 @@ namespace AnalyzerTests.Pipeline
             {
                 foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
-                    //Debug.WriteLine("\n\n\n\n");
-                    //Console.WriteLine("Class: " + cls.Name);
-                    //Console.WriteLine("Inheritance: ");
+                    //Debug.WriteLine( "\n\n\n\n" );
+                    //Console.WriteLine( "Class: " + cls.Name );
+                    //Console.WriteLine( "Inheritance: " );
                     foreach (string inhCls in cls.InheritanceList)
                     {
-                        Console.WriteLine(inhCls);
+                        //Console.WriteLine(inhCls);
                         if (!InheritanceRel.ContainsKey(cls.Name))
                         {
                             InheritanceRel[cls.Name] = new List<string>();
                         }
                         InheritanceRel[cls.Name].Add(inhCls);
                     }
-                    //Console.WriteLine("------------------------------------");
-                    //Console.WriteLine("Composiition: ");
+                    //Console.WriteLine( "------------------------------------" );
+                    //Console.WriteLine( "Composiition: " );
                     foreach (string compCls in cls.CompositionList)
                     {
-                        //Console.WriteLine(compCls);
+                        //Console.WriteLine( compCls );
                         if (!CompositionRel.ContainsKey(cls.Name))
                         {
                             CompositionRel[cls.Name] = new List<string>();
                         }
                         CompositionRel[cls.Name].Add(compCls);
                     }
-                    //Console.WriteLine("------------------------------------");
+                    //Console.WriteLine( "------------------------------------" );
 
-                    //Console.WriteLine("Aggregation: ");
+                    //Console.WriteLine( "Aggregation: " );
                     foreach (string aggCls in cls.AggregationList)
                     {
-                        //Console.WriteLine(aggCls);
+                        //Console.WriteLine( aggCls );
                         if (!AggregationRel.ContainsKey(cls.Name))
                         {
                             AggregationRel[cls.Name] = new List<string>();
@@ -99,12 +98,12 @@ namespace AnalyzerTests.Pipeline
                         AggregationRel[cls.Name].Add(aggCls);
                     }
 
-                    //Console.WriteLine("------------------------------------");
+                    //Console.WriteLine( "------------------------------------" );
 
-                    //Console.WriteLine("Using: ");
+                    //Console.WriteLine( "Using: " );
                     foreach (string useCls in cls.UsingList)
                     {
-                        //Console.WriteLine(useCls);
+                        //Console.WriteLine( useCls );
                         if (!UsingRel.ContainsKey(cls.Name))
                         {
                             UsingRel[cls.Name] = new List<string>();
@@ -112,7 +111,7 @@ namespace AnalyzerTests.Pipeline
                         UsingRel[cls.Name].Add(useCls);
 
                     }
-                    //Console.WriteLine("------------------------------------");
+                    //Console.WriteLine( "------------------------------------" );
 
                 }
             }
@@ -129,19 +128,19 @@ namespace AnalyzerTests.Pipeline
 
             foreach (string key in InheritanceRel.Keys)
             {
-                CollectionAssert.AreEqual(InheritanceExp[key], InheritanceRel[key]);
+                CollectionAssert.AreEqual( InheritanceExp[key] , InheritanceRel[key] );
             }
             foreach (string key in CompositionRel.Keys)
             {
-                CollectionAssert.AreEqual(CompositionExp[key], CompositionRel[key]);
+                CollectionAssert.AreEqual( CompositionExp[key] , CompositionRel[key] );
             }
             foreach (string key in AggregationRel.Keys)
             {
-                CollectionAssert.AreEqual(AggregationExp[key], AggregationRel[key]);
+                CollectionAssert.AreEqual( AggregationExp[key] , AggregationRel[key] );
             }
             foreach (string key in UsingRel.Keys)
             {
-                CollectionAssert.AreEqual(UsingExp[key], UsingRel[key]);
+                CollectionAssert.AreEqual( UsingExp[key] , UsingRel[key] );
             }
         }
 
@@ -159,14 +158,14 @@ namespace AnalyzerTests.Pipeline
             {
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Square"))
                 {
-                    HashSet<string> expectedUsingList = new HashSet<string>{ "CClassRelTestCase1.Circle" };
+                    HashSet<string> expectedUsingList = new() { "CClassRelTestCase1.Circle" };
                     bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
                     Assert.AreEqual(true, areEqual);
                 }
 
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Circle"))
                 {
-                    HashSet<string> expectedUsingList = new HashSet<string> { "IClassRelTestCase1.IColor" };
+                    HashSet<string> expectedUsingList = new() { "IClassRelTestCase1.IColor" };
                     bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
                     Assert.AreEqual(true, areEqual);
                 }
@@ -187,7 +186,7 @@ namespace AnalyzerTests.Pipeline
             {
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Rectangle"))
                 {
-                    HashSet<string> expectedUsingList = new HashSet<string> { "IClassRelTestCase1.IColor" };
+                    HashSet<string> expectedUsingList = new() { "IClassRelTestCase1.IColor" };
                     bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
                     Assert.AreEqual(true, areEqual);
                 }
@@ -212,6 +211,7 @@ namespace AnalyzerTests.Pipeline
             public Circle(IColor clr)
             {
                 IColor rClr = clr;        
+                Console.WriteLine(rClr.ToString());
             }
             public void Draw()
             {

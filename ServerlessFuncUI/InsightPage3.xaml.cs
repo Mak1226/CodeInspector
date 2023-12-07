@@ -71,9 +71,13 @@ namespace ServerlessFuncUI
                 Trace.WriteLine("retrieved runinng averages and diplayed the changes in bar graph");
                 _meanValues.Clear();
                 // Create a ColumnSeries and add the average values to it
-                foreach (double average in averageList)
+                if(averageList is not  null)
                 {
-                    _meanValues.Add(new ObservableValue(average));
+                    foreach (double average in averageList)
+                    {
+                        _meanValues.Add(new ObservableValue(average));
+                    }
+
                 }
 
             }

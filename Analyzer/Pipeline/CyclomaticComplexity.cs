@@ -1,12 +1,14 @@
-﻿/******************************************************************************
+﻿/*******************************************************************************
 * Filename    = CyclomaticComplexity.cs
 * 
-* Author      = 
+* Author      = Nikhitha Atyam
+* 
+* Product     = Analyzer
 * 
 * Project     = Analyzer
 *
-* Description = 
-*****************************************************************************/
+* Description = Measures the cyclomatic complexity of methods in the dll files and flags the complex methods
+*********************************************************************************/
 
 using Analyzer.Parsing;
 using System.Text;
@@ -15,10 +17,23 @@ using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline
 {
+    /// <summary>
+    /// CYCLOMATIC COMPLEXITY: Quantitative measure of number of linearly-independent paths through a program module 
+    /// Programs with lower cyclomatic complexity are easier to understand and less risky to modify
+    /// Higher cyclomatic complexity => complex method => Such methods are flagged by this analyzer
+    /// </summary>
     public class CyclomaticComplexity : AnalyzerBase
     {
-        private readonly int _maxAllowedComplexity;
+        // maximum allowed complexity for each method 
+        private readonly int _maxAllowedComplexity;    
         private readonly string _analyzerID ;
+
+
+        /// <summary>
+        /// Measures cyclomatic complexity of all methods in the files
+        /// </summary>
+        /// <param name="dllFiles">List of parsed DLL objects which are to be analyzed</param>
+        /// <param name="maxAllowedComplexity">Maximum allowed complexity for each method(default = 10)</param>
         public CyclomaticComplexity(List<ParsedDLLFile> dllFiles , int maxAllowedComplexity=10) : base(dllFiles)
         {
             _maxAllowedComplexity = maxAllowedComplexity;
@@ -26,34 +41,39 @@ namespace Analyzer.Pipeline
         }
 
 
+        // Analyzing all methods of one DLL file
         protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
         {
             StringBuilder errorMessageBuilder = new();
-            int verdict = 1;    // no error
+            int verdict = 1;    // no violating method
 
             List<ParsedClassMonoCecil> parsedClasses = parsedDLLFile.classObjListMC;
 
+            // Traversing over all class objects for finding all methods of the file
             foreach (ParsedClassMonoCecil parsedClass in parsedClasses)
             {
-                List<MethodDefinition> methods_constructors = parsedClass.MethodsList;
-                methods_constructors.AddRange(parsedClass.Constructors);
+                // Constructors are also included in this analysis
+                List<MethodDefinition> methodsAndConstructorsList = parsedClass.MethodsList;
+                methodsAndConstructorsList.AddRange(parsedClass.Constructors);
 
-                foreach(MethodDefinition method in methods_constructors)
+                foreach(MethodDefinition method in methodsAndConstructorsList)
                 {
                     int methodComplexity = GetMethodCyclomaticComplexity(method);
 
+                    // Flags method if complexity of it is more than allowed complexity
                     if(methodComplexity > _maxAllowedComplexity)
                     {
-                        verdict = 0;
+                        verdict = 0;    // there exists complex methods
                         errorMessageBuilder.AppendLine($"{method.FullName} : Cyclomatic Complexity = {methodComplexity}");
                     }
                 }     
             }
 
+            // No violating method
             if(verdict == 1)
             {
-                errorMessageBuilder.Append($"No methods have cyclomatic complexity greater than {_maxAllowedComplexity}\n");
-                errorMessageBuilder.Append($"[NOTE: Switch case complexity is not accurate]");
+                errorMessageBuilder.AppendLine($"No methods have cyclomatic complexity greater than {_maxAllowedComplexity}");
+                errorMessageBuilder.AppendLine($"[NOTE: Switch case complexity is not accurate]");
             }
             else
             {
@@ -66,9 +86,14 @@ namespace Analyzer.Pipeline
         }
 
 
+        /// <summary>
+        /// Finding cyclomatic complexity of a method
+        /// </summary>
+        /// <param name="method">Method for which complexity needs to be found</param>
+        /// <returns>complexity of method</returns>
         public int GetMethodCyclomaticComplexity(MethodDefinition method)
         {
-            List<Instruction> targets = new();
+            List<Instruction> targets = new();      // stores branch targets
             int cyclomaticComplexity = 1;
 
             // non empty methods
@@ -89,6 +114,7 @@ namespace Analyzer.Pipeline
         }
 
 
+        // Calculating complexity in case of conditional branch 
         private int CalculateCondBranchCaseComplexity(Instruction instruction , List<Instruction> targets)
         {
             int complexity = 0;
@@ -99,19 +125,20 @@ namespace Analyzer.Pipeline
             }
             else
             {
-                Instruction target = instruction.Operand as Instruction;
+                //Instruction target = instruction.Operand as Instruction;
 
                 //if (!targets.Contains(target) && instruction.Previous?.OpCode.Code != Code.Dup)
-                if (!targets.Contains(target))
-                {
+                //if (!targets.Contains(target))
+                //{
                     complexity++;
-                }
+                //}
             }
 
             return complexity;
         }
 
 
+        // Finding the number of switch case labels
         private void FindSwitchTargetLabels(Instruction instruction , List<Instruction> targets)
         {
             // Analysing the cases of the switch statement to calculate complexity
@@ -121,6 +148,10 @@ namespace Analyzer.Pipeline
             {
                 targets.Add(caseLabel);
             }
+
+            // default case in case may exist or not
+            // default case would be generally unconditional branch statement next to switch instruction
+            // But in case of no default => this way may not be the appropriate way for finding existence of default case
         }
 
     }

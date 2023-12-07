@@ -13,6 +13,7 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
+using Analyzer.Pipeline.Analyzers;
 using Analyzer.UMLDiagram;
 using System.Diagnostics;
 
@@ -89,7 +90,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[107] = new AvoidSwitchStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[108] = new DisposableFieldsShouldBeDisposedRule(_parsedDLLFiles);
             _allAnalyzers[109] = new RemoveUnusedLocalVariablesRule(_parsedDLLFiles);
-            _allAnalyzers[110] = new ReviewUselessControlFlowRule(_parsedDLLFiles);
+            _allAnalyzers[110] = new AsyncMethodAnalyzer( _parsedDLLFiles);
             _allAnalyzers[111] = new AbstractClassNamingChecker(_parsedDLLFiles);
             _allAnalyzers[112] = new CasingChecker(_parsedDLLFiles);
             _allAnalyzers[113] = new CyclomaticComplexity(_parsedDLLFiles);
@@ -99,6 +100,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[117] = new AvoidGotoStatementsAnalyzer(_parsedDLLFiles);
             _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
+            _allAnalyzers[120] = new NotImplementedChecker(_parsedDLLFiles);
             Trace.Write("MainPipeline : All Analyzers Generated\n");
         }
 
@@ -183,7 +185,6 @@ namespace Analyzer.Pipeline
         /// <returns>Byte array representing the generated class diagram.</returns>
         public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
-            // TODO: Call ClassDiagram.Run() after modifications
             ClassDiagram classDiag = new(_parsedDLLFiles);
             byte[] bytes = classDiag.Run(removableNamespaces).Result;
             Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));

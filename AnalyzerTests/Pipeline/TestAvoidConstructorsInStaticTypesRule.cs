@@ -171,10 +171,11 @@ namespace AcistTestCase1
         public static void Calculate()
         {
             Console.WriteLine( "Static Method" );
-            Func<int, int, int> addFunction = (a, b) => a + b;
+            //Func<int, int, int> addFunction = (a, b) => a + b;
 
             // Using the lambda function
-            int result = addFunction(5, 3);
+           // int result = addFunction(5, 3);
+            //Console.WriteLine( result );
         }
     }
 

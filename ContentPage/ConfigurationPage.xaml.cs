@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Diagnostics;
 using System.Windows.Controls;
 using Content.ViewModel;
 
@@ -34,6 +35,8 @@ namespace ContentPage
         /// <param name="server">Running server</param>
         public ConfigurationPage(ContentServerViewModel viewModel)
         {
+            Trace.WriteLine( "Initializing ConfigurationPage" );
+
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = viewModel;
@@ -55,6 +58,7 @@ namespace ContentPage
                 
                 int analyzerId = Convert.ToInt32( analyzerItem.AnalyzerId );
                 _accumulatedOptions[analyzerId] = true;
+                Trace.WriteLine( $"Checkbox checked for Analyzer ID: {analyzerId}" );
                 _viewModel.ConfigureAnalyzer( _accumulatedOptions );
                
             }
@@ -74,6 +78,8 @@ namespace ContentPage
             {
                 int analyzerId = Convert.ToInt32( analyzerItem.AnalyzerId );
                 _accumulatedOptions.Remove( analyzerId );
+
+                Trace.WriteLine( $"Checkbox unchecked for Analyzer ID: {analyzerId}" );
 
                 _viewModel.ConfigureAnalyzer( _accumulatedOptions );
             }

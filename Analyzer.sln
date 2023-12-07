@@ -25,11 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnalyzerTests", "AnalyzerTests\AnalyzerTests.csproj", "{0E81FD33-F200-49F5-8B47-DF24F371448F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E17D307-3C65-4C85-B72A-A9C7B5696765}"
-	ProjectSection(SolutionItems) = preProject
-		Analyzer\DynamicAnalyzer\InvokeCustomAnalyzers.cs = Analyzer\DynamicAnalyzer\InvokeCustomAnalyzers.cs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerlessFunc", "ServerlessFunc\ServerlessFunc.csproj", "{7BDFB42E-7D4E-444A-B1A2-373A01FABD4B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudUnitTests", "UnitTests\CloudUnitTests.csproj", "{C1081456-4DB3-4362-84C4-8B684900C8EF}"
@@ -38,7 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerlessFuncUI", "Serverl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloud_UX", "Cloud_UX\Cloud_UX.csproj", "{98408E0F-37E0-4860-8512-6DF569D68D6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkingUnitTests", "NetworkingUnitTests\NetworkingUnitTests.csproj", "{330DA808-32E2-4D21-A3A2-439A181EFD3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingUnitTests", "NetworkingUnitTests\NetworkingUnitTests.csproj", "{330DA808-32E2-4D21-A3A2-439A181EFD3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DashboardUnitTests", "DashboardUnitTests\DashboardUnitTests.csproj", "{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Packaging", "Packaging\Packaging.vdproj", "{099E46C2-407E-465D-B120-727168636305}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logger\Logging.csproj", "{734F70EC-CE71-4239-96E9-CCB648289314}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,14 +107,20 @@ Global
 		{98408E0F-37E0-4860-8512-6DF569D68D6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98408E0F-37E0-4860-8512-6DF569D68D6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98408E0F-37E0-4860-8512-6DF569D68D6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{687E4F33-795E-49E2-83D6-C99A3D15FB06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{330DA808-32E2-4D21-A3A2-439A181EFD3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE48CCD4-A82F-441B-9FBE-19D11D8FCFE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{099E46C2-407E-465D-B120-727168636305}.Debug|Any CPU.ActiveCfg = Debug
+		{099E46C2-407E-465D-B120-727168636305}.Release|Any CPU.ActiveCfg = Release
+		{734F70EC-CE71-4239-96E9-CCB648289314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734F70EC-CE71-4239-96E9-CCB648289314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734F70EC-CE71-4239-96E9-CCB648289314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734F70EC-CE71-4239-96E9-CCB648289314}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

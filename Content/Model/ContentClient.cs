@@ -10,11 +10,11 @@
  * Description = Class that represents a client for handling file uploads.
  *****************************************************************************/
 
-using System.Diagnostics;
 using Analyzer;
 using Content.Encoder;
 using Content.FileHandling;
 using Networking.Communicator;
+using Logging;
 
 namespace Content.Model
 {
@@ -28,7 +28,14 @@ namespace Content.Model
         readonly string _sessionID;
         readonly AnalyzerResultSerializer _serializer;
 
+        /// <summary>
+        /// Output of analysis
+        /// </summary>
         public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+
+        /// <summary>
+        /// Action to be invoked when <see cref="analyzerResult"/> is changed
+        /// </summary>
         public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         /// <summary>
@@ -36,7 +43,6 @@ namespace Content.Model
         /// </summary>
         public ContentClient(ICommunicator client, string sessionID)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: ContentClient: Initialized ContentClient" );
             _client = client;
             ClientRecieveHandler recieveHandler = new (this);
             _client.Subscribe(recieveHandler, "Content-Results");
@@ -46,7 +52,10 @@ namespace Content.Model
             _serializer = new AnalyzerResultSerializer();
 
             analyzerResult = new();
+            Logger.Inform( "[ContentClient.cs] ContentClient: Initialized ContentClient" );
         }
+
+        
 
         /// <summary>
         /// Handles the upload of files from a folder/file to the folder specified for that session.
@@ -55,10 +64,10 @@ namespace Content.Model
         /// or path to the file to upload</param>
         public void HandleUpload(string folderPath)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: HandleUpload: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );
             string encoding = _fileHandler.HandleUpload(folderPath, _sessionID);
             _client.Send(encoding, "Content-Files", "server");
-            Trace.WriteLine( "Content: ContentClient.cs: HandleUpload: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );
         }
 
         /// <summary>
@@ -67,10 +76,10 @@ namespace Content.Model
         /// <param name="encoding">The encoded data containing analyzer results.</param>
         public void HandleReceive(string encoding)
         {
-            Trace.WriteLine( "Content: ContentClient.cs: HandleReceive: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleReceive: Started" );
             analyzerResult = _serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(encoding);
             AnalyzerResultChanged?.Invoke(analyzerResult);
-            Trace.WriteLine( "Content: ContentClient.cs: HandleReceive: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleReceive: Started" );
         }
     }
 }

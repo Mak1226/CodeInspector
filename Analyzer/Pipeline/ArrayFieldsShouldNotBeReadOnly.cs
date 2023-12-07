@@ -9,9 +9,8 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
-using System;
+
 
 namespace Analyzer.Pipeline
 {

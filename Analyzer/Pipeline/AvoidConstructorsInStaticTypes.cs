@@ -9,14 +9,10 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Analyzer.Pipeline
 {
@@ -58,6 +54,10 @@ namespace Analyzer.Pipeline
             {
                 foreach (MethodInfo method in methods)
                 {
+                    if(method == null)
+                    {
+                        continue;
+                    }
                     Type? declaringType = method.DeclaringType;
                     if ((declaringType != null) && (declaringType.ToString().StartsWith( "System.Object" )))
                     {
@@ -77,7 +77,7 @@ namespace Analyzer.Pipeline
 
             if (fields.Length != 0)
             {
-                foreach (FieldInfo field in fields)
+                foreach (FieldInfo? field in fields)
                 {
                     if (!field.IsStatic)
                     {
