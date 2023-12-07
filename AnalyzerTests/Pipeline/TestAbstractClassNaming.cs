@@ -36,7 +36,7 @@ namespace AnalyzerTests.Pipeline
 
         //namespace ClassLibrary1
         //{
-        //    public abstract class goodBase
+        //    public abstract class GoodBase
         //    {
         //        //..
         //    }
@@ -69,7 +69,7 @@ namespace AnalyzerTests.Pipeline
 
         //namespace ClassLibrary1
         //{
-        //    public abstract class BadBase
+        //    public abstract class badBase
         //    {
         //        //..
         //    }
