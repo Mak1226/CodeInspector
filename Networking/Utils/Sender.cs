@@ -127,16 +127,22 @@ namespace Networking.Utils
         /// <param name="messageSize">The length of the bytes of the message</param>
         private static void SendToDest(NetworkStream stream, byte[] message, int messageSize)
         {
-            stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
-            //stream.Write( message );                                                    // sending the message itself
-            int chunkSize = 1024 * 1024; // 1MB chunk size
-            int totalBytesSent = 0;
-
-            while (totalBytesSent < message.Length)
+            try
             {
-                int bytesToSend = Math.Min( chunkSize , message.Length - totalBytesSent );
-                stream.Write( message , totalBytesSent , bytesToSend );
-                totalBytesSent += bytesToSend;
+                stream.Write( BitConverter.GetBytes( messageSize ) , 0 , sizeof( int ) );   // first sizeof( int ) bytes of a message sent will be the size of message payload
+                                                                                            //stream.Write( message );                                                    // sending the message itself
+                int chunkSize = 1024 * 1024; // 1MB chunk size
+                int totalBytesSent = 0;
+
+                while (totalBytesSent < message.Length)
+                {
+                    int bytesToSend = Math.Min( chunkSize , message.Length - totalBytesSent );
+                    stream.Write( message , totalBytesSent , bytesToSend );
+                    totalBytesSent += bytesToSend;
+                }
+            }
+            catch(Exception e) {
+                Trace.WriteLine( "Exception in Sender:SendToDest " +e.Message);
             }
 
         }
@@ -168,8 +174,9 @@ namespace Networking.Utils
                     Message message = _sendQueue.Dequeue();
 
                     // Serialize the message; convert to Bytes; get its length
-                    string serStr = Serializer.Serialize( message );
-                    byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes( serStr );
+                    //string serStr = Serializer.Serialize( message );
+                    byte[] messagebytes = System.Text.Encoding.ASCII.GetBytes( Serializer.Serialize( message ) );
+
                     int messageSize = messagebytes.Length;
 
                     // Try to send the message

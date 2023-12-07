@@ -120,7 +120,7 @@ namespace Networking.Utils
                             System.Diagnostics.Trace.Assert( sizeBytesRead == sizeof( int ) );
                             int messageSize = BitConverter.ToInt32( sizeBytes , 0 );
 
-                            // Now read the actual message
+                            // Now read the actual message  
                             byte[] receiveData = new byte[messageSize];
                             int totalBytesRead = 0;
 
