@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
+using Logging;
 
 
 namespace ViewModel
@@ -191,7 +192,7 @@ namespace ViewModel
                         //removing student in local data structure
                         _studentSessionState.RemoveStudent(rollNo);
                         //acknowledging student about removing connection
-                        Communicator.Send("0", $"{rollNo}");
+                        //Communicator.Send("0", $"{rollNo}");
                         Trace.WriteLine($"[Instructor View Model] Removed student: Roll No - {rollNo}");
                     }
                     OnPropertyChanged(nameof(StudentList));
