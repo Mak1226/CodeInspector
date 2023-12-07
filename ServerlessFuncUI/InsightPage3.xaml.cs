@@ -27,7 +27,8 @@ namespace ServerlessFuncUI
     public sealed partial class InsightPage3 : Page, INotifyPropertyChanged
     {
         private readonly InsightsApi _insightsApi;
-        public string InsightPath = "http://localhost:7074/api/insights";
+        //public string InsightPath = "http://localhost:7074/api/insights";
+        public string InsightPath = "https://serverlessfunc20231121082343.azurewebsites.net/api/insights";
         public string hostname;
         private ChartValues<ObservableValue> _meanValues;
 

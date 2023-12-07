@@ -18,6 +18,7 @@ using Networking.Communicator;
 using Networking.Models;
 using Networking.Queues;
 using Networking.Serialization;
+using Logging;
 
 namespace Networking.Utils
 {
@@ -63,7 +64,7 @@ namespace Networking.Utils
         /// <param name="comm">Communicator interface for handling received messages.</param>
         public Receiver( Dictionary<string , NetworkStream> clientIdToStream , ICommunicator comm )
         {
-            Trace.WriteLine( "[Receiver] Init" );
+            Logger.Log( "[Receiver] Init" , LogLevel.INFO );
             _clientIdToStream = clientIdToStream;
             _recvThread = new Thread( Receive )
             {
@@ -83,7 +84,8 @@ namespace Networking.Utils
         /// </summary>
         public void Stop()
         {
-            Trace.WriteLine( "[Receiver] Stop" );
+            Logger.Log( "[Receiver] Stop" , LogLevel.INFO );
+
             _stopThread = true;
 
             // Wait for the threads to terminate
@@ -96,7 +98,8 @@ namespace Networking.Utils
         /// </summary>
         private void Receive()
         {
-            Trace.WriteLine( "[Receiver] Receive starts" );
+            Logger.Log( "[Receiver] Receive starts" , LogLevel.INFO );
+
 
             // Continue receiving messages until the thread is signaled to stop
             while (!_stopThread)
@@ -148,12 +151,13 @@ namespace Networking.Utils
                             }
 
                             // Enqueue the received message with its priority
-                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ));
+                            _recvQueue.Enqueue( message , Priority.GetPriority( message.ModuleName ) );
                         }
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine( "Exception in receiver: " + ex.Message );
+                        Logger.Log( "Exception in receiver: " + ex.Message , LogLevel.ERROR );
+
                     }
                 }
 
@@ -164,7 +168,8 @@ namespace Networking.Utils
                 }
             }
 
-            Trace.WriteLine( "[Receiver] Receive stops" );
+            Logger.Log( "[Receiver] Receive stops" , LogLevel.INFO );
+
         }
 
 

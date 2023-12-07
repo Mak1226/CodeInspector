@@ -10,11 +10,9 @@
 * Description = Parses the most used information from the class object using Mono.Cecil package
 *****************************************************************************/
 
-using System.Diagnostics;
-using System.Reflection;
+using Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
 
 namespace Analyzer.Parsing
 {
@@ -48,7 +46,7 @@ namespace Analyzer.Parsing
 
         public ParsedClassMonoCecil(TypeDefinition type)
         {
-            Trace.WriteLine("Creating ParsedMonoCecil Obj for " + type.FullName);
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Creating ParsedMonoCecil Obj for " + type.FullName );
             TypeObj = type;
             Name = type.Name;
 
@@ -95,7 +93,7 @@ namespace Analyzer.Parsing
             FieldsList = TypeObj.Fields.ToList();
             PropertiesList = TypeObj.Properties.ToList();
 
-            Trace.WriteLine( "Extracting Relationships List for " + type.FullName );
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Extracting Relationships List for " + type.FullName); 
             //Extracting the relationships between different classes and the current ParsedClassMonoCecil Type obj
             if (!TypeObj.GetType().IsGenericType)
             {
@@ -104,9 +102,9 @@ namespace Analyzer.Parsing
                 UpdateAggregationList();
                 UpdateUsingList();
             }
-            Trace.WriteLine( "Updated the Relationships List for " + type.FullName );
-            Trace.WriteLine( "ParsedMonoCecil Obj creation Completed for " + type.FullName );
 
+            Logger.Inform( "[ParsedClassMonoCecil.cs] Updated the Relationships List for " + type.FullName );
+            Logger.Inform( "[ParsedClassMonoCecil.cs] ParsedMonoCecil Obj creation Completed for " + type.FullName );
 
             // Properties,events handlers will be coming to methods list when used GetMethods() as described above
             List<EventDefinition> events = new();
@@ -253,12 +251,21 @@ namespace Analyzer.Parsing
         /// </summary>
         private void UpdateRelationshipsListFromCtors()
         {
-            //Composition Relation:
-            //Cases1: If any parameter of constructor is assigned to a field of the class, then it is composition relationship.
-            //CAse2: If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
+            // Composition Relation:
+            // if parameter of constructor is assigned to a field of the class, then it is not considered composition relationship, because life time of 
+            // object would be more than that of class.
+            // If any new object is instantiated inside a constructor, and is assigned to any class field, then there exist composition relationship.
+            // On the other hand if a field is assigned to an object which is returned by a function, its considered aggregation relation
             foreach (MethodDefinition? ctor in Constructors)
             {
                 List<ParameterDefinition>? parameterList = ctor.Parameters.ToList();
+                List<string> parameterNames = new();
+                foreach(ParameterDefinition param in parameterList)
+                {
+                    Console.WriteLine( param.ParameterType.FullName );
+                    parameterNames.Add( param.ParameterType.FullName );
+                }
+                  
                 if (ctor.HasBody)
                 {
                     //iterating over all instructions, to check if any class field (of reference type) is assigned a value (be it from parameter or by instantiating a new object)
@@ -268,23 +275,51 @@ namespace Analyzer.Parsing
                         if (inst != null && inst.OpCode == OpCodes.Stfld)
                         {
                             FieldReference? fieldReference = (FieldReference)inst.Operand;
-                            TypeReference? fieldType = fieldReference.FieldType;
-                            TypeDefinition? objType = fieldType.Resolve();
+                            TypeReference? fieldType = fieldReference?.FieldType;
+                            TypeDefinition? objType = fieldType?.Resolve();
+
+                            if(fieldType == null  || objType == null)
+                            {
+                                continue;
+                            }
 
                             // Check if the field type is of reference type (not a value type), not a Generic type, and does not start with "System"
                             if (!fieldType.IsValueType && !objType.GetType().IsGenericType && !objType.FullName.StartsWith( "System" ))
                             {
-                                if (objType.IsClass && !SetsContainElement( "C" + objType.FullName , InheritanceList ))
+                                
+                                if (parameterNames.Contains( objType.FullName ))
                                 {
+                                    //not adding to using list here, in order to maintain priority of composition over using
+                                    continue;
+                                }
+                               
+                                if (objType.IsClass && !SetsContainElement( "C" + objType.FullName , InheritanceList ))
+                                { 
                                     if (objType.Name.StartsWith( "<" ))
                                     {
                                         continue;
                                     }
-                                    CompositionList.Add( "C" + objType.FullName );
+                                    // if the previous instruction has new opcode , its composition
+                                    if (inst.Previous != null && inst.Previous.OpCode == OpCodes.Newobj)
+                                    {
+                                        CompositionList.Add( "C" + objType.FullName );
+                                    }
+                                    else
+                                    {
+                                        AggregationList.Add( "C" + objType.FullName );
+                                    }
                                 }
                                 else if (objType.IsInterface && !SetsContainElement( "I" + objType.FullName , InheritanceList ))
                                 {
-                                    CompositionList.Add( "I" + objType.FullName );
+                                    // if the previous instruction has new opcode , its composition
+                                    if (inst.Previous != null && inst.Previous.OpCode == OpCodes.Newobj)
+                                    {
+                                        CompositionList.Add( "I" + objType.FullName );
+                                    }
+                                    else
+                                    {
+                                        AggregationList.Add( "I" + objType.FullName );
+                                    }
                                 }
                             }
                         }
@@ -301,8 +336,6 @@ namespace Analyzer.Parsing
 
                     if (!parameterTypeName.StartsWith( "System" ) && !parameterType.GetType().IsGenericType)
                     {
-                        //Console.WriteLine( parameterType );
-                        //Console.WriteLine( parameterType.IsClass );
                         if (parameterType.IsClass && !SetsContainElement( "C" + parameter.ParameterType.FullName , InheritanceList , CompositionList ))
                         {
                             if(parameter.ParameterType.Name.StartsWith( "<" ) )
@@ -359,6 +392,8 @@ namespace Analyzer.Parsing
         /// </summary>
         private void UpdateAggregationList()
         {
+            Logger.Inform( "[ParsedClassMonoCecil.cs] UpdateAggregationList started");
+
             // Aggregation List:
             // Cases1: If a new class object is created and/or instantiated inside any method (other than constructor), its aggregation.
             // Cases2: If a new class object is instantiated inside a constructor, but is not assigned to any class field, its aggregation. 
@@ -404,37 +439,56 @@ namespace Analyzer.Parsing
             {
                 foreach (ParameterDefinition? argument in pair.Value)
                 {
-                    TypeDefinition? objType = argument.ParameterType.Resolve();
-                    TypeReference objRef = argument.ParameterType;
-
-                    //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
-                    if (objType != TypeObj && objType != null && !(objType.GetType().IsGenericType || objRef.IsGenericInstance))
+                    TypeReference? objRef = argument.ParameterType;
+                    if(objRef == null) 
                     {
-                        if (pair.Key.IsConstructor)
+                        continue;
+                    }
+
+                    try
+                    {
+                        TypeDefinition? objType = objRef.Resolve();
+                        if (objType == null)
                         {
                             continue;
                         }
-                        else
+
+                        //adding to using list, if the parameter is of class type and is not of generic class (list, dict,etc.)
+                        if (objType != TypeObj && objType != null && !(objType.GetType().IsGenericType || objRef.IsGenericInstance))
                         {
-                            //ignoring the classes those start with "System"
-                            if (!argument.ParameterType.FullName.StartsWith( "System" ))
+                            if (pair.Key.IsConstructor)
                             {
-                                if (objType.IsClass && !SetsContainElement( "C" + argument.ParameterType.FullName , InheritanceList , CompositionList , AggregationList ))
+                                continue;
+                            }
+                            else
+                            {
+                                string? param = argument.ParameterType.FullName;
+
+                                //ignoring the classes those start with "System"
+                                if (!param.StartsWith( "System" ))
                                 {
-                                    //Console.WriteLine( "1: " + argument.ParameterType.FullName );
-                                    if (argument.ParameterType.Name.StartsWith( "<" ))
+                                    if (objType.IsClass && !SetsContainElement( "C" + argument.ParameterType.FullName , InheritanceList , CompositionList , AggregationList ))
                                     {
-                                        continue;
+                                        //Console.WriteLine( "1: " + argument.ParameterType.FullName );
+                                        if (param.StartsWith( "<" ))
+                                        {
+                                            continue;
+                                        }
+                                        UsingList.Add( "C" + param );
                                     }
-                                    UsingList.Add( "C" + argument.ParameterType.FullName );
-                                }
-                                else if (objType.IsInterface && !SetsContainElement( "I" + argument.ParameterType.FullName , InheritanceList , CompositionList , AggregationList ))
-                                {
-                                    //Console.WriteLine( "1: " + argument.ParameterType.FullName );
-                                    UsingList.Add( "I" + argument.ParameterType.FullName );
+                                    else if (objType.IsInterface && !SetsContainElement( "I" + argument.ParameterType.FullName , InheritanceList , CompositionList , AggregationList ))
+                                    {
+                                        //Console.WriteLine( "1: " + argument.ParameterType.FullName );
+                                        UsingList.Add( "I" + param );
+                                    }
                                 }
                             }
                         }
+                    }
+                    catch (Exception ex) 
+                    {
+                        Logger.Debug( "[ParsedClassMonoCecil.cs] UpdateUsingList: " + ex.Message );
+                        continue;
                     }
                 }
             }

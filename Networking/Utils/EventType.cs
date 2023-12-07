@@ -70,5 +70,9 @@ namespace Networking.Utils
         {
             return "HandleServerLeft";
         }
+        public static string ClientKicked()
+        {
+            return "ClientKicked";
+        }
     }
 }

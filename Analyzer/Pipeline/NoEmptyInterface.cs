@@ -13,9 +13,8 @@
 *               Therefore, it does not define a contract that can be implemented.
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using System.Diagnostics;
 using System.Text;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

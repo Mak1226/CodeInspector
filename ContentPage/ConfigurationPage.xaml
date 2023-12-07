@@ -1,17 +1,5 @@
-﻿<!--<Page x:Class="ContentPage.ConfigurationPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ContentPage"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="ConfigurationPage">
+﻿
 
-    <Grid>
-        
-    </Grid>
-</Page>-->
 <Page x:Class="ContentPage.ConfigurationPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,15 +9,47 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ConfigurationPage">
+    <Page.Resources>
+        <Style x:Key="LightModeStyle" TargetType="Control">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="White"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LightModeStyleText" TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="White"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
+
+    </Page.Resources>
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="CheckBox" BasedOn="{StaticResource LightModeStyle}" />
+            <Style TargetType="TextBlock" BasedOn="{StaticResource LightModeStyle}" />
+            <!-- Add more styles for other controls as needed -->
+        </Grid.Resources>
         <StackPanel Orientation="Vertical">
 
             <!-- Configuration Options Table -->
             <DataGrid Height="Auto" HorizontalAlignment="Left" Name="configOptionsGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding ConfigOptionsList}" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}" />
-                    <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}" />
+                    <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}" ElementStyle="{StaticResource LightModeStyleText}" EditingElementStyle="{StaticResource LightModeStyleText}" />
+                    <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}" ElementStyle="{StaticResource LightModeStyleText}" EditingElementStyle="{StaticResource LightModeStyleText}" />
                     <DataGridTemplateColumn Header="Select">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

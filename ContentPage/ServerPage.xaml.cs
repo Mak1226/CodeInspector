@@ -63,6 +63,15 @@ namespace ContentPage
         }
 
         /// <summary>
+        /// Function to toggle dark mode in server
+        /// </summary>
+        /// <param name="darkMode"></param>
+        public void SetDarkMode(bool darkMode)
+        {
+            _viewModel.IsDarkMode = darkMode;
+        }
+
+        /// <summary>
         /// Loads the ResultPage into the ResultFrame.
         /// </summary>
         private void LoadResultPage()

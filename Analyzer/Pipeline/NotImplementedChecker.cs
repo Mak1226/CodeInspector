@@ -7,7 +7,6 @@
 *
 * Description = 
 *****************************************************************************/
-using System;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;

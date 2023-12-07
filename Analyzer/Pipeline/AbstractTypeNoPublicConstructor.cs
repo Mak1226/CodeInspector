@@ -13,10 +13,9 @@
 *               an abstract type that has a public constructor is incorrectly designed.
 *****************************************************************************/
 
-using Analyzer.Parsing;
 using System.Reflection;
-using System.Diagnostics;
 using System.Text;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

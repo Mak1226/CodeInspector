@@ -10,11 +10,6 @@
  * Description = Class that implements Disposable Fields Should Be Disposed Analyser
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;

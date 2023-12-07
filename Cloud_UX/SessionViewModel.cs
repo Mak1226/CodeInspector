@@ -43,7 +43,7 @@ namespace Cloud_UX
         /// Then dispatch the changes to the view.
         /// <param name="userName">The username of the user.</param>
         /// </summary>
-        public async void GetSessions(string userName)
+        public async Task GetSessions(string userName)
         {
             IReadOnlyList<SessionEntity> sessionsList = await _model.GetSessionsDetails(userName);
             Trace.WriteLine("[Cloud] Session details received");

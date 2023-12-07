@@ -12,7 +12,7 @@
 
 
 using System.Reflection;
-
+using Logging;
 
 namespace Analyzer.Parsing
 {
@@ -36,6 +36,7 @@ namespace Analyzer.Parsing
         // Parses the interface object (parameter - type)
         public ParsedInterface(Type type)
         {
+            Logger.Inform("[ParsedInterface.cs] ParsedInterface: Started for "+ type.Name);
             TypeObj = type;
             Name = type.Name;
 
@@ -69,6 +70,7 @@ namespace Analyzer.Parsing
 
                 ParentInterfaces = implIfaceList.ToArray();
             }
+            Logger.Inform("[ParsedInterface.cs] ParsedInterface: Completed for "+ type.Name);
         }
     }
 }

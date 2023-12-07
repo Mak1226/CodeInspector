@@ -10,16 +10,11 @@
  * Description = Unit Tests for DisposableFieldsShouldBeDisposedRule class
  *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using Analyzer.Parsing;
 using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AnalyzerTests.Pipeline
 {

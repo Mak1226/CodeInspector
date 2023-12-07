@@ -41,6 +41,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Packaging", "Packaging\Pack
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logger\Logging.csproj", "{734F70EC-CE71-4239-96E9-CCB648289314}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clientapp1", "Clientapp1\Clientapp1.csproj", "{EE80D2A5-5717-4601-9FFD-51BBB780703C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{734F70EC-CE71-4239-96E9-CCB648289314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{734F70EC-CE71-4239-96E9-CCB648289314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{734F70EC-CE71-4239-96E9-CCB648289314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE80D2A5-5717-4601-9FFD-51BBB780703C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE80D2A5-5717-4601-9FFD-51BBB780703C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE80D2A5-5717-4601-9FFD-51BBB780703C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE80D2A5-5717-4601-9FFD-51BBB780703C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,18 +8,11 @@
 * Description = Tsts the functionality of analyzer AvoidConstructorsInStaticTypes
 *****************************************************************************/
 
+using System.Reflection;
+using Analyzer;
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
-using Analyzer;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 
@@ -150,10 +143,7 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(1, resultObj["Proxy.dll"].Verdict);
             Assert.AreEqual(0, resultObj["ACIST1.dll"].Verdict);
             Assert.AreEqual(1, resultObj["BridgePattern.dll"].Verdict);
-
         }
-
-
     }
 }
 

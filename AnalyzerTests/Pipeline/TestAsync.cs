@@ -10,17 +10,11 @@
  * Description = Unit Tests for AsyncMethodAnalyzer class
  *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using Analyzer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Analyzer.Parsing;
-using System.Reflection;
 using System.Diagnostics;
+using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AnalyzerTests.Pipeline
 {

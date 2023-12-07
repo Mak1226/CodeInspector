@@ -13,8 +13,8 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline
 {
@@ -46,7 +46,15 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         public List<string> HandleClass(ParsedClassMonoCecil cls)
         {
-            List<string> unusedFields = new(cls.FieldsList.Select( field => field.Name.ToString()));
+            List<string> unusedFields = new();
+
+            foreach(FieldDefinition x in cls.FieldsList)
+            {
+                if (x.IsPrivate)
+                {
+                    unusedFields.Add(x.Name.ToString());
+                }
+            }   
 
             foreach (MethodDefinition method in cls.MethodsList.Concat( cls.Constructors ))
             {

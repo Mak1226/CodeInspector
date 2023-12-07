@@ -14,7 +14,7 @@
 
 using Analyzer.Parsing;
 using Analyzer.UMLDiagram;
-using System.Diagnostics;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -72,14 +72,15 @@ namespace Analyzer.Pipeline
                 try
                 {
                     _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                    Logger.Inform( $"[MainPipeline.cs] GenerateAnalysers: Parsed {Path.GetFileName(file)}" );
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine($"MainPipeline : Failed to parse {Path.GetFileName(file)}. Exception {ex.GetType().Name} : {ex.Message}");
+                    Logger.Error( $"[MainPipeline.cs] GenerateAnalysers: Failed to parse {Path.GetFileName(file)}. Exception {ex.GetType().Name} : {ex.Message}" );
                 }
             }
 
-            Trace.Write("MainPipeline : Generating instance of Analyzers\n");
+            Logger.Inform( "[MainPipeline.cs] GenerateAnalysers: Generating instance of Analyzers" );
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -100,7 +101,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
             _allAnalyzers[120] = new NotImplementedChecker(_parsedDLLFiles);
-            Trace.Write("MainPipeline : All Analyzers Generated\n");
+            Logger.Inform( "[MainPipeline.cs] GenerateAnalysers: All Analyzers Generated" );
         }
 
         /// <summary>
@@ -109,14 +110,14 @@ namespace Analyzer.Pipeline
         /// <param name="analyzerID">Identifier of the analyzer to run.</param>
         private void RunAnalyzer(int analyzerID)
         {
-            Trace.WriteLine("MainPipeline : Calling analyzer " + analyzerID);
+            Logger.Inform( $"[MainPipeline.cs] RunAnalyzer: Calling analyzer {analyzerID}" );
 
             Dictionary<string, AnalyzerResult> currentAnalyzerResult;
 
             try
             {
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
-                Trace.WriteLine("MainPipeline : Succeed analyzer " + analyzerID);
+                Logger.Inform( $"[MainPipeline.cs] RunAnalyzer: Succeed analyzer {analyzerID}" );
             }
             catch (KeyNotFoundException)
             {
@@ -200,7 +201,7 @@ namespace Analyzer.Pipeline
         {
             ClassDiagram classDiag = new(_parsedDLLFiles);
             byte[] bytes = classDiag.Run(removableNamespaces).Result;
-            Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));
+            Logger.Inform( "[MainPipeline.cs] GenerateClassDiagram: Created Class Relationship graph " + string.Join( " " , removableNamespaces ) );
             return bytes;
         }
     }

@@ -10,14 +10,7 @@
 * Description = An analyzer that checks the correctness of casing of classes , namesspaces, parameters and methods in parsed DLL files.
 *****************************************************************************/
 
-using System;
 using Analyzer.Parsing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
 
 namespace Analyzer.Pipeline

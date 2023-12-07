@@ -14,7 +14,7 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
 
       Title="InsightPage3" Height="500" Width="800">
-    
+
     <Page.Resources>
         <!-- Styling settings -->
         <Style TargetType="TextBlock" x:Key="WhiteTextBlock">
@@ -29,8 +29,8 @@
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="BorderThickness" Value="1"/>
-           
-            
+
+
         </Style>
 
         <Style TargetType="Button" x:Key="BlueButton">
@@ -46,11 +46,11 @@
             <Setter Property="Background" Value="#CDE6C7"/>
             <Setter Property="Foreground" Value="Black"/>
 
-            
+
         </Style>
-        
+
     </Page.Resources>
-    
+
     <Grid Background="#CDE6C7">
         <!-- Changed background color to a dark shade -->
         <Grid.RowDefinitions>
@@ -71,11 +71,11 @@
         <!-- Information Label -->
         <Label Content="Running Average on Test" Foreground="Black" FontSize="20" Margin="10,10,10,0" HorizontalAlignment="Center"/>
 
-        
+
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Test Name" FontSize="16" Foreground="Green" Margin="120,10,5,5"/>
         <!-- Changed text color to white -->
         <TextBox x:Name="TestNameTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource WhiteTextBox}"/>
-        
+
 
         <!-- Send Button -->
         <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Content="Send" Click="GetRunningAverage_Click" Style="{StaticResource BlueButton}"/>
@@ -88,12 +88,15 @@
                 <lvc:ColumnSeries Title="Mean" Values="{Binding MeanValues}" />
             </lvc:CartesianChart.Series>
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Sessions" />
+                <lvc:Axis Title="Sessions" ForceCursor="True" />
             </lvc:CartesianChart.AxisX>
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Values" />
+                <lvc:Axis Title="Values" MinValue="0" MaxValue="100" />
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
+
+
+
 
 
     </Grid>
