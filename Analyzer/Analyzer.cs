@@ -34,6 +34,9 @@ namespace Analyzer
         private List<string> _pathOfDLLFilesOfStudent;
         private IDictionary<int, bool> _teacherOptions;
         private List<string> _pathOfDLLFilesOfCustomAnalyzers;
+        private int _customAnalyzersID;
+        private readonly IDictionary<int, InvokeCustomAnalyzers> _customAnalyzers;
+        private readonly List<Tuple<int , string>> _allConfigurationOptions;
 
         /// <summary>
         /// Initializes a new instance of the Analyzer class.
@@ -43,6 +46,9 @@ namespace Analyzer
             _pathOfDLLFilesOfStudent = new List<string>();
             _teacherOptions = new Dictionary<int, bool>();
             _pathOfDLLFilesOfCustomAnalyzers = new List<string>();
+            _customAnalyzersID = 201;
+            _customAnalyzers = new Dictionary<int, InvokeCustomAnalyzers>();
+            _allConfigurationOptions = AnalyzerFactory.GetAllConfigurationOptions();
         }
 
         /// <summary>
@@ -73,10 +79,27 @@ namespace Analyzer
         /// Loads DLL files of custom analyzers for additional analysis.
         /// </summary>
         /// <param name="PathOfDLLFilesOfCustomAnalyzers">List of paths to DLL files of custom analyzers.</param>
-        public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
+        public List<Tuple<int , string>> LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
-            Trace.Write("Analyzer : Loaded custom analyzers " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
+
+            foreach(string path in PathOfDLLFilesOfCustomAnalyzers)
+            {
+
+                try
+                {
+                    InvokeCustomAnalyzers customAnalyzer = new(new List<string> { path });
+                    _customAnalyzers[_customAnalyzersID] = customAnalyzer;
+                    _allConfigurationOptions.Add(Tuple.Create(_customAnalyzersID++, path));
+                    Trace.Write( "Analyzer : Loaded custom analyzers " + path + "\n" );
+                }
+                catch
+                {
+                    Trace.Write( "Analyzer : Failed to Load custom analyzers " + path + "\n" );
+                }
+            }
+
+            return _allConfigurationOptions;
         }
 
         /// <summary>
@@ -86,11 +109,15 @@ namespace Analyzer
         public Dictionary<string, List<AnalyzerResult>> Run()
         {
             Trace.Write("Analyzer : MainPipeline is starting with " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
-            MainPipeline _customAnalyzerPipeline = new();
-            _customAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
-            _customAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
-            Dictionary<string, List<AnalyzerResult>> result = _customAnalyzerPipeline.Start();
+            MainPipeline _mainAnalyzerPipeline = new();
+            _mainAnalyzerPipeline.AddDLLFiles(_pathOfDLLFilesOfStudent);
+            _mainAnalyzerPipeline.AddTeacherOptions(_teacherOptions);
+            Dictionary<string, List<AnalyzerResult>> result = _mainAnalyzerPipeline.Start();
             Trace.Write("Analyzer : MainPipeline is over for " + string.Join(" ", _pathOfDLLFilesOfStudent) + "\n");
+
+            Dictionary<string , List<AnalyzerResult>> customAnalyzerResults = RnuCustomAnalyzers();
+
+            result = MergeDictionaries(result, customAnalyzerResults);
 
             foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
             {
@@ -125,20 +152,77 @@ namespace Analyzer
         /// <returns>Dictionary of analysis results from custom analyzers.</returns>
         public Dictionary<string, List<AnalyzerResult>> RnuCustomAnalyzers()
         {
-            Trace.Write("Analyzer : Invoking custom Analysers " + string.Join( " ", _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " ", _pathOfDLLFilesOfStudent));
-            Dictionary<string , List<AnalyzerResult>> result = new InvokeCustomAnalyzers( _pathOfDLLFilesOfCustomAnalyzers , _pathOfDLLFilesOfStudent ).Start();
-            Trace.Write( "Analyzer : Completed custom Analysers " + string.Join( " " , _pathOfDLLFilesOfCustomAnalyzers ) + "on students dll file " + string.Join( " " , _pathOfDLLFilesOfStudent ) );
 
-            foreach (KeyValuePair<string , List<AnalyzerResult>> keyValuePair in result)
+            Dictionary<string , List<AnalyzerResult>> result = new();
+
+            foreach (KeyValuePair<int , InvokeCustomAnalyzers> analyzer in _customAnalyzers)
             {
-                foreach (AnalyzerResult analyzerResult in keyValuePair.Value)
+                if (_teacherOptions[analyzer.Key]==true)
                 {
-                    Trace.Write( $"Analyzer : Key: {keyValuePair.Key}");
-                    Trace.Write( $"  {analyzerResult}\n" );
+                    try
+                    {
+                        InvokeCustomAnalyzers current = analyzer.Value;
+                        current.AddStudentDllFiles( _pathOfDLLFilesOfStudent );
+                        Dictionary<string , List<AnalyzerResult>> currentResult = current.Start();
+                        UpdateAnalyzerId( currentResult , analyzer.Key );
+                        result = MergeDictionaries( result , currentResult );
+                        Trace.Write("Analyzer : Completed custom analyzer " + analyzer.Key +" "+ string.Join(" ", _pathOfDLLFilesOfStudent));
+                    } catch
+                    {
+                        Trace.Write("Analyzer : Failed custom analyzer " + analyzer.Key);
+                    }
                 }
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Helper function to Update Analyzer Id
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="newAnalyzerId"></param>
+        private void UpdateAnalyzerId(Dictionary<string , List<AnalyzerResult>> dictionary , int newAnalyzerId)
+        {
+            foreach (string key in dictionary.Keys)
+            {
+                List<AnalyzerResult> resultList = dictionary[key];
+
+                foreach (AnalyzerResult result in resultList)
+                {
+                    result.AnalyserID = newAnalyzerId.ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper function to merge two dictionaries based on their key
+        /// </summary>
+        /// <param name="dictionary1"></param>
+        /// <param name="dictionary2"></param>
+        /// <returns></returns>
+        private Dictionary<string , List<AnalyzerResult>> MergeDictionaries(Dictionary<string , List<AnalyzerResult>> dictionary1, Dictionary<string , List<AnalyzerResult>> dictionary2 )
+        {
+            Dictionary<string , List<AnalyzerResult>> mergedDictionary = new();
+
+            foreach (string? key in dictionary1.Keys.Concat( dictionary2.Keys ).Distinct())
+            {
+                List<AnalyzerResult> resultList = new();
+
+                if (dictionary1.TryGetValue( key , out List<AnalyzerResult>? list1 ))
+                {
+                    resultList.AddRange( list1 );
+                }
+
+                if (dictionary2.TryGetValue( key , out List<AnalyzerResult>? list2 ))
+                {
+                    resultList.AddRange( list2 );
+                }
+
+                mergedDictionary[key] = resultList;
+            }
+
+            return mergedDictionary;
         }
     }
 }

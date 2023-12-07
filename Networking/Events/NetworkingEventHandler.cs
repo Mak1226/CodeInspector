@@ -10,12 +10,11 @@
  * Description = Defines the event handler for the Networking module.
  *****************************************************************************/
 
+using Logging;
 using Networking.Communicator;
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
-using System.Diagnostics;
-
 
 namespace Networking.Events
 {
@@ -117,7 +116,7 @@ namespace Networking.Events
             {
                 ((Server)_communicator)._senderIdToClientId.Remove(message.SenderId);
             }
-            Trace.WriteLine("[server] removed client with: " + clientId + " " + message.SenderId);
+            Logger.Log( "[server] Removed client with: " + clientId + " " + message.SenderId ,LogLevel.INFO);
             HandleClientLeft(message);
             return "";
         }
@@ -134,7 +133,7 @@ namespace Networking.Events
             {
                 ((Client)_communicator)._IdToStream.Remove(serverId);
             }
-            Trace.WriteLine("[client] removed server with: " + serverId + " " + message.SenderId);
+            Logger.Log("[client] Removed server with: " + serverId + " " + message.SenderId , LogLevel.INFO );
             return "";
         }
     }
