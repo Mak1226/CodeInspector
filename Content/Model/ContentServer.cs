@@ -81,6 +81,8 @@ namespace Content.Model
         /// </summary>
         public Action<Dictionary<string , List<AnalyzerResult>>>? AnalyzerResultChanged;
 
+        public Action<bool>? CloudSuccess;
+
         /// <summary>
         /// Currently loaded Analyzer Result
         /// </summary>
@@ -237,21 +239,39 @@ namespace Content.Model
         /// </summary>
         public async void SendToCloud()
         {
+            bool res = true;
 
             Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
             Logger.Debug( $"[ContentServer.cs] SentToCloud : Session :: {_hostSessionID}" );
-            await cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            ServerlessFunc.SessionEntity sessionRes = await cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            if (sessionRes == default)
+            {
+                Logger.Error( $"[ContentServer.cs] SentToCloud failed : Session :: {_hostSessionID}" );
+                res = false;
+            }
+
             foreach (KeyValuePair<string , Dictionary<string , List<AnalyzerResult>>> kvp in _sessionAnalysisResultDict)
             {
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Analysis :: {kvp.Key}" );
-                await cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
+                if (await cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value) == default)
+                {
+                    Logger.Error( $"[ContentServer.cs] SentToCloud failed : Analysis :: {kvp.Key}" );
+                    res = false;
+                }
 
                 IFileHandler fileHandler = new FileHandler();
                 string encoding = fileHandler.HandleUpload(kvp.Key, kvp.Key);
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Submission :: {kvp.Key}" );
-                await cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
+                if (await cloudHandler.PostSubmissionAsync( kvp.Key , encoding ) == default)
+                {
+                    Logger.Error( $"[ContentServer.cs] SentToCloud failed : Submission :: {kvp.Key}" );
+                    res = false;
+                }
             }
+
+            CloudSuccess?.Invoke( res );
+
             Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
 
