@@ -35,7 +35,7 @@ namespace Analyzer
         /// Loads DLL files of custom analyzers for additional analysis.
         /// </summary>
         /// <param name="pathOfDLLFilesOfCustomAnalyzers">List of paths to DLL files of custom analyzers.</param>
-        public void LoadDLLOfCustomAnalyzers(List<string> pathOfDLLFilesOfCustomAnalyzers);
+        public List<Tuple<int , string>> LoadDLLOfCustomAnalyzers(List<string> pathOfDLLFilesOfCustomAnalyzers);
 
         /// <summary>
         /// Runs the main analysis pipeline and returns the results.

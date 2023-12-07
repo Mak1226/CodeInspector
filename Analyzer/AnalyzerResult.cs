@@ -19,7 +19,7 @@ namespace Analyzer
     /// </summary>
     public class AnalyzerResult : IAnalyzerResult
     {
-        public string AnalyserID { get; }
+        public string AnalyserID { get; set; }
         public int Verdict { get; }
         public string ErrorMessage { get; }
 
