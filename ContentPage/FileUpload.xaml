@@ -9,11 +9,34 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="LightModeStyle" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="White"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DarkModeStackPanelStyle" TargetType="StackPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <!--<Setter Property="Foreground" Value="White"/>-->
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-    <StackPanel Background="Beige">
+    </Page.Resources>
+    <StackPanel  Style="{StaticResource DarkModeStackPanelStyle}">
         <Button
             x:Name="UploadButton"
             Click="UploadButton_Click"
+            Style="{StaticResource LightModeStyle}"
             Width="150" Height="40"
             Content="Choose a file to upload" />
         <TextBlock 

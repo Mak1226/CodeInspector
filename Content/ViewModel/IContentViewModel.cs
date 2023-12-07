@@ -20,5 +20,10 @@ namespace Content.ViewModel
         /// Two way binding for tab selection in view
         /// </summary>
         public Tuple<string, List<Tuple<string, int, string>>> SelectedItem { get; set; }
+
+        /// <summary>
+        /// Dark mode for all Content Pages
+        /// </summary>
+        public bool IsDarkMode { get; set; }
     }
 }
