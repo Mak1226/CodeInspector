@@ -8,12 +8,11 @@
 * Description = Test class to verify the functionality of the AvoidGotoStatementsAnalyzer
 *****************************************************************************/
 
+using System.Reflection;
+using Analyzer;
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
-using Analyzer;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace AnalyzerTests.Pipeline
 {

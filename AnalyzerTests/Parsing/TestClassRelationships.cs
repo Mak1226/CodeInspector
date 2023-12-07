@@ -7,19 +7,9 @@
 *
 * Description =  Test class to verify the functionality of retrieving class relationships from given dll file.
 *****************************************************************************/
+using System.Reflection;
 using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mono.Cecil;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using Analyzer;
-using System.Drawing;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -207,8 +197,8 @@ namespace AnalyzerTests.Pipeline
     }
 }
     namespace ClassRelTestCase1
-    {
-        public interface IColor
+{
+    public interface IColor
         {
             
         }

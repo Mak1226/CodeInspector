@@ -12,8 +12,8 @@
 *               Fields should be private or internal and should be exposed by using properties. 
 *****************************************************************************/
 
-using Analyzer.Parsing;
 using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using System.Diagnostics;
 using Logging;

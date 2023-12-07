@@ -13,8 +13,8 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline
 {

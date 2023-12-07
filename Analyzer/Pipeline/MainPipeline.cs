@@ -14,7 +14,6 @@
 
 using Analyzer.Parsing;
 using Analyzer.UMLDiagram;
-using System.Diagnostics;
 using Logging;
 
 namespace Analyzer.Pipeline

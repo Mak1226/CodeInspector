@@ -17,6 +17,7 @@ using Analyzer.Parsing;
 using Logging;
 using System.Diagnostics;
 using System.Text;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {
