@@ -41,7 +41,6 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 AuthenticationViewModel viewModel = new();
                 DataContext = viewModel;
-
             }
             catch (Exception exception)
             {
@@ -52,17 +51,16 @@ namespace Dashboard
         }
 
         private void ShowErrorWindow(string errorMessage)
-{
-    var errorWindow = new ErrorWindow(errorMessage);
-    errorWindow.ShowDialog();
-}
+        {
+            var errorWindow = new ErrorWindow(errorMessage);
+            errorWindow.ShowDialog();
+        }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
             AuthenticationViewModel viewModel = (AuthenticationViewModel)DataContext;
             try
             {
-
                 AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
 
                 Debug.WriteLine("Printing from page");
@@ -80,7 +78,6 @@ namespace Dashboard
                 ShowErrorWindow("Login request using OAuth cancelled before completion, try again!");
                 Application.Current.Shutdown();
             }
-
         }
     }
 }
