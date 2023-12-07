@@ -10,16 +10,10 @@
 
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
 using Analyzer;
-using System;
-using System.Collections;
+using System.Reflection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -29,11 +23,9 @@ namespace AnalyzerTests.Pipeline
         [TestMethod]
         public void TestWithGotoStatements()
         {
-            
             string dllFile = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile parsedDLL = new( dllFile );
 
-            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
             List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
             AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
@@ -50,7 +42,6 @@ namespace AnalyzerTests.Pipeline
             string dllFile = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile parsedDLL = new( dllFile );
 
-            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
             List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
             AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
@@ -61,13 +52,13 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual( 0 , result.Verdict );
         }
 
+
         [TestMethod]
         public void TestWithoutGotoStatements1()
         {
             string dllFile = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile parsedDLL = new( dllFile );
 
-            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
             List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
             AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
