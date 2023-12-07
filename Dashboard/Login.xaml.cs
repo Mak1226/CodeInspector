@@ -89,11 +89,12 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void StudentButton_Click( object sender , RoutedEventArgs e )
         {
+
             string insIP = InsIP.Text;
             string insPort = InsPort.Text;
 
             StudentPage studentPage = new( UserName,UserId,UserImage,insIP,insPort );
-          
+
             Logger.Inform($"[LoginPage] Created new StudentPage : #{RuntimeHelpers.GetHashCode( studentPage )}" );
             NavigationService?.Navigate( studentPage );
         }
