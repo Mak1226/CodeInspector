@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using Analyzer;
+using System.Drawing;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -37,15 +38,14 @@ namespace AnalyzerTests.Pipeline
             List<ParsedDLLFile> DllFileObjs = new();
 
             string path = "..\\..\\..\\TestDLLs\\TypeRelationships.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
-            DllFileObjs.Add(parsedDllObj);
+            var parsedDllObj = new ParsedDLLFile( path );
+            DllFileObjs.Add( parsedDllObj );
 
             int classes = 0;
             foreach (ParsedDLLFile dllFileObj in DllFileObjs)
             {
                 foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
-                    Console.WriteLine(cls.TypeObj.FullName);
                     classes++;
                 }
             }
@@ -53,73 +53,55 @@ namespace AnalyzerTests.Pipeline
             //check diff Relationship Lists
             Assert.AreEqual( 5 , classes );
 
-            Dictionary<string, List<string>> InheritanceRel = new();
-            Dictionary<string, List<string>> CompositionRel = new();
-            Dictionary<string, List<string>> AggregationRel = new();
-            Dictionary<string, List<string>> UsingRel = new();
+            Dictionary<string , List<string>> InheritanceRel = new();
+            Dictionary<string , List<string>> CompositionRel = new();
+            Dictionary<string , List<string>> AggregationRel = new();
+            Dictionary<string , List<string>> UsingRel = new();
 
             foreach (ParsedDLLFile dllFileObj in DllFileObjs)
             {
                 foreach (ParsedClassMonoCecil cls in dllFileObj.classObjListMC)
                 {
-                    //Debug.WriteLine( "\n\n\n\n" );
-                    //Console.WriteLine( "Class: " + cls.Name );
-                    //Console.WriteLine( "Inheritance: " );
                     foreach (string inhCls in cls.InheritanceList)
                     {
-                        //Console.WriteLine(inhCls);
-                        if (!InheritanceRel.ContainsKey(cls.Name))
+                        if (!InheritanceRel.ContainsKey( cls.Name ))
                         {
                             InheritanceRel[cls.Name] = new List<string>();
                         }
-                        InheritanceRel[cls.Name].Add(inhCls);
+                        InheritanceRel[cls.Name].Add( inhCls );
                     }
-                    //Console.WriteLine( "------------------------------------" );
-                    //Console.WriteLine( "Composiition: " );
                     foreach (string compCls in cls.CompositionList)
                     {
-                        //Console.WriteLine( compCls );
-                        if (!CompositionRel.ContainsKey(cls.Name))
+                        if (!CompositionRel.ContainsKey( cls.Name ))
                         {
                             CompositionRel[cls.Name] = new List<string>();
                         }
-                        CompositionRel[cls.Name].Add(compCls);
+                        CompositionRel[cls.Name].Add( compCls );
                     }
-                    //Console.WriteLine( "------------------------------------" );
-
-                    //Console.WriteLine( "Aggregation: " );
                     foreach (string aggCls in cls.AggregationList)
                     {
-                        //Console.WriteLine( aggCls );
-                        if (!AggregationRel.ContainsKey(cls.Name))
+                        if (!AggregationRel.ContainsKey( cls.Name ))
                         {
                             AggregationRel[cls.Name] = new List<string>();
                         }
-                        AggregationRel[cls.Name].Add(aggCls);
+                        AggregationRel[cls.Name].Add( aggCls );
                     }
 
-                    //Console.WriteLine( "------------------------------------" );
-
-                    //Console.WriteLine( "Using: " );
                     foreach (string useCls in cls.UsingList)
                     {
-                        //Console.WriteLine( useCls );
-                        if (!UsingRel.ContainsKey(cls.Name))
+                        if (!UsingRel.ContainsKey( cls.Name ))
                         {
                             UsingRel[cls.Name] = new List<string>();
                         }
-                        UsingRel[cls.Name].Add(useCls);
-
+                        UsingRel[cls.Name].Add( useCls );
                     }
-                    //Console.WriteLine( "------------------------------------" );
-
                 }
             }
 
-            Dictionary<string, List<string>> InheritanceExp = new();
-            Dictionary<string, List<string>> CompositionExp = new();
-            Dictionary<string, List<string>> AggregationExp = new();
-            Dictionary<string, List<string>> UsingExp = new();
+            Dictionary<string , List<string>> InheritanceExp = new();
+            Dictionary<string , List<string>> CompositionExp = new();
+            Dictionary<string , List<string>> AggregationExp = new();
+            Dictionary<string , List<string>> UsingExp = new();
 
             InheritanceExp["Student"] = new List<string> { "CTypeRelationships.Person" };
             CompositionExp["Car"] = new List<string> { "CTypeRelationships.Engine" };
@@ -152,22 +134,52 @@ namespace AnalyzerTests.Pipeline
         {
             string dllFile = Assembly.GetExecutingAssembly().Location;
 
-            ParsedDLLFile parsedDLL = new(dllFile);
+            ParsedDLLFile parsedDLL = new( dllFile );
 
             foreach (ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
             {
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Square"))
                 {
                     HashSet<string> expectedUsingList = new() { "CClassRelTestCase1.Circle" };
-                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
-                    Assert.AreEqual(true, areEqual);
+                    bool areEqual = parsedClass.UsingList.SetEquals( expectedUsingList );
+                    Assert.AreEqual( true , areEqual );
                 }
 
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Circle"))
                 {
                     HashSet<string> expectedUsingList = new() { "IClassRelTestCase1.IColor" };
-                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
-                    Assert.AreEqual(true, areEqual);
+                    bool areEqual = parsedClass.UsingList.SetEquals( expectedUsingList );
+                    Assert.AreEqual( true , areEqual );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checking the case where 1.the constructor takes in an object as parameter but is then assigned to a field (using case)
+        /// 2. the field in a constructor is assigned to an object returned by another function (aggregation case)
+        /// </summary>
+        [TestMethod()]
+        public void CheckParameterAssignedToField()
+        {
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+
+            ParsedDLLFile parsedDLL = new( dllFile );
+
+            foreach (ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
+            {
+                if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Triangle"))
+                {
+                    HashSet<string> expectedUsingList = new() { "CClassRelTestCase1.Circle" };
+                    bool areEqual = parsedClass.UsingList.SetEquals( expectedUsingList );
+                    Assert.AreEqual( true , areEqual );
+
+                    HashSet<string> expectedAggregationList = new() { "CClassRelTestCase1.RedColour" , "IClassRelTestCase1.IColor"};
+                    foreach(string x in parsedClass.AggregationList)
+                    {
+                        Console.WriteLine( x );
+                    }
+                    areEqual = parsedClass.AggregationList.SetEquals( expectedAggregationList );
+                    Assert.AreEqual( true , areEqual );
                 }
             }
         }
@@ -180,20 +192,19 @@ namespace AnalyzerTests.Pipeline
         {
             string dllFile = Assembly.GetExecutingAssembly().Location;
 
-            ParsedDLLFile parsedDLL = new(dllFile);
+            ParsedDLLFile parsedDLL = new( dllFile );
 
             foreach (ParsedClassMonoCecil parsedClass in parsedDLL.classObjListMC)
             {
                 if ((parsedClass.TypeObj.Namespace == "ClassRelTestCase1") && (parsedClass.Name == "Rectangle"))
                 {
                     HashSet<string> expectedUsingList = new() { "IClassRelTestCase1.IColor" };
-                    bool areEqual = parsedClass.UsingList.SetEquals(expectedUsingList);
-                    Assert.AreEqual(true, areEqual);
+                    bool areEqual = parsedClass.UsingList.SetEquals( expectedUsingList );
+                    Assert.AreEqual( true , areEqual );
                 }
             }
         }
     }
-
 }
     namespace ClassRelTestCase1
     {
@@ -201,7 +212,23 @@ namespace AnalyzerTests.Pipeline
         {
             
         }
-        public interface IDrawable
+
+        public class RedColour : IColor
+        {
+            public RedColour()
+            {
+            Console.WriteLine( "Red Color" );
+            }
+        }
+
+        public class BlueColor : IColor
+        {
+            public BlueColor()
+            {
+                Console.WriteLine( "Blue Color" );
+            }
+        }
+    public interface IDrawable
         {
             void Draw();
         }
@@ -215,8 +242,10 @@ namespace AnalyzerTests.Pipeline
             }
             public void Draw()
             {
+                //add some lambda function
                 Console.WriteLine("Drawing a circle.");
             }
+            
         }
 
         public class Square : IDrawable
@@ -244,4 +273,34 @@ namespace AnalyzerTests.Pipeline
                 Console.WriteLine("Using some Clr ");
             }
         }
+        public class Triangle : IDrawable
+        {
+            public Circle _inscribed;
+            public RedColour _color;
+            public IColor _c1;
+            public Triangle(Circle c1 )
+            {
+                _inscribed = c1;
+                _color = getRedColor();
+                _c1 = GetColor.getBlueColor();                
+            }
+            public void Draw()
+            {
+                Console.WriteLine( "Drawing a Triangle." );
+            }
+            
+            public RedColour getRedColor()
+            {
+                return new RedColour();
+            }
+        }
+
+    static class GetColor
+    {
+        public static IColor getBlueColor()
+        {
+            return new BlueColor();
+        }
+
     }
+}

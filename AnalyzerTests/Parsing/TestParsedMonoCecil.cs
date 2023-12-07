@@ -36,7 +36,7 @@ namespace AnalyzerTests.Pipeline
             string dllFile = Assembly.GetExecutingAssembly().Location;
             ParsedDLLFile parsedDLL = new(dllFile);
             List<ParsedClassMonoCecil> classObjList = parsedDLL.classObjListMC;
-            foreach (ParsedClassMonoCecil cls in classObjList)
+            foreach (ParsedClassMonoCecil? cls in classObjList)
             {
                 if (cls.Name == "TestNullNamespaceClassMC" || cls.TypeObj.Namespace == null)
                 {
@@ -47,7 +47,7 @@ namespace AnalyzerTests.Pipeline
                 if (cls.Name == "BMW" && cls.TypeObj.Namespace == "TestParsedMonoCecil")
                 {
                     Assert.AreEqual(2, cls.Constructors.Count);
-                    Assert.AreEqual("TestParsedMonoCecil.Car", cls.ParentClass.FullName);
+                    Assert.AreEqual("TestParsedMonoCecil.Car", cls.ParentClass?.FullName);
                     Assert.AreEqual("TestParsedMonoCecil.IBMWSpec", cls.Interfaces[0].InterfaceType.FullName);
                     Assert.AreEqual(2, cls.MethodsList.Count);
                     Assert.AreEqual(2, cls.FieldsList.Count);
@@ -55,26 +55,6 @@ namespace AnalyzerTests.Pipeline
                 }
             }
         }
-
-        /// <summary>
-        ///// Test case for checking if auto properties are excluded from fields list
-        ///// </summary>
-        //[TestMethod()]
-        //public void TestFieldsAndProperties()
-        //{
-        //    string dllFile = Assembly.GetExecutingAssembly().Location;
-        //    ParsedDLLFile parsedDLL = new(dllFile);
-        //    parsedDLL.classObjListMC.RemoveAll(cls => cls.TypeObj.Namespace != "TestParsedMonoCecil2");
-        //    List<ParsedClassMonoCecil> classObjList = parsedDLL.classObjListMC;
-        //    foreach (ParsedClassMonoCecil cls in classObjList)
-        //    {
-        //        if(cls.Name == "ChildClass")
-        //        {
-        //            Assert.AreEqual(1,cls.FieldsList.Count);
-        //            Assert.AreEqual(1,cls.PropertiesList.Count);
-        //        }
-        //    }
-        //}
     } 
 }
 
@@ -107,7 +87,7 @@ namespace TestParsedMonoCecil
 
     public class BMW : Car, IBMWSpec
     {
-        private string _name = "BMW";
+        private readonly string _name = "BMW";
         public int seatCapacity;
         public BMW()
         {
@@ -117,7 +97,10 @@ namespace TestParsedMonoCecil
 
         public string Name
         {
-            get { return _name; }
+            get {
+                Console.WriteLine( "get" );
+                
+                return _name; }
         }
         public void Drive()
         {
@@ -142,4 +125,18 @@ namespace TestParsedMonoCecil2
         }
     }
 }
+
+//namespace TestCompilerGenerated
+//{
+//    public class CheckCompilerGenerated
+//    {
+//        public CheckCompilerGenerated()
+//        {
+//            int val = 30;
+
+//            Action lambda = () => { Console.WriteLine( "value: " + val ); };
+//            lambda();
+//        }
+//}
+//}
 

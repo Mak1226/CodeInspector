@@ -150,10 +150,7 @@ namespace AnalyzerTests.Pipeline
             Assert.AreEqual(1, resultObj["Proxy.dll"].Verdict);
             Assert.AreEqual(0, resultObj["ACIST1.dll"].Verdict);
             Assert.AreEqual(1, resultObj["BridgePattern.dll"].Verdict);
-
         }
-
-
     }
 }
 
