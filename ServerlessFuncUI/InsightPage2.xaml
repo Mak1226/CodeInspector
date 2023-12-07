@@ -7,8 +7,8 @@
   *
   * Description = Defines the view for failed students in a test
   **************************************************************************** -->
-    
-    <Page x:Class="ServerlessFuncUI.InsightPage2"
+
+<Page x:Class="ServerlessFuncUI.InsightPage2"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="InsightPage1" Height="500" Width="800">

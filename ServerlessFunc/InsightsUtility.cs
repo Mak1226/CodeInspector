@@ -84,5 +84,13 @@ namespace ServerlessFunc
             string jsonString = JsonSerializer.Serialize( data );
             return Encoding.UTF8.GetBytes( jsonString );
         }
+
+
+
+        public static byte[] ConvertDictionaryToAnalysisFile1( Dictionary<string , List<Analyzer.AnalyzerResult>> data )
+        {
+            string jsonString = JsonSerializer.Serialize( data );
+            return Encoding.UTF8.GetBytes( jsonString );
+        }
     }
 }
