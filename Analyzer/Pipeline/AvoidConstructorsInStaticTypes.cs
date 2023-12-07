@@ -22,7 +22,6 @@ namespace Analyzer.Pipeline
     public class AvoidConstructorsInStaticTypes : AnalyzerBase
     {
         // Unique identifier for the analyzer
-        private readonly string _analyzerID;
         private string _errorMessage;
         private int _verdict;
 
@@ -141,7 +140,7 @@ namespace Analyzer.Pipeline
                 _verdict = 1;
                 _errorMessage = "No violation found";
                 Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
-                return new AnalyzerResult( _analyzerID , _verdict , _errorMessage );
+                return new AnalyzerResult( analyzerID , _verdict , _errorMessage );
             }
 
             //adding error message
@@ -158,7 +157,7 @@ namespace Analyzer.Pipeline
             _errorMessage += " contains only static fields and methods, but has non-static, visible constructor. Try changing it to private or make it static.";
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
-            AnalyzerResult resultObj = new( _analyzerID , _verdict , _errorMessage );
+            AnalyzerResult resultObj = new( analyzerID , _verdict , _errorMessage );
             Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
             return resultObj;
         }

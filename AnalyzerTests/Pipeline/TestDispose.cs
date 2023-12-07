@@ -19,8 +19,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Analyzer.Parsing;
+using Analyzer;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
 
     /// <summary>

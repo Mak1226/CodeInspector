@@ -105,9 +105,10 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// </summary>
         /// <param name="PathOfDLLFilesOfCustomAnalyzers">
         /// List of paths to DLL files of custom analyzers.</param>
-        public void LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
+        public List<Tuple<int , string>> LoadDLLOfCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
             _dllFilePathCustom = PathOfDLLFilesOfCustomAnalyzers;
+            return new();
         }
 
         /// <summary>

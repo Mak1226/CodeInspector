@@ -99,6 +99,13 @@ namespace Analyzer.DynamicAnalyzer.Tests
             tdlls.Add(path);
             analyzer.LoadDLLOfCustomAnalyzers(tdlls);
 
+            IDictionary<int, bool> options = new Dictionary<int , bool>
+            {
+                [201] = true
+            };
+
+            analyzer.Configure(options);
+
             // Run the custom Analyzer on student dlls and get the result
             Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
 
@@ -108,7 +115,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
                 ["CasingChecker.dll"] = new List<AnalyzerResult>() ,
             };
 
-            expected["CasingChecker.dll"].Add(new AnalyzerResult("Teacher", 1, "All abstract classes are named correctly"));
+            expected["CasingChecker.dll"].Add(new AnalyzerResult("201", 1, "All abstract classes are named correctly"));
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {
@@ -161,6 +168,13 @@ namespace Analyzer.DynamicAnalyzer.Tests
             tdlls.Add(path);
             analyzer.LoadDLLOfCustomAnalyzers(tdlls);
 
+            IDictionary<int , bool> options = new Dictionary<int , bool>
+            {
+                [201] = true
+            };
+
+            analyzer.Configure(options);
+
             // Run the custom Analyzer on student dlls and get the result
             Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
 
@@ -170,7 +184,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
                 ["NotValidAbstractClassNaming.dll"] = new List<AnalyzerResult>(),
             };
 
-            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("Teacher", 0, "Incorrect Abstract Class Naming : someClass"));
+            expected["NotValidAbstractClassNaming.dll"].Add(new AnalyzerResult("201", 0, "Incorrect Abstract Class Naming : someClass"));
 
             foreach (KeyValuePair<string, List<AnalyzerResult>> dll in result)
             {

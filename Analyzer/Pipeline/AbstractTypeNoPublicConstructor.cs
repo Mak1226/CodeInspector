@@ -29,7 +29,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;   // Output message returned by the analyzer.
         private int _verdict;   // Verdict if the analyzer has passed or failed.
-        private readonly string _analyzerID;    // Unique ID for the analyzer.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractTypeNoPublicConstructor"/> analyzer with parsed DLL files.
@@ -39,7 +38,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "101";
+            analyzerID = "101";
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Analyzer.Pipeline
                 throw new NullReferenceException("Encountered exception while processing.", ex);
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }

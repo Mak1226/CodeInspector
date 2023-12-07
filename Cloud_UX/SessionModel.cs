@@ -18,9 +18,14 @@ namespace Cloud_UX
 {
     public class SessionsModel
     {
-        private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
+        /*private readonly string _analysisUrl = "http://localhost:7074/api/analysis";
         private readonly string _submissionUrl = "http://localhost:7074/api/submission";
-        private readonly string _sessionUrl = "http://localhost:7074/api/session";
+        private readonly string _sessionUrl = "http://localhost:7074/api/session";*/
+
+        private readonly string _sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        private readonly string _submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
+        private readonly string _analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
+
         private readonly DownloadApi _fileDownloadApi;
         public SessionsModel()
         {

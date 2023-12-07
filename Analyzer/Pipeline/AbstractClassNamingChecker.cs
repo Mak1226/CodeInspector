@@ -24,7 +24,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the AbstractClassNamingChecker analyzer with parsed DLL files.
@@ -35,7 +34,7 @@ namespace Analyzer.Pipeline
             // TODO if required
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "111";
+            analyzerID = "111";
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Analyzer.Pipeline
                 _verdict = 1; // If all abstract classes meet the criteria, set the score to 1
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
 
         /// <summary>
