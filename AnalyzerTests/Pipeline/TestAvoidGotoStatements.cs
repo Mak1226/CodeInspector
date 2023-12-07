@@ -11,7 +11,15 @@
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;
+using Analyzer;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -21,59 +29,53 @@ namespace AnalyzerTests.Pipeline
         [TestMethod]
         public void TestWithGotoStatements()
         {
-            // Create a list to hold parsed DLL files
-            List<ParsedDLLFile> DllFileObjs = new();
-            string path = "..\\..\\..\\TestDLLs\\Goto.dll";
+            
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            // Create a ParsedDLLFile object for the specified DLL
-            var parsedDllObj = new ParsedDLLFile(path);
-            DllFileObjs.Add(parsedDllObj);
+            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            AvoidGotoStatementsAnalyzer avoidGotoStatements = new(DllFileObjs);
+            AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
 
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["Goto.dll"];
-            Assert.AreEqual(0, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual( 0 , result.Verdict );
         }
 
         [TestMethod]
         public void TestWithGotoStatements1()
         {
-            // Create a list to hold parsed DLL files
-            List<ParsedDLLFile> DllFileObjs = new();
-            string path = "..\\..\\..\\TestDLLs\\Goto1.dll";
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            // Create a ParsedDLLFile object for the specified DLL
-            var parsedDllObj = new ParsedDLLFile(path);
-            DllFileObjs.Add(parsedDllObj);
+            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            AvoidGotoStatementsAnalyzer avoidGotoStatements = new(DllFileObjs);
+            AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
 
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["Goto1.dll"];
-            Assert.AreEqual(0, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual( 0 , result.Verdict );
         }
-
 
         [TestMethod]
         public void TestWithoutGotoStatements1()
         {
-            // Create a list to hold parsed DLL files
-            List<ParsedDLLFile> DllFileObjs = new();
-            string path = "..\\..\\..\\TestDLLs\\Goto1.dll";
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            // Create a ParsedDLLFile object for the specified DLL
-            var parsedDllObj = new ParsedDLLFile(path);
-            DllFileObjs.Add(parsedDllObj);
+            parsedDLL.classObjList.RemoveAll( cls => cls.TypeObj.Namespace != "Goto" );
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            AvoidGotoStatementsAnalyzer avoidGotoStatements = new(DllFileObjs);
+            AvoidGotoStatementsAnalyzer avoidGotoStatements = new( parseddllFiles );
 
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
+            Dictionary<string , AnalyzerResult> resultObj = avoidGotoStatements.AnalyzeAllDLLs();
 
-            Analyzer.AnalyzerResult result = resultObj["Goto1.dll"];
-            Assert.AreNotEqual(1, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreNotEqual( 1 , result.Verdict );
         }
     }
 }
