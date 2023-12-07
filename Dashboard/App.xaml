@@ -156,7 +156,7 @@
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Viewbox>
                             <Border x:Name="Border" CornerRadius="10"
-                            Background="#FFFFFFFF"
+                            Background="#FF4CD661"
                             Width="40" Height="20">
                                 <Border.Effect>
                                     <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" />
@@ -177,7 +177,7 @@
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetName="Border"
                                                     Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                    To="#FF4CD661"
+                                                    To="#FF0000"
                                                     Duration="0:0:0.1" />
                                         <ThicknessAnimation Storyboard.TargetName="Ellipse"
                                                         Storyboard.TargetProperty="Margin"
@@ -191,7 +191,7 @@
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetName="Border"
                                                     Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                    To="White"
+                                                    To="#FF4CD661"
                                                     Duration="0:0:0.1" />
                                         <ThicknessAnimation Storyboard.TargetName="Ellipse"
                                                         Storyboard.TargetProperty="Margin"

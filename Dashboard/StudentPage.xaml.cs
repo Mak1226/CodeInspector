@@ -35,7 +35,7 @@ namespace Dashboard
     /// </summary>
     public partial class StudentPage : Page
     {
-        public StudentPage(string name, string id, string userImage )
+        public StudentPage(string name, string id, string userImage, string insIP, string insPort )
         {
             InitializeComponent();
 
@@ -44,6 +44,20 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 StudentViewModel viewModel = new(name, id, userImage );
                 DataContext = viewModel;
+
+                InstructorIpTextBox.Text = insIP;
+                InstructorPortTextBox.Text = insPort;
+
+                viewModel?.SetInstructorAddress( insIP , insPort );
+                bool? isConnected = viewModel?.ConnectInstructor();
+                if (isConnected != null && viewModel != null)
+                {
+                    if (isConnected.Value)
+                    {
+                        ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
+                        ContentFrame.Content = clientPage;
+                    }
+                }
                 Logger.Inform($"[StudentPage] Created viewModel {RuntimeHelpers.GetHashCode( viewModel )}");
                 //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
@@ -68,6 +82,7 @@ namespace Dashboard
         /// <summary>
         /// Event handler for the "IstructorIpTextBox" text changed event.
         /// </summary>
+        /**
         private void InstructorIpTextBox_TextChanged( object sender , TextChangedEventArgs e )
         {
             StudentViewModel? viewModel = DataContext as StudentViewModel;
@@ -92,7 +107,7 @@ namespace Dashboard
                 }
             }
         }
-
+        **/
         private void DisconnectButton_Click( object sender , RoutedEventArgs e )
         {
             //Attempting to disconnect from the instructor
