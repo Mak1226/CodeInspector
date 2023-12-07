@@ -68,7 +68,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -132,7 +132,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -190,7 +190,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -221,7 +221,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -277,7 +277,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
