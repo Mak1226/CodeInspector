@@ -3,6 +3,8 @@ Software Engineering Group Project
 
 [Project Wiki](https://github.com/Mak1226/CodeInspector/wiki)
 
+!!!Stay tuned for demo video!!!
+
 ![CodeInspector](https://github.com/Mak1226/CodeInspector/assets/87255862/c4112141-e861-4794-8c51-d35172e01900)
 
 
