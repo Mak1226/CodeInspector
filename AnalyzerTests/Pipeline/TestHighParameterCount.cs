@@ -56,7 +56,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of HighParameterCountRule
             HighParameterCountRule analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string, AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string, AnalyzerResult> dll in result)
@@ -86,7 +86,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of HighParameterCountRule
             HighParameterCountRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

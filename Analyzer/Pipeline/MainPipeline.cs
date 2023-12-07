@@ -200,7 +200,7 @@ namespace Analyzer.Pipeline
         public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            byte[] bytes = classDiag.Run(removableNamespaces).Result;
+            byte[] bytes = classDiag.RenderImageBytes(removableNamespaces).Result;
             Logger.Inform( "[MainPipeline.cs] GenerateClassDiagram: Created Class Relationship graph " + string.Join( " " , removableNamespaces ) );
             return bytes;
         }
