@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Parsing;
 using System.Reflection;
+using Analyzer.Pipeline;
+using Analyzer;
 
 namespace TestNoVisibleInstanceFields
 {
@@ -63,7 +65,7 @@ namespace TestNoVisibleInstanceFields
         
 }
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Unit tests for NoVisibleInstanceFields analyzer.

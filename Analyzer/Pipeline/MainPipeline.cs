@@ -13,7 +13,6 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
-using Analyzer.Pipeline.Analyzers;
 using Analyzer.UMLDiagram;
 using System.Diagnostics;
 
@@ -74,9 +73,9 @@ namespace Analyzer.Pipeline
                 {
                     _parsedDLLFiles.Add(new ParsedDLLFile(file));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Trace.WriteLine("MainPipeline : Failed to parse " + file);
+                    Trace.WriteLine($"MainPipeline : Failed to parse {Path.GetFileName(file)}. Exception {ex.GetType().Name} : {ex.Message}");
                 }
             }
 
@@ -119,17 +118,10 @@ namespace Analyzer.Pipeline
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
                 Trace.WriteLine("MainPipeline : Succeed analyzer " + analyzerID);
             }
-            catch (Exception)
+            catch (KeyNotFoundException)
             {
-                Trace.WriteLine("Internal error, analyzer failed to execute " + analyzerID);
                 currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
-                string errorMsg = "Internal error, analyzer failed to execute";
-
-                if (!_allAnalyzers.ContainsKey(analyzerID))
-                {
-                    errorMsg = "Analyser does not exists";
-                    Trace.WriteLine("MainPipeline : Analyser does not exists " + analyzerID);
-                }
+                string errorMsg = "Analyser does not exist";
 
                 foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
                 {
@@ -159,20 +151,41 @@ namespace Analyzer.Pipeline
             {
                 _results[file.DLLFileName] = new List<AnalyzerResult>();
             }
-
-            foreach(KeyValuePair<int,bool> option in _teacherOptions)
+            
+            if (_parsedDLLFiles.Count != 0)
             {
-                if(option.Value == true)
+                foreach (KeyValuePair<int , bool> option in _teacherOptions)
                 {
-                    Thread WorkerThread = new(() => RunAnalyzer(option.Key));
-                    WorkerThread.Start();
-                    threads.Add(WorkerThread);
+                    if (option.Value == true)
+                    {
+                        Thread WorkerThread = new( () => RunAnalyzer( option.Key ) );
+                        WorkerThread.Start();
+                        threads.Add( WorkerThread );
+                    }
                 }
             }    
 
             foreach(Thread workerThread in threads)
             {
                 workerThread.Join();
+            }
+
+            // errors during the parsing of dlls
+            foreach(string filepath in _studentDLLFiles)
+            {
+                string fileName = Path.GetFileName(filepath);
+                if(!_results.ContainsKey(fileName))
+                {
+                    _results[fileName] = new List<AnalyzerResult>();
+
+                    foreach (KeyValuePair<int , bool> option in _teacherOptions)
+                    {
+                        if (option.Value == true)
+                        {
+                            _results[fileName].Add( new AnalyzerResult( option.Key.ToString() , 0 , $"Failed to parse {fileName}" ) );
+                        }
+                    }
+                }
             }
 
             return _results;

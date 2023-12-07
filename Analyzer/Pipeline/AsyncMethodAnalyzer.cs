@@ -27,6 +27,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public AsyncMethodAnalyzer( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
+            analyzerID = "110";
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {asyncMethodCount} async methods."
                 : "No async methods found.";
             int verdict = asyncMethodCount > 0 ? 0 : 1;
-            return new AnalyzerResult( "110" , verdict , errorString );
+            return new AnalyzerResult( analyzerID , verdict , errorString );
         }
 
         /// <summary>

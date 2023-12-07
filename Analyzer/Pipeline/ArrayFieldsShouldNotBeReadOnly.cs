@@ -21,13 +21,12 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
         public ArrayFieldsShouldNotBeReadOnlyRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "106";
+            analyzerID = "106";
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Analyzer.Pipeline
                 _errorMessage = "No readonly array fields found.";
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
 
         /// <summary>
