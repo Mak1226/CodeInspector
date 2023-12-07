@@ -10,10 +10,10 @@
  * Description = Class that implements IFileHandler
  *****************************************************************************/
 
-using Content.Encoder;
 using System.Diagnostics;
-using Networking.Serialization;
+using Content.Encoder;
 using Logging;
+using Networking.Serialization;
 
 namespace Content.FileHandling
 {
@@ -54,7 +54,7 @@ namespace Content.FileHandling
         /// <param name="filepath">The path of the file or directory to be uploaded.</param>
         /// <param name="sessionID">The session ID associated with the upload.</param>
         /// <returns>The encoded representation of the file data for further analysis.</returns>
-        public string HandleUpload(string filepath, string sessionID)
+        public string HandleUpload( string filepath , string sessionID )
         {
             Logger.Inform( "[FileHandler.cs] HandleUpload: Started" );
             Logger.Debug( $"[FileHandler.cs] HandleUpload: filePath {filepath}" );
@@ -64,28 +64,28 @@ namespace Content.FileHandling
             // extract dll , and pass it to xml encoder use network functions to send
             // extracting paths of all dll files from the given directory
             string encoding;
-            if (Directory.Exists(filepath))
+            if (Directory.Exists( filepath ))
             {
                 Logger.Debug( "[FileHandler.cs] HandleUpload: Directory Exists in the given path" );
 
                 try
                 {
-                    dllFiles = Directory.GetFiles(filepath, "*.dll", SearchOption.AllDirectories).ToList();
-                    encoding = _fileEncoder.GetEncoded(dllFiles, filepath, sessionID);
+                    dllFiles = Directory.GetFiles( filepath , "*.dll" , SearchOption.AllDirectories ).ToList();
+                    encoding = _fileEncoder.GetEncoded( dllFiles , filepath , sessionID );
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Logger.Error( $"[FileHandler.cs] HandleUpload: Error while Encoding. {ex}" );
                     encoding = "";
                 }
             }
             // Check if the path is a file
-            else if (File.Exists(filepath) && string.Equals(Path.GetExtension(filepath), ".dll", StringComparison.OrdinalIgnoreCase))
+            else if (File.Exists( filepath ) && string.Equals( Path.GetExtension( filepath ) , ".dll" , StringComparison.OrdinalIgnoreCase ))
             {
                 Logger.Debug( "[FileHandler.cs] HandleUpload: File Exists in given path" );
 
                 dllFiles = new List<string> { filepath };
-                encoding = _fileEncoder.GetEncoded(dllFiles.ToList(), Path.GetDirectoryName(filepath), sessionID);
+                encoding = _fileEncoder.GetEncoded( dllFiles.ToList() , Path.GetDirectoryName( filepath ) , sessionID );
                 // Do something specific for files
             }
             else
@@ -95,17 +95,18 @@ namespace Content.FileHandling
                 return "";
             }
 
-            Trace.Write(encoding);
+            Trace.Write( encoding );
             // Encode RecieveEventType
-            Dictionary<string, string> sendData = new()
+            Dictionary<string , string> sendData = new()
             {
                 { "EventType", "File" },
                 { "Data", encoding }
             };
-            encoding = Serializer.Serialize(sendData);
+            encoding = Serializer.Serialize( sendData );
 
             _filesList = dllFiles;
-            Logger.Debug($"[FileHandler.cs] HandleUpload: {encoding}");
+            //Logger.Debug( $"[FileHandler.cs] HandleUpload: {encoding}" ); This takes 80% of the log
+            Logger.Debug( $"[FileHandler.cs] HandleUpload: {string.Join(',', _filesList)}" );
             Logger.Inform( "[FileHandler.cs] HandleUpload: Done" );
             return encoding;
         }
@@ -117,15 +118,15 @@ namespace Content.FileHandling
         /// <param name="encoding">The encoded data to be processed.</param>
         /// <returns>The session ID associated with the received data, 
         /// or null if the decoding fails or the event type is not "File".</returns>
-        public string? HandleRecieve(string encoding)
+        public string? HandleRecieve( string encoding )
         {
             Logger.Inform( "[FileHandler.cs] HandleReceive: Started" );
 
-            Dictionary<string, string> recvData;
+            Dictionary<string , string> recvData;
             _filesList = new List<string>();
             Logger.Debug( "[FileHandler.cs] HandleReceive: Deserializing the encoding" );
-            recvData = Serializer.Deserialize<Dictionary<string, string>>(encoding);
-            if( recvData == null ) 
+            recvData = Serializer.Deserialize<Dictionary<string , string>>( encoding );
+            if (recvData == null)
             {
                 Logger.Warn( "[FileHandler.cs] HandleReceive: Empty data received" );
                 return null;
@@ -139,12 +140,12 @@ namespace Content.FileHandling
             }
 
             encoding = recvData["Data"];
-            _fileEncoder.DecodeFrom(encoding);
+            _fileEncoder.DecodeFrom( encoding );
             string sessionID = _fileEncoder.sessionID;
             string sessionPath = sessionID;
             try
             {
-                _fileEncoder.SaveFiles(sessionPath);
+                _fileEncoder.SaveFiles( sessionPath );
             }
             catch (Exception e)
             {
@@ -152,12 +153,12 @@ namespace Content.FileHandling
                 return null;
             }
 
-            Dictionary<string, string> decodedFiles = _fileEncoder.GetData();
+            Dictionary<string , string> decodedFiles = _fileEncoder.GetData();
             Logger.Debug( "[FileHandler.cs] HandleReceive: Decoded Files" );
             _filesList = new List<string>();
             foreach (KeyValuePair<string , string> file in decodedFiles)
             {
-                _filesList.Add(Path.Combine(sessionPath, file.Key));
+                _filesList.Add( Path.Combine( sessionPath , file.Key ) );
             }
             Logger.Inform( "[FileHandler.cs] HandleReceive: Done" );
             return sessionID;

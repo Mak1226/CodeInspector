@@ -5,4 +5,5 @@
     xmlns:local="clr-namespace:ContentPage"
     StartupUri="MainWindow.xaml">
     <Application.Resources />
+
 </Application>
