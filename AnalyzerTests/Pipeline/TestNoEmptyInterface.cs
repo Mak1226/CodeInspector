@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
+using Analyzer;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -71,7 +72,7 @@ namespace NoEmptyInterface
     }
 }
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Unit tests for NoEmptyInterface analyzer.
@@ -115,7 +116,7 @@ namespace Analyzer.Pipeline.Tests
             ParsedDLLFile dllFile = new( path );
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
-            NoEmptyInterface noEmptyInterfaces = new( dllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterfaces = new( dllFiles );
 
             Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
             Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
@@ -132,7 +133,7 @@ namespace Analyzer.Pipeline.Tests
             _parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceEmpty" );
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -149,7 +150,7 @@ namespace Analyzer.Pipeline.Tests
             _parsedDLL.interfaceObjList.RemoveAll( iface => iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceNotEmpty" );
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -167,7 +168,7 @@ namespace Analyzer.Pipeline.Tests
                                                              iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceEmpty" ));
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -185,7 +186,7 @@ namespace Analyzer.Pipeline.Tests
                                                              iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceNotEmpty" ));
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -203,7 +204,7 @@ namespace Analyzer.Pipeline.Tests
                                                              iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceNotEmpty") );
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -221,7 +222,7 @@ namespace Analyzer.Pipeline.Tests
                                                              iface.TypeObj.FullName != "NoEmptyInterface.IInterfaceEmpty") );
             List<ParsedDLLFile> parseddllFiles = new() { _parsedDLL };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Dictionary<string , AnalyzerResult> result = noEmptyInterface.AnalyzeAllDLLs();
 
             Console.WriteLine( result[_parsedDLL.DLLFileName].ErrorMessage );
@@ -237,7 +238,7 @@ namespace Analyzer.Pipeline.Tests
         {
             List<ParsedDLLFile> parseddllFiles = new() { null };
 
-            NoEmptyInterface noEmptyInterface = new( parseddllFiles );
+            Analyzer.Pipeline.NoEmptyInterface noEmptyInterface = new( parseddllFiles );
             Assert.ThrowsException<NullReferenceException>( () => noEmptyInterface.AnalyzeAllDLLs() );
         }
     }

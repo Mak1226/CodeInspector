@@ -56,7 +56,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out1.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out1.svg" , imageBytes );
             }
         }
 
@@ -86,7 +86,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out2.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out2.svg" , imageBytes );
             }
         }
 
@@ -116,7 +116,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out3.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out3.svg" , imageBytes );
             }
         }
 
@@ -146,7 +146,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out4.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out4.svg" , imageBytes );
             }
         }
 
@@ -176,7 +176,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out5.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out5.svg" , imageBytes );
             }
         }
 
@@ -206,7 +206,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out6.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out6.svg" , imageBytes );
             }
         }
 
@@ -237,7 +237,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out7.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out7.svg" , imageBytes );
             }
         }
 
@@ -268,7 +268,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out8.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out8.svg" , imageBytes );
             }
         }
 
@@ -298,7 +298,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out9.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out9.svg" , imageBytes );
             }
         }
 
@@ -328,7 +328,7 @@ namespace AnalyzerTests.Pipeline
 
             if (imageBytes != null && imageBytes.Length > 0)
             {
-                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out10.png" , imageBytes );
+                File.WriteAllBytes( "..\\..\\..\\UMLDiagramResults\\out10.svg" , imageBytes );
             }
         }
     }

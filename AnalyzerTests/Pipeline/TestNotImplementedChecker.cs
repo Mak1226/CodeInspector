@@ -9,9 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Analyzer.Pipeline.Analyzers;
+using Analyzer;
 
-namespace Analyzer.Pipeline.Tests
+
+namespace AnalyzerTests.Pipeline
 {
     [TestClass]
     public class TestNotImplementedChecker
