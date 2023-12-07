@@ -11,6 +11,8 @@
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Analyzer;
+using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,80 +22,43 @@ using System.Threading.Tasks;
 namespace AnalyzerTests.Pipeline
 {
     [TestClass()]
-    public class TestArrayFieldsShouldNotBeReadOnly
+    public class TestArrayFieldsShouldNotBeReadOnlyRule
     {
-
+        /// <summary>
+        /// Test method for a case where no classes have readonly array fields.
+        /// </summary>
         [TestMethod()]
-        public void GoodTest()
+        public void TestNoReadOnlyArrayFields()
         {
-            List<ParsedDLLFile> DllFileObjs = new();
+            string dllFile = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile parsedDLL = new( dllFile );
 
-            string path = "..\\..\\..\\TestDLLs\\array1.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            List<ParsedDLLFile> parseddllFiles = new() { parsedDLL };
 
-            DllFileObjs.Add(parsedDllObj);
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new( parseddllFiles );
 
-            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
+            Dictionary<string , AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
-
-            Analyzer.AnalyzerResult result = resultObj["array1.dll"];
-            Assert.AreEqual(1, result.Verdict);
+            Analyzer.AnalyzerResult result = resultObj["AnalyzerTests.dll"];
+            Assert.AreEqual( 1 , result.Verdict );
         }
 
         [TestMethod()]
-        public void GoodTest1()
-        {
-            List<ParsedDLLFile> DllFileObjs = new();
-
-            string path = "..\\..\\..\\TestDLLs\\notReadOnly.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
-
-            DllFileObjs.Add(parsedDllObj);
-
-            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
-
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
-
-            Analyzer.AnalyzerResult result = resultObj["notReadOnly.dll"];
-            Assert.AreNotEqual(0, result.Verdict);
-        }
-
-
-        [TestMethod()]
-        public void BadTest()
+        public void TestReadOnlyArrayFields()
         {
             List<ParsedDLLFile> DllFileObjs = new();
 
             string path = "..\\..\\..\\TestDLLs\\Array.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
+            var parsedDllObj = new ParsedDLLFile( path );
 
-            DllFileObjs.Add(parsedDllObj);
+            DllFileObjs.Add( parsedDllObj );
 
-            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
+            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new( DllFileObjs );
 
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
+            Dictionary<string , Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
 
             Analyzer.AnalyzerResult result = resultObj["Array.dll"];
-            Assert.AreEqual(0, result.Verdict);
-        }
-
-        [TestMethod()]
-        public void BadTest1()
-        {
-            List<ParsedDLLFile> DllFileObjs = new();
-
-            string path = "..\\..\\..\\TestDLLs\\readOnly.dll";
-            var parsedDllObj = new ParsedDLLFile(path);
-
-            DllFileObjs.Add(parsedDllObj);
-
-            ArrayFieldsShouldNotBeReadOnlyRule arrayFiledsShouldNotBeReadOnly = new(DllFileObjs);
-
-            Dictionary<string, Analyzer.AnalyzerResult> resultObj = arrayFiledsShouldNotBeReadOnly.AnalyzeAllDLLs();
-
-            Analyzer.AnalyzerResult result = resultObj["readOnly.dll"];
-            Assert.AreEqual(0, result.Verdict);
+            Assert.AreEqual( 0 , result.Verdict );
         }
     }
 }

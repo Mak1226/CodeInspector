@@ -17,4 +17,7 @@
   <ItemGroup>
     <Folder Include="Queues\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logger\Logging.csproj" />
+  </ItemGroup>
 </Project>

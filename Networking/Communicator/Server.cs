@@ -11,12 +11,12 @@
  *****************************************************************************/
 
 using System.Net.Sockets;
-using System.Diagnostics;
 using System.Net;
 using Networking.Utils;
 using Networking.Models;
 using Networking.Events;
 using Networking.Serialization;
+using Logging;
 
 namespace Networking.Communicator
 {
@@ -80,7 +80,7 @@ namespace Networking.Communicator
                 throw new Exception("Start server first");
             }
 
-            Trace.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
+            Logger.Log("[Server] Send" + serializedData + " " + moduleName + " " + destId,LogLevel.INFO);
             Message message = new(
                 serializedData, moduleName, destId, _senderId
             );
@@ -98,7 +98,7 @@ namespace Networking.Communicator
             {
                 throw new Exception("Start server first");
             }
-            Trace.WriteLine("[Server] Send" + serializedData + " " + _moduleName + " " + destId);
+            Logger.Log("[Server] Send" + serializedData + " " + _moduleName + " " + destId , LogLevel.INFO );
             Message message = new(
                 serializedData, _moduleName, destId, _senderId
             );
@@ -119,7 +119,7 @@ namespace Networking.Communicator
                 throw new Exception("Start server first");
             }
 
-            Trace.WriteLine("[Server] Send" + serializedData + " " + moduleName + " " + destId);
+            Logger.Log("[Server] Send" + serializedData + " " + moduleName + " " + destId , LogLevel.INFO );
             Message message = new(
                 serializedData, moduleName, destId, senderId
             );
@@ -137,10 +137,10 @@ namespace Networking.Communicator
         {
             if (_isStarted)
             {
-                Trace.WriteLine("[Server] Already started, returning same IP:Port");
+                Logger.Log("[Server] Already started, returning same IP:Port" , LogLevel.ERROR );
                 return _ipPort;
             }
-            Trace.WriteLine("[Server] Start" + destIP + " " + destPort);
+            Logger.Log("[Server] Start" + destIP + " " + destPort , LogLevel.INFO );
             _moduleName = moduleName;
             _senderId = senderId;
             _sender = new(_clientIdToStream, _senderIdToClientId, false);
@@ -164,14 +164,14 @@ namespace Networking.Communicator
                     }
                     else
                     {
-                        Trace.WriteLine("Socket error: " + ex.SocketErrorCode);
+                        Logger.Log("Socket error: " + ex.SocketErrorCode , LogLevel.ERROR );
                     }
                 }
             }
             IPEndPoint localEndPoint = (IPEndPoint)_serverListener.LocalEndpoint;
-            Trace.WriteLine("[Server] Server is listening on:");
-            Trace.WriteLine("[Server] IP Address: " + GetLocalIPAddress());
-            Trace.WriteLine("[Server] Port: " + localEndPoint.Port);
+            Logger.Log("[Server] Server is listening on:" , LogLevel.INFO );
+            Logger.Log("[Server] IP Address: " + GetLocalIPAddress() , LogLevel.INFO );
+            Logger.Log("[Server] Port: " + localEndPoint.Port , LogLevel.INFO );
             _listenThread = new Thread(AcceptConnection)
             {
                 IsBackground = true
@@ -196,7 +196,7 @@ namespace Networking.Communicator
                 throw new Exception("Start server first");
             }
 
-            Trace.WriteLine("[Server] Stop");
+            Logger.Log("[Server] Stop" , LogLevel.INFO );
             _stopThread = true;
             Data data = new (EventType.ServerLeft());
             Send(Serializer.Serialize<Data>(data), Id.GetNetworkingBroadcastId(), Id.GetBroadcastId());
@@ -208,12 +208,12 @@ namespace Networking.Communicator
                 stream.Close(); // Close the network stream
             }
 
-            Trace.WriteLine("[Server] Stopped _sender and _receiver");
+            Logger.Log("[Server] Stopped _sender and _receiver" , LogLevel.INFO );
             _serverListener.Stop();
             //_listenThread.Interrupt();
             _listenThread.Join();
             _isStarted = false;
-            Trace.WriteLine("[Server] Stopped");
+            Logger.Log("[Server] Stopped" , LogLevel.INFO );
         }
 
         /// <summary>
@@ -228,11 +228,11 @@ namespace Networking.Communicator
                 throw new Exception("Start server first");
             }
 
-            Trace.WriteLine("[Server] Subscribe " + moduleName);
+            Logger.Log("[Server] Subscribe " + moduleName , LogLevel.INFO );
 
             if (_eventHandlersMap.ContainsKey(moduleName))
             {
-                Trace.WriteLine("[Server] "+moduleName+" already subscribed!");// already subs
+                Logger.Log("[Server] "+moduleName+" already subscribed!" , LogLevel.WARNING );// already subs
             }
             else
             {
@@ -249,7 +249,7 @@ namespace Networking.Communicator
 
             while (!_stopThread)
             {
-                Trace.WriteLine("waiting for connection");
+                Logger.Log( "[Server] waiting for connection" , LogLevel.INFO );
                 TcpClient client = new();
                 try
                 {
@@ -259,7 +259,7 @@ namespace Networking.Communicator
                 {
                     if (e.SocketErrorCode == SocketError.Interrupted)
                     {
-                        Trace.WriteLine("[Server] Listener stopped");
+                        Logger.Log("[Server] Listener stopped" , LogLevel.INFO );
                         break;
                     }
                     //handle other exceptions
@@ -272,11 +272,11 @@ namespace Networking.Communicator
                 }
                 catch (Exception)
                 {
-                    Trace.WriteLine("[Server] Failed to get stream!");
+                    Logger.Log("[Server] Failed to get stream!" , LogLevel.ERROR );
                     continue;
                 }
                 clientId += 'A';
-                Trace.WriteLine("New client connected");
+                Logger.Log("New client connected" , LogLevel.INFO );
             }
         }
 
@@ -296,11 +296,11 @@ namespace Networking.Communicator
                 {
                     if (_eventHandlersMap.ContainsKey( message.ModuleName ))
                     {
-                        Trace.WriteLine( "[Server] " + message.ModuleName + " not subscribed" );
+                        Logger.Log( "[Server] " + message.ModuleName + " not subscribed" , LogLevel.WARNING );
                     }
                     else
                     {
-                        Trace.WriteLine( "[Server] Error in handling message: " + e.Message );
+                        Logger.Log( "[Server] Error in handling message: " + e.Message , LogLevel.ERROR );
                     }
                 }
             }

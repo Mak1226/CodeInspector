@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 * Filename    = PrefixChecker.cs
 *
 * Author      = Monesh Vanga 
@@ -24,7 +24,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
        
         /// <summary>
         /// Initializes a new instance of the BaseAnalyzer with parsed DLL files.
@@ -35,7 +34,7 @@ namespace Analyzer.Pipeline
             // The constructor can be used for any necessary setup or initialization.
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "115";
+            analyzerID = "115";
         }
 
 
@@ -111,7 +110,7 @@ namespace Analyzer.Pipeline
                 _verdict = 0;
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
 
 

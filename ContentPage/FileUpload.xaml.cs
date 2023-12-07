@@ -36,6 +36,7 @@ namespace ContentPage
         {
             Trace.WriteLine( "Initializing FileUpload" );
             _client = client;
+            DataContext = client;
             InitializeComponent();
         }
 
@@ -63,7 +64,7 @@ namespace ContentPage
                     string folderPath = ofd.FileName;
                     Trace.WriteLine( $"Selected folder path: {folderPath}" );
                     // Pass folder path to Content Client
-                    if (Directory.Exists(folderPath.Substring(0, folderPath.Length - 12)))
+                    if (folderPath.EndsWith("This folder"))
                     {
                         _client.HandleUpload(folderPath.Substring(0, folderPath.Length - 12));
                     }

@@ -20,8 +20,9 @@ using System.Threading.Tasks;
 using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
+using Analyzer;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     public class BaseClass
     {
