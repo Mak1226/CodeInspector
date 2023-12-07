@@ -11,6 +11,7 @@
  *****************************************************************************/
 
 using System.Diagnostics;
+using Logging;
 using Networking.Models;
 
 namespace Networking.Queues
@@ -65,7 +66,7 @@ namespace Networking.Queues
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("[Queue] Can not dequeue: "+ex.Message);
+                Logger.Log("[Queue] Can not dequeue due to error "+ex.Message , LogLevel.ERROR );
             }
             return val;
         }

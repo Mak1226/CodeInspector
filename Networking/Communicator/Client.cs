@@ -18,6 +18,7 @@ using Networking.Events;
 using Networking.Models;
 using Networking.Serialization;
 using Networking.Utils;
+using Logging;
 
 namespace Networking.Communicator
 {
@@ -54,7 +55,8 @@ namespace Networking.Communicator
             }
 
             // NOTE: destID SHOULD be ID.GetServerID() to send to the server.
-            Trace.WriteLine("[Client] Send" + serializedData + " " + moduleName + " " + destId);
+            Logger.Log( "[Client] Send string; length=" + serializedData.Length + ", module=" + moduleName + " destId=" + destId, LogLevel.INFO );
+            
             Message message = new(
                 serializedData, moduleName, destId, _senderId
             );
@@ -73,7 +75,7 @@ namespace Networking.Communicator
                 throw new Exception("Start client first");
             }
 
-            Trace.WriteLine("[Client] Send" + serializedData + " " + _moduleName + " " + destId);
+            Logger.Log( "[Client] Send string; length=" + serializedData.Length + ", module=" + _moduleName + " destId=" + destId , LogLevel.INFO );
             Message message = new(
                 serializedData, _moduleName, destId, _senderId
             );
@@ -102,7 +104,7 @@ namespace Networking.Communicator
             _moduleName = moduleName;
             _senderId = senderId;
 
-            Trace.WriteLine("[Client] Start" + destIP + " " + destPort);
+            Logger.Log( "[Client] Starting at destIP=" + destIP + " destPort=" + destPort , LogLevel.INFO );
             TcpClient tcpClient = new();
 
 
@@ -112,16 +114,14 @@ namespace Networking.Communicator
             }
             catch (Exception e)
             {
-                Trace.WriteLine("[Client] Cannot connect to server at "+ destIP + ":"+ destPort.ToString());
-                Trace.WriteLine(e.Message);
+                Logger.Log( "[Client] Cannot connect to server at " + destIP + ":" + destPort.ToString() + " due to the error " + e.Message , LogLevel.ERROR );
                 return "failed";
             }
             _isStarted = true;              // mark as started only when the connection is successful
 
 
             IPEndPoint localEndPoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
-            Trace.WriteLine("[Client] IP Address: " + localEndPoint.Address.MapToIPv4());
-            Trace.WriteLine("[Client] Port: " + localEndPoint.Port);
+            Logger.Log( "[Client] IP Address: " + localEndPoint.Address.MapToIPv4() + " Port: " + localEndPoint.Port , LogLevel.INFO );
 
             // send message to Networking module of the server to register this client with this Id
             Data data = new(_senderId,EventType.ClientRegister());
@@ -131,15 +131,15 @@ namespace Networking.Communicator
             lock (_IdToStream) { _IdToStream[Id.GetServerId()] = _networkStream; }
 
             // starting the sender and receiver threads
-            Trace.WriteLine("[Client] Starting sender");
+            Logger.Log( "[Client] Starting sender" , LogLevel.INFO );
             _sender = new(_IdToStream,_senderIdToClientId, true);
-            Trace.WriteLine("[Client] Starting receiver");
+            Logger.Log( "[Client] Starting receiver" , LogLevel.INFO );
             _receiver = new(_IdToStream, this);
             _sender.Send(message);
 
             // subscribing to the Networking module's event handler.
             Subscribe(new NetworkingEventHandler(this), Id.GetNetworkingId());
-            Trace.WriteLine("[Client] Started");
+            Logger.Log( "[Client] Started" , LogLevel.INFO );
             return localEndPoint.Address.MapToIPv4()+":"+localEndPoint.Port;
         }
 
@@ -153,7 +153,7 @@ namespace Networking.Communicator
                 throw new Exception("Start client first");
             }
 
-            Trace.WriteLine("[Client] Stop");
+            Logger.Log( "[Client] Stop..." , LogLevel.INFO );
             Data data = new(EventType.ClientDeregister());
             _sender.Send(new Message(Serializer.Serialize<Data>(data), Id.GetNetworkingId(), Id.GetServerId(), _senderId));
             _sender.Stop();
@@ -161,7 +161,7 @@ namespace Networking.Communicator
 
             _networkStream.Close();
             _isStarted = false;
-            Trace.WriteLine("[Client] Stopped");
+            Logger.Log( "[Client] Stopped" , LogLevel.INFO );
         }
 
         /// <summary>
@@ -175,12 +175,11 @@ namespace Networking.Communicator
             {
                 throw new Exception("Start client first");
             }
-
-            Trace.WriteLine("[Client] Subscribe "+ moduleName);
+            Logger.Log( "[Client] Subscribe to " + moduleName , LogLevel.INFO );
 
             if (_eventHandlersMap.ContainsKey(moduleName))
             {
-                Trace.WriteLine("[Client] "+moduleName+" already subscribed");// already subs
+                Logger.Log( "[Client] " + moduleName + " already subscribed" , LogLevel.WARNING );
             }
             else
             {
@@ -202,12 +201,12 @@ namespace Networking.Communicator
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine( "[Client] Error in handling message: " + e.Message );
+                    Logger.Log( "[Client] Error in handling message: " + e.Message,LogLevel.ERROR );
                 }
             }
             else
             {
-                 Trace.WriteLine("[Client] " + message.ModuleName + " not subscribed");
+                Logger.Log( "[Client] " + message.ModuleName + " not subscribed" , LogLevel.WARNING );
             }
         }
 
