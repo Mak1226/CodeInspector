@@ -62,6 +62,7 @@ namespace Analyzer.Pipeline
                 }
             }
 
+
             return _result;
         }
 

@@ -9,7 +9,7 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using System.Diagnostics;
+using Logging;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -34,9 +34,9 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles"></param>
         public AvoidConstructorsInStaticTypes( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
-            Trace.WriteLine("Created Instance of Analyzer AvoidConstructorsInStaticTypes");
-            _analyzerID = "102";
             _errorMessage = string.Empty;
+            Logger.Inform( "[AvoidConstructorsInStaticTypes.cs] AvoidConstructorsInStaticTypes: Started" );
+            analyzerID = "102";
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile"></param>
         protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
-            Trace.WriteLine("Running Analyzer AvoidConstructorInStaticTypes on " + parsedDLLFile.DLLFileName);
+            Logger.Inform("[AvoidConstructorsInStaticTypes.cs] AnalyzeSingleDLL: Started on " + parsedDLLFile.DLLFileName);
             _errorMessage = "";
             _verdict = 1;
             violatingClasses = new HashSet<ParsedClass>();
@@ -139,7 +139,7 @@ namespace Analyzer.Pipeline
             {
                 _verdict = 1;
                 _errorMessage = "No violation found";
-                Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
+                Logger.Inform("[AvoidConstructorsInStaticTypes.cs] AnalyzeSingleDLL: Completed on " + parsedDLLFile.DLLFileName);
                 return new AnalyzerResult( analyzerID , _verdict , _errorMessage );
             }
 
@@ -158,7 +158,7 @@ namespace Analyzer.Pipeline
 
             //Return the AnalyzerResult object, with appropriate error mesaage.
             AnalyzerResult resultObj = new( analyzerID , _verdict , _errorMessage );
-            Trace.WriteLine("Analysis completed for " + parsedDLLFile.DLLFileName);
+            Logger.Inform("[AvoidConstructorsInStaticTypes.cs] AnalyzeSingleDLL: Completed on " + parsedDLLFile.DLLFileName);
             return resultObj;
         }
 
