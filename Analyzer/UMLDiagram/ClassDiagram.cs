@@ -68,7 +68,7 @@ namespace Analyzer.UMLDiagram
                 if(_plantUMLCode.ToString() != emptyDiagramUMLString)
                 {
                     // Render the PlantUML diagram asynchronously
-                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Png );
+                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Svg );
                     System.Diagnostics.Debug.WriteLine( _plantUMLImage );
                     System.Diagnostics.Debug.Assert( _plantUMLImage != null );
 

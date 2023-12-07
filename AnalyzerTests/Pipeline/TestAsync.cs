@@ -12,6 +12,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Analyzer.Pipeline;
+using Analyzer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ using Analyzer.Parsing;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     //ClassLibrary1.dll is generated from the below class
 

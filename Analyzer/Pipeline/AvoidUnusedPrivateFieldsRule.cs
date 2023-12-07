@@ -26,7 +26,6 @@ namespace Analyzer.Pipeline
 
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "103";
+            analyzerID = "103";
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }
