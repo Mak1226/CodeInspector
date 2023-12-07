@@ -235,8 +235,7 @@ namespace Analyzer
 
             // write lambda for writing console writeline
 
-            Action action = () => { Console.WriteLine( "Hello World" ); };  
-
+            //Action action = () => { Console.WriteLine( "Hello World" ); };  
 
         }
     }
