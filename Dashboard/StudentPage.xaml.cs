@@ -25,6 +25,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ContentPage;
 using ViewModel;
+using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -42,6 +44,7 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 StudentViewModel viewModel = new(name, id);
                 DataContext = viewModel;
+                Logger.Inform($"[StudentPage] Created viewModel {RuntimeHelpers.GetHashCode( viewModel )}");
                 //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
             catch (Exception exception)

@@ -81,7 +81,7 @@ namespace Dashboard
             }
             catch (Exception ex)
             {
-                ShowErrorWindow("Login request using OAuth cancelled before completion, try again!");
+                ShowErrorWindow($"Login request using OAuth cancelled before completion, try again! {ex}");
                 Application.Current.Shutdown();
             }
         }

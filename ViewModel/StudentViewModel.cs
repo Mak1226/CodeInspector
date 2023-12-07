@@ -106,6 +106,7 @@ namespace ViewModel
         private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            Logger.Inform( $"[StudentViewModel] OnPropertyChanged called for {property}" );
         }
 
         /// <summary>
@@ -222,7 +223,7 @@ namespace ViewModel
 
                     string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
                     Client.Send(message, "server");
-                    Logger.Inform( $"[StudentViewModel] Trying to join Instructor" );
+                    Logger.Inform( $"[StudentViewModel] Made joining request to Instructor" );
                     return true;
                 }
                 catch { }

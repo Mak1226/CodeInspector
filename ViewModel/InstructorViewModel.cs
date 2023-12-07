@@ -27,6 +27,8 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
 using Logging;
+using System.Runtime.CompilerServices;
+
 
 
 namespace ViewModel
@@ -74,6 +76,7 @@ namespace ViewModel
                 // Notify any subscribers about the change in IP address and port
                 OnPropertyChanged(nameof(IpAddress));
                 OnPropertyChanged(nameof(ReceivePort));
+                Logger.Inform($"[]");
             }
             else
             {
@@ -185,7 +188,7 @@ namespace ViewModel
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
                         //acknowledging student about accepting connection
                         Communicator.Send("1", $"{rollNo}");
-                        Logger.Inform( $"[Instructor View Model] Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
+                        Logger.Inform( $"[InstructorViewModel] Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
                     }
                     else if (isConnect == 0)
                     {
@@ -193,7 +196,7 @@ namespace ViewModel
                         _studentSessionState.RemoveStudent(rollNo);
                         //acknowledging student about removing connection
                         //Communicator.Send("0", $"{rollNo}");
-                        Logger.Inform($"[Instructor View Model] Removed student: Roll No - {rollNo}");
+                        Logger.Inform($"[InstructorViewModel] Removed student: Roll No - {rollNo}");
                     }
                     OnPropertyChanged(nameof(StudentList));
                    
@@ -210,7 +213,7 @@ namespace ViewModel
         public void Logout()
         {
             DisconnectAllStudents();
-            Logger.Inform( $"[Instructor View Model] Disconnected all students." );
+            Logger.Inform( $"[InstructorViewModel] Disconnected all students." );
 
             // Waiting for some time for messages to be send
             Thread.Sleep( 2000 );
@@ -223,7 +226,7 @@ namespace ViewModel
         /// </summary>
         public void DisconnectAllStudents()
         {
-            Logger.Inform( $"[Instructor View Model] Disconnecting all students." );
+            Logger.Inform( $"[InstructorViewModel] Disconnecting all students." );
             
             // Retrieving the list of all students from the session state
             List<Student> _studentList = new( _studentSessionState.GetAllStudents() );
@@ -235,12 +238,12 @@ namespace ViewModel
                 {
                     // Sending a disconnection message to the student using the Communicator
                     Communicator.Send( "0" , $"{student.Id}" );
-                    Logger.Inform( $"[Instructor View Model] Disconnection message sent to student {student.Id}" );
+                    Logger.Inform( $"[InstructorViewModel] Disconnection message sent to student {student.Id}" );
                 }
                 catch
                 {
                     // Logging if the disconnection message fails to send to a student
-                    Logger.Inform( $"[Instructor View Model] Disconnection message to student {student.Id} failed." );
+                    Logger.Inform( $"[InstructorViewModel] Disconnection message to student {student.Id} failed." );
                 }
             }
             _studentSessionState.RemoveAllStudents();
@@ -253,7 +256,7 @@ namespace ViewModel
         /// <returns>An empty string.</returns>
         public string HandleMessageRecv(Networking.Models.Message data)
         {
-            Logger.Inform( $"[Instructor View Model] Received message {data.Data}" );
+            Logger.Inform( $"[InstructorViewModel] Received message {data.Data}" );
             AddStudnet(data.Data);
             return "";
         }
