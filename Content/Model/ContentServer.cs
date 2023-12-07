@@ -235,22 +235,22 @@ namespace Content.Model
         /// <summary>
         /// Funciton to cumulate all data and send them to cloud.
         /// </summary>
-        public void SendToCloud()
+        public async void SendToCloud()
         {
 
             Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
             Logger.Debug( $"[ContentServer.cs] SentToCloud : Session :: {_hostSessionID}" );
-            _ = cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            await cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
             foreach (KeyValuePair<string , Dictionary<string , List<AnalyzerResult>>> kvp in _sessionAnalysisResultDict)
             {
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Analysis :: {kvp.Key}" );
-                _ = cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
+                await cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
 
                 IFileHandler fileHandler = new FileHandler();
                 string encoding = fileHandler.HandleUpload(kvp.Key, kvp.Key);
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Submission :: {kvp.Key}" );
-                _ = cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
+                await cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
             }
             Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
