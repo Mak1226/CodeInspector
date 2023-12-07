@@ -10,15 +10,15 @@
  * Description = Class that represents a client for handling file uploads.
  *****************************************************************************/
 
-using Networking.Communicator;
-using Content.FileHandling;
-using Content.Encoder;
-using Analyzer;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Diagnostics;
-using Networking.Serialization;
+using System.Text.Json;
+using Analyzer;
+using Content.Encoder;
+using Content.FileHandling;
 using Logging;
+using Networking.Communicator;
+using Networking.Serialization;
 
 namespace Content.Model
 {
@@ -28,40 +28,80 @@ namespace Content.Model
     /// </summary>
     public class ContentServer
     {
+        static readonly string s_configurationPath = "teacher_configuration.json";
+
         readonly ICommunicator _server;
         readonly string _hostSessionID;
         readonly IAnalyzer _analyzer;
 
         string? _sessionID;
-        string? _fileEncoding;
-        string? _resultEncoding;
-        IDictionary<int, bool> _configuration;
+
+        IDictionary<int , bool> _configuration;
+        internal IDictionary<int , bool> Configuration
+        {
+            get
+            {
+                if (_configuration == null)
+                {
+                    if (File.Exists( s_configurationPath ))
+                    {
+                        Logger.Inform( "[ContentServer.cs] Loading Configuration" );
+                        string json = File.ReadAllText( s_configurationPath );
+                        IDictionary<int , bool>? result = JsonSerializer.Deserialize<IDictionary<int , bool>>( json );
+                        if (result != null)
+                        {
+                            _configuration = result;
+
+                            // Filter out custom analyzers
+                            List<int> keysToRemove = _configuration.Keys.Where( x => x >= 200 ).ToList();
+                            foreach (int keyToRemove in keysToRemove)
+                            {
+                                _configuration.Remove( keyToRemove );
+                            }
+
+                            return _configuration;
+                        }
+                    }
+                    return new Dictionary<int , bool>();
+                }
+                return _configuration;
+            }
+
+            set
+            {
+                Logger.Inform( "[ContentServer.cs] Saving Configuration" );
+                _configuration = value;
+                string json = JsonSerializer.Serialize( _configuration );
+                File.WriteAllText( s_configurationPath , json );
+            }
+        }
 
         /// <summary>
         /// Delegate Function called when <see cref="analyzerResult"/> is changed
         /// </summary>
-        public Action<Dictionary<string, List<AnalyzerResult>>>? AnalyzerResultChanged;
+        public Action<Dictionary<string , List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         /// <summary>
         /// Currently loaded Analyzer Result
         /// </summary>
-        public Dictionary<string, List<AnalyzerResult>> analyzerResult { get; private set; }
+        public Dictionary<string , List<AnalyzerResult>> analyzerResult { get; private set; }
 
-        private readonly Dictionary<string, Dictionary<string, List<AnalyzerResult>>> _sessionAnalysisResultDict;
-        private readonly object _sessionLock = new ();
+        private readonly Dictionary<string , Dictionary<string , List<AnalyzerResult>>> _sessionAnalysisResultDict;
+        private readonly object _sessionLock = new();
 
         /// <summary>
         /// Initialise the content server, subscribe to networking server
         /// </summary>
         /// <param name="_server">Networking server</param>
         /// <param name="_analyzer">Analyzer</param>
-        public ContentServer(ICommunicator _server, IAnalyzer _analyzer, string sessionID)
+        public ContentServer( ICommunicator _server , IAnalyzer _analyzer , string sessionID )
         {
             this._server = _server;
             _hostSessionID = sessionID;
-            ServerRecieveHandler recieveHandler = new (this);
-            this._server.Subscribe( recieveHandler , "Content-Files");
+            ServerRecieveHandler recieveHandler = new( this );
+            this._server.Subscribe( recieveHandler , "Content-Files" );
             this._analyzer = _analyzer;
+            this._analyzer.Configure( Configuration );
             analyzerResult = new();
             _sessionAnalysisResultDict = new();
             Logger.Inform( "[ContentServer.cs] ContentServer: Initialized ContentServer" );
@@ -72,15 +112,14 @@ namespace Content.Model
         /// </summary>
         /// <param name="encodedFiles">The encoded file</param>
         /// <param name="clientID">Unique ID of client</param>
-        public void HandleRecieve(string encodedFiles, string? clientID)
+        public void HandleRecieve( string encodedFiles , string? clientID )
         {
             Logger.Inform( "[ContentServer.cs] HandleReceive: Started" );
-            _fileEncoding = encodedFiles;
             IFileHandler _fileHandler = new FileHandler();
             ISerializer _serializer = new AnalyzerResultSerializer();
 
             // Save files to user session directory and collect sessionID
-            string? recievedSessionID = _fileHandler.HandleRecieve(encodedFiles);
+            string? recievedSessionID = _fileHandler.HandleRecieve( encodedFiles );
             if (recievedSessionID == null)
             {
                 Logger.Warn( "[ContentServer.cs] HandleReceive: unable to recieve" );
@@ -98,28 +137,23 @@ namespace Content.Model
             {
                 Logger.Debug( "[ContentServer.cs] HandleReceive: Inside SessionLock" );
                 // Analyse DLL files
-                _analyzer.LoadDLLFileOfStudent(_fileHandler.GetFiles());
-                Logger.Debug( "[ContentServer.cs] HandleReceive: Loaded Student DLL files" );
+                _analyzer.LoadDLLFileOfStudent( _fileHandler.GetFiles() );
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Loaded Student DLL files" );
                 Dictionary<string , List<AnalyzerResult>> res = _analyzer.Run();
-                Dictionary<string, List<AnalyzerResult>> customRes = _analyzer.RnuCustomAnalyzers();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in customRes)
-                {
-                    res[kvp.Key] = res[kvp.Key].Concat(kvp.Value).ToList();
-                }
 
                 _sessionAnalysisResultDict[recievedSessionID] = res;
-                string serializedResults = _serializer.Serialize(res);
-                _resultEncoding = serializedResults;
-                _server.Send(serializedResults, "Content-Results", clientID);
+                string serializedResults = _serializer.Serialize( res );
+                _server.Send( serializedResults , "Content-Results" , clientID );
+                Logger.Debug( $"[ContentServer.cs] HandleReceive: Sending result {serializedResults}" );
                 if (_sessionID == recievedSessionID)
                 {
-                    Logger.Debug($"[ContentServer.cs] HandleReceive: SessionIDs match ({_sessionID})");
+                    Logger.Debug( $"[ContentServer.cs] HandleReceive: SessionIDs match ({_sessionID})" );
                     analyzerResult = res;
                     // Notification for viewModel
-                    AnalyzerResultChanged?.Invoke(analyzerResult);
+                    AnalyzerResultChanged?.Invoke( analyzerResult );
                 }
 
-                byte[] graph = _analyzer.GetRelationshipGraph(new());
+                byte[] graph = _analyzer.GetRelationshipGraph( new() );
                 if (graph == null || graph.Length == 0)
                 {
                     Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
@@ -129,12 +163,12 @@ namespace Content.Model
                 // Save the image as PNG
                 try
                 {
-                    using MemoryStream ms = new(graph);
+                    using MemoryStream ms = new( graph );
                     Image image = Image.FromStream( ms );
                     image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
                     Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
                 }
-                catch ( Exception ex )
+                catch (Exception ex)
                 {
                     Logger.Error( $"[ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
                 }
@@ -146,11 +180,11 @@ namespace Content.Model
         /// Configures the analyzer with the specified configuration settings.
         /// </summary>
         /// <param name="configuration">The dictionary containing configuration settings.</param>
-        public void Configure(IDictionary<int, bool> configuration)
+        public void Configure( IDictionary<int , bool> configuration )
         {
             Logger.Inform( "[ContentServer.cs] Configure: Started" );
-            _configuration = configuration;
-            _analyzer.Configure(configuration);
+            Configuration = configuration;
+            _analyzer.Configure( configuration );
             Logger.Inform( "[ContentServer.cs] Configure: Done" );
         }
 
@@ -158,18 +192,17 @@ namespace Content.Model
         /// Loads custom DLLs for additional analyzers.
         /// </summary>
         /// <param name="filePaths">The list of file paths for the custom DLLs.</param>
-        public void LoadCustomDLLs(List<string> filePaths)
+        public List<Tuple<int , string>> LoadCustomDLLs( List<string> filePaths )
         {
-            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Started" );
-            _analyzer.LoadDLLOfCustomAnalyzers(filePaths);
-            Logger.Inform( "[ContentServer.cs] LoadCustomDLLs: Done" );
+            Logger.Inform( $"[ContentServer.cs] LoadCustomDLLs {filePaths}" );
+            return _analyzer.LoadDLLOfCustomAnalyzers( filePaths );
         }
 
         /// <summary>
         /// Sets the session ID and updates the associated analyzer results if available.
         /// </summary>
         /// <param name="sessionID">The session ID to be set.</param>
-        public void SetSessionID(string? sessionID)
+        public void SetSessionID( string? sessionID )
         {
             Logger.Inform( $"[ContentServer.cs] SetSessionID: started. SessionID {sessionID}" );
             if (sessionID == null)
@@ -181,7 +214,7 @@ namespace Content.Model
             }
 
             _sessionID = sessionID;
-            if (_sessionAnalysisResultDict.ContainsKey(sessionID)) 
+            if (_sessionAnalysisResultDict.ContainsKey( sessionID ))
             {
                 Logger.Debug( "[ContentServer.cs] SetSessionID: Already sessionID present" );
                 // Use existing analyzer results if available for the given session ID.
@@ -195,7 +228,7 @@ namespace Content.Model
                 analyzerResult = new();
                 _sessionAnalysisResultDict[sessionID] = analyzerResult;
             }
-            AnalyzerResultChanged?.Invoke(analyzerResult);
+            AnalyzerResultChanged?.Invoke( analyzerResult );
             Logger.Inform( "[ContentServer.cs] SetSessionID: done" );
         }
 
@@ -207,12 +240,18 @@ namespace Content.Model
 
             Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
-            Task.Run(() 
-                => cloudHandler.PostSessionAsync(_hostSessionID, _configuration, _sessionAnalysisResultDict.Keys.ToList()));
-            Task.Run(()
-                => cloudHandler.PostSubmissionAsync(_hostSessionID, _fileEncoding));
-            Task.Run(()
-                => cloudHandler.PostSubmissionAsync(_hostSessionID, _resultEncoding));
+            Logger.Debug( $"[ContentServer.cs] SentToCloud : Session :: {_hostSessionID}" );
+            _ = cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            foreach (KeyValuePair<string , Dictionary<string , List<AnalyzerResult>>> kvp in _sessionAnalysisResultDict)
+            {
+                Logger.Debug( $"[ContentServer.cs] SentToCloud : Analysis :: {kvp.Key}" );
+                _ = cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
+
+                IFileHandler fileHandler = new FileHandler();
+                string encoding = fileHandler.HandleUpload(kvp.Key, kvp.Key);
+                Logger.Debug( $"[ContentServer.cs] SentToCloud : Submission :: {kvp.Key}" );
+                _ = cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
+            }
             Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
 

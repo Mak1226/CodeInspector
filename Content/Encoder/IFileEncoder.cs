@@ -22,13 +22,13 @@ namespace Content.Encoder
         /// </summary>
         /// <param name="filePaths">Path to each file to be encoded together</param>
         /// <returns>A string containing the encoded XML data.</returns>
-        string GetEncoded(List<string> filePaths, string rootPath, string sessionID);
+        string GetEncoded( List<string> filePaths , string rootPath , string sessionID );
 
         /// <summary>
         /// Decodes data from an XML string and sets the internal state of an object with the decoded data.
         /// </summary>
         /// <param name="packet">The XML string containing the data to be decoded.</param>
-        void DecodeFrom(string packet);
+        void DecodeFrom( string packet );
 
         /// <summary>
         /// This function can be used to access the private variable data.
@@ -41,8 +41,8 @@ namespace Content.Encoder
         /// Note: filepaths are encoded in the XML
         /// </summary>
         /// <param name="path">Directory root to where each file is to be saved</param>
-        void SaveFiles(string path);
+        void SaveFiles( string path );
 
-        string sessionID {  get; }
+        string sessionID { get; }
     }
 }
