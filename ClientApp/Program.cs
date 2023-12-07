@@ -15,7 +15,7 @@ namespace ClientApp
             string moduleName = "EgModule";
             HashSet<string> clients=new ();
             ICommunicator client = CommunicationFactory.GetClient();
-            client.Start( "10.128.2.85" , 12399, clientId,moduleName);
+            client.Start( "192.168.0.101" , 12399, clientId,moduleName);
             client.Subscribe( new ExampleEventHandler(clients), Id.GetNetworkingBroadcastId());
             client.Subscribe( new ExampleEventHandler(clients) , moduleName );
             Console.ReadKey();

@@ -25,7 +25,7 @@ namespace Content.Model
         /// Initiate
         /// </summary>
         /// <param name="client">ContentClient to be notified</param>
-        public ClientRecieveHandler(ContentClient client) 
+        public ClientRecieveHandler( ContentClient client )
         {
             _client = client;
         }
@@ -35,9 +35,16 @@ namespace Content.Model
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public string HandleMessageRecv(Message message)
+        public string HandleMessageRecv( Message message )
         {
-            _client.HandleReceive(message.Data);
+            if (message.ModuleName != "Content-Messages")
+            {
+                _client.HandleReceive( message.Data );
+            }
+            else
+            {
+                _client.ContentMessageInfo( message.Data );
+            }
             return "";
         }
     }
