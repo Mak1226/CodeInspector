@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
-* Filename    = AvoidGotoStatement.cs
+* Filename    = AvoidGotoStatements.cs
 * 
 * Author      = Thanmayee
 * 
@@ -16,28 +16,20 @@ using System.Linq;
 
 namespace Analyzer.Pipeline
 {
-    /// <summary>
-    /// Analyzer rule for detecting goto statements in methods.
-    /// </summary>
     public class AvoidGotoStatementsAnalyzer : AnalyzerBase
     {
         private readonly List<string> _errorMessages;
 
-        public AvoidGotoStatementsAnalyzer(List<ParsedDLLFile> dllFiles) : base(dllFiles)
+        public AvoidGotoStatementsAnalyzer( List<ParsedDLLFile> dllFiles ) : base( dllFiles )
         {
             _errorMessages = new List<string>();
             analyzerID = "117";
         }
 
-        /// <summary>
-        /// Runs the analysis to check for the presence of goto statements in methods.
-        /// </summary>
-        /// <returns>An <see cref="AnalyzerResult"/> based on the analysis.</returns>
-        protected override AnalyzerResult AnalyzeSingleDLL(ParsedDLLFile parsedDLLFile)
+        protected override AnalyzerResult AnalyzeSingleDLL( ParsedDLLFile parsedDLLFile )
         {
-            CheckForGotoStatements(parsedDLLFile);
+            CheckForGotoStatements( parsedDLLFile );
 
-            // If no errors, add a message indicating everything looks fine
             if (_errorMessages.Count == 0)
             {
                 return new AnalyzerResult(analyzerID, 1, "No goto statements found.");
@@ -49,10 +41,7 @@ namespace Analyzer.Pipeline
             return new AnalyzerResult(analyzerID, 0, errorMessageString);
         }
 
-        /// <summary>
-        /// Checks each method for the presence of goto statements.
-        /// </summary>
-        private void CheckForGotoStatements(ParsedDLLFile parsedDLLFile)
+        private void CheckForGotoStatements( ParsedDLLFile parsedDLLFile )
         {
             foreach (ParsedClassMonoCecil cls in parsedDLLFile.classObjListMC)
             {
@@ -60,23 +49,19 @@ namespace Analyzer.Pipeline
                 {
                     if (method.HasBody)
                     {
-                        if (MethodContainsGotoStatement(method.Body.Instructions))
+                        if (MethodContainsGotoStatement( method.Body.Instructions ))
                         {
-                            // Collect the class name if a goto statement is found
-                            _errorMessages.Add(cls.TypeObj.Name);
-                            break; // Break after finding the first goto statement in the method
+                            _errorMessages.Add( cls.TypeObj.Name );
+                            break;
                         }
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Checks if the method contains a goto statement.
-        /// </summary>
-        private bool MethodContainsGotoStatement(IEnumerable<Instruction> instructions)
+        private bool MethodContainsGotoStatement( IEnumerable<Instruction> instructions )
         {
-            return instructions.Any(instruction => instruction.OpCode == OpCodes.Br || instruction.OpCode == OpCodes.Br_S);
+            return instructions.Any( instruction => instruction.OpCode == OpCodes.Br || instruction.OpCode == OpCodes.Br_S );
         }
     }
 }
