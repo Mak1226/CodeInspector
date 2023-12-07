@@ -183,7 +183,7 @@ namespace Networking.Utils
                 if (!_recvQueue.canDequeue())
                 {
                     // Wait for some time if the queue is empty to avoid busy-waiting
-                    Thread.Sleep( 100 );
+                    Thread.Sleep( 500 );
                     continue;
                 }
 
