@@ -40,7 +40,7 @@
             <Grid Grid.Row="0">
                 <Ellipse Height="35" Width="35" Margin="182,15,182,0">
                     <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding UserImage}" />
+                        <ImageBrush ImageSource="{Binding UserImage, Mode=OneWay}" />
                     </Ellipse.Fill>
                 </Ellipse>
             </Grid>

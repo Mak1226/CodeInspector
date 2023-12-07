@@ -62,7 +62,6 @@ namespace Dashboard
             AuthenticationViewModel viewModel = (AuthenticationViewModel)DataContext;
             try
             {
-
                 AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
 
                 Debug.WriteLine("Printing from page");

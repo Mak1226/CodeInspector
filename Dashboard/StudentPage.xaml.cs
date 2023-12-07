@@ -33,14 +33,14 @@ namespace Dashboard
     /// </summary>
     public partial class StudentPage : Page
     {
-        public StudentPage(string name, string id)
+        public StudentPage(string name, string id, string userImage )
         {
             InitializeComponent();
 
             try
             {
                 // Create the ViewModel and set as data context.
-                StudentViewModel viewModel = new(name, id);
+                StudentViewModel viewModel = new(name, id, userImage );
                 DataContext = viewModel;
                 //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
@@ -95,7 +95,5 @@ namespace Dashboard
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.DisconnectInstructor();
         }
-
-
     }
 }

@@ -9,17 +9,21 @@
     Background="#9EDDFF" >
 
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Image/backgrnd.jpg" />
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Viewbox Stretch="Uniform">
-            <Image Source="/Image/logo.png" />
+            <Image Source="/Image/name_trans.png" />
         </Viewbox>
         <!-- <Image Source="/Image/Analyzer.png" /> -->
-                
 
-        <Border Background="#FFFFFF" Grid.Column="1" CornerRadius="0 10 10 0" >
+
+        <!--<Border Background="#9EDDFF" Grid.Column="1" CornerRadius="0 10 10 0" > -->
+        <Border Grid.Column="1" CornerRadius="0 10 10 0" >
             <StackPanel VerticalAlignment="Center">
                 
                 <!-- <TextBlock Text="CodeInspector" Foreground="#0C356A" Style="{StaticResource TitleText}" FontFamily="Segoe Script" /> -->
@@ -31,13 +35,13 @@
                     <Grid>
                         <!-- Centered Horizontal Line -->
                         <Line X1="0" Y1="0" X2="111" Y2="0" Stroke="Black" StrokeThickness="0.5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="60,0,215,0" />
-                        <TextBlock Text=".. " Foreground="#878787" Style="{StaticResource NormalText}" />
+                        <TextBlock Text=".." Foreground="#878787" Style="{StaticResource NormalText}" />
                         <Line X1="0" Y1="0" X2="111" Y2="0" Stroke="Black" StrokeThickness="0.5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="215,0,60,0" />
                     </Grid>
                 </Viewbox>
                 <StackPanel Orientation="Horizontal" Margin="0 20" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource buttonCircle}" Click="Login_Click" Background="White">
-                        <Image Source="/Image/google.png" Width="20" Height="20" />
+                    <Button Style="{StaticResource buttonCircle}" Click="Login_Click">
+                        <Image Source="/Image/bettergoogle.png" Width="30" Height="30" />
                     </Button>
                     <Button Cursor="Hand" Content=" Sign in with Google " Margin="0 10 0 15" Foreground="#0C356A" Click="Login_Click" Background="white" FontFamily="{StaticResource ProtoMonoRegular}">
                         <Button.Resources>
