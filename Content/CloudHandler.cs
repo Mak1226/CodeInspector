@@ -9,9 +9,9 @@
  *
  * Description = Wrapper class for handling cloud functionality
  *****************************************************************************/
-using ServerlessFunc;
 using System.Text;
 using Analyzer;
+using ServerlessFunc;
 
 namespace Content
 {
@@ -27,7 +27,7 @@ namespace Content
         private readonly string _sessionID;
 
         // Creates a random string as sesssion ID for this handler
-        public CloudHandler() : base(s_sessionUrl, s_submissionUrl, s_analysisUrl) 
+        public CloudHandler() : base( s_sessionUrl , s_submissionUrl , s_analysisUrl )
         {
             _sessionID = Guid.NewGuid().ToString();
         }
@@ -39,7 +39,7 @@ namespace Content
         /// <param name="configuration">Dictionary of configuration options and whether they are being used</param>
         /// <param name="sessionList">List of sessionIDs of the sessions which are connected</param>
         /// <returns>A SessionData object</returns>
-        private SessionData CreateSessionData(string hostSessionID, IDictionary<int, bool> configuration, List<string> sessionList)
+        private SessionData CreateSessionData( string hostSessionID , IDictionary<int , bool> configuration , List<string> sessionList )
         {
             SessionData sessionData = new()
             {
@@ -59,7 +59,7 @@ namespace Content
         /// <param name="hostSessionID">Session ID of server</param>
         /// <param name="encoding">Encoding of DLL files</param>
         /// <returns>A SubmissionData object</returns>
-        private SubmissionData CreateSubmissionData(string hostSessionID, string? encoding)
+        private SubmissionData CreateSubmissionData( string hostSessionID , string? encoding )
         {
             encoding ??= "";
             SubmissionData submissionData = new()
@@ -78,7 +78,7 @@ namespace Content
         /// <param name="hostSessionID">Session ID of server</param>
         /// <param name="encoding">Encoding of analysis results</param>
         /// <returns>An AnalysisData object</returns>
-        private AnalysisData CreateAnalysisData(string hostSessionID, string? encoding)
+        private AnalysisData CreateAnalysisData( string hostSessionID , string? encoding )
         {
             encoding ??= "";
             AnalysisData analysisData = new()
@@ -98,9 +98,9 @@ namespace Content
         /// <param name="configuration">Dictionary of configuration options and whether they are being used</param>
         /// <param name="sessionList">List of sessionIDs of the sessions which are connected</param>
         /// <returns></returns>
-        public async Task<SessionEntity> PostSessionAsync(string hostSessionID, IDictionary<int, bool> configuration, List<string> sessionList)
+        public async Task<SessionEntity> PostSessionAsync( string hostSessionID , IDictionary<int , bool> configuration , List<string> sessionList )
         {
-            return await PostSessionAsync(CreateSessionData(hostSessionID, configuration, sessionList));
+            return await PostSessionAsync( CreateSessionData( hostSessionID , configuration , sessionList ) );
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace Content
         /// <param name="hostSessionID">Session ID of server</param>
         /// <param name="encoding">Encoding of DLL files</param>
         /// <returns></returns>
-        public async Task<SubmissionEntity> PostSubmissionAsync(string hostSessionID, string? encoding)
+        public async Task<SubmissionEntity> PostSubmissionAsync( string hostSessionID , string? encoding )
         {
-            return await PostSubmissionAsync(CreateSubmissionData(hostSessionID, encoding));
+            return await PostSubmissionAsync( CreateSubmissionData( hostSessionID , encoding ) );
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace Content
         /// <param name="hostSessionID">Session ID of server</param>
         /// <param name="encoding">Encoding of analysis results</param>
         /// <returns></returns>
-        public async Task<AnalysisEntity> PostAnalysisAsync(string hostSessionID, string? encoding)
+        public async Task<AnalysisEntity> PostAnalysisAsync( string hostSessionID , string? encoding )
         {
-            return await PostAnalysisAsync(CreateAnalysisData(hostSessionID, encoding));
+            return await PostAnalysisAsync( CreateAnalysisData( hostSessionID , encoding ) );
         }
     }
 }

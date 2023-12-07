@@ -9,9 +9,9 @@
  *
  * Description = Server side viewModel
  *****************************************************************************/
+using System.ComponentModel;
 using Analyzer;
 using Content.Model;
-using System.ComponentModel;
 
 namespace Content.ViewModel
 {
@@ -31,13 +31,13 @@ namespace Content.ViewModel
     public class ContentServerViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private readonly ContentServer _contentServer;
-        private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
+        private Dictionary<string , List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
-        private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
+        private Tuple<string , List<Tuple<string , int , string>>> _selectedItem;
         private List<string> _uploadedFiles = new();
         private bool _isDarkMode;
 
-        
+
 
         /// <summary>
         /// Property change event
@@ -48,23 +48,23 @@ namespace Content.ViewModel
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
         /// <param name="contentServer">Content Server to be passed</param>
-        public ContentServerViewModel(ContentServer contentServer)
+        public ContentServerViewModel( ContentServer contentServer )
         {
             _contentServer = contentServer;
-            _contentServer.AnalyzerResultChanged += (result) =>
+            _contentServer.AnalyzerResultChanged += ( result ) =>
             {
                 _analyzerResults = result;
                 //UpdateDataList(analyzerResults);
-                OnPropertyChanged(nameof(_analyzerResults));
-                OnPropertyChanged(nameof(DataList));
+                OnPropertyChanged( nameof( _analyzerResults ) );
+                OnPropertyChanged( nameof( DataList ) );
             };
 
             // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
-            _configOptionsList = TupleListToAnalyzerConfigOptionsList(AnalyzerFactory.GetAllConfigurationOptions());
+            _configOptionsList = TupleListToAnalyzerConfigOptionsList( AnalyzerFactory.GetAllConfigurationOptions() );
             _analyzerResults = _contentServer.analyzerResult;
         }
 
-        private List<AnalyzerConfigOption> TupleListToAnalyzerConfigOptionsList(List<Tuple<int, string>> configOptions)
+        private List<AnalyzerConfigOption> TupleListToAnalyzerConfigOptionsList( List<Tuple<int , string>> configOptions )
         {
             List<AnalyzerConfigOption> newList = new();
             IDictionary<int , bool> serverConfigs = _contentServer.Configuration;
@@ -91,35 +91,35 @@ namespace Content.ViewModel
         /// Configure Analyzer to the given analyzer
         /// </summary>
         /// <param name="teacherOptions">Dictionary of teacher options</param>
-        public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions)
+        public void ConfigureAnalyzer( IDictionary<int , bool> teacherOptions )
         {
             // Call Analyzer.Configure
-            _contentServer.Configure(teacherOptions);
+            _contentServer.Configure( teacherOptions );
         }
 
         /// <summary>
         /// Set the sessionID of the server
         /// </summary>
         /// <param name="sessionID"></param>
-        public void SetSessionID(string? sessionID)
+        public void SetSessionID( string? sessionID )
         {
-            _contentServer.SetSessionID(sessionID);
+            _contentServer.SetSessionID( sessionID );
         }
 
         /// <summary>
         /// Load custom DLLs into the server
         /// </summary>
         /// <param name="filePaths">paths to the custom analyzer DLLs</param>
-        public void LoadCustomDLLs(List<string> filePaths)
+        public void LoadCustomDLLs( List<string> filePaths )
         {
-            List<Tuple<int , string>> teacherConfigs = _contentServer.LoadCustomDLLs(filePaths);
+            List<Tuple<int , string>> teacherConfigs = _contentServer.LoadCustomDLLs( filePaths );
 
-            ConfigOptionsList = TupleListToAnalyzerConfigOptionsList(teacherConfigs);
+            ConfigOptionsList = TupleListToAnalyzerConfigOptionsList( teacherConfigs );
 
             _uploadedFiles = filePaths;
-            OnPropertyChanged(nameof(UploadedFiles));
+            OnPropertyChanged( nameof( UploadedFiles ) );
         }
-        
+
         /// <summary>
         /// Summarise data and send to cloud from server
         /// </summary>
@@ -136,7 +136,7 @@ namespace Content.ViewModel
         /// 
         /// Dictionary keys are filenames. Entries are tuples of (Analyzer ID, Verdict, ErrorMessage)
         /// </summary>
-        public List<Tuple<string, List<Tuple<string, int, string>>>> DataList
+        public List<Tuple<string , List<Tuple<string , int , string>>>> DataList
         {
             get
             {
@@ -146,19 +146,19 @@ namespace Content.ViewModel
                 }
 
 
-                List<Tuple<string, List<Tuple<string, int, string>>>> outList = new();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in _analyzerResults)
+                List<Tuple<string , List<Tuple<string , int , string>>>> outList = new();
+                foreach (KeyValuePair<string , List<AnalyzerResult>> kvp in _analyzerResults)
                 {
-                    List<Tuple<string, int, string>> resultList = new();
+                    List<Tuple<string , int , string>> resultList = new();
                     foreach (AnalyzerResult result in kvp.Value)
                     {
-                        resultList.Add(new(
-                            result.AnalyserID,
-                            result.Verdict,
-                            result.ErrorMessage)
+                        resultList.Add( new(
+                            result.AnalyserID ,
+                            result.Verdict ,
+                            result.ErrorMessage )
                             );
                     }
-                    outList.Add(new(kvp.Key, resultList));
+                    outList.Add( new( kvp.Key , resultList ) );
                 }
                 return outList;
             }
@@ -168,13 +168,13 @@ namespace Content.ViewModel
         /// <summary>
         /// Tab bindings
         /// </summary>
-        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
+        public Tuple<string , List<Tuple<string , int , string>>> SelectedItem
         {
             get => _selectedItem;
             set
             {
                 _selectedItem = value;
-                OnPropertyChanged(nameof(SelectedItem));
+                OnPropertyChanged( nameof( SelectedItem ) );
             }
         }
 
@@ -184,7 +184,7 @@ namespace Content.ViewModel
         public List<AnalyzerConfigOption> ConfigOptionsList
         {
             get { return _configOptionsList; }
-            set { _configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
+            set { _configOptionsList = value; OnPropertyChanged( nameof( ConfigOptionsList ) ); }
         }
 
         /// <summary>
@@ -208,9 +208,9 @@ namespace Content.ViewModel
             }
         }
 
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged( string propertyName )
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke( this , new PropertyChangedEventArgs( propertyName ) );
         }
 
     }

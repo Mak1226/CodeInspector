@@ -9,9 +9,9 @@
  *
  * Description = Client side ViewModel
  *****************************************************************************/
+using System.ComponentModel;
 using Analyzer;
 using Content.Model;
-using System.ComponentModel;
 
 namespace Content.ViewModel
 {
@@ -21,8 +21,8 @@ namespace Content.ViewModel
     public class ContentClientViewModel : INotifyPropertyChanged, IContentViewModel
     {
         private readonly ContentClient _contentClient;
-        private Dictionary<string, List<AnalyzerResult>> _analyzerResults;
-        private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
+        private Dictionary<string , List<AnalyzerResult>> _analyzerResults;
+        private Tuple<string , List<Tuple<string , int , string>>> _selectedItem;
         private ContentClient.StatusType _status;
 
         private bool _isDarkMode;
@@ -35,20 +35,20 @@ namespace Content.ViewModel
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
-        public ContentClientViewModel(ContentClient contentClient)
+        public ContentClientViewModel( ContentClient contentClient )
         {
             _contentClient = contentClient;
-            _contentClient.AnalyzerResultChanged += (result) =>
+            _contentClient.AnalyzerResultChanged += ( result ) =>
             {
                 _analyzerResults = result;
-                OnPropertyChanged(nameof(_analyzerResults));
-                OnPropertyChanged(nameof(DataList));
+                OnPropertyChanged( nameof( _analyzerResults ) );
+                OnPropertyChanged( nameof( DataList ) );
             };
             _contentClient.ClientStatusChanged += ( status ) =>
             {
                 _status = status;
-                OnPropertyChanged(nameof(Status));
-                OnPropertyChanged(nameof(StatusColor));
+                OnPropertyChanged( nameof( Status ) );
+                OnPropertyChanged( nameof( StatusColor ) );
             };
             _analyzerResults = _contentClient.analyzerResult;
         }
@@ -59,7 +59,7 @@ namespace Content.ViewModel
         /// 
         /// Dictionary keys are filenames. Entries are tuples of (Analyzer ID, Verdict, ErrorMessage)
         /// </summary>
-        public List<Tuple<string, List<Tuple<string, int, string>>>> DataList
+        public List<Tuple<string , List<Tuple<string , int , string>>>> DataList
         {
             get
             {
@@ -69,19 +69,19 @@ namespace Content.ViewModel
                 }
 
 
-                List<Tuple<string, List<Tuple<string, int, string>>>> outList = new();
-                foreach (KeyValuePair<string, List<AnalyzerResult>> kvp in _analyzerResults)
+                List<Tuple<string , List<Tuple<string , int , string>>>> outList = new();
+                foreach (KeyValuePair<string , List<AnalyzerResult>> kvp in _analyzerResults)
                 {
-                    List<Tuple<string, int, string>> resultList = new();
+                    List<Tuple<string , int , string>> resultList = new();
                     foreach (AnalyzerResult result in kvp.Value)
                     {
-                        resultList.Add(new(
-                            result.AnalyserID,
-                            result.Verdict,
-                            result.ErrorMessage)
+                        resultList.Add( new(
+                            result.AnalyserID ,
+                            result.Verdict ,
+                            result.ErrorMessage )
                             );
                     }
-                    outList.Add(new(kvp.Key, resultList));
+                    outList.Add( new( kvp.Key , resultList ) );
                 }
                 return outList;
             }
@@ -92,13 +92,13 @@ namespace Content.ViewModel
         /// <summary>
         /// ViewModel binding for tab navigation
         /// </summary>
-        public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
+        public Tuple<string , List<Tuple<string , int , string>>> SelectedItem
         {
             get => _selectedItem;
             set
             {
                 _selectedItem = value;
-                OnPropertyChanged(nameof(SelectedItem));
+                OnPropertyChanged( nameof( SelectedItem ) );
             }
         }
 
@@ -118,7 +118,7 @@ namespace Content.ViewModel
                     _ => "Unknown error",
                 };
             }
-            set { throw new FieldAccessException();  }
+            set { throw new FieldAccessException(); }
         }
 
         /// <summary>
@@ -140,18 +140,18 @@ namespace Content.ViewModel
             set { throw new FieldAccessException(); }
         }
 
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged( string propertyName )
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke( this , new PropertyChangedEventArgs( propertyName ) );
         }
 
         /// <summary>
         /// Pass on to the client filepath to handle uploading at given path
         /// </summary>
         /// <param name="path">path of file/directory to upload</param>
-        public void HandleUpload(string path)
+        public void HandleUpload( string path )
         {
-            _contentClient.HandleUpload(path);
+            _contentClient.HandleUpload( path );
 
         }
 
