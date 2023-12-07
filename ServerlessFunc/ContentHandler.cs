@@ -23,13 +23,13 @@ namespace Content
     /// </summary>
     public class CloudHandler : UploadApi
     {
-        /*private static readonly string s_sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
+        private static readonly string s_sessionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/session";
         private static readonly string s_submissionUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/submission";
-        private static readonly string s_analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";*/
+        private static readonly string s_analysisUrl = "https://serverlessfunc20231121082343.azurewebsites.net/api/analysis";
 
-        private static readonly string s_sessionUrl = "http://localhost:7074/api/session";
+       /*private static readonly string s_sessionUrl = "http://localhost:7074/api/session";
         private static readonly string s_submissionUrl = "http://localhost:7074/api/submission";
-        private static readonly string s_analysisUrl = "http://localhost:7074/api/analysis";
+        private static readonly string s_analysisUrl = "http://localhost:7074/api/analysis";*/
 
         private string _sessionID;
 
