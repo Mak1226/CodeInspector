@@ -85,7 +85,10 @@ namespace Networking.Utils
 
             Logger.Log("[Sender] Stop" , LogLevel.INFO );
             _stopThread = true;
-            _queueEvent.Set();
+            lock (_lock)
+            {
+                _queueEvent.Set();
+            }
             _sendThread.Join();
         }
 
@@ -163,6 +166,10 @@ namespace Networking.Utils
                 //    continue;
                 //}
                 _queueEvent.WaitOne();
+                if (_stopThread)
+                {
+                    break;
+                }
                 lock (_lock)
                 {
                     if (!_sendQueue.canDequeue())

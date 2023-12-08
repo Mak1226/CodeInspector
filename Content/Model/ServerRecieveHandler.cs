@@ -25,7 +25,7 @@ namespace Content.Model
         /// Notifies content server only on recieving an encoded file list
         /// </summary>
         /// <param name="server">ContentServer to be notified</param>
-        public ServerRecieveHandler(ContentServer server)
+        public ServerRecieveHandler( ContentServer server )
         {
             _server = server;
         }
@@ -35,9 +35,9 @@ namespace Content.Model
         /// </summary>
         /// <param name="message"></param>
         /// <returns>Nothing... Return is just there for the interface</returns>
-        public string HandleMessageRecv(Message message)
+        public string HandleMessageRecv( Message message )
         {
-            _server.HandleRecieve(message.Data, message.SenderId);
+            _server.HandleRecieve( message.Data , message.SenderId );
             return "";
         }
     }
