@@ -53,7 +53,7 @@ namespace Dashboard
         public static async Task<AuthenticationResult> Authenticate( int timeOut = 180000 )
         {
 
-            Trace.WriteLine( "[Authenticator] Creating State and Redirecting URI on port 8080" );
+            Logger.Inform( "[Authenticator] Creating State and Redirecting URI on port 8080" );
             // Creating state and redirect URI using port 8080 on Loopback address
             string state = CryptRandomInt( 32 );
             string codeVerifier = CryptRandomInt( 32 );
@@ -217,7 +217,7 @@ namespace Dashboard
         /// <param name="redirectURI"></param>
         private static async void GetUserData( string code , string code_verifier , string redirectURI )
         {
-            Trace.WriteLine( "[Authenticator] Getting Data From User" );
+            Logger.Inform( "[Authenticator] Getting Data From User" );
             // Building the  request
             string tokenRequestURI = "https://www.googleapis.com/oauth2/v4/token";
             string tokenRequestBody = string.Format( "code={0}&redirect_uri={1}&client_id={2}&code_verifier={3}&client_secret={4}&scope=&grant_type=authorization_code" ,

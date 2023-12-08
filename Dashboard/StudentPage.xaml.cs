@@ -49,8 +49,8 @@ namespace Dashboard
 
             try
             {
-                // Create the ViewModel and set as data context.
-                StudentViewModel viewModel = new(name, id, userImage );
+                Logger.Inform( "[Student Page] Initialized" );
+                StudentViewModel viewModel = new( name , id , userImage );
                 DataContext = viewModel;
 
                 InstructorIpTextBox.Text = insIP;
@@ -71,15 +71,21 @@ namespace Dashboard
             }
             catch (Exception exception)
             {
-                // If an exception occurs during ViewModel creation, show an error message and shutdown the application.
-                _ = MessageBox.Show( exception.Message );
-                Application.Current.Shutdown();
+                Logger.Error( $"Exception during ViewModel creation: {exception.Message}" );
+                ShowErrorAndShutdown( exception.Message );
             }
         }
 
         private void StudentPage_Unloaded( object sender , RoutedEventArgs e )
         {
             LogoutButton_Click( sender , e );
+        }
+
+        private void ShowErrorAndShutdown( string errorMessage )
+        {
+            Logger.Error( $"Application shutdown due to error: {errorMessage}" );
+            MessageBox.Show( errorMessage );
+            Application.Current.Shutdown();
         }
 
         private void LogoutButton_Click( object sender , RoutedEventArgs e )
@@ -99,25 +105,24 @@ namespace Dashboard
         /**
         private void InstructorIpTextBox_TextChanged( object sender , TextChangedEventArgs e )
         {
-            StudentViewModel? viewModel = DataContext as StudentViewModel;
+            StudentViewModel viewModel = DataContext as StudentViewModel;
             viewModel?.SetInstructorAddress( InstructorIpTextBox.Text , InstructorPortTextBox.Text );
+
+            Logger.Inform( $"Instructor IP changed to: {InstructorIpTextBox.Text}, Port: {InstructorPortTextBox.Text}" );
         }
 
-        /// <summary>
-        /// Event handler for the "Connect" button click.
-        /// </summary>
         private void ConnectButton_Click( object sender , RoutedEventArgs e )
         {
-            // Show a message box indicating an attempt to connect to the specified IP address and port.
-            StudentViewModel? viewModel = DataContext as StudentViewModel;
+            StudentViewModel viewModel = DataContext as StudentViewModel;
 
-            bool? isConnected = viewModel?.ConnectToInstructor();
-            if(isConnected != null && viewModel != null)
+            bool? isConnected = viewModel?.ConnectInstructor();
+            if (isConnected != null && viewModel != null)
             {
-                if ( isConnected.Value )
+                if (isConnected.Value)
                 {
                     ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
                     ContentFrame.Content = clientPage;
+                    Logger.Inform( "Connected to instructor" );
                 }
             }
         }
