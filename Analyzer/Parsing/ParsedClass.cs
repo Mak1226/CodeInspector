@@ -83,8 +83,8 @@ namespace Analyzer.Parsing
                 foreach (MethodInfo method in Methods)
                 {
                     string methodName = method.Name;
-                    Console.WriteLine( methodName );
-                    Console.WriteLine( methodName.Length );
+                    //Console.WriteLine( methodName );
+                    //Console.WriteLine( methodName.Length );
                     //Console.WriteLine( methodName.Substring(4, methodName.Length ));
 
                     if ((methodName.StartsWith( "get_" ) || methodName.StartsWith( "set_" )) && propertiesNames.Contains( methodName.Substring( 4 , methodName.Length - 4) ))
@@ -104,7 +104,6 @@ namespace Analyzer.Parsing
                 }
                 Methods = methodInfos.ToArray();
             }
-        }
 
         //// This is commented so that it will be used later if required
         //// Properties can come into fields and methods. Currently here trying to remove Auto Implemented Properties from fields (Auto properties)

@@ -81,7 +81,7 @@ namespace AnalyzerTests.Parsing
         public void CheckCompleteDLL()
         {
             // BridgePatternDLL structure is same as "TestParsingDLL_BridgePattern" namespace
-            string dllPath = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\BridgePattern.dll";
+            string dllPath = "..\\..\\..\\TestDLLs\\BridgePattern.dll";
             ParsedDLLFile parsedDLL = new( dllPath );
 
             Assert.AreEqual(5, parsedDLL.classObjList.Count);
