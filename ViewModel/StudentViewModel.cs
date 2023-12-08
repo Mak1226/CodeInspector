@@ -177,15 +177,11 @@ namespace ViewModel
                 IsConnected = true;
                 Logger.Inform( $"[StudentViewModel] Connection request to Instructor acknowledged" );
             }
-            //else if (message == "0")
-            //{
-            //    IsConnected = false;
-            //    Dispatcher.Invoke( () =>
-            //    {
-            //        Client.Stop();
-            //    } );
-            //    Trace.WriteLine("Disconnected from Instructor");
-            //}
+            else if (message == "0")
+            {
+                IsConnected = false;
+                Trace.WriteLine( "Disconnected from Instructor" );
+            }
         }
 
         /// <summary>

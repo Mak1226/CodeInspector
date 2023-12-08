@@ -38,6 +38,18 @@
             </Grid>
             <Grid Grid.Column="1">
                 <StackPanel x:Name="LogoutStack" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,7,5,5" FontWeight="Bold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Disconnected" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                        <Setter Property="Text" Value="Connected" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <Ellipse Height="27" Width="27" Margin="3,3,3,3">
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="{Binding StudentImage, Mode=OneWay}" />
@@ -49,7 +61,7 @@
         </Grid>
         
         <!--Second Bar-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Visibility="Collapsed">
             <Grid.Background>
                 <SolidColorBrush Color="Cyan" />
             </Grid.Background>
@@ -71,7 +83,7 @@
                 <StackPanel x:Name="ConnectionStack" Orientation="Horizontal" HorizontalAlignment="Right">
                     
                     <!--Connection Status-->
-                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,7,5,5" FontWeight="Bold">
+                    <TextBlock x:Name="ConnectionStatus" Margin="5,7,5,5" FontWeight="Bold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="Disconnected" />

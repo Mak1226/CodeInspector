@@ -35,9 +35,17 @@ namespace Dashboard
     /// </summary>
     public partial class StudentPage : Page
     {
+        private readonly string _name;
+        private readonly string _id;
+        private readonly string _userImage;
+
         public StudentPage(string name, string id, string userImage, string insIP, string insPort )
         {
             InitializeComponent();
+            _name = name;
+            _id = id;
+            _userImage = userImage;
+            Unloaded += StudentPage_Unloaded;
 
             try
             {
@@ -49,7 +57,7 @@ namespace Dashboard
                 InstructorPortTextBox.Text = insPort;
 
                 viewModel?.SetInstructorAddress( insIP , insPort );
-                bool? isConnected = viewModel?.ConnectInstructor();
+                bool? isConnected = viewModel?.ConnectToInstructor();
                 if (isConnected != null && viewModel != null)
                 {
                     if (isConnected.Value)
@@ -69,14 +77,20 @@ namespace Dashboard
             }
         }
 
+        private void StudentPage_Unloaded( object sender , RoutedEventArgs e )
+        {
+            LogoutButton_Click( sender , e );
+        }
+
         private void LogoutButton_Click( object sender , RoutedEventArgs e )
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
 
             viewModel?.DisconnectFromInstructor();
-            AuthenticationPage authenticationPage = new();
-            NavigationService?.Navigate( authenticationPage );
+            Application.Current.Shutdown();
+            //AuthenticationPage authenticationPage = new();
+            //NavigationService?.Navigate( authenticationPage );
         }
 
         /// <summary>
@@ -113,6 +127,8 @@ namespace Dashboard
             //Attempting to disconnect from the instructor
             StudentViewModel? viewModel = DataContext as StudentViewModel;
             viewModel?.DisconnectFromInstructor();
+            Login loginPage = new(_name,_id,_userImage);
+            NavigationService?.Navigate( loginPage );
         }
     }
 }

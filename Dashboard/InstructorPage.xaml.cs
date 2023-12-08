@@ -48,6 +48,7 @@ namespace Dashboard
         public InstructorPage( string userName , string userId, string userImage )
         {
             InitializeComponent();
+            Unloaded += InstructorPage_Unloaded;
             try
             {
 
@@ -71,6 +72,11 @@ namespace Dashboard
             }
         }
 
+        private void InstructorPage_Unloaded ( object sender , RoutedEventArgs e )
+        {
+            Logger.Inform( "[InstructorPage] Unloading" );
+            LogoutButton_Click( sender , e );
+        }
 
 
         /// <summary>

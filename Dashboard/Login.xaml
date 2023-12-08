@@ -93,13 +93,13 @@
                     <Grid Grid.Row="1">
                         <StackPanel x:Name="InstructorIP" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4">
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Instructor IP: "/>
-                            <TextBox x:Name="InsIP" FontWeight="Bold" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
+                            <TextBox x:Name="InsIP" FontWeight="Bold" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="2">
                         <StackPanel x:Name="InstructorPort" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4">
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Instructor Port: " />
-                            <TextBox x:Name="InsPort" FontWeight="Bold" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
+                            <TextBox x:Name="InsPort" FontWeight="Bold" Width="70" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="3">

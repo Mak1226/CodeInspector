@@ -216,7 +216,7 @@ namespace ViewModel
             Logger.Inform( $"[InstructorViewModel] Disconnected all students." );
 
             // Waiting for some time for messages to be send
-            Thread.Sleep( 2000 );
+            Thread.Sleep( 4000 );
             // Stopping the communicator before logging out
             Communicator.Stop();
         }
