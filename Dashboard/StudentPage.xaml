@@ -38,13 +38,30 @@
             </Grid>
             <Grid Grid.Column="1">
                 <StackPanel x:Name="LogoutStack" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,7,5,5" FontWeight="Bold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Disconnected" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                        <Setter Property="Text" Value="Connected" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Ellipse Height="27" Width="27" Margin="3,3,3,3">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding StudentImage, Mode=OneWay}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
                     <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
                 </StackPanel>
             </Grid>
         </Grid>
         
         <!--Second Bar-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Visibility="Collapsed">
             <Grid.Background>
                 <SolidColorBrush Color="Cyan" />
             </Grid.Background>
@@ -56,9 +73,9 @@
             <Grid Grid.Column="0">
                 <StackPanel x:Name="InstructorInfoStack" Orientation="Horizontal" HorizontalAlignment="Left">
                     <Label Content="Instructor IP:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBox Name="InstructorIpTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"  TextChanged="InstructorIpTextBox_TextChanged"/>
+                    <TextBlock Name="InstructorIpTextBox" Text="" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"/>
                     <Label Content="Instructor Port:" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <TextBox Name="InstructorPortTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure" TextChanged="InstructorIpTextBox_TextChanged"/>
+                    <TextBlock Name="InstructorPortTextBox" Text="" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"/>
                 </StackPanel>
             </Grid>
             
@@ -66,7 +83,7 @@
                 <StackPanel x:Name="ConnectionStack" Orientation="Horizontal" HorizontalAlignment="Right">
                     
                     <!--Connection Status-->
-                    <TextBlock x:Name="ConnectionStatusTextBlock" Margin="5,5,5,5" FontWeight="Bold">
+                    <TextBlock x:Name="ConnectionStatus" Margin="5,7,5,5" FontWeight="Bold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="Disconnected" />
@@ -79,34 +96,9 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <!--Connect Button-->
-                    <Button x:Name="connectButton" Content="Connect" Background="LawnGreen" Width="84" Height="20" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="5,5,5,5" >
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    
                     <!--Disconnect Button-->
-                    <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="20" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    
+                    <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="20" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5" />
+
                 </StackPanel>
             </Grid>
         </Grid>

@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     [TestClass]
     public class TestMainPipeline

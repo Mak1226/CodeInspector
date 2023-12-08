@@ -10,16 +10,11 @@
 * Description = Unit Tests for AbstractTypeNoPublicConstructor.cs
 *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Analyzer.Parsing;
-using System.IO;
 using System.Reflection;
+using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AbstractClassWithPublicConstructor
 {
@@ -141,7 +136,7 @@ namespace AbstractClassWithPublicConstructor
     }
 }
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Unit tests for AbstractTypeNoPublicConstructor analyzer.
@@ -158,53 +153,6 @@ namespace Analyzer.Pipeline.Tests
         {
             _dllFile = Assembly.GetExecutingAssembly().Location;
             _parsedDLL = new( _dllFile );
-        }
-
-        /*
-        namespace AbstractTypeNoPublicConstructor1
-        {
-            public abstract class AbstractClass
-            {
-                private readonly int _sampleVar;
-                private int _sampleVar2;
-                public AbstractClass()
-                {
-                    _sampleVar = 100;
-                }
-
-                private void SampleFunction(int sampleVar)
-                {
-                    _sampleVar2 = sampleVar + _sampleVar;
-                }
-            }
-
-            public class Program
-            {
-                public static void Main() 
-                {
-                    var path = Assembly.GetExecutingAssembly().Location;
-                    Assembly assembly = Assembly.LoadFrom(path);
-                }
-            }
-        }
-        */
-
-        /// <summary>
-        /// Fails since abstract type with a public constructor.
-        /// </summary>
-        [TestMethod()]
-        public void TestAbstractConstructorPresent()
-        {
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\AbstractTypeNoPublicConstructor1.dll";
-
-            ParsedDLLFile dLLFile = new (path);
-
-            List<ParsedDLLFile> dllFiles = new() { dLLFile };
-            AbstractTypeNoPublicConstructor abstractTypeNoPublicConstructor = new(dllFiles);
-
-            Dictionary<string, AnalyzerResult> result = abstractTypeNoPublicConstructor.AnalyzeAllDLLs();
-            Console.WriteLine(result[dLLFile.DLLFileName].ErrorMessage);
-            Assert.AreEqual(0, result[dLLFile.DLLFileName].Verdict);
         }
 
         /// <summary>

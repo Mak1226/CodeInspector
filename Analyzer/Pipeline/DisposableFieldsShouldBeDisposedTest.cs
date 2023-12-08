@@ -10,11 +10,6 @@
  * Description = Class that implements Disposable Fields Should Be Disposed Analyser
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -33,6 +28,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public DisposableFieldsShouldBeDisposedRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
+            analyzerID = "108";
         }
 
         /// <summary>
@@ -59,7 +55,7 @@ namespace Analyzer.Pipeline
                 ? $"{violationCount} violations found: Some disposable fields are not properly disposed."
                 : "No violations found.";
             int verdict = violationCount > 0 ? 0 : 1;
-            return new AnalyzerResult("108", verdict, errorString);
+            return new AnalyzerResult(analyzerID, verdict, errorString);
         }
 
         /// <summary>

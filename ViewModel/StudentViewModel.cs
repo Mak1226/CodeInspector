@@ -23,6 +23,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Networking.Utils;
 using Networking.Models;
+using System.Windows.Threading;
+using System.Windows;
+using Logging;
 
 namespace ViewModel
 {
@@ -34,13 +37,15 @@ namespace ViewModel
         /// <param name="name">The name of the student.</param>
         /// <param name="id">The ID of the student.</param>
         /// <param name="communicator">The communicator interface parameter.</param>
-        public StudentViewModel( string name , string id, ICommunicator? communicator = null)
+        public StudentViewModel( string name , string id , string userImage , ICommunicator? communicator = null)
         {
             Client = communicator ?? CommunicationFactory.GetClient();
             StudentName = name;
             StudentRoll = id;
+            StudentImage = userImage;
             IpAddress = GetPrivateIp();
 
+            Logger.Inform( $"[StudentViewModel] ViewModel created with name: {name}, id: {id}, Ip: {IpAddress}" );
         }
 
         /// <summary>
@@ -78,6 +83,7 @@ namespace ViewModel
                 {
                     _isConnected = value;
                     OnPropertyChanged(nameof(IsConnected));
+                    Logger.Inform( $"[StudentViewModel] Changed IsConnected :{IsConnected}");
                 }
             }
         }
@@ -89,10 +95,20 @@ namespace ViewModel
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Gets the name of the student.
+        /// </summary>
         public string StudentName { get; private set; }
 
+        /// <summary>
+        /// Gets the user ID of the student.
+        /// </summary>
         public string StudentRoll { get; private set; }
 
+        /// <summary>
+        /// Gets the user image of the student.
+        /// </summary>
+        public string StudentImage { get; init; }
         public ICommunicator Client { get; }
 
         /// <summary>
@@ -101,7 +117,14 @@ namespace ViewModel
         private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            Logger.Inform( $"[StudentViewModel] OnPropertyChanged called for {property}" );
         }
+
+        /// <summary>
+        /// Gets the main thread dispatcher in the real mode.
+        /// For unit test mode, it gets the current thread's dispatcher.
+        /// </summary>
+        private static Dispatcher Dispatcher => Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
 
         /// <summary>
         /// Retrieves the private IP address of the host machine.
@@ -123,7 +146,7 @@ namespace ViewModel
                     }
                 }
             }
-            Trace.WriteLine("No suitable private IP address found.");
+            Logger.Warn( $"[StudentViewModel]No suitable private IP address found" );
             return null;
         }
 
@@ -139,7 +162,6 @@ namespace ViewModel
         private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port, int connect)
         {
             string serializedInfo = $"{rollNo}|{name}|{ip}|{port}|{connect}";
-            Trace.WriteLine($"Serialized student information: {serializedInfo}");
             return serializedInfo;
         }
 
@@ -149,46 +171,55 @@ namespace ViewModel
         /// <param name="message">The received message.</param>
         private void HandleMessage(string message)
         {
+            Logger.Inform( $"[StudentViewModel] Received message : {message}" );
             if (message == "1")
             {
                 IsConnected = true;
-                Trace.WriteLine("Connected to Instructor");
+                Logger.Inform( $"[StudentViewModel] Connection request to Instructor acknowledged" );
             }
             else if (message == "0")
             {
                 IsConnected = false;
-                Client.Stop();
-                Trace.WriteLine("Disconnected from Instructor");
+                Trace.WriteLine( "Disconnected from Instructor" );
             }
         }
 
-            /// <summary>
-            /// Disconnects from the instructor.
-            /// </summary>
-            public void DisconnectInstructor()
+        /// <summary>
+        /// Disconnects from the instructor.
+        /// </summary>
+        public void DisconnectFromInstructor()
+        {
+            if(IsConnected)
             {
                 string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 0);
             
                 if (InstructorIp != null && InstructorPort != null)
                 {
                     Client.Send(message, "server");
+                    Thread.Sleep( 1000 );
+                    IsConnected = false;
+                    Client.Stop();   
                 }
+                Logger.Inform( $"[StudentViewModel] Disconnected from Instructor");
             }
+        }
         /// <summary>
         /// Connects to the instructor.
         /// </summary>
         /// <returns>True if connection succeeds, false otherwise.</returns>
-        public bool ConnectInstructor()
+        public bool ConnectToInstructor()
         {
             if (InstructorIp != null && InstructorPort != null && StudentRoll!=null)
             {
+                Logger.Inform( $"[StudentViewModel] Trying to initiate TCP connection to Instructor at {InstructorIp}:{InstructorPort}" );
                 string ipPort = Client.Start( InstructorIp , int.Parse( InstructorPort ) , StudentRoll , "Dashboard" );
-                if(ipPort == "failed")
+                Logger.Inform( $"[StudentViewModel] Ip Port alloted by Networking: {ipPort}" );
+
+                if (ipPort == "failed")
                 {
                     return false;
                 }
                 Client.Subscribe(this, "Dashboard");
-                Trace.WriteLine(ipPort);
                 string[] parts = ipPort.Split(':');
                 try
                 {
@@ -199,6 +230,7 @@ namespace ViewModel
 
                     string message = SerializeStudnetInfo(StudentName, StudentRoll, IpAddress, ReceivePort, 1);
                     Client.Send(message, "server");
+                    Logger.Inform( $"[StudentViewModel] Made joining request to Instructor" );
                     return true;
                 }
                 catch { }

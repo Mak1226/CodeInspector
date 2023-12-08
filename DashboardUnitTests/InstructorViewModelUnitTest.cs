@@ -36,7 +36,7 @@ namespace DashboardUnitTests
         [TestMethod]
         public void TestAddingStudent()
         {
-            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com", "/someimage" );
             //checking student count before adding student
             Assert.AreEqual( viewModel.StudentCount , 0 );
             // Adding student to instructor
@@ -51,7 +51,7 @@ namespace DashboardUnitTests
         [TestMethod]
         public void TestRemovingStudnet()
         {
-            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" , "/someimage" );
             // Adding student to instructor
             viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
             //checking student count after adding student
@@ -68,7 +68,7 @@ namespace DashboardUnitTests
         [TestMethod]
         public void TestInvalidMessageReceived()
         {
-            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com", "/someimage" );
             //Trying to add a student in invalid format (port is missing).
             viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|1" } );
             //Student count remains zero.
@@ -81,7 +81,7 @@ namespace DashboardUnitTests
         [TestMethod]
         public void TestObservableCollectionStudentList()
         {
-            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com", "/someimage" );
             // Adding student to instructor
             viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
             // Student count increased. ObservableCollection stays consistent
@@ -97,7 +97,7 @@ namespace DashboardUnitTests
         public void TestRemoveAllStudents()
         {
             
-            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com" );
+            InstructorViewModel viewModel = new( "John Doe Jr" , "123@123mail.com", "/someimage" );
             // Adding Students
             viewModel.HandleMessageRecv( new Message { Data = "001|Alice|192.168.0.1|8080|1" } );
             Assert.AreEqual( viewModel.StudentList.Count , 1 );
@@ -119,7 +119,7 @@ namespace DashboardUnitTests
             var mockCommunicator = new Mock<ICommunicator>();
             mockCommunicator.Setup( x => x.Start( It.IsAny<string?>() , It.IsAny<int?>(), It.IsAny<string>() , It.IsAny<string>() ) ).Returns( "SomeStringExceptValidAddress" );
 
-            Assert.ThrowsException<Exception>( () => new InstructorViewModel( "John Doe Jr" , "123@123mail.com" , mockCommunicator.Object ) ,
+            Assert.ThrowsException<Exception>( () => new InstructorViewModel( "John Doe Jr" , "123@123mail.com" , "/someimage",  mockCommunicator.Object ) ,
             "Invalid Port/Ip returned by communicator" );
         }
     }

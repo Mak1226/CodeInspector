@@ -12,4 +12,8 @@
     <PackageReference Include="PlantUml.Net" Version="1.4.80" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Logger\Logging.csproj" />
+  </ItemGroup>
+
 </Project>

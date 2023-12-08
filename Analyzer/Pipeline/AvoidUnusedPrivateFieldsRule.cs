@@ -13,8 +13,8 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
-using Mono.Cecil.Cil;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Analyzer.Pipeline
 {
@@ -26,7 +26,6 @@ namespace Analyzer.Pipeline
 
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "103";
+            analyzerID = "103";
         }
 
         /// <summary>
@@ -47,7 +46,15 @@ namespace Analyzer.Pipeline
         /// <returns></returns>
         public List<string> HandleClass(ParsedClassMonoCecil cls)
         {
-            List<string> unusedFields = new(cls.FieldsList.Select( field => field.Name.ToString()));
+            List<string> unusedFields = new();
+
+            foreach(FieldDefinition x in cls.FieldsList)
+            {
+                if (x.IsPrivate)
+                {
+                    unusedFields.Add(x.Name.ToString());
+                }
+            }   
 
             foreach (MethodDefinition method in cls.MethodsList.Concat( cls.Constructors ))
             {
@@ -121,7 +128,7 @@ namespace Analyzer.Pipeline
             _verdict = 1;
 
             Check(parsedDLLFile);
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }
