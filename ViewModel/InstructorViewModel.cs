@@ -183,7 +183,7 @@ namespace ViewModel
                 if (rollNo != null && name != null && ip != null)
                 {
                     if (isConnect == 1)
-                    {
+                    {   
                         //adding student in local data structure
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
                         //acknowledging student about accepting connection

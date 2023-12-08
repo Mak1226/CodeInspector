@@ -28,6 +28,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
 using ServerlessFuncUI;
+using Logging;
 
 
 namespace Dashboard
