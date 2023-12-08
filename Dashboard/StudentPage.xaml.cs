@@ -38,7 +38,7 @@ namespace Dashboard
         private readonly string _name;
         private readonly string _id;
         private readonly string _userImage;
-        private readonly ServerPage _clientPage;
+        private readonly ClientPage _clientPage;
         public StudentPage(string name, string id, string userImage, string insIP, string insPort, bool isDark )
         {
             InitializeComponent();
