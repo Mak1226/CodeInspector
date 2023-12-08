@@ -16,6 +16,7 @@ using System.Linq;
 using System.Diagnostics;
 using Analyzer.Parsing;
 using Mono.Cecil;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -50,7 +51,8 @@ namespace Analyzer.Pipeline
                     if (method.Parameters.Count > ParameterCountThreshold)
                     {
                         highParameterCountMethods++;
-                        Trace.WriteLine($"Method {method.Name} has a high number of parameters: {method.Parameters.Count}");
+                        //Trace.WriteLine($"Method {method.Name} has a high number of parameters: {method.Parameters.Count}");
+                        Logger.Log( $"Method {method.Name} has a high number of parameters: {method.Parameters.Count}" , LogLevel.INFO );
                     }
                 }
             }

@@ -22,6 +22,7 @@ using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
 using System.Collections;
 using System.Globalization;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -114,6 +115,7 @@ namespace Analyzer.Pipeline
         /// <returns>The count of unused local variables removed from the method.</returns>
         private static int RemoveUnusedLocalVariables(MethodDefinition method)
         {
+            Logger.Log("Inside function RemoveUnusedLocalVariables" , LogLevel.INFO );
             const int DefaultLength = (16 << 3);
 
             if (!method.HasBody)

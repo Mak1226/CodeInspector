@@ -44,6 +44,10 @@ namespace Analyzer.Parsing
             MonoCecilParsingDLL();
         }
 
+        public ParsedDLLFile( Assembly assembly )
+        {
+        }
+
 
         /// <summary>
         /// Parsing the DLL using System.Reflection
