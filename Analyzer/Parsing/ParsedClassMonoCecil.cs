@@ -139,7 +139,7 @@ namespace Analyzer.Parsing
                     }
                 }
 
-                MethodsList = methodInfos;
+                MethodsList = new List<MethodDefinition>(methodInfos);
             }
 
 

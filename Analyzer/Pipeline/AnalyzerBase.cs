@@ -12,6 +12,7 @@
 * Description = A base class providing a common structure for various analyzers.
 ******************************************************************************/
 
+using System.Diagnostics;
 using Analyzer.Parsing;
 using Logging;
 
@@ -54,7 +55,9 @@ namespace Analyzer.Pipeline
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error( $"[AnalyzerBase.cs][Analyzer {analyzerID}] : Analyzing {parsedDLL.DLLFileName} caused an exception {ex.GetType().Name} : {ex}\n" );
+                    //Logger.Error( $"[AnalyzerBase.cs][Analyzer {analyzerID}] : Analyzing {parsedDLL.DLLFileName} caused an exception {ex.GetType().Name} : {ex}\n" );
+                    Trace.WriteLine( $"[AnalyzerBase.cs][Analyzer {analyzerID}] : Analyzing {parsedDLL.DLLFileName} caused an exception {ex.GetType().Name} : {ex}\n" );
+
 
                     string errorMsg = "Internal error, analyzer failed to execute";
                     _result[parsedDLL.DLLFileName] = new AnalyzerResult(analyzerID, 0, errorMsg);
