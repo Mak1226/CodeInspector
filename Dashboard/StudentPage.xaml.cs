@@ -26,6 +26,7 @@ using System.Windows.Shapes;
 using ContentPage;
 using ViewModel;
 using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -34,7 +35,7 @@ namespace Dashboard
     /// </summary>
     public partial class StudentPage : Page
     {
-        public StudentPage( string name , string id , string userImage )
+        public StudentPage(string name, string id, string userImage, string insIP, string insPort )
         {
             InitializeComponent();
 
@@ -43,6 +44,22 @@ namespace Dashboard
                 Logger.Inform( "[Student Page] Initialized" );
                 StudentViewModel viewModel = new( name , id , userImage );
                 DataContext = viewModel;
+
+                InstructorIpTextBox.Text = insIP;
+                InstructorPortTextBox.Text = insPort;
+
+                viewModel?.SetInstructorAddress( insIP , insPort );
+                bool? isConnected = viewModel?.ConnectInstructor();
+                if (isConnected != null && viewModel != null)
+                {
+                    if (isConnected.Value)
+                    {
+                        ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
+                        ContentFrame.Content = clientPage;
+                    }
+                }
+                Logger.Inform($"[StudentPage] Created viewModel {RuntimeHelpers.GetHashCode( viewModel )}");
+                //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
             catch (Exception exception)
             {
@@ -67,6 +84,10 @@ namespace Dashboard
             Logger.Inform( "User logged out" );
         }
 
+        /// <summary>
+        /// Event handler for the "IstructorIpTextBox" text changed event.
+        /// </summary>
+        /**
         private void InstructorIpTextBox_TextChanged( object sender , TextChangedEventArgs e )
         {
             StudentViewModel viewModel = DataContext as StudentViewModel;
@@ -90,7 +111,7 @@ namespace Dashboard
                 }
             }
         }
-
+        **/
         private void DisconnectButton_Click( object sender , RoutedEventArgs e )
         {
             StudentViewModel viewModel = DataContext as StudentViewModel;

@@ -61,9 +61,9 @@
             <Grid Grid.Column="0">
                 <StackPanel x:Name="InstructorInfoStack" Orientation="Horizontal" HorizontalAlignment="Left">
                     <Label Content="Instructor IP:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBox Name="InstructorIpTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"  TextChanged="InstructorIpTextBox_TextChanged"/>
+                    <TextBlock Name="InstructorIpTextBox" Text="" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"/>
                     <Label Content="Instructor Port:" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <TextBox Name="InstructorPortTextBox" Margin="10,5,10,5" Width="100" Height="20" Background="Azure" TextChanged="InstructorIpTextBox_TextChanged"/>
+                    <TextBlock Name="InstructorPortTextBox" Text="" Margin="10,5,10,5" Width="100" Height="20" Background="Azure"/>
                 </StackPanel>
             </Grid>
             
@@ -84,34 +84,9 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <!--Connect Button-->
-                    <Button x:Name="connectButton" Content="Connect" Background="LawnGreen" Width="84" Height="20" Click="ConnectButton_Click" VerticalAlignment="Center" Margin="5,5,5,5" >
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    
                     <!--Disconnect Button-->
-                    <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="20" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsConnected}" Value="true">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    
+                    <Button x:Name="disconnectButton" Content="Disconnect" Background="Red" Width="84" Height="20" Click="DisconnectButton_Click" VerticalAlignment="Center" Margin="10,5,10,5" />
+
                 </StackPanel>
             </Grid>
         </Grid>

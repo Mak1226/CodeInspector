@@ -65,6 +65,12 @@ namespace Dashboard
             {
                 AuthenticationResult authenticationResult = await viewModel.AuthenticateButton_Click();
 
+                if(authenticationResult.UserEmail == null)
+                {
+                    ShowErrorAndShutdown( "Authentication Failed, try again!" );
+                    Application.Current.Shutdown();
+                }
+
                 // Log authentication information
                 Logger.Inform( "User authenticated successfully:" );
                 Logger.Inform( $"UserName: {authenticationResult.UserName}" );

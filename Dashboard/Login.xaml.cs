@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,7 +26,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Logging;
 using Networking.Utils;
+using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -73,6 +77,7 @@ namespace Dashboard
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
             InstructorPage instructorPage = new( UserName,UserId,UserImage );
+            Logger.Inform( $"[LoginPage] Created new InstructorPage : #{RuntimeHelpers.GetHashCode( instructorPage )}" );
             NavigationService?.Navigate( instructorPage );
         }
 
@@ -84,8 +89,15 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void StudentButton_Click( object sender , RoutedEventArgs e )
         {
-            StudentPage studentPage = new(UserName,UserId,UserImage);
+
+            string insIP = InsIP.Text;
+            string insPort = InsPort.Text;
+
+            StudentPage studentPage = new( UserName,UserId,UserImage,insIP,insPort );
+
+            Logger.Inform($"[LoginPage] Created new StudentPage : #{RuntimeHelpers.GetHashCode( studentPage )}" );
             NavigationService?.Navigate( studentPage );
         }
+
     }
 }

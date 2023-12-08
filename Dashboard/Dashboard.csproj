@@ -24,7 +24,6 @@
     <None Remove="Image\logo.png" />
     <None Remove="Image\name_trans.png" />
     <None Remove="Image\no_name_trans.png" />
-    <None Remove="Image\supergoog.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +63,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContentPage\ContentPage.csproj" />
+    <ProjectReference Include="..\Logger\Logging.csproj" />
     <ProjectReference Include="..\ServerlessFuncUI\ServerlessFuncUI.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
@@ -81,7 +81,6 @@
     <Resource Include="Image\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\supergoog.jpg" />
   </ItemGroup>
 
 </Project>
