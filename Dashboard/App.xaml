@@ -4,7 +4,13 @@
              xmlns:local="clr-namespace:Dashboard"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <Style x:Key="TitleText" TargetType="TextBlock">
+
+        <FontFamily x:Key="ProtoMonoRegular">./Fonts/ProtoMono-Regular.ttf#Proto Mono</FontFamily>
+        <FontFamily x:Key="ProtoMonoMedium">./Fonts/ProtoMono-Medium.ttf#Proto Mono Med</FontFamily>
+        <FontFamily x:Key="ProtoMonoSemiBold">./Fonts/ProtoMono-SemiBold.ttf#Proto Mono SemBd</FontFamily>
+        <FontFamily x:Key="ProtoMonoSemiBoldShadow">./Fonts/ProtoMono-SemiBoldShadow.ttf#Proto Mono SemBd Shadow</FontFamily>
+
+        <Style x:Key="TitleText" TargetType="TextBlock">
             <Setter Property="FontSize" Value="36" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -50,13 +56,14 @@
 
 
         <Style x:Key="buttonCircle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="White" />
             <Setter Property="Margin" Value="8 0" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="30" BorderBrush="#878787" Padding="15" BorderThickness="1">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="30" BorderBrush="#878787" Padding="10" BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -64,10 +71,12 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#d9d9d9" />
+                    <Setter Property="Background" Value="#8ECDDD" />
+                    <Setter Property="Foreground" Value="White" />
                 </Trigger>
                 <Trigger Property="IsMouseCaptured" Value="True">
-                    <Setter Property="Background" Value="#c4c4c4" />
+                    <Setter Property="Background" Value="#8ECDDD" />
+                    <Setter Property="Foreground" Value="White" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -139,5 +148,65 @@
         </Style>
 
 
+
+        <!-- Dark Mode Toggle Button  |||| DELICATE! DO NOT MESS WITH THIS!!! -->
+        <Style x:Key="DarkModeButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Viewbox>
+                            <Border x:Name="Border" CornerRadius="10"
+                            Background="#FF4CD661"
+                            Width="40" Height="20">
+                                <Border.Effect>
+                                    <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" />
+                                </Border.Effect>
+                                <Ellipse x:Name="Ellipse" Fill="#FFFFFFFF" Stretch="Uniform"
+                                 Margin="2 1 2 1"
+                                 Stroke="Gray" StrokeThickness="0.2"
+                                 HorizontalAlignment="Stretch">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="1" Opacity="0.3" Direction="260" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                            </Border>
+                        </Viewbox>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="Checked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#FF0000"
+                                                    Duration="0:0:0.1" />
+                                        <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="20 1 2 1"
+                                                        Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#FF4CD661"
+                                                    Duration="0:0:0.1" />
+                                        <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="2 1 2 1"
+                                                        Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Toggle Button implementation ends -->
+        
     </Application.Resources>
+    
 </Application>

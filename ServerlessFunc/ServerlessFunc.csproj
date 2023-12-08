@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analyzer\Analyzer.csproj" />
+    <ProjectReference Include="..\Logger\Logging.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

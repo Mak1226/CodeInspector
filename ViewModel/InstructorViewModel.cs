@@ -26,6 +26,9 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
+using Logging;
+using System.Runtime.CompilerServices;
+
 
 
 namespace ViewModel
@@ -43,11 +46,12 @@ namespace ViewModel
         /// <param name="name">The Name of the instructor.</param>
         /// <param name="userId">The user ID of the instructor.</param>
         /// <param name="communicator">An optional communicator, default is set to the server communicator.</param>
-        public InstructorViewModel( string name, string userId, ICommunicator? communicator = null )
+        public InstructorViewModel( string name, string userId, string userImage, ICommunicator? communicator = null )
         {
             // Set the username and user ID for the InstructorViewModel
             Name = name;
             UserId = userId;
+            UserImage = userImage;
 
             // Initialize the session state for tracking students
             _studentSessionState = new StudentSessionState();
@@ -70,8 +74,9 @@ namespace ViewModel
                 ReceivePort = parts[1];
 
                 // Notify any subscribers about the change in IP address and port
-                OnPropertyChanged( nameof(IpAddress));
+                OnPropertyChanged(nameof(IpAddress));
                 OnPropertyChanged(nameof(ReceivePort));
+                Logger.Inform($"[]");
             }
             else
             {
@@ -104,6 +109,11 @@ namespace ViewModel
         /// Gets the user ID of the instructor.
         /// </summary>
         public string UserId { get; init; }
+
+        /// <summary>
+        /// Gets the user image of the instructor.
+        /// </summary>
+        public string UserImage { get; init; }
 
         /// <summary>
         /// Gets the receiving port for the instructor.
@@ -158,7 +168,7 @@ namespace ViewModel
         /// <returns>True if the student is successfully added, false otherwise.</returns>
         private bool AddStudnet(string serializedStudnet)
         {
-            Trace.WriteLine($"[Instructor View Model] One message received {serializedStudnet}");
+            Logger.Inform( $"[Instructor View Model] One message received. Serialized student information: {serializedStudnet}");
             if (serializedStudnet != null)
             {
                 // Trying to decerialize the student info
@@ -173,20 +183,20 @@ namespace ViewModel
                 if (rollNo != null && name != null && ip != null)
                 {
                     if (isConnect == 1)
-                    {
+                    {   
                         //adding student in local data structure
                         _studentSessionState.AddStudent(rollNo, name, ip, port);
                         //acknowledging student about accepting connection
                         Communicator.Send("1", $"{rollNo}");
-                        Trace.WriteLine($"[Instructor View Model] Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
+                        Logger.Inform( $"[InstructorViewModel] Added student: Roll No - {rollNo}, Name - {name}, IP - {ip}, Port - {port}");
                     }
                     else if (isConnect == 0)
                     {
                         //removing student in local data structure
                         _studentSessionState.RemoveStudent(rollNo);
                         //acknowledging student about removing connection
-                        Communicator.Send("0", $"{rollNo}");
-                        Trace.WriteLine($"[Instructor View Model] Removed student: Roll No - {rollNo}");
+                        //Communicator.Send("0", $"{rollNo}");
+                        Logger.Inform($"[InstructorViewModel] Removed student: Roll No - {rollNo}");
                     }
                     OnPropertyChanged(nameof(StudentList));
                    
@@ -203,9 +213,10 @@ namespace ViewModel
         public void Logout()
         {
             DisconnectAllStudents();
+            Logger.Inform( $"[InstructorViewModel] Disconnected all students." );
 
             // Waiting for some time for messages to be send
-            Thread.Sleep( 2000 );
+            Thread.Sleep( 4000 );
             // Stopping the communicator before logging out
             Communicator.Stop();
         }
@@ -215,7 +226,7 @@ namespace ViewModel
         /// </summary>
         public void DisconnectAllStudents()
         {
-            Trace.WriteLine( $"[Instructor View Model] Disconnecting all students." );
+            Logger.Inform( $"[InstructorViewModel] Disconnecting all students." );
             
             // Retrieving the list of all students from the session state
             List<Student> _studentList = new( _studentSessionState.GetAllStudents() );
@@ -227,12 +238,12 @@ namespace ViewModel
                 {
                     // Sending a disconnection message to the student using the Communicator
                     Communicator.Send( "0" , $"{student.Id}" );
-                    Trace.WriteLine( $"[Instructor View Model] Disconnection message send to student {student.Id}" );
+                    Logger.Inform( $"[InstructorViewModel] Disconnection message sent to student {student.Id}" );
                 }
                 catch
                 {
                     // Logging if the disconnection message fails to send to a student
-                    Trace.WriteLine( $"[Instructor View Model] Disconnection message to student {student.Id} failed." );
+                    Logger.Inform( $"[InstructorViewModel] Disconnection message to student {student.Id} failed." );
                 }
             }
             _studentSessionState.RemoveAllStudents();
@@ -245,7 +256,7 @@ namespace ViewModel
         /// <returns>An empty string.</returns>
         public string HandleMessageRecv(Networking.Models.Message data)
         {
-            Trace.WriteLine( $"[Instructor View Model] Received message {data.Data}" );
+            Logger.Inform( $"[InstructorViewModel] Received message {data.Data}" );
             AddStudnet(data.Data);
             return "";
         }

@@ -28,6 +28,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
 using ServerlessFuncUI;
+using Logging;
 
 
 namespace Dashboard
@@ -39,18 +40,21 @@ namespace Dashboard
     {
         private readonly ServerPage _contentServerPage;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InstructorPage"/> class.
         /// </summary>
         /// <param name="userName">The username of the instructor.</param>
         /// <param name="userId">The user ID of the instructor.</param>
-        public InstructorPage( string userName , string userId )
+        public InstructorPage( string userName , string userId, string userImage )
         {
             InitializeComponent();
+            Unloaded += InstructorPage_Unloaded;
             try
             {
+
                 // Create and set up the ViewModel
-                InstructorViewModel viewModel = new(userName,userId);
+                InstructorViewModel viewModel = new(userName,userId,userImage);
                 DataContext = viewModel;
 
                 // Create and set up the ServerPage
@@ -69,13 +73,12 @@ namespace Dashboard
             }
         }
 
-        /// <summary>
-        /// Event handler for when the page is unloaded.
-        /// </summary>
-        private void InstructorPage_Unloaded( object sender , RoutedEventArgs e )
+        private void InstructorPage_Unloaded ( object sender , RoutedEventArgs e )
         {
-            
+            Logger.Inform( "[InstructorPage] Unloading" );
+            LogoutButton_Click( sender , e );
         }
+
 
         /// <summary>
         /// Event handler for the logout button click.
@@ -85,7 +88,8 @@ namespace Dashboard
             // Navigate to the AuthenticationPage when the logout button is clicked
             InstructorViewModel? viewModel = DataContext as InstructorViewModel;
             viewModel?.Logout();
-            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
+            AuthenticationPage authenticationPage = new ();
+            NavigationService?.Navigate( authenticationPage );
         }
 
         /// <summary>
