@@ -138,7 +138,7 @@ namespace Analyzer
         /// <param name="removableNamespaces">List of namespaces to be excluded from the graph.</param>
         /// <param name="outputBytesFormat">True if output bytes are of SVG, false if PNG</param>
         /// <returns>Byte array representing the generated relationship graph.</returns>
-        public byte[] GetRelationshipGraph(List<string> removableNamespaces, bool outputBytesFormat)
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces, bool outputBytesFormat = true)
         {
             try
             {

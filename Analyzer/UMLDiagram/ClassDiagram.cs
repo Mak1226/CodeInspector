@@ -57,7 +57,7 @@ namespace Analyzer.UMLDiagram
         /// <param name="removableNamespaces">List of namespaces not to be shown.</param>
         /// <param name="outputBytesFormat">True if output is SVG bytes, false if PNG.</param>
         /// <returns>Byte array that forms the image.</returns>
-        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces, bool outputBytesFormat)
+        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces, bool outputBytesFormat = true)
         {
             Logger.Inform( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Started creating bytes for image" );
             CreateStringForRendering(removableNamespaces);
