@@ -41,7 +41,7 @@
                 <Ellipse Height="30" Width="30" Margin="182,5,182,0">
                     <Ellipse.Fill>
                         <!--<ImageBrush ImageSource="{Binding UserImage, Mode=OneWay}" /> -->
-                        <ImageBrush ImageSource="Image/google.png" />
+                        <ImageBrush ImageSource="{Binding UserImage}" />
                     </Ellipse.Fill>
                 </Ellipse>
             </Grid>
