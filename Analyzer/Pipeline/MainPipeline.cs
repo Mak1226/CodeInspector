@@ -197,10 +197,10 @@ namespace Analyzer.Pipeline
         /// </summary>
         /// <param name="removableNamespaces">List of namespaces to be excluded from the diagram.</param>
         /// <returns>Byte array representing the generated class diagram.</returns>
-        public byte[] GenerateClassDiagram(List<string> removableNamespaces)
+        public byte[] GenerateClassDiagram(List<string> removableNamespaces, bool outputBytesFormat)
         {
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            byte[] bytes = classDiag.RenderImageBytes(removableNamespaces).Result;
+            byte[] bytes = classDiag.RenderImageBytes(removableNamespaces, outputBytesFormat).Result;
             Logger.Inform( "[MainPipeline.cs] GenerateClassDiagram: Created Class Relationship graph " + string.Join( " " , removableNamespaces ) );
             return bytes;
         }

@@ -47,8 +47,9 @@ namespace Analyzer
         /// Generates a relationship graph based on the analysis results.
         /// </summary>
         /// <param name="removableNamespaces">List of namespaces to be excluded from the graph.</param>
+        /// <param name="outputBytesFormat">True if image is to be rendered in SVG and false if in PNG.</param>
         /// <returns>Byte array representing the generated relationship graph.</returns>
-        public byte[] GetRelationshipGraph(List<string> removableNamespaces);
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces, bool outputBytesFormat);
 
         /// <summary>
         /// Runs custom analyzers specified by the teacher.
