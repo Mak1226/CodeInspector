@@ -43,6 +43,8 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MSIXPackaging", "MSIXPackag
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Package", "Package\Package.vdproj", "{44B9323C-A493-45D6-9212-BCA1E685F4F2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MSI", "MSI\MSI.vdproj", "{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -457,6 +459,16 @@ Global
 		{44B9323C-A493-45D6-9212-BCA1E685F4F2}.Release|ARM64.ActiveCfg = Release
 		{44B9323C-A493-45D6-9212-BCA1E685F4F2}.Release|x64.ActiveCfg = Release
 		{44B9323C-A493-45D6-9212-BCA1E685F4F2}.Release|x86.ActiveCfg = Release
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Debug|Any CPU.ActiveCfg = Debug
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Debug|ARM.ActiveCfg = Debug
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Debug|ARM64.ActiveCfg = Debug
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Debug|x64.ActiveCfg = Debug
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Debug|x86.ActiveCfg = Debug
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Release|Any CPU.ActiveCfg = Release
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Release|ARM.ActiveCfg = Release
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Release|ARM64.ActiveCfg = Release
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Release|x64.ActiveCfg = Release
+		{06D07F9D-6C0C-4FF8-AFE4-108847D94AE6}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
