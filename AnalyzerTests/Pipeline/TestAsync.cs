@@ -69,7 +69,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             AsyncMethodAnalyzer analyzer = new(dllFiles);
 
-            // RenderImageBytes the analyzer
+            // Run the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

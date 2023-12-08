@@ -61,7 +61,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             DepthOfInheritance analyzer = new(dllFiles);
 
-            // RenderImageBytes the analyzer
+            // Run the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             Dictionary<Type , int> depthMap = analyzer.CalculateDepthOfInheritance( dllFile );

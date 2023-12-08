@@ -139,8 +139,7 @@ namespace AnalyzerTests.Parsing
         public void CheckMethods()
         {
             // General Case: Counting number of declared only methods with no inheritance / interface implementation
-            // Note: Properties got added
-            Assert.AreEqual(11, SampleClass1_Demo2.Methods.Length);
+            Assert.AreEqual(3, SampleClass1_Demo2.Methods.Length);
 
             // Case: Class when implementing interface
             Assert.AreEqual(3, SampleClass2_Demo2.Methods.Length);
@@ -223,6 +222,67 @@ namespace AnalyzerTests.Parsing
             // no property case
             Assert.AreEqual(0, SampleClass3_Demo2.Properties.Length);
         }
+
+        
+
+        /// <summary>
+        /// Checking events
+        /// </summary>
+        [TestMethod]
+        public void CheckEvents()
+        {
+            ParsedClass eventClass2_Demo = new( typeof( EventExample.TemperatureChangedEventArgs ) );
+            ParsedClass eventClass3_Demo = new( typeof( EventExample.TemperatureSensor ) );
+            
+            Assert.AreEqual(0, eventClass2_Demo.TypeObj.GetEvents().Length);
+            Assert.AreEqual(1, eventClass3_Demo.TypeObj.GetEvents().Length );
+        }
+
+        //// can be removed later
+        //[TestMethod]
+        //public void NoUseSampleMethod()
+        //{
+        //Console.WriteLine( SampleClass1_Demo2.Properties[0].Name );
+        //Console.WriteLine( SampleClass1_Demo2.Properties[0].GetType().Name );
+        //Console.WriteLine( SampleClass1_Demo2.Methods[0].Name );
+        //Console.WriteLine( SampleClass1_Demo2.Methods[0].IsSpecialName );
+
+        //Console.WriteLine( SampleClass4_Demo2.Properties[0].Name );
+        //Console.WriteLine( SampleClass4_Demo2.Properties[0].GetType().Name );
+
+        //Console.WriteLine( "=============" );
+        //foreach (MemberInfo member in briefViewClass_Bridge.TypeObj.GetMembers())
+        //{
+        //    Console.WriteLine( member.Name );
+        //    Console.WriteLine( member.MemberType );
+        //}
+
+        //string dashboardDLL = "C:\\Users\\nikhi\\source\\repos\\nikhi9603\\Analyzer\\Dashboard\\bin\\Debug\\net6.0-windows\\Dashboard.dll";
+        //ParsedDLLFile parsedDLLFile = new(dashboardDLL);
+        //Console.WriteLine(parsedDLLFile.classObjList.Count);
+
+        //foreach (ParsedClass parsedClass in parsedDLLFile.classObjList)
+        //{
+        //    Console.WriteLine(parsedClass.Name);
+        //    Console.WriteLine( parsedClass.TypeObj.GetEvents().Length );
+        //}
+
+
+        //ParsedClass eventClass1_Demo = new( typeof( EventExample.Program ) );
+        //ParsedClass eventClass2_Demo = new( typeof( EventExample.TemperatureChangedEventArgs ) );
+        //ParsedClass eventClass3_Demo = new( typeof( EventExample.TemperatureSensor ) );
+        //List<ParsedClass> parsedClassesList = new() { eventClass1_Demo, eventClass2_Demo, eventClass3_Demo, eventClass4_Demo};
+        //foreach (ParsedClass parsedClass in parsedClassesList)
+        //{
+        //    Console.WriteLine( parsedClass.Name );
+        //    Console.WriteLine( parsedClass.TypeObj.GetEvents().Length );
+
+        //    foreach(EventInfo e in parsedClass.TypeObj.GetEvents())
+        //    {
+        //        Console.WriteLine(e.Name);
+        //    }
+        //}
+        //}
     }
 }
 
@@ -432,4 +492,73 @@ namespace TestParsingClass_DemoProject2
 
 public class SampleGlobalClass
 {
+}
+
+
+
+
+namespace EventExample
+{
+    class TemperatureChangedEventArgs : EventArgs
+    {
+        public int NewTemperature { get; }
+
+        public TemperatureChangedEventArgs( int newTemperature )
+        {
+            NewTemperature = newTemperature;
+        }
+    }
+
+    class TemperatureSensor
+    {
+        private int _temperature;
+
+        // Define the event using the EventHandler delegate
+        public event EventHandler<TemperatureChangedEventArgs> TemperatureChanged;
+
+        public int Temperature
+        {
+            get { return _temperature; }
+            set
+            {
+                if (value != _temperature)
+                {
+                    _temperature = value;
+                    OnTemperatureChanged( new TemperatureChangedEventArgs( value ) );
+                }
+            }
+        }
+
+        // Raise the TemperatureChanged event
+        protected virtual void OnTemperatureChanged( TemperatureChangedEventArgs e )
+        {
+            TemperatureChanged?.Invoke( this , e );
+        }
+    }
+
+    class Program
+    {
+        static void Main1()
+        {
+            TemperatureSensor sensor = new();
+
+            // Subscribe to the event
+            sensor.TemperatureChanged += TemperatureChangedHandler;
+
+            // Change the temperature, triggering the event
+            sensor.Temperature = 25;
+
+            // Unsubscribe from the event
+            sensor.TemperatureChanged -= TemperatureChangedHandler;
+
+            // Change the temperature again, but this time no event is triggered
+            sensor.Temperature = 30;
+        }
+
+        // Event handler method
+        private static void TemperatureChangedHandler( object sender , TemperatureChangedEventArgs e )
+        {
+            Console.WriteLine( $"Temperature changed: {e.NewTemperature} degrees Celsius" );
+        }
+    }
 }

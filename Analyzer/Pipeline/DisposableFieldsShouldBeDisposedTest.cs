@@ -14,6 +14,7 @@ using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -65,6 +66,7 @@ namespace Analyzer.Pipeline
         /// <returns>A list of disposable fields in the class.</returns>
         private List<FieldDefinition> GetDisposableFields( TypeDefinition type )
         {
+            Logger.Log("Inside function GetDisposableFields", LogLevel.INFO);
             List<FieldDefinition> disposableFields = new();
 
             // Iterate through the fields in the class
@@ -91,6 +93,7 @@ namespace Analyzer.Pipeline
         /// <returns>True if the class implements IDisposable; otherwise, false.</returns>
         private bool ImplementsIDisposable(TypeDefinition type)
         {
+            Logger.Log("Inside function ImplementsIDisposable" , LogLevel.INFO);
             // Check if the class directly implements IDisposable through interfaces
             if (type.Interfaces != null)
             {

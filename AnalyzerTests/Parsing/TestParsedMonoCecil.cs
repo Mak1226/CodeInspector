@@ -12,7 +12,7 @@ using System.Reflection;
 using Analyzer.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AnalyzerTests.Pipeline
+namespace AnalyzerTests.Parsing
 {
     /// <summary>
     /// Testing the generation of ParsedClassMonoCecil Object
@@ -42,9 +42,10 @@ namespace AnalyzerTests.Pipeline
                     Assert.AreEqual(2, cls.Constructors.Count);
                     Assert.AreEqual("TestParsedMonoCecil.Car", cls.ParentClass?.FullName);
                     Assert.AreEqual("TestParsedMonoCecil.IBMWSpec", cls.Interfaces[0].InterfaceType.FullName);
-                    Assert.AreEqual(2, cls.MethodsList.Count);
-                    Assert.AreEqual(2, cls.FieldsList.Count);
+                    Assert.AreEqual(1, cls.MethodsList.Count);
+                    Assert.AreEqual(3, cls.FieldsList.Count);
                     Assert.AreEqual(1, cls.PropertiesList.Count);
+                    Assert.AreEqual(1, cls.TypeObj.Events.Count);
                 }
             }
         }
@@ -82,6 +83,8 @@ namespace TestParsedMonoCecil
     {
         private readonly string _name = "BMW";
         public int seatCapacity;
+        public event EventHandler mySampleEvent;
+
         public BMW()
         {
             Console.WriteLine("BMW Car");
@@ -90,10 +93,11 @@ namespace TestParsedMonoCecil
 
         public string Name
         {
-            get {
-                Console.WriteLine( "get" );
-                
-                return _name; }
+            get 
+            {
+                Console.WriteLine();
+                return _name; 
+            }
         }
         public void Drive()
         {
