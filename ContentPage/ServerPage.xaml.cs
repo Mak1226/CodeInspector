@@ -18,7 +18,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Analyzer;
 using Content.Model;
-using System.Diagnostics; 
+using System.Diagnostics;
+using System.IO;
 
 namespace ContentPage
 {
@@ -129,6 +130,27 @@ namespace ContentPage
             Trace.WriteLine( "SendToCloudButton Click" );
 
             _viewModel.SendToCloud();
+        }
+
+        private void ShowImageButton_Click( object sender , System.Windows.RoutedEventArgs e )
+        {
+            string imagePath = _viewModel.GetImagePath();
+            if (File.Exists( imagePath ))
+            {
+                try
+                {
+                    Process.Start( imagePath ); // Opens the image with the default application
+                }
+                catch
+                {
+                    MessageBox.Show( $"Couldn't open image" , "Error" , MessageBoxButtons.OK );
+                }
+            }
+            else
+            {
+                // Display a message indicating that the image is not present
+                MessageBox.Show( $"Image not found at the specified path {imagePath}" , "Image Not Found" , MessageBoxButtons.OK);
+            }
         }
     }
 }

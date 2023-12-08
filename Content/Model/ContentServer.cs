@@ -82,6 +82,18 @@ namespace Content.Model
         public Action<Dictionary<string , List<AnalyzerResult>>>? AnalyzerResultChanged;
 
         /// <summary>
+        /// Delegate function for providing the result of a cloud upload
+        /// </summary>
+        public Action<bool>? CloudSuccess;
+
+        /// <summary>
+        /// Get image path of this session
+        /// </summary>
+        /// <param name="sessionID">Given session ID. Uses currently loaded session ID if null</param>
+        /// <returns>String path to the class diagram. Doesn't check whether it exists.</returns>
+        public string SessionImagePath( string? sessionID = null ) => (sessionID != null) ? sessionID + "/image.svg" : _sessionID + "/image.svg";
+
+        /// <summary>
         /// Currently loaded Analyzer Result
         /// </summary>
         public Dictionary<string , List<AnalyzerResult>> analyzerResult { get; private set; }
@@ -153,28 +165,35 @@ namespace Content.Model
                     AnalyzerResultChanged?.Invoke( analyzerResult );
                 }
 
-                byte[] graph = _analyzer.GetRelationshipGraph( new() );
-                if (graph == null || graph.Length == 0)
-                {
-                    Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
-                    return;
-                }
-
-                // Save the image as PNG
                 try
                 {
-                    using MemoryStream ms = new( graph );
-                    Image image = Image.FromStream( ms );
-                    image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
-                    Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                    byte[] graph = _analyzer.GetRelationshipGraph( new() );
+                    if (graph == null || graph.Length == 0)
+                    {
+                        Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
+                        return;
+                    }
+
+                    // Save the image as PNG
+                    try
+                    {
+                        using MemoryStream ms = new( graph );
+                        Image image = Image.FromStream( ms );
+                        image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
+                        Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                    }
+                    catch
+                    {
+                        File.WriteAllBytes( SessionImagePath( recievedSessionID ) , graph );
+                        Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved SVG graph at {SessionImagePath( recievedSessionID )}" );
+                    }
                 }
                 catch (Exception ex)
                 {
                     Logger.Error( $"[ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
                 }
+                Logger.Inform( "[ContentServer.cs] HandleReceive: Done" );
             }
-            Logger.Inform( "[ContentServer.cs] HandleReceive: Done" );
-
         }
         /// <summary>
         /// Configures the analyzer with the specified configuration settings.
@@ -187,6 +206,8 @@ namespace Content.Model
             _analyzer.Configure( configuration );
             Logger.Inform( "[ContentServer.cs] Configure: Done" );
         }
+
+        
 
         /// <summary>
         /// Loads custom DLLs for additional analyzers.
@@ -237,21 +258,39 @@ namespace Content.Model
         /// </summary>
         public async void SendToCloud()
         {
+            bool res = true;
 
             Logger.Inform( "[ContentServer.cs] SentToCloud: started" );
             CloudHandler cloudHandler = new();
             Logger.Debug( $"[ContentServer.cs] SentToCloud : Session :: {_hostSessionID}" );
-            await cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            ServerlessFunc.SessionEntity sessionRes = await cloudHandler.PostSessionAsync( _hostSessionID , _configuration , _sessionAnalysisResultDict.Keys.ToList() );
+            if (sessionRes == default)
+            {
+                Logger.Error( $"[ContentServer.cs] SentToCloud failed : Session :: {_hostSessionID}" );
+                res = false;
+            }
+
             foreach (KeyValuePair<string , Dictionary<string , List<AnalyzerResult>>> kvp in _sessionAnalysisResultDict)
             {
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Analysis :: {kvp.Key}" );
-                await cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value);
+                if (await cloudHandler.PostAnalysisAsync( kvp.Key, kvp.Value) == default)
+                {
+                    Logger.Error( $"[ContentServer.cs] SentToCloud failed : Analysis :: {kvp.Key}" );
+                    res = false;
+                }
 
                 IFileHandler fileHandler = new FileHandler();
                 string encoding = fileHandler.HandleUpload(kvp.Key, kvp.Key);
                 Logger.Debug( $"[ContentServer.cs] SentToCloud : Submission :: {kvp.Key}" );
-                await cloudHandler.PostSubmissionAsync( kvp.Key , encoding );
+                if (await cloudHandler.PostSubmissionAsync( kvp.Key , encoding ) == default)
+                {
+                    Logger.Error( $"[ContentServer.cs] SentToCloud failed : Submission :: {kvp.Key}" );
+                    res = false;
+                }
             }
+
+            CloudSuccess?.Invoke( res );
+
             Logger.Inform( "[ContentServer.cs] SentToCloud: done" );
         }
 

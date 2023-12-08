@@ -108,7 +108,7 @@ namespace Content.Model
             SetStatus( StatusType.WAITING );
             string encoding = _fileHandler.HandleUpload( folderPath , _sessionID );
             _client.Send( encoding , "Content-Files" , "server" );
-            Logger.Inform( "[ContentClient.cs] HandleUpload: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleUpload: Done" );
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Content.Model
             Logger.Inform( "[ContentClient.cs] HandleReceive: Started" );
             analyzerResult = _serializer.Deserialize<Dictionary<string , List<AnalyzerResult>>>( encoding );
             AnalyzerResultChanged?.Invoke( analyzerResult );
-            Logger.Inform( "[ContentClient.cs] HandleReceive: Started" );
+            Logger.Inform( "[ContentClient.cs] HandleReceive: Done" );
         }
     }
 }

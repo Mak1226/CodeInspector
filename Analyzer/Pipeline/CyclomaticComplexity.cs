@@ -72,11 +72,12 @@ namespace Analyzer.Pipeline
             if(verdict == 1)
             {
                 errorMessageBuilder.AppendLine($"No methods have cyclomatic complexity greater than {_maxAllowedComplexity}");
-                errorMessageBuilder.AppendLine($"[NOTE: Switch case complexity is not accurate]");
+                //errorMessageBuilder.AppendLine($"[NOTE: Switch case complexity is not accurate]");
             }
             else
             {
-                errorMessageBuilder.Insert(0, $"Methods having cyclomatic complexity greater than {_maxAllowedComplexity}:\n[NOTE: Switch case complexity is not accurate]\n");
+                errorMessageBuilder.Insert(0, $"Methods having cyclomatic complexity greater than {_maxAllowedComplexity}:\n");
+                    //$"[NOTE: Switch case complexity is not accurate]\n");
             }
 
             AnalyzerResult analyzerResult = new(analyzerID , verdict , errorMessageBuilder.ToString());

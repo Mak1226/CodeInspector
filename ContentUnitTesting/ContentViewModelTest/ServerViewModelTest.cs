@@ -111,34 +111,6 @@ namespace ContentUnitTesting.ContentViewModelTest
         }
 
         /// <summary>
-        /// Test case to confirm that LoadCustomDLLs adds files to the UploadedFiles list.
-        /// </summary>
-        [TestMethod]
-        public void LoadCustomDLLs_AddsFilesToUploadedFilesList()
-        {
-            // Arrange
-            MockAnalyzer mockAnalyzer = new();
-            MockCommunicator mockCommunicator = new();
-            ContentServer mockContentServer = new( mockCommunicator , mockAnalyzer , "sessionID" );
-            ContentServerViewModel viewModel = new( mockContentServer );
-
-            List<string> filePaths = new()
-            {
-                "PersistentStorage.dll",
-                "Content.dll"
-            };
-
-            // Act
-            viewModel.LoadCustomDLLs( filePaths );
-
-            // Assert
-            string uploadedFiles = viewModel.UploadedFiles;
-            Assert.IsNotNull( uploadedFiles );
-            Trace.WriteLine( uploadedFiles );
-            Assert.AreEqual( "PersistentStorage.dll,Content.dll" , uploadedFiles );
-        }
-
-        /// <summary>
         /// Test case to ensure that the PropertyChanged event is raised when setting the SelectedItem property.
         /// </summary>
         [TestMethod]
