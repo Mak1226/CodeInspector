@@ -101,8 +101,9 @@ namespace Dashboard
             // Navigate to the AuthenticationPage when the logout button is clicked
             InstructorViewModel? viewModel = DataContext as InstructorViewModel;
             viewModel?.Logout();
-            AuthenticationPage authenticationPage = new ();
-            NavigationService?.Navigate( authenticationPage );
+            Application.Current.Shutdown();
+            //AuthenticationPage authenticationPage = new ();
+            //NavigationService?.Navigate( authenticationPage );
         }
 
         /// <summary>
@@ -136,6 +137,7 @@ namespace Dashboard
                 Resources.Source = (new Uri("Theme/Dark.xaml", UriKind.Relative));
                 isDarkMode = true;
             }
+            _contentServerPage.SetDarkMode( isDarkMode );
         }
     }
 }

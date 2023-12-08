@@ -38,7 +38,7 @@ namespace Dashboard
         private readonly string _name;
         private readonly string _id;
         private readonly string _userImage;
-
+        private readonly ServerPage _clientPage;
         public StudentPage(string name, string id, string userImage, string insIP, string insPort, bool isDark )
         {
             InitializeComponent();
@@ -46,8 +46,8 @@ namespace Dashboard
             _id = id;
             _userImage = userImage;
             Unloaded += StudentPage_Unloaded;
-
             isDarkMode = true;
+
             try
             {
                 if (!isDark)
@@ -68,8 +68,8 @@ namespace Dashboard
                 {
                     if (isConnected.Value)
                     {
-                        ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
-                        ContentFrame.Content = clientPage;
+                        _clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
+                        ContentFrame.Content = _clientPage;
                     }
                     else
                     {
@@ -168,6 +168,7 @@ namespace Dashboard
                 Resources.Source = (new Uri("Theme/Dark.xaml", UriKind.Relative));
                 isDarkMode = true;
             }
+            _clientPage.SetDarkMode( isDarkMode );
         }
     }
 }
