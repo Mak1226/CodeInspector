@@ -56,7 +56,7 @@ namespace Analyzer.Pipeline
                 }
             }   
 
-            foreach (MethodDefinition method in cls.MethodsList.Concat( cls.Constructors ))
+            foreach (MethodDefinition method in cls.TypeObj.Methods)
             {
                 if (!method.HasBody)
                 {
