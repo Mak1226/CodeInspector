@@ -34,8 +34,16 @@ namespace Content.ViewModel
         private Dictionary<string , List<AnalyzerResult>> _analyzerResults;
         private List<AnalyzerConfigOption> _configOptionsList;
         private Tuple<string , List<Tuple<string , int , string>>> _selectedItem;
-        private List<string> _uploadedFiles = new();
         private bool _isDarkMode;
+
+        enum CloudStatus
+        {
+            NONE,
+            WAITING,
+            SUCCESS,
+            FALURE
+        }
+        private CloudStatus _cloudStatus = CloudStatus.NONE;
 
 
 
@@ -57,6 +65,18 @@ namespace Content.ViewModel
                 //UpdateDataList(analyzerResults);
                 OnPropertyChanged( nameof( _analyzerResults ) );
                 OnPropertyChanged( nameof( DataList ) );
+            };
+            _contentServer.CloudSuccess += ( result ) =>
+            {
+                if (result)
+                {
+                    _cloudStatus = CloudStatus.SUCCESS;
+                }
+                else
+                {
+                    _cloudStatus = CloudStatus.FALURE;
+                }
+                OnPropertyChanged( nameof( CloudSendStatus ) );
             };
 
             // Populate ConfigOptionsList with data from AnalyzerFactory.GetAllConfigOptions
@@ -115,9 +135,6 @@ namespace Content.ViewModel
             List<Tuple<int , string>> teacherConfigs = _contentServer.LoadCustomDLLs( filePaths );
 
             ConfigOptionsList = TupleListToAnalyzerConfigOptionsList( teacherConfigs );
-
-            _uploadedFiles = filePaths;
-            OnPropertyChanged( nameof( UploadedFiles ) );
         }
 
         /// <summary>
@@ -126,6 +143,13 @@ namespace Content.ViewModel
         public void SendToCloud()
         {
             _contentServer.SendToCloud();
+            _cloudStatus = CloudStatus.WAITING;
+            OnPropertyChanged( nameof( CloudSendStatus ) );
+        }
+
+        public string GetImagePath()
+        {
+            return _contentServer.SessionImagePath();
         }
 
         /// ------------MVVM bindings--------------
@@ -188,11 +212,6 @@ namespace Content.ViewModel
         }
 
         /// <summary>
-        /// Binding to show which all files are uploaded
-        /// </summary>
-        public string UploadedFiles => string.Join( "," , _uploadedFiles );
-
-        /// <summary>
         /// Function to check if the app is in dark mode or light mode
         /// </summary>
         public bool IsDarkMode
@@ -207,6 +226,16 @@ namespace Content.ViewModel
                 }
             }
         }
+
+
+        public string CloudSendStatus => _cloudStatus switch
+        {
+            CloudStatus.NONE => "",
+            CloudStatus.WAITING => "Uploading to cloud",
+            CloudStatus.SUCCESS => "Successfully uploaded to cloud",
+            CloudStatus.FALURE => "Failed to upload to cloud",
+            _ => "Unknown error",
+        };
 
         private void OnPropertyChanged( string propertyName )
         {
