@@ -12,6 +12,7 @@
 
 using System.Text;
 using Analyzer.Parsing;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -96,6 +97,7 @@ namespace Analyzer.Pipeline
 
             if (violatingClasses.Count > 0)
             {
+                Logger.Log("Found violating classes" , LogLevel.INFO );
                 // Build an error message with details about the violating classes
                 var errorMessageBuilder = new StringBuilder();
                 errorMessageBuilder.AppendLine("Classes violating depth of inheritance rule:");
