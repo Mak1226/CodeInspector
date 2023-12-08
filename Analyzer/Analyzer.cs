@@ -136,8 +136,9 @@ namespace Analyzer
         /// Generates a relationship graph based on the analysis results.
         /// </summary>
         /// <param name="removableNamespaces">List of namespaces to be excluded from the graph.</param>
+        /// <param name="outputBytesFormat">True if output bytes are of SVG, false if PNG</param>
         /// <returns>Byte array representing the generated relationship graph.</returns>
-        public byte[] GetRelationshipGraph(List<string> removableNamespaces)
+        public byte[] GetRelationshipGraph(List<string> removableNamespaces, bool outputBytesFormat)
         {
             try
             {
@@ -146,7 +147,7 @@ namespace Analyzer
                 _customAnalyzerPipeline.AddDLLFiles( _pathOfDLLFilesOfStudent );
                 _customAnalyzerPipeline.AddTeacherOptions( _teacherOptions );
                 Logger.Inform( "[Analyzer.cs] GetRelationshipGraph: Completed main analyzer" + string.Join( " " , _pathOfDLLFilesOfStudent ) + "By removing " + string.Join( " " , removableNamespaces ) );
-                return _customAnalyzerPipeline.GenerateClassDiagram( removableNamespaces );
+                return _customAnalyzerPipeline.GenerateClassDiagram( removableNamespaces, outputBytesFormat );
             }
             catch
             {
