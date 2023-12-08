@@ -7,12 +7,11 @@
 *
 * Description = 
 *****************************************************************************/
-using System;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Analyzer.Pipeline.Analyzers
+namespace Analyzer.Pipeline
 {
     /// <summary>
     /// This class represents an analyzer for counting unimplemented methods in DLL files.
@@ -21,7 +20,6 @@ namespace Analyzer.Pipeline.Analyzers
     {
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotImplementedChecker"/> class.
@@ -31,7 +29,7 @@ namespace Analyzer.Pipeline.Analyzers
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "120";
+            analyzerID = "120";
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Analyzer.Pipeline.Analyzers
             {
                 _errorMessage = "No violation found";
             }
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }

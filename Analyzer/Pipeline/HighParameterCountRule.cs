@@ -10,9 +10,6 @@
  * Description = Class that implements High Parameter Count Check Analyser
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
 using Analyzer.Parsing;
 using Mono.Cecil;
@@ -32,6 +29,7 @@ namespace Analyzer.Pipeline
         /// <param name="dllFiles">The parsed DLL files to analyze.</param>
         public HighParameterCountRule(List<ParsedDLLFile> dllFiles) : base(dllFiles)
         {
+            analyzerID = "119";
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace Analyzer.Pipeline
                 ? $"Detected {highParameterCountMethods} methods with a high number of parameters."
                 : "No methods with a high number of parameters found.";
             int verdict = highParameterCountMethods > 0 ? 0 : 1;
-            return new AnalyzerResult("119", verdict, errorString);
+            return new AnalyzerResult(analyzerID, verdict, errorString);
         }
     }
 }

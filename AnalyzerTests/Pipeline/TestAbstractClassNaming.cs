@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 * Filename    = TestAbstractClassNamingChecker.cs
 *
 * Author      = Monesh Vanga 
@@ -13,11 +13,6 @@
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace AnalyzerTests.Pipeline

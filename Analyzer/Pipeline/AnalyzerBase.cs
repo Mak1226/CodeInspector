@@ -13,6 +13,7 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -23,6 +24,7 @@ namespace Analyzer.Pipeline
     {
         public List<ParsedDLLFile> parsedDLLFilesList { get; }
         private Dictionary<string, AnalyzerResult> _result;
+        protected string analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the Base Analyzer with parsed DLL files.
@@ -33,6 +35,7 @@ namespace Analyzer.Pipeline
             // Set the parsedDLLFiles field with the provided DLL files
             parsedDLLFilesList = dllFiles;
             _result = new Dictionary<string , AnalyzerResult>();
+            analyzerID = "";
         }
 
         /// <summary>
@@ -45,8 +48,19 @@ namespace Analyzer.Pipeline
 
             foreach (ParsedDLLFile parsedDLL in  parsedDLLFilesList)
             {
-                _result[parsedDLL.DLLFileName] = AnalyzeSingleDLL(parsedDLL);
+                try
+                {
+                    _result[parsedDLL.DLLFileName] = AnalyzeSingleDLL( parsedDLL );
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"[Analyzer {analyzerID}] : Analyzing {parsedDLL.DLLFileName} caused an exception {ex.GetType().Name} : {ex.Message}");
+
+                    string errorMsg = "Internal error, analyzer failed to execute";
+                    _result[parsedDLL.DLLFileName] = new AnalyzerResult(analyzerID, 0, errorMsg);
+                }
             }
+
 
             return _result;
         }

@@ -10,18 +10,14 @@
  * Description = Unit Tests for TestDepthOfInheritance class
  *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Analyzer.Parsing;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
+using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     public class BaseClass
     {
@@ -65,7 +61,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DepthOfInheritance analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             Dictionary<Type , int> depthMap = analyzer.CalculateDepthOfInheritance( dllFile );

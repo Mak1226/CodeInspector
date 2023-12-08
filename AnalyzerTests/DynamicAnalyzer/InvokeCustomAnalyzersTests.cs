@@ -106,7 +106,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
 
             analyzer.Configure(options);
 
-            // Run the custom Analyzer on student dlls and get the result
+            // RenderImageBytes the custom Analyzer on student dlls and get the result
             Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
 
             // Defining the expected result
@@ -175,7 +175,7 @@ namespace Analyzer.DynamicAnalyzer.Tests
 
             analyzer.Configure(options);
 
-            // Run the custom Analyzer on student dlls and get the result
+            // RenderImageBytes the custom Analyzer on student dlls and get the result
             Dictionary<string, List<AnalyzerResult>> result = analyzer.RnuCustomAnalyzers();
 
             // Defining the expected result

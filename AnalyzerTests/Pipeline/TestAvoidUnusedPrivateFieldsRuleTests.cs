@@ -12,12 +12,14 @@
 * Description = Unit tests for the UnusedPrivateFieldsRuleTests class.
 ******************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
+using Analyzer;
 using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mono.Cecil;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     /// <summary>
     /// Test class for test TestClassWithUnusedPrivateFields

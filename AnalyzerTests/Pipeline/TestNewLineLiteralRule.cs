@@ -1,16 +1,9 @@
-﻿using Analyzer.Parsing;
+﻿using Analyzer;
+using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mono.Cecil.Cil;
-using System.Reflection;
-using Mono.Cecil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
     [TestClass]
     /*

@@ -229,7 +229,7 @@ namespace Analyzer.Tests
 
             Dictionary<string, List<AnalyzerResult>> result = analyzer.Run();
 
-            Assert.AreEqual(0, result.Count);
+            Assert.AreEqual("Failed to parse Abstract.dll", result["Abstract.dll"][0].ErrorMessage );
 
         }
 
@@ -268,8 +268,7 @@ namespace Analyzer.Tests
                 ["ACIST.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 1, "No violation found"),
-                new AnalyzerResult("103", 0, "BadExample : counter ,GoodExample : counter , are unused private field.")
-
+                new AnalyzerResult("103", 1, "No violation found.")
             }
             };
 

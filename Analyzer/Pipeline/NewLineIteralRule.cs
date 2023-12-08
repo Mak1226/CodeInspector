@@ -7,12 +7,9 @@
 *
 * Description = 
 *****************************************************************************/
-using System;
-using System.Globalization;
-using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {
@@ -26,7 +23,6 @@ namespace Analyzer.Pipeline
     {
         private string _errorMessage;
         private int _verdict;
-        private readonly string _analyzerID;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NewLineLiteralRule"/> class.
@@ -36,7 +32,7 @@ namespace Analyzer.Pipeline
         {
             _errorMessage = "";
             _verdict = 1;
-            _analyzerID = "114";
+            analyzerID = "114";
         }
 
         /// <summary>
@@ -115,7 +111,7 @@ namespace Analyzer.Pipeline
                 _errorMessage = "No violation found";
             }
 
-            return new AnalyzerResult(_analyzerID, _verdict, _errorMessage);
+            return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }
 }

@@ -11,6 +11,7 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
+using Logging;
 using PlantUml.Net;
 using System.Text;
 
@@ -53,9 +54,10 @@ namespace Analyzer.UMLDiagram
         /// Provides image bytes of class diagram
         /// </summary>
         /// <returns>Byte array that forms the image.</returns>
-        public async Task<byte[]> Run(List<string> removableNamespaces)
+        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces)
         {
-            CodeStr(removableNamespaces);
+            Logger.Inform( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Started creating bytes for image" );
+            CreateStringForRendering(removableNamespaces);
             var factory = new RendererFactory();
             IPlantUmlRenderer renderer = factory.CreateRenderer(new PlantUmlSettings());
 
@@ -68,7 +70,7 @@ namespace Analyzer.UMLDiagram
                 if(_plantUMLCode.ToString() != emptyDiagramUMLString)
                 {
                     // Render the PlantUML diagram asynchronously
-                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Png );
+                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Svg );
                     System.Diagnostics.Debug.WriteLine( _plantUMLImage );
                     System.Diagnostics.Debug.Assert( _plantUMLImage != null );
 
@@ -76,21 +78,22 @@ namespace Analyzer.UMLDiagram
                 }
                 else
                 {
+                    Logger.Debug( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Successfully created bytes for image" );
                     return Array.Empty<byte>();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Couldn't render image ", ex);
+                Logger.Error( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Exception while rendering image " + ex.Message );
+                throw;
             }
         }
-
 
         /// <summary>
         /// Generates the plantUML code(string) in the required format from the class relationships.
         /// </summary>
         /// <param name="removableNamespaces">Namespaces which should not be included in the classDiagram.</param>
-        private void CodeStr(List<string> removableNamespaces)
+        private void CreateStringForRendering(List<string> removableNamespaces)
         {
             // Class objects list and interface objects list as they will be different in the graph due to removable namespaces
             List<ParsedClassMonoCecil> graphParsedClassObj = new();
@@ -132,7 +135,7 @@ namespace Analyzer.UMLDiagram
                 AddElement("-->", usingList, classObj.TypeObj.FullName , removableNamespaces);
 
                 // adding aggregation relationships to diagram code
-                AddElement("o--", aggregationList, classObj.TypeObj.FullName, removableNamespaces);
+                AddElement("o-", aggregationList, classObj.TypeObj.FullName, removableNamespaces);
 
                 // For ParentClasses => Inheritance symbol and For Parent Interfaces => Implements symbol for a class object
                 foreach (string inheritedFrom in inheritanceList)
@@ -162,6 +165,7 @@ namespace Analyzer.UMLDiagram
                     }
                 }
             }
+            Logger.Inform( "[Analyzer][ClassDiagram.cs] CreateStringForRendering: Removed namespaces" );
 
             // End of plantUMLCode
             _plantUMLCode.Append("\r\n@enduml");

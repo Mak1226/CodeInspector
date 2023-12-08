@@ -13,9 +13,8 @@
 ******************************************************************************/
 
 using Analyzer.Parsing;
-using Analyzer.Pipeline.Analyzers;
 using Analyzer.UMLDiagram;
-using System.Diagnostics;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -73,14 +72,15 @@ namespace Analyzer.Pipeline
                 try
                 {
                     _parsedDLLFiles.Add(new ParsedDLLFile(file));
+                    Logger.Inform( $"[MainPipeline.cs] GenerateAnalysers: Parsed {Path.GetFileName(file)}" );
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Trace.WriteLine("MainPipeline : Failed to parse " + file);
+                    Logger.Error( $"[MainPipeline.cs] GenerateAnalysers: Failed to parse {Path.GetFileName(file)}. Exception {ex.GetType().Name} : {ex.Message}" );
                 }
             }
 
-            Trace.Write("MainPipeline : Generating instance of Analyzers\n");
+            Logger.Inform( "[MainPipeline.cs] GenerateAnalysers: Generating instance of Analyzers" );
             _allAnalyzers[101] = new AbstractTypeNoPublicConstructor(_parsedDLLFiles);
             _allAnalyzers[102] = new AvoidConstructorsInStaticTypes(_parsedDLLFiles);
             _allAnalyzers[103] = new AvoidUnusedPrivateFieldsRule(_parsedDLLFiles);
@@ -101,7 +101,7 @@ namespace Analyzer.Pipeline
             _allAnalyzers[118] = new NoVisibleInstanceFields(_parsedDLLFiles);
             _allAnalyzers[119] = new HighParameterCountRule(_parsedDLLFiles);
             _allAnalyzers[120] = new NotImplementedChecker(_parsedDLLFiles);
-            Trace.Write("MainPipeline : All Analyzers Generated\n");
+            Logger.Inform( "[MainPipeline.cs] GenerateAnalysers: All Analyzers Generated" );
         }
 
         /// <summary>
@@ -110,26 +110,19 @@ namespace Analyzer.Pipeline
         /// <param name="analyzerID">Identifier of the analyzer to run.</param>
         private void RunAnalyzer(int analyzerID)
         {
-            Trace.WriteLine("MainPipeline : Calling analyzer " + analyzerID);
+            Logger.Inform( $"[MainPipeline.cs] RunAnalyzer: Calling analyzer {analyzerID}" );
 
             Dictionary<string, AnalyzerResult> currentAnalyzerResult;
 
             try
             {
                 currentAnalyzerResult = _allAnalyzers[analyzerID].AnalyzeAllDLLs();
-                Trace.WriteLine("MainPipeline : Succeed analyzer " + analyzerID);
+                Logger.Inform( $"[MainPipeline.cs] RunAnalyzer: Succeed analyzer {analyzerID}" );
             }
-            catch (Exception)
+            catch (KeyNotFoundException)
             {
-                Trace.WriteLine("Internal error, analyzer failed to execute " + analyzerID);
                 currentAnalyzerResult = new Dictionary<string, AnalyzerResult>();
-                string errorMsg = "Internal error, analyzer failed to execute";
-
-                if (!_allAnalyzers.ContainsKey(analyzerID))
-                {
-                    errorMsg = "Analyser does not exists";
-                    Trace.WriteLine("MainPipeline : Analyser does not exists " + analyzerID);
-                }
+                string errorMsg = "Analyser does not exist";
 
                 foreach (ParsedDLLFile dllFile in _parsedDLLFiles)
                 {
@@ -159,20 +152,41 @@ namespace Analyzer.Pipeline
             {
                 _results[file.DLLFileName] = new List<AnalyzerResult>();
             }
-
-            foreach(KeyValuePair<int,bool> option in _teacherOptions)
+            
+            if (_parsedDLLFiles.Count != 0)
             {
-                if(option.Value == true)
+                foreach (KeyValuePair<int , bool> option in _teacherOptions)
                 {
-                    Thread WorkerThread = new(() => RunAnalyzer(option.Key));
-                    WorkerThread.Start();
-                    threads.Add(WorkerThread);
+                    if (option.Value == true)
+                    {
+                        Thread WorkerThread = new( () => RunAnalyzer( option.Key ) );
+                        WorkerThread.Start();
+                        threads.Add( WorkerThread );
+                    }
                 }
             }    
 
             foreach(Thread workerThread in threads)
             {
                 workerThread.Join();
+            }
+
+            // errors during the parsing of dlls
+            foreach(string filepath in _studentDLLFiles)
+            {
+                string fileName = Path.GetFileName(filepath);
+                if(!_results.ContainsKey(fileName))
+                {
+                    _results[fileName] = new List<AnalyzerResult>();
+
+                    foreach (KeyValuePair<int , bool> option in _teacherOptions)
+                    {
+                        if (option.Value == true)
+                        {
+                            _results[fileName].Add( new AnalyzerResult( option.Key.ToString() , 0 , $"Failed to parse {fileName}" ) );
+                        }
+                    }
+                }
             }
 
             return _results;
@@ -186,8 +200,8 @@ namespace Analyzer.Pipeline
         public byte[] GenerateClassDiagram(List<string> removableNamespaces)
         {
             ClassDiagram classDiag = new(_parsedDLLFiles);
-            byte[] bytes = classDiag.Run(removableNamespaces).Result;
-            Trace.WriteLine("MainPipeline : Created Class Relationship graph with removing " + string.Join( " " , removableNamespaces));
+            byte[] bytes = classDiag.RenderImageBytes(removableNamespaces).Result;
+            Logger.Inform( "[MainPipeline.cs] GenerateClassDiagram: Created Class Relationship graph " + string.Join( " " , removableNamespaces ) );
             return bytes;
         }
     }

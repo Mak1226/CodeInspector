@@ -10,17 +10,13 @@
  * Description = Unit Tests for DisposableFieldsShouldBeDisposedRule class
  *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using Analyzer;
 using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Analyzer.Pipeline.Tests
+namespace AnalyzerTests.Pipeline
 {
 
     /// <summary>
@@ -72,7 +68,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -136,7 +132,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -194,7 +190,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -225,7 +221,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -281,7 +277,7 @@ namespace Analyzer.Pipeline.Tests
             // Create an instance of RemoveUnusedLocalVariablesRule
             DisposableFieldsShouldBeDisposedRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

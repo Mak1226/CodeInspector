@@ -10,8 +10,8 @@
 * Description = Measures the cyclomatic complexity of methods in the dll files and flags the complex methods
 *********************************************************************************/
 
-using Analyzer.Parsing;
 using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -26,7 +26,6 @@ namespace Analyzer.Pipeline
     {
         // maximum allowed complexity for each method 
         private readonly int _maxAllowedComplexity;    
-        private readonly string _analyzerID ;
 
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace Analyzer.Pipeline
         public CyclomaticComplexity(List<ParsedDLLFile> dllFiles , int maxAllowedComplexity=10) : base(dllFiles)
         {
             _maxAllowedComplexity = maxAllowedComplexity;
-            _analyzerID = "113";
+            analyzerID = "113";
         }
 
 
@@ -80,7 +79,7 @@ namespace Analyzer.Pipeline
                 errorMessageBuilder.Insert(0, $"Methods having cyclomatic complexity greater than {_maxAllowedComplexity}:\n[NOTE: Switch case complexity is not accurate]\n");
             }
 
-            AnalyzerResult analyzerResult = new(_analyzerID , verdict , errorMessageBuilder.ToString());
+            AnalyzerResult analyzerResult = new(analyzerID , verdict , errorMessageBuilder.ToString());
 
             return analyzerResult;
         }
