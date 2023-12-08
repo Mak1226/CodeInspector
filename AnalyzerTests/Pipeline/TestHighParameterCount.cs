@@ -19,30 +19,31 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace AnalyzerTests.Pipeline
 {
 
-    //xyz.dll
-
-    public class HighParams
-    {
-        public static void HighParameterMethod( int param1 , int param2 , int param3 , int param4 , int param5 , int param6 )
-        {
-            Console.WriteLine( "Method with high parameter count?" );
-        }
-    }
-
-    public class LowParams
-    {
-        public static void LowParameterMethod(int param1, int param2, int param3, int param4, int param5)
-        {
-            Console.WriteLine("Method with high parameter count?");
-        }
-    }
-
     /// <summary>
     /// Test class for the HighParameterCountRule.
     /// </summary>
     [TestClass()]
     public class TestHighParameterCount
     {
+
+        //xyz.dll is given below
+
+        //public class HighParams
+        //{
+        //    public static void HighParameterMethod( int param1 , int param2 , int param3 , int param4 , int param5 , int param6 )
+        //    {
+        //        Console.WriteLine( "Method with high parameter count?" );
+        //    }
+        //}
+
+        public class LowParams
+        {
+            public static void LowParameterMethod( int param1 , int param2 , int param3 , int param4 , int param5 )
+            {
+                Console.WriteLine( "Method with high parameter count?" );
+            }
+        }
+
         /// <summary>
         /// Test method for low parameter count.
         /// </summary>
@@ -51,9 +52,8 @@ namespace AnalyzerTests.Pipeline
         {
             // Specify the path to the DLL file
             //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\xyz.dll";
-            //string path = Assembly.GetExecutingAssembly().Location;
-            //ParsedDLLFile dllFile = new(path);
-            ParsedDLLFile dllFile = new( typeof( LowParams ).Assembly );
+            string path = Assembly.GetExecutingAssembly().Location;
+            ParsedDLLFile dllFile = new(path);
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 
@@ -81,10 +81,9 @@ namespace AnalyzerTests.Pipeline
         public void TestHighParams()
         {
             // Specify the path to the DLL file
-            //string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\xyz.dll";
-            ParsedDLLFile dllFile = new( typeof( HighParams ).Assembly );
+            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\xyz.dll";
             //string path = Assembly.GetExecutingAssembly().Location;
-            //ParsedDLLFile dllFile = new( path );
+            ParsedDLLFile dllFile = new( path );
 
             List<ParsedDLLFile> dllFiles = new() { dllFile };
 

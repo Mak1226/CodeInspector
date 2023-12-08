@@ -10,7 +10,6 @@
  * Description = Class that implements High Parameter Count Check Analyser
  *****************************************************************************/
 
-using System.Diagnostics;
 using Analyzer.Parsing;
 using Mono.Cecil;
 using Logging;

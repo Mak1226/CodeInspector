@@ -10,18 +10,11 @@
  * Description = Class that implements Unused Local Variable Analyser
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Analyzer.Parsing;
-using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
 using System.Collections;
-using System.Globalization;
 using Logging;
 
 namespace Analyzer.Pipeline
