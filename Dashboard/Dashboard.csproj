@@ -8,9 +8,53 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\ProtoMono-Light.ttf" />
+    <None Remove="Fonts\ProtoMono-LightShadow.ttf" />
+    <None Remove="Fonts\ProtoMono-Medium.ttf" />
+    <None Remove="Fonts\ProtoMono-MediumShadow.ttf" />
+    <None Remove="Fonts\ProtoMono-Regular.ttf" />
+    <None Remove="Fonts\ProtoMono-RegularShadow.ttf" />
+    <None Remove="Fonts\ProtoMono-SemiBold.ttf" />
+    <None Remove="Fonts\ProtoMono-SemiBoldShadow.ttf" />
     <None Remove="Image\Analyzer.png" />
+    <None Remove="Image\backgrnd.jpg" />
+    <None Remove="Image\bettergoogle.png" />
     <None Remove="Image\close.png" />
     <None Remove="Image\google.png" />
+    <None Remove="Image\logo.png" />
+    <None Remove="Image\name_trans.png" />
+    <None Remove="Image\no_name_trans.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\ProtoMono-Light.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-LightShadow.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-Medium.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-MediumShadow.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-RegularShadow.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-SemiBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\ProtoMono-SemiBoldShadow.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Image\backgrnd.jpg" />
+    <Resource Include="Image\bettergoogle.png" />
+    <Resource Include="Image\name_trans.png" />
+    <Content Include="Image\no_name_trans.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +63,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContentPage\ContentPage.csproj" />
+    <ProjectReference Include="..\Logger\Logging.csproj" />
     <ProjectReference Include="..\ServerlessFuncUI\ServerlessFuncUI.csproj" />
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
@@ -31,6 +76,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Image\google.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

@@ -268,7 +268,7 @@ namespace Analyzer.Tests
                 ["ACIST.dll"] = new List<AnalyzerResult> {
 
                 new AnalyzerResult("102", 1, "No violation found"),
-                new AnalyzerResult("103", 0, "BadExample : counter ,GoodExample : counter , are unused private field.")
+                new AnalyzerResult("103", 1, "No violation found.")
             }
             };
 

@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Logging;
 
 namespace ServerlessFunc
 {
@@ -35,7 +36,7 @@ namespace ServerlessFunc
         {
             _entityClient = new HttpClient();
             _insightsRoute = insightsRoute;
-            Trace.WriteLine( "[Cloud] New insights client created" );
+            Logger.Inform( "[Cloud] New insights client created" );
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace ServerlessFunc
         {
             _entityClient = httpClient ?? throw new ArgumentNullException( nameof( httpClient ) );
             _insightsRoute = insightsRoute;
-            Trace.WriteLine( "[Cloud] New insights client created" );
+            Logger.Inform( "[Cloud] New insights client created" );
         }
 
         /// <summary>
@@ -68,12 +69,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<Dictionary<string , int>> dictionary = JsonSerializer.Deserialize<List<Dictionary<string , int>>>( result , options );
-                Trace.WriteLine( $"[Cloud] CompareTwoSessions successful for {sessionId1} and {sessionId2}" );
+                Logger.Inform( $"[Cloud] CompareTwoSessions successful for {sessionId1} and {sessionId2}" );
                 return dictionary;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                Logger.Error( "[InsightsApi] Exception: " + ex );
                 return default;
             }
         }
@@ -96,12 +97,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> studentList = JsonSerializer.Deserialize<List<string>>( result , options );
-                Trace.WriteLine( $"[Cloud] GetFailedStudentsGivenTest successful for {hostname} and {testName}" );
+                Logger.Inform( $"[Cloud] GetFailedStudentsGivenTest successful for {hostname} and {testName}" );
                 return studentList;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                Logger.Warn( "[InsightsApi] Exception: " + ex );
                 return default;
             }
         }
@@ -124,12 +125,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
-                Trace.WriteLine( $"[Cloud] RunningAverageOnGivenTest successful for {hostname} and {testName}" );
+                Logger.Inform( $"[Cloud] RunningAverageOnGivenTest successful for {hostname} and {testName}" );
                 return averageList;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                Logger.Warn( "[InsightsApi] Exception: " + ex );
                 return default;
             }
         }
@@ -152,12 +153,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
-                Trace.WriteLine( $"[Cloud] RunningAverageOnGivenStudent successful for {hostname} and {studentName}" );
+                Logger.Inform( $"[Cloud] RunningAverageOnGivenStudent successful for {hostname} and {studentName}" );
                 return averageList;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                Logger.Warn( "[InsightsApi] Exception: " + ex );
                 return default;
             }
         }
@@ -179,12 +180,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<double> averageList = JsonSerializer.Deserialize<List<double>>( result , options );
-                Trace.WriteLine( $"[Cloud] RunningAverageAcrossSessoins successful for {hostname}" );
+                Logger.Inform( $"[Cloud] RunningAverageAcrossSessoins successful for {hostname}" );
                 return averageList;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi] Exception: " + ex );
+                Logger.Warn( "[InsightsApi] Exception: " + ex );
                 return default;
             }
         }
@@ -206,12 +207,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> studentsList = JsonSerializer.Deserialize<List<string>>( result , options );
-                Trace.WriteLine( $"[Cloud] UsersWithoutAnalysisGivenSession successful for {sessionId}" );
+                Logger.Inform( $"[Cloud] UsersWithoutAnalysisGivenSession successful for {sessionId}" );
                 return studentsList;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi.UsersWithoutAnalysisGivenSession] Exception: " + ex );
+                Logger.Warn( "[InsightsApi.UsersWithoutAnalysisGivenSession] Exception: " + ex );
                 return default;
             }
         }
@@ -233,12 +234,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 Dictionary<string , int> studentScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
-                Trace.WriteLine( $"[Cloud] GetStudentScoreGivenSession successful for {sessionId}" );
+                Logger.Inform( $"[Cloud] GetStudentScoreGivenSession successful for {sessionId}" );
                 return studentScore;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi.GetStudentScoreGivenSession] Exception: " + ex );
+                Logger.Warn( "[InsightsApi.GetStudentScoreGivenSession] Exception: " + ex );
                 return default;
             }
         }
@@ -260,12 +261,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 Dictionary<string , int> testScore = JsonSerializer.Deserialize<Dictionary<string , int>>( result , options );
-                Trace.WriteLine( $"[Cloud] GetTestScoreGivenSession successful for {sessionId}" );
+                Logger.Inform( $"[Cloud] GetTestScoreGivenSession successful for {sessionId}" );
                 return testScore;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi.GetTestScoreGivenSession] Exception: " + ex );
+                Logger.Warn( "[InsightsApi.GetTestScoreGivenSession] Exception: " + ex );
                 return default;
             }
         }
@@ -287,12 +288,12 @@ namespace ServerlessFunc
                     PropertyNameCaseInsensitive = true ,
                 };
                 List<string> bestWorstResult = JsonSerializer.Deserialize<List<string>>( result , options );
-                Trace.WriteLine( $"[Cloud] GetBestWorstGivenSession successful for {sessionId}" );
+                Logger.Inform( $"[Cloud] GetBestWorstGivenSession successful for {sessionId}" );
                 return bestWorstResult;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[InsightsApi.GetBestWorstGivenSession] Exception: " + ex );
+                Logger.Warn( "[InsightsApi.GetBestWorstGivenSession] Exception: " + ex );
                 return default;
             }
         }

@@ -26,6 +26,7 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using Logging;
 
 namespace Dashboard
 {
@@ -52,7 +53,7 @@ namespace Dashboard
         public static async Task<AuthenticationResult> Authenticate( int timeOut = 180000 )
         {
 
-            Trace.WriteLine( "[Authenticator] Creating State and Redirecting URI on port 8080" );
+            Logger.Inform( "[Authenticator] Creating State and Redirecting URI on port 8080" );
             // Creating state and redirect URI using port 8080 on Loopback address
             string state = CryptRandomInt( 32 );
             string codeVerifier = CryptRandomInt( 32 );
@@ -61,14 +62,14 @@ namespace Dashboard
             string redirectURI = string.Format( "http://{0}:{1}/" , IPAddress.Loopback , "8080" );
             AuthenticationResult result = new();
 
-            Trace.WriteLine( "[Authenticator] Creating HTTP Listener" );
+            Logger.Inform( "[Authenticator] Creating HTTP Listener" );
             // Creating HTTP listener
             HttpListener httpListener = new();
             httpListener.Prefixes.Add( redirectURI );
-            Trace.WriteLine( "[Authenticator] Listening on HTTP" );
+            Logger.Inform( "[Authenticator] Listening on HTTP" );
             httpListener.Start();
 
-            Trace.WriteLine( "[Authenticator] Sending Authorization Request" );
+            Logger.Inform( "[Authenticator] Sending Authorization Request" );
             // Creating an authorization request for OAuth 2.0
             string authorizationRequest = string.Format( "{0}?response_type=code&scope=openid%20email%20profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}" ,
                     s_authorizationEndpoint ,
@@ -87,12 +88,12 @@ namespace Dashboard
             {
                 if (noBrowser.ErrorCode == -2147467259)
                 {
-                    Trace.WriteLine( "[Authenticator] Error finding browser" );
+                    Logger.Inform( "[Authenticator] Error finding browser" );
                 }
             }
             catch (Exception other)
             {
-                Trace.WriteLine( other.Message );
+                Logger.Error( other.Message );
             }
 
             // Sending HTTP request to browser and displaying response
@@ -102,7 +103,7 @@ namespace Dashboard
             // This may happen because of closing the browser
             if (await Task.WhenAny( taskData , Task.Delay( timeOut ) ) != taskData)
             {
-                Trace.WriteLine( "[Authenticator] Timeout occurred before getting response" );
+                Logger.Inform( "[Authenticator] Timeout occurred before getting response" );
                 httpListener.Stop();
                 result.IsAuthenticated = false;
                 return result;
@@ -118,20 +119,20 @@ namespace Dashboard
             {
                 responseOutput.Close();
                 httpListener.Stop();
-                Trace.WriteLine( "[Authenticator] HTTP server stopped." );
+                Logger.Inform( "[Authenticator] HTTP server stopped." );
             } );
 
             // In case of errors, return to Sign In window
             if (context.Request.QueryString.Get( "error" ) != null)
             {
-                Trace.WriteLine( string.Format( "OAuth authorization error: {0}." , context.Request.QueryString.Get( "error" ) ) );
+                Logger.Inform( string.Format( "OAuth authorization error: {0}." , context.Request.QueryString.Get( "error" ) ) );
                 result.IsAuthenticated = false;
                 return result;
             }
 
             if (context.Request.QueryString.Get( "code" ) == null || context.Request.QueryString.Get( "state" ) == null)
             {
-                Trace.WriteLine( "[Authenticator] Malformed authorization response. " + context.Request.QueryString );
+                Logger.Inform( "[Authenticator] Malformed authorization response. " + context.Request.QueryString );
                 result.IsAuthenticated = false;
                 return result;
             }
@@ -143,17 +144,19 @@ namespace Dashboard
             // Comparing state to expected value
             if (incomingState != state)
             {
-                Trace.WriteLine( string.Format( "Received request with invalid state ({0})" , incomingState ) );
+                Logger.Inform( string.Format( "Received request with invalid state ({0})" , incomingState ) );
                 result.IsAuthenticated = false;
                 return result;
             }
 
-            Trace.WriteLine( "[Authenticator] No Errors Occurred" );
+            Logger.Inform( "[Authenticator] No Errors Occurred" );
             // A new thread to wait for the GetUserData to get all required information
             Task task = Task.Factory.StartNew( () => GetUserData( code , codeVerifier , redirectURI ) );
             task.Wait();
 
             result.IsAuthenticated = true;
+            // so as to wait for information to be updated again after logout
+            s_userName = "";
             while (s_userName == "" || s_userEmail == "" || s_imageName == "")
             {
                 // Thread sleeps until information is received
@@ -214,7 +217,7 @@ namespace Dashboard
         /// <param name="redirectURI"></param>
         private static async void GetUserData( string code , string code_verifier , string redirectURI )
         {
-            Trace.WriteLine( "[Authenticator] Getting Data From User" );
+            Logger.Inform( "[Authenticator] Getting Data From User" );
             // Building the  request
             string tokenRequestURI = "https://www.googleapis.com/oauth2/v4/token";
             string tokenRequestBody = string.Format( "code={0}&redirect_uri={1}&client_id={2}&code_verifier={3}&client_secret={4}&scope=&grant_type=authorization_code" ,
@@ -244,7 +247,7 @@ namespace Dashboard
                 using StreamReader reader = new( tokenResponse.GetResponseStream() );
                 // Reading response body
                 string responseText = await reader.ReadToEndAsync();
-                Trace.WriteLine( responseText );
+                Logger.Inform( responseText );
                 // Converting to dictionary
                 Dictionary<string , string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string , string>>( responseText );
                 string access_token = tokenEndpointDecoded["access_token"];
@@ -256,11 +259,11 @@ namespace Dashboard
                 {
                     if (ex.Response is HttpWebResponse response)
                     {
-                        Trace.WriteLine( "[Authenticator] HTTP: " + response.StatusCode );
+                        Logger.Error( "[Authenticator] HTTP: " + response.StatusCode );
                         using StreamReader reader = new( response.GetResponseStream() );
                         // Reading response body
                         string responseText = await reader.ReadToEndAsync();
-                        Trace.WriteLine( responseText );
+                        Logger.Inform( responseText );
                     }
                 }
             }
@@ -288,7 +291,7 @@ namespace Dashboard
             using StreamReader userInfoResponseReader = new( userInfoResponse.GetResponseStream() );
             // Reading response body
             string userInfoResponseText = await userInfoResponseReader.ReadToEndAsync();
-            Trace.WriteLine( "[Authenticator] USER INFO:\n" + userInfoResponseText );
+            Logger.Inform( "[Authenticator] USER INFO:\n" + userInfoResponseText );
             JObject json = JObject.Parse( userInfoResponseText );
             s_userName = json["name"].ToString();
             s_userEmail = json["email"].ToString();

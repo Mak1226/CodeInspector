@@ -7,12 +7,9 @@
 *
 * Description = 
 *****************************************************************************/
-using System;
-using System.Globalization;
-using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {

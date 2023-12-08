@@ -11,16 +11,8 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
-using Analyzer.Pipeline;
 using Analyzer.UMLDiagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PlantUml.Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -38,7 +30,8 @@ namespace AnalyzerTests.Pipeline
         {
             List<string> DllFilePaths = new()
             {
-                "..\\..\\..\\TestDLLs\\BridgePattern.dll"
+                // ExamplarDLLs.BridgePattern
+                 "..\\..\\..\\TestDLLs\\Analyzer.dll"
             };
 
             List<ParsedDLLFile> dllFiles = new() { new ParsedDLLFile(DllFilePaths[0]) };
@@ -47,7 +40,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { };
 
-            byte[] imageBytes = classDiag.Run(removableNamespaces).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes(removableNamespaces).Result;
 
             Console.WriteLine(imageBytes);
             Console.WriteLine(imageBytes.Length);
@@ -77,7 +70,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -107,7 +100,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer", "Mono.Cecil" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -137,7 +130,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "AnalyzerTests.Pipeline" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -167,7 +160,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Analyzer.Pipeline" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -197,7 +190,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -228,7 +221,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil.Instruction" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -259,7 +252,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "Analyzer" , "Mono.Cecil.Cil.Instruction" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -289,7 +282,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );
@@ -319,7 +312,7 @@ namespace AnalyzerTests.Pipeline
 
             List<string> removableNamespaces = new() { "TypeRelationships" };
 
-            byte[] imageBytes = classDiag.Run( removableNamespaces ).Result;
+            byte[] imageBytes = classDiag.RenderImageBytes( removableNamespaces ).Result;
 
             Console.WriteLine( imageBytes );
             Console.WriteLine( imageBytes.Length );

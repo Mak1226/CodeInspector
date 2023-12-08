@@ -8,9 +8,9 @@
 * Description = Utility class for invoking custom analyzers on student DLL files.
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using System.Diagnostics;
 using System.Reflection;
+using Analyzer.Parsing;
+using Logging;
 
 namespace Analyzer.DynamicAnalyzer
 {
@@ -29,14 +29,14 @@ namespace Analyzer.DynamicAnalyzer
         /// <param name="PathOfDLLFilesOfStudent">List of paths to student DLL files.</param>
         public InvokeCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers, List<string> PathOfDLLFilesOfStudent)
         {
-            Trace.WriteLine("Invoking Custom Analyzers ");
+            Logger.Inform( "[InvokeCustomAnalyzers.cs] InvokeCustomAnalyzers: Started" );
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
             _pathOfDLLFilesOfStudent = PathOfDLLFilesOfStudent;
         }
 
         public InvokeCustomAnalyzers(List<string> PathOfDLLFilesOfCustomAnalyzers)
         {
-            Trace.WriteLine("Invoking Custom Analyzers");
+            Logger.Inform( "[InvokeCustomAnalyzers.cs] InvokeCustomAnalyzers: Started" );
             _pathOfDLLFilesOfCustomAnalyzers = PathOfDLLFilesOfCustomAnalyzers;
         }
 
@@ -73,7 +73,7 @@ namespace Analyzer.DynamicAnalyzer
             foreach (string customAnalyzer in _pathOfDLLFilesOfCustomAnalyzers)
             {
                 // Load the custom analyzer assembly
-                Trace.WriteLine("Running custom Analyzer ", customAnalyzer);
+                Logger.Inform( "[InvokeCustomAnalyzers.cs] Start: Running custom Analyzer" );
                 Assembly customAnalyzerAssembly = Assembly.Load(File.ReadAllBytes(customAnalyzer));
                 Type? type = customAnalyzerAssembly.GetType("Analyzer.DynamicAnalyzer.CustomAnalyzer");
 
@@ -84,7 +84,7 @@ namespace Analyzer.DynamicAnalyzer
                 MethodInfo? method = type.GetMethod("AnalyzeAllDLLs");
                 object? currentAnalyzerResult = method.Invoke(teacher, null);
 
-                Trace.WriteLine("Analysis completed for all student dlls");
+                Logger.Inform( "[InvokeCustomAnalyzers.cs] Start: Analysis completed for all student dlls" );
 
                 foreach (KeyValuePair<string, AnalyzerResult> dllResult in currentAnalyzerResult as Dictionary<string, AnalyzerResult>)
                 {

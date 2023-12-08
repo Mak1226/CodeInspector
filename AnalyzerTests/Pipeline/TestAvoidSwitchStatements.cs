@@ -8,14 +8,11 @@
 * Description = Test class to verify the functionality of the AvoidSwitchStatementsAnalyzer
 *****************************************************************************/
 
+using System.Reflection;
+using Analyzer;
 using Analyzer.Parsing;
 using Analyzer.Pipeline;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reflection;
-using Analyzer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace AnalyzerTests.Pipeline
 {

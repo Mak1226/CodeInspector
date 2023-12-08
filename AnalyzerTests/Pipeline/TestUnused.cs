@@ -10,17 +10,12 @@
  * Description = Unit Tests for RemoveUnusedLocalVariablesRule class
  *****************************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Analyzer.Parsing;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
 using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
 namespace AnalyzerTests.Pipeline
@@ -85,7 +80,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)
@@ -117,7 +112,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of RemoveUnusedLocalVariablesRule
             RemoveUnusedLocalVariablesRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

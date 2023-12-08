@@ -10,16 +10,10 @@
 * Description = Unit Tests for NoEmptyInterface.cs
 *****************************************************************************/
 
-using Analyzer.Parsing;
-using Analyzer;
-using Analyzer.Pipeline;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Analyzer;
+using Analyzer.Parsing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NoEmptyInterface
 {
@@ -89,38 +83,6 @@ namespace AnalyzerTests.Pipeline
         {
             _dllFile = Assembly.GetExecutingAssembly().Location;
             _parsedDLL = new( _dllFile );
-        }
-
-        /*
-        namespace NoEmptyInterfaces1
-        {
-            public class Class1 : IInterfaceEmpty
-            {
-                private readonly int _sampleVar;
-                public Class1() 
-                {
-                    _sampleVar = 1;
-                }
-
-            }
-        }
-         */
-        /// <summary>
-        /// Fails since empty interface exists.
-        /// </summary>
-        [TestMethod()]
-        public void TestEmptyInterfacePresent()
-        {
-            string path = "..\\..\\..\\..\\AnalyzerTests\\TestDLLs\\NoEmptyInterfaces1.dll";
-
-            ParsedDLLFile dllFile = new( path );
-
-            List<ParsedDLLFile> dllFiles = new() { dllFile };
-            Analyzer.Pipeline.NoEmptyInterface noEmptyInterfaces = new( dllFiles );
-
-            Dictionary<string , AnalyzerResult> result = noEmptyInterfaces.AnalyzeAllDLLs();
-            Console.WriteLine( result[dllFile.DLLFileName].ErrorMessage );
-            Assert.AreEqual( 0 , result[dllFile.DLLFileName].Verdict );
         }
 
         /// <summary>

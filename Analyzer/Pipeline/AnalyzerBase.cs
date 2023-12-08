@@ -12,7 +12,6 @@
 * Description = A base class providing a common structure for various analyzers.
 ******************************************************************************/
 
-using System.Diagnostics;
 using Analyzer.Parsing;
 using Logging;
 
@@ -61,6 +60,7 @@ namespace Analyzer.Pipeline
                     _result[parsedDLL.DLLFileName] = new AnalyzerResult(analyzerID, 0, errorMsg);
                 }
             }
+
 
             return _result;
         }

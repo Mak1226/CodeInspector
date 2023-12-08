@@ -10,8 +10,8 @@
 * Description = Measures the cyclomatic complexity of methods in the dll files and flags the complex methods
 *********************************************************************************/
 
-using Analyzer.Parsing;
 using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 

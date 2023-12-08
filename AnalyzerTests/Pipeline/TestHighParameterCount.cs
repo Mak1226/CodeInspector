@@ -10,16 +10,11 @@
  * Description = Unit Tests for TestHighParameterCount class
  *****************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Analyzer.Parsing;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Analyzer.Pipeline;
 using Analyzer;
+using Analyzer.Parsing;
+using Analyzer.Pipeline;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AnalyzerTests.Pipeline
 {
@@ -65,7 +60,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of HighParameterCountRule
             HighParameterCountRule analyzer = new(dllFiles);
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string, AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string, AnalyzerResult> dll in result)
@@ -96,7 +91,7 @@ namespace AnalyzerTests.Pipeline
             // Create an instance of HighParameterCountRule
             HighParameterCountRule analyzer = new( dllFiles );
 
-            // Run the analyzer
+            // RenderImageBytes the analyzer
             Dictionary<string , AnalyzerResult> result = analyzer.AnalyzeAllDLLs();
 
             foreach (KeyValuePair<string , AnalyzerResult> dll in result)

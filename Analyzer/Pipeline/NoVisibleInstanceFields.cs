@@ -12,10 +12,11 @@
 *               Fields should be private or internal and should be exposed by using properties. 
 *****************************************************************************/
 
-using Analyzer.Parsing;
 using System.Text;
+using Analyzer.Parsing;
 using Mono.Cecil;
 using System.Diagnostics;
+using Logging;
 
 namespace Analyzer.Pipeline
 {
@@ -36,6 +37,7 @@ namespace Analyzer.Pipeline
             _errorMessage = "";
             _verdict = 1;
             analyzerID = "118";
+            Logger.Inform( $"[Analyzer][NoVisibleInstanceFields.cs]: Created instance of analyzer NoVisibleInstanceFields" );
         }
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace Analyzer.Pipeline
         /// <returns>List of violating fields in the DLL.</returns>
         private List<FieldDefinition> FindVisibleNativeFields(ParsedDLLFile parsedDLLFile)
         {
+            Logger.Inform( $"[Analyzer][NoVisibleInstanceFields.cs] FindVisibleNativeFields: Running analyzer on {parsedDLLFile.DLLFileName} " );
+
             List<FieldDefinition> visibleNativeFieldsList = new();
 
             foreach (ParsedClassMonoCecil classobj in parsedDLLFile.classObjListMC)
@@ -83,8 +87,9 @@ namespace Analyzer.Pipeline
                     }
                     else
                     {
-                        // IsInitOnly for readonly.
-                        if (field.IsPublic && field.IsInitOnly)
+                        // IsInitOnly for readonly
+                        // IsLiteral for const
+                        if (field.IsPublic && (field.IsInitOnly || field.IsLiteral))
                         {
                             continue;
                         }
@@ -105,7 +110,7 @@ namespace Analyzer.Pipeline
         /// <returns>String with all the violating types.</returns>
         private string ErrorMessage(List<FieldDefinition> visibleNativeFieldsList)
         {
-            StringBuilder errorLog = new ("The following native fields are visible:");
+            StringBuilder errorLog = new ("The following native fields are visible:\r\n");
 
             foreach (FieldDefinition field in visibleNativeFieldsList)
             {
@@ -136,11 +141,13 @@ namespace Analyzer.Pipeline
                     _errorMessage = "No violation found.";
                 }
             }
-            catch (NullReferenceException ex)
+            catch (Exception ex)
             {
-                throw new NullReferenceException("Encountered exception while processing.", ex);
+                Logger.Error( $"[Analyzer][NoVisibleInstanceFields.cs] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message );
+                throw;
             }
 
+            Logger.Debug( $"[Analyzer][NoVisibleInstanceFields.cs] AnalyzeSingleDLL: Successfully finished analyzing {parsedDLLFile.DLLFileName} " );
             return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }

@@ -14,8 +14,10 @@
 *****************************************************************************/
 
 using Analyzer.Parsing;
+using Logging;
 using System.Diagnostics;
 using System.Text;
+using Analyzer.Parsing;
 
 namespace Analyzer.Pipeline
 {
@@ -36,6 +38,8 @@ namespace Analyzer.Pipeline
             _errorMessage = "";
             _verdict = 1;
             analyzerID = "104";
+            Logger.Inform( $"[Analyzer][NoEmptyInterface.cs] Created instance of analyzer NoEmptyInterface" );
+
         }
 
         /// <summary>
@@ -45,6 +49,8 @@ namespace Analyzer.Pipeline
         /// <param name="parsedDLLFile">DLL file to be analyzed.</param>
         public List<Type> FindEmptyInterfaces(ParsedDLLFile parsedDLLFile)
         {
+            Logger.Inform( $"[Analyzer][NoEmptyInterface.cs] FindEmptyInterfaces: Running analyzer on {parsedDLLFile.DLLFileName} " );
+
             List<Type> emptyInterfaceList = new();
 
             foreach (ParsedInterface interfaceObj in parsedDLLFile.interfaceObjList)
@@ -96,14 +102,16 @@ namespace Analyzer.Pipeline
                 }
                 else
                 {
-                    _errorMessage = "No violation found.";
+                    _errorMessage = "No violation found.\r\n";
                 }
             }
-            catch (NullReferenceException ex)
+            catch (Exception ex)
             {
-                throw new NullReferenceException("Encountered exception while processing.", ex);
+                Logger.Error( $"[Analyzer][NoEmptyInterface.cs] AnalyzeSingleDLL: Exception while analyzing {parsedDLLFile.DLLFileName} " + ex.Message );
+                throw;
             }
 
+            Logger.Debug( $"[Analyzer][NoEmptyInterface.cs] AnalyzeSingleDLL: Successfully finished analyzing {parsedDLLFile.DLLFileName} " );
             return new AnalyzerResult(analyzerID, _verdict, _errorMessage);
         }
     }

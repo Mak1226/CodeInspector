@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Logging;
 
 namespace ServerlessFunc
 {
@@ -41,7 +42,7 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
-            Trace.WriteLine( "[Cloud] New download client created" );
+            Logger.Inform( "[Cloud] New download client created" );
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace ServerlessFunc
             _sessionRoute = sessionRoute;
             _submissionRoute = submissionRoute;
             _analysisRoute = analysisRoute;
-            Trace.WriteLine( "[Cloud] New download client created" );
+            Logger.Inform( "[Cloud] New download client created" );
         }
 
 
@@ -79,12 +80,12 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<SessionEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<SessionEntity>>( result , options );
-                Trace.WriteLine( "[Cloud] Session data by hostname GET successful" );
+                Logger.Inform( "[Cloud] Session data by hostname GET successful" );
                 return entities;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
                 return default; // or throw a custom exception, return a default value, or handle it as needed
             }
         }
@@ -108,12 +109,12 @@ namespace ServerlessFunc
                 };
 
                 byte[] submission = JsonSerializer.Deserialize<byte[]>( result , options );
-                Trace.WriteLine( "[Cloud] Submission data by username and sessionid GET successful" );
+                Logger.Inform( "[Cloud] Submission data by username and sessionid GET successful" );
                 return submission;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
                 return default; // or throw a custom exception, return a default value, or handle it as needed
             }
         }
@@ -137,12 +138,12 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
-                Trace.WriteLine( "[Cloud] Analysis data by username and sessionid GET successful" );
+                Logger.Inform( "[Cloud] Analysis data by username and sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
                 return default; // or throw a custom exception, return a default value, or handle it as needed
             }
         }
@@ -165,12 +166,12 @@ namespace ServerlessFunc
                 };
 
                 IReadOnlyList<AnalysisEntity> entities = System.Text.Json.JsonSerializer.Deserialize<IReadOnlyList<AnalysisEntity>>( result , options );
-                Trace.WriteLine( "[Cloud] Analysis data by sessionid GET successful" );
+                Logger.Inform( "[Cloud] Analysis data by sessionid GET successful" );
                 return entities;
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
                 return default; // or throw a custom exception, return a default value, or handle it as needed
             }
         }
@@ -184,11 +185,11 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _sessionRoute );
                 response.EnsureSuccessStatusCode();
-                Trace.WriteLine( "[Cloud] Session data DELETE successful" );
+                Logger.Inform( "[Cloud] Session data DELETE successful" );
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
             }
         }
 
@@ -201,11 +202,11 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _submissionRoute );
                 response.EnsureSuccessStatusCode();
-                Trace.WriteLine( "[Cloud] Submission data DELETE successful" );
+                Logger.Inform( "[Cloud] Submission data DELETE successful" );
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
             }
         }
 
@@ -218,11 +219,11 @@ namespace ServerlessFunc
             {
                 using HttpResponseMessage response = await _entityClient.DeleteAsync( _analysisRoute );
                 response.EnsureSuccessStatusCode();
-                Trace.WriteLine( "[Cloud] Analysis data DELETE successful" );
+                Logger.Inform( "[Cloud] Analysis data DELETE successful" );
             }
             catch (Exception ex)
             {
-                Trace.WriteLine( "[cloud] Network Error Exception " + ex );
+                Logger.Warn( "[cloud] Network Error Exception " + ex );
             }
         }
     }

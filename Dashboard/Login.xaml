@@ -8,44 +8,135 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Login">
 
-    <Grid>
-        <Grid.Background>
-            <SolidColorBrush Color="LightSalmon" />
-        </Grid.Background>
-        <Grid Height="200" Width="400">
-            
-            <Grid.Background>
-                <SolidColorBrush Color="WhiteSmoke" />
-            </Grid.Background>
+    <Page.Resources>
+        <ResourceDictionary Source="Theme/Dark.xaml" />
+    </Page.Resources>
+    
+    
+    <Grid Background="{DynamicResource Login_Backdrop}">
+        <Grid.Resources>
+            <!-- Define a default style for controls within the Grid -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource ProtoMonoMedium}" />
+                <Setter Property="Foreground" Value="{DynamicResource Login_Text}" />
+            </Style>
 
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource ProtoMonoRegular}" />
+            </Style>
+        </Grid.Resources>
+
+        <Grid Height="280" Width="400" Background="{DynamicResource Login_Card}">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
+            
+            <!-- One way mode required? -->
             <Grid Grid.Row="0">
+                <Ellipse Height="30" Width="30" Margin="182,5,182,0">
+                    <Ellipse.Fill>
+                        <!--<ImageBrush ImageSource="{Binding UserImage, Mode=OneWay}" /> -->
+                        <ImageBrush ImageSource="{Binding UserImage}" />
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+            <Grid Grid.Row="1">
                 <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="Name: " />
                      <Run Text="{Binding UserName, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>-->
                 <StackPanel x:Name="NameStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name :" Margin="10,10,10,10"/>
-                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" Margin="10,25,10,25"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Name:" Margin="10,10,10,10" />
+                    <TextBox x:Name="NameInformation" Text="{Binding UserName}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource Login_Card}" Foreground="{DynamicResource Login_Text}" />
                 </StackPanel>
             </Grid>
             
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="2">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                      <Run Text="User Id: " />  
-                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold"/>
+                     <Run Text="{Binding UserId, Mode=OneWay}" FontWeight="Bold" FontFamily="Null"/>
                 </TextBlock>
             </Grid>
 
-            <Grid Grid.Row="2">
-                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,15,236,29"/>
-                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,15,75,29"/>
+            
+            <Grid Grid.Row="3">
+                <ToggleButton x:Name="ModeToggleButton" Style="{StaticResource DarkModeButton}" Height="15"/>
             </Grid>
 
+            <Grid x:Name="StudentMode" Grid.Row="4">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=ModeToggleButton}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <TextBlock Text=" Joining as Student " FontFamily="Tahoma" HorizontalAlignment="Center" Background="{DynamicResource Login_Text}" Foreground="{DynamicResource Login_Backdrop}" Margin="0,0,0,10" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <StackPanel x:Name="InstructorIP" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Instructor IP: "/>
+                            <TextBox x:Name="InsIP" FontWeight="Bold" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <StackPanel x:Name="InstructorPort" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Instructor Port: " />
+                            <TextBox x:Name="InsPort" FontWeight="Bold" Width="70" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Login_Card}" Background="{DynamicResource Login_Text}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Button Content="Join" Height="20" Width="90"  Click="StudentButton_Click"  HorizontalAlignment="Center" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid x:Name="InstructorMode" Grid.Row="4">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=ModeToggleButton}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <TextBlock Text=" Joining as Instructor " FontFamily="Tahoma" HorizontalAlignment="Center" Foreground="{DynamicResource Login_Text}" Background="{DynamicResource Login_Backdrop}"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Button Content="Create Meeting" Height="23" Width="140"  Click="InstructorButton_Click"  HorizontalAlignment="Center" Margin="0,15"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <!--
+            <Grid Grid.Row="4">
+                <Button Content="Student" Width="100" Height="20" Click="StudentButton_Click" Margin="64,0,236,20" />
+                <Button Content="Instructor" Width="100" Height="20" Click="InstructorButton_Click"  Margin="225,0,75,20" />
+            </Grid>
+            -->
         </Grid>
     </Grid>
 </Page>
