@@ -6,6 +6,15 @@
     <SolidColorBrush Color="#000000" x:Key="Login_Text" />
     <SolidColorBrush Color="WhiteSmoke" x:Key="Login_Card" />
     
-    
-    
+    <!-- Instructor Page -->
+    <SolidColorBrush Color="LightBlue" x:Key="Instructor_Backdrop" />
+    <SolidColorBrush Color="#000000" x:Key="Instructor_Text" />
+    <SolidColorBrush Color="WhiteSmoke" x:Key="Instructor_Card" />
+
+    <!-- Student Page -->
+    <SolidColorBrush Color="LightCyan" x:Key="Student_Backdrop" />
+    <SolidColorBrush Color="#000000" x:Key="Student_Text" />
+    <SolidColorBrush Color="Yellow" x:Key="Student_Card" />
+
+
 </ResourceDictionary>

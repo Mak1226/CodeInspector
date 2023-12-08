@@ -9,10 +9,19 @@
       Title="Login">
 
     <Page.Resources>
-        <ResourceDictionary Source="Theme/Dark.xaml" />
+        <!-- Dark Theme -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="ThemeDictionary">
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="Theme/Dark.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
-    
-    
+
+
     <Grid Background="{DynamicResource Login_Backdrop}">
         <Grid.Resources>
             <!-- Define a default style for controls within the Grid -->
@@ -26,6 +35,7 @@
             </Style>
         </Grid.Resources>
 
+        <ToggleButton x:Name="darkMode" Style="{StaticResource DarkMode}" Height="15" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="25,25" Click="ChangeTheme"/>
         <Grid Height="280" Width="400" Background="{DynamicResource Login_Card}">
             
             <Grid.RowDefinitions>

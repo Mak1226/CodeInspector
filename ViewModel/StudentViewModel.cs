@@ -108,7 +108,9 @@ namespace ViewModel
         /// <summary>
         /// Gets the user image of the student.
         /// </summary>
-        public string StudentImage { get; init; }
+        public string StudentImage { get; private set; }
+
+
         public ICommunicator Client { get; }
 
         /// <summary>

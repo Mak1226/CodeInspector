@@ -39,7 +39,7 @@ namespace Dashboard
         private readonly string _id;
         private readonly string _userImage;
 
-        public StudentPage(string name, string id, string userImage, string insIP, string insPort )
+        public StudentPage(string name, string id, string userImage, string insIP, string insPort, bool isDark )
         {
             InitializeComponent();
             _name = name;
@@ -47,8 +47,14 @@ namespace Dashboard
             _userImage = userImage;
             Unloaded += StudentPage_Unloaded;
 
+            isDarkMode = true;
             try
             {
+                if (!isDark)
+                {
+                    Resources.Source = (new Uri( "Theme/Light.xaml" , UriKind.Relative ));
+                    isDarkMode = false;
+                }
                 // Create the ViewModel and set as data context.
                 StudentViewModel viewModel = new(name, id, userImage );
                 DataContext = viewModel;
@@ -104,6 +110,13 @@ namespace Dashboard
             //NavigationService?.Navigate( authenticationPage );
         }
 
+
+        /// <summary>
+        /// Gets the current Theme
+        /// </summary>
+        public bool isDarkMode { get; set; }
+
+
         /// <summary>
         /// Event handler for the "IstructorIpTextBox" text changed event.
         /// </summary>
@@ -140,6 +153,21 @@ namespace Dashboard
             viewModel?.DisconnectFromInstructor();
             Login loginPage = new(_name,_id,_userImage);
             NavigationService?.Navigate( loginPage );
+        }
+
+
+        private void ChangeTheme( object sender , RoutedEventArgs e )
+        {
+            if (isDarkMode)
+            {
+                Resources.Source = ( new Uri( "Theme/Light.xaml" , UriKind.Relative ) );
+                isDarkMode = false;
+            }
+            else
+            {
+                Resources.Source = (new Uri("Theme/Dark.xaml", UriKind.Relative));
+                isDarkMode = true;
+            }
         }
     }
 }
