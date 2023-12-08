@@ -67,6 +67,8 @@ namespace Dashboard
                 _contentServerPage = new ServerPage ( viewModel.Communicator, userId);
                 ResultFrame.Content = _contentServerPage;
 
+                _contentServerPage.SetDarkMode( isDarkMode ); // Setting theme for contentServerpage
+
                 //Create and ste up the Cloud Page
                 SessionsPage _cloudPage = new (userId);
                 CloudFrame.Content = _cloudPage;
