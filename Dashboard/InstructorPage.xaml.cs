@@ -29,6 +29,7 @@ using System.Windows.Shapes;
 using ViewModel;
 using ServerlessFuncUI;
 using Logging;
+using System.Runtime.CompilerServices;
 
 
 namespace Dashboard
@@ -46,13 +47,18 @@ namespace Dashboard
         /// </summary>
         /// <param name="userName">The username of the instructor.</param>
         /// <param name="userId">The user ID of the instructor.</param>
-        public InstructorPage( string userName , string userId, string userImage )
+        public InstructorPage( string userName , string userId, string userImage, bool isDark )
         {
             InitializeComponent();
             Unloaded += InstructorPage_Unloaded;
             try
             {
-
+                isDarkMode = true;
+                if (!isDark)
+                {
+                    Resources.Source = (new Uri( "Theme/Light.xaml" , UriKind.Relative ));
+                    isDarkMode = false;
+                }
                 // Create and set up the ViewModel
                 InstructorViewModel viewModel = new(userName,userId,userImage);
                 DataContext = viewModel;
@@ -64,6 +70,7 @@ namespace Dashboard
                 //Create and ste up the Cloud Page
                 SessionsPage _cloudPage = new (userId);
                 CloudFrame.Content = _cloudPage;
+
             }
             catch (Exception exception)
             {
@@ -79,6 +86,12 @@ namespace Dashboard
             LogoutButton_Click( sender , e );
         }
 
+
+
+        /// <summary>
+        /// Gets the current Theme
+        /// </summary>
+        public bool isDarkMode { get; set; }
 
         /// <summary>
         /// Event handler for the logout button click.
@@ -107,6 +120,21 @@ namespace Dashboard
                         _contentServerPage.SetSessionID( clickedStudent.Id );
                     }
                 }
+            }
+        }
+
+
+        private void ChangeTheme( object sender , RoutedEventArgs e )
+        {
+            if (isDarkMode)
+            {
+                Resources.Source = ( new Uri( "Theme/Light.xaml" , UriKind.Relative ) );
+                isDarkMode = false;
+            }
+            else
+            {
+                Resources.Source = (new Uri("Theme/Dark.xaml", UriKind.Relative));
+                isDarkMode = true;
             }
         }
     }

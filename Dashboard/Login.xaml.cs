@@ -51,7 +51,10 @@ namespace Dashboard
             UserId = userEmail;
             UserImage = userPicture;
             DataContext = this; // Set the DataContext to this instance
+            isDarkMode = true;
         }
+
+        public ResourceDictionary ThemeDictionary => Resources.MergedDictionaries[0];
 
         /// <summary>
         /// Gets the name of the user.
@@ -69,6 +72,11 @@ namespace Dashboard
         public string UserImage { get; init; }
 
         /// <summary>
+        /// Gets the current Theme
+        /// </summary>
+        public bool isDarkMode { get; set; }
+
+        /// <summary>
         /// Handles the click event for the Instructor button.
         /// Navigates to the InstructorPage.
         /// </summary>
@@ -76,7 +84,7 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            InstructorPage instructorPage = new( UserName,UserId,UserImage );
+            InstructorPage instructorPage = new( UserName,UserId,UserImage,isDarkMode );
             Logger.Inform( $"[LoginPage] Created new InstructorPage : #{RuntimeHelpers.GetHashCode( instructorPage )}" );
             NavigationService?.Navigate( instructorPage );
         }
@@ -93,11 +101,30 @@ namespace Dashboard
             string insIP = InsIP.Text;
             string insPort = InsPort.Text;
 
-            StudentPage studentPage = new( UserName,UserId,UserImage,insIP,insPort );
+            StudentPage studentPage = new( UserName,UserId,UserImage,insIP,insPort,isDarkMode );
 
             Logger.Inform($"[LoginPage] Created new StudentPage : #{RuntimeHelpers.GetHashCode( studentPage )}" );
             NavigationService?.Navigate( studentPage );
         }
 
+        public void Change_Theme( Uri uri )
+        {
+            ThemeDictionary.MergedDictionaries.Clear();
+            ThemeDictionary.MergedDictionaries.Add( new ResourceDictionary() { Source = uri } );
+        }
+
+        private void ChangeTheme( object sender , RoutedEventArgs e )
+        {
+            if (isDarkMode)
+            {
+                Change_Theme( new Uri( "Theme/Light.xaml" , UriKind.Relative ) );
+                isDarkMode = false;
+            }
+            else
+            {
+                Change_Theme( new Uri( "Theme/Dark.xaml" , UriKind.Relative ) );
+                isDarkMode = true;
+            }
+        }
     }
 }

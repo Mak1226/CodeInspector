@@ -7,17 +7,24 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="InstructorPage">
-
+    
+    <Page.Resources>
+        <!-- Dark Theme -->
+        <ResourceDictionary Source="Theme/Dark.xaml" />
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="12*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.Background>
-                <SolidColorBrush Color="LightBlue" />
-            </Grid.Background>
-
+        <Grid Grid.Row="0" Background="{DynamicResource Instructor_Backdrop}" >
+            <Grid.Resources>
+                <!-- Define a default style for controls within the Grid -->
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{DynamicResource Login_Text}" />
+                </Style>
+            </Grid.Resources>
             <StackPanel x:Name="InstructorName" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,5,5">
                 <Ellipse Height="35" Width="35">
                     <Ellipse.Fill>
@@ -52,22 +59,17 @@
                      <Run Text="{Binding ReceivePort, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
                 <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
+                <ToggleButton x:Name="darkMode" Style="{StaticResource DarkMode}" Height="15" Margin="0,0,10,0" Click="ChangeTheme"/>
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <Grid.Background>
-                <SolidColorBrush Color="White" />
-            </Grid.Background>
+        <Grid Grid.Row="1" Background="{DynamicResource Instructor_Backdrop}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0"  Margin="5,5,5,5">
-                <Grid.Background>
-                    <SolidColorBrush Color="LightCyan" />
-                </Grid.Background>
+            <Grid Grid.Column="0"  Margin="5,5,5,5" Background="{DynamicResource Instructor_Card}" >
                 <TabControl>
                     <!-- Tab 1 -->
                     <TabItem Header="Content">
@@ -80,10 +82,7 @@
                     </TabItem>
                 </TabControl>
             </Grid>
-            <Grid Grid.Column="1" Margin="5,5,5,5">
-                <Grid.Background>
-                    <SolidColorBrush Color="LightBlue" />
-                </Grid.Background>
+            <Grid Grid.Column="1" Margin="5,5,5,5" Background="{DynamicResource Instructor_Card}" >
                 <ListView ItemsSource="{Binding StudentList}">
                     <ListView.View>
                         <GridView>

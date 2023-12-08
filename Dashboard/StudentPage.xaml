@@ -8,6 +8,19 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StudentPage">
 
+    <Page.Resources>
+        <!-- Dark Theme -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="ThemeDictionary">
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="Theme/Dark.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -15,10 +28,13 @@
             <RowDefinition Height="12*"/>
         </Grid.RowDefinitions>
         <!--Frist Bar-->
-        <Grid Grid.Row="0">
-            <Grid.Background>
-                <SolidColorBrush Color="Yellow" />
-            </Grid.Background>
+        <Grid Grid.Row="0" Background="{DynamicResource Student_Card}" >
+            <Grid.Resources>
+                <!-- Define a default style for controls within the Grid -->
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{DynamicResource Login_Text}" />
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="auto"/>
@@ -56,6 +72,7 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <Button Content="Logout" Width="50" Height="20" Click="LogoutButton_Click" Margin="5,5,5,5"/>
+                    <ToggleButton x:Name="darkMode" Style="{StaticResource DarkMode}" Height="15" Margin="0,0,10,0" Click="ChangeTheme"/>
                 </StackPanel>
             </Grid>
         </Grid>
@@ -104,10 +121,7 @@
         </Grid>
 
         <!--Content -->
-        <Grid Grid.Row="2">
-            <Grid.Background>
-                <SolidColorBrush Color="LightCyan" />
-            </Grid.Background>
+        <Grid Grid.Row="2" Background="{DynamicResource Student_Backdrop}" >
             <Frame x:Name="ContentFrame">
                 <Frame.Style>
                     <Style TargetType="Frame">

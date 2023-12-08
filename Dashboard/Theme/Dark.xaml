@@ -5,5 +5,15 @@
     <SolidColorBrush Color="#1c1b21" x:Key="Login_Backdrop" />
     <SolidColorBrush Color="#ffffff" x:Key="Login_Text" />
     <SolidColorBrush Color="#353b48" x:Key="Login_Card" />
+    
+    <!-- Instructor Page -->
+    <SolidColorBrush Color="#1c1b21" x:Key="Instructor_Backdrop" />
+    <SolidColorBrush Color="#ffffff" x:Key="Instructor_Text" />
+    <SolidColorBrush Color="#353b48" x:Key="Instructor_Card" />
+
+    <!-- Student Page -->
+    <SolidColorBrush Color="#1c1b21" x:Key="Student_Backdrop" />
+    <SolidColorBrush Color="#ffffff" x:Key="Student_Text" />
+    <SolidColorBrush Color="#353b48" x:Key="Student_Card" />
 
 </ResourceDictionary>
