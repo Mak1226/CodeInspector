@@ -147,6 +147,11 @@ namespace Content.ViewModel
             OnPropertyChanged( nameof( CloudSendStatus ) );
         }
 
+        public string GetImagePath()
+        {
+            return _contentServer.SessionImagePath();
+        }
+
         /// ------------MVVM bindings--------------
 
         /// <summary>

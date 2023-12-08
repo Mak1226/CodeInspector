@@ -48,8 +48,8 @@
             <!-- Configuration Options Table -->
             <DataGrid Height="Auto" HorizontalAlignment="Left" Name="configOptionsGrid" VerticalAlignment="Top" Width="492" AutoGenerateColumns="False" ItemsSource="{Binding ConfigOptionsList}" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}" ElementStyle="{StaticResource LightModeStyleText}" EditingElementStyle="{StaticResource LightModeStyleText}" />
-                    <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}" ElementStyle="{StaticResource LightModeStyleText}" EditingElementStyle="{StaticResource LightModeStyleText}" />
+                    <DataGridTextColumn Width="100" Header="Analyzer ID" Binding="{Binding AnalyzerId}"/>
+                    <DataGridTextColumn Width="200" Header="Description" Binding="{Binding Description}"/>
                     <DataGridTemplateColumn Header="Select">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

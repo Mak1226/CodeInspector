@@ -81,7 +81,17 @@ namespace Content.Model
         /// </summary>
         public Action<Dictionary<string , List<AnalyzerResult>>>? AnalyzerResultChanged;
 
+        /// <summary>
+        /// Delegate function for providing the result of a cloud upload
+        /// </summary>
         public Action<bool>? CloudSuccess;
+
+        /// <summary>
+        /// Get image path of this session
+        /// </summary>
+        /// <param name="sessionID">Given session ID. Uses currently loaded session ID if null</param>
+        /// <returns>String path to the class diagram. Doesn't check whether it exists.</returns>
+        public string SessionImagePath( string? sessionID = null ) => (sessionID != null) ? sessionID + "/image.svg" : _sessionID + "/image.svg";
 
         /// <summary>
         /// Currently loaded Analyzer Result
@@ -155,28 +165,35 @@ namespace Content.Model
                     AnalyzerResultChanged?.Invoke( analyzerResult );
                 }
 
-                byte[] graph = _analyzer.GetRelationshipGraph( new() );
-                if (graph == null || graph.Length == 0)
-                {
-                    Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
-                    return;
-                }
-
-                // Save the image as PNG
                 try
                 {
-                    using MemoryStream ms = new( graph );
-                    Image image = Image.FromStream( ms );
-                    image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
-                    Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                    byte[] graph = _analyzer.GetRelationshipGraph( new() );
+                    if (graph == null || graph.Length == 0)
+                    {
+                        Logger.Warn( "[ContentServer.cs] HandleReceive: Graph is either null or of 0 length" );
+                        return;
+                    }
+
+                    // Save the image as PNG
+                    try
+                    {
+                        using MemoryStream ms = new( graph );
+                        Image image = Image.FromStream( ms );
+                        image.Save( recievedSessionID + "/image.png" , ImageFormat.Png );
+                        Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved graph for {recievedSessionID}" );
+                    }
+                    catch
+                    {
+                        File.WriteAllBytes( SessionImagePath( recievedSessionID ) , graph );
+                        Logger.Debug( $"[ContentServer.cs] HandleReceive: Successfully saved SVG graph at {SessionImagePath( recievedSessionID )}" );
+                    }
                 }
                 catch (Exception ex)
                 {
                     Logger.Error( $"[ContentServer.cs] HandleReceive : Couldn't save graph for {recievedSessionID}. {ex}" );
                 }
+                Logger.Inform( "[ContentServer.cs] HandleReceive: Done" );
             }
-            Logger.Inform( "[ContentServer.cs] HandleReceive: Done" );
-
         }
         /// <summary>
         /// Configures the analyzer with the specified configuration settings.
@@ -189,6 +206,8 @@ namespace Content.Model
             _analyzer.Configure( configuration );
             Logger.Inform( "[ContentServer.cs] Configure: Done" );
         }
+
+        
 
         /// <summary>
         /// Loads custom DLLs for additional analyzers.
