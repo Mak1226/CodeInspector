@@ -33,6 +33,12 @@ namespace ContentUnitTesting.ContentClientServerTest
             _dllFilePath = new List<string>();
             _isGraph = 0;
         }
+
+        public byte[] GetRelationshipGraph( List<string> removableNamespaces , bool outputBytesFormat = true )
+        {
+            byte[] result = { 0 };
+            return result;
+        }
         /// <summary>
         /// Configures the mock analyzer with the specified teacher options.
         /// </summary>
@@ -57,7 +63,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         /// <summary>
         /// Placeholder implementation that throws a NotImplementedException.
         /// </summary>
-        public byte[] GetRelationshipGraph( List<string> removableNamespaces )
+        public byte[] GetRelationshipGraph( )
         {
             if (_isGraph == 0)
             {
@@ -128,7 +134,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             return new Dictionary<string, List<AnalyzerResult>>
             {
-                { "File1", new List<AnalyzerResult> { new AnalyzerResult("AnalyzerCustom", 1, "Some errors") } },
+                { "File1", new List<AnalyzerResult> { new ("AnalyzerCustom", 1, "Some errors") } },
                 // Add more initial values as needed
             };
         }
@@ -141,7 +147,7 @@ namespace ContentUnitTesting.ContentClientServerTest
         {
             return new Dictionary<string, List<AnalyzerResult>>
             {
-                { "File1", new List<AnalyzerResult> { new AnalyzerResult("Analyzer1", 1, "No errors") } },
+                { "File1", new List<AnalyzerResult> { new ("Analyzer1", 1, "No errors") } },
                 // Add more initial values as needed
             }; 
         }

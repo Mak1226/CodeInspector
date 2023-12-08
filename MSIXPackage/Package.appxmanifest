@@ -7,9 +7,9 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="d3eff55c-490d-4867-9820-590f0dbfd03e"
+    Name="333b3ea2-78e6-4e02-bb55-3624b3bd0e88"
     Publisher="CN=IIT Palakkad"
-    Version="1.0.1.0" />
+    Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>CodeInspector</DisplayName>
@@ -32,11 +32,11 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="CodeInspector"
-        Description="Welcome to CodeInspector, a platform that empowers instructors to host sessions, allowing students to submit their C# code in the form of DLL files for analysis."
+        Description="CodeInspector is a C# code analyzer"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png" ShortName="CI"/>
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
         <uap:SplashScreen Image="Images\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>

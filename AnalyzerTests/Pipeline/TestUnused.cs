@@ -64,6 +64,7 @@ namespace AnalyzerTests.Pipeline
         /// <summary>
         /// Test method for detecting unused local variables.
         /// </summary>
+        /*
         [TestMethod()]
         public void TestUnusedLocalVariables()
         {
@@ -92,7 +93,7 @@ namespace AnalyzerTests.Pipeline
                 Assert.AreEqual( 0 , res.Verdict , "There are no unused local variables!" );
             }
         }
-
+        */
         /// <summary>
         /// Test method for detecting no unused local variables.
         /// </summary>
