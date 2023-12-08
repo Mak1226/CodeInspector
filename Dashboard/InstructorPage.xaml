@@ -19,7 +19,13 @@
             </Grid.Background>
 
             <StackPanel x:Name="InstructorName" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,5,5">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Ellipse Height="35" Width="35">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding UserImage, Mode=OneWay}" />
+                    </Ellipse.Fill>
+                </Ellipse>
+                
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="9">
                      <Run Text="Name : " />
                      <Run Text="{Binding Name, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,7 +26,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Logging;
 using Networking.Utils;
+using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -45,6 +49,7 @@ namespace Dashboard
             InitializeComponent();
             UserName = userName;
             UserId = userEmail;
+            UserImage = userPicture;
             DataContext = this; // Set the DataContext to this instance
         }
 
@@ -59,6 +64,11 @@ namespace Dashboard
         public string UserId { get; init; }
 
         /// <summary>
+        /// Gets the user image of the instructor.
+        /// </summary>
+        public string UserImage { get; init; }
+
+        /// <summary>
         /// Handles the click event for the Instructor button.
         /// Navigates to the InstructorPage.
         /// </summary>
@@ -66,7 +76,8 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void InstructorButton_Click(object sender, RoutedEventArgs e)
         {
-            InstructorPage instructorPage = new( UserName,UserId );
+            InstructorPage instructorPage = new( UserName,UserId,UserImage );
+            Logger.Inform( $"[LoginPage] Created new InstructorPage : #{RuntimeHelpers.GetHashCode( instructorPage )}" );
             NavigationService?.Navigate( instructorPage );
         }
 
@@ -78,8 +89,15 @@ namespace Dashboard
         /// <param name="e">The event data.</param>
         private void StudentButton_Click( object sender , RoutedEventArgs e )
         {
-            StudentPage studentPage = new(UserName,UserId);
+
+            string insIP = InsIP.Text;
+            string insPort = InsPort.Text;
+
+            StudentPage studentPage = new( UserName,UserId,UserImage,insIP,insPort );
+
+            Logger.Inform($"[LoginPage] Created new StudentPage : #{RuntimeHelpers.GetHashCode( studentPage )}" );
             NavigationService?.Navigate( studentPage );
         }
+
     }
 }

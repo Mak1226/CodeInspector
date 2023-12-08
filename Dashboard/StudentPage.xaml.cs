@@ -25,6 +25,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ContentPage;
 using ViewModel;
+using Logging;
+using System.Runtime.CompilerServices;
 
 namespace Dashboard
 {
@@ -33,15 +35,48 @@ namespace Dashboard
     /// </summary>
     public partial class StudentPage : Page
     {
-        public StudentPage(string name, string id)
+        private readonly string _name;
+        private readonly string _id;
+        private readonly string _userImage;
+
+        public StudentPage(string name, string id, string userImage, string insIP, string insPort )
         {
             InitializeComponent();
+            _name = name;
+            _id = id;
+            _userImage = userImage;
+            Unloaded += StudentPage_Unloaded;
 
             try
             {
                 // Create the ViewModel and set as data context.
-                StudentViewModel viewModel = new(name, id);
+                StudentViewModel viewModel = new(name, id, userImage );
                 DataContext = viewModel;
+
+                InstructorIpTextBox.Text = insIP;
+                InstructorPortTextBox.Text = insPort;
+
+                viewModel?.SetInstructorAddress( insIP , insPort );
+                bool? isConnected = viewModel?.ConnectToInstructor();
+                if (isConnected != null && viewModel != null)
+                {
+                    if (isConnected.Value)
+                    {
+                        ClientPage clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
+                        ContentFrame.Content = clientPage;
+                    }
+                    else
+                    {
+                        _ = MessageBox.Show( "Connection Failed" );
+                        Application.Current.Shutdown();
+                    }
+                }
+                else
+                {
+                    _ = MessageBox.Show( "Connection Failed" );
+                    Application.Current.Shutdown();
+                }
+                Logger.Inform($"[StudentPage] Created viewModel {RuntimeHelpers.GetHashCode( viewModel )}");
                 //viewModel?.SetStudentInfo( StudentName , StudentId);
             }
             catch (Exception exception)
@@ -52,18 +87,27 @@ namespace Dashboard
             }
         }
 
+        private void StudentPage_Unloaded( object sender , RoutedEventArgs e )
+        {
+            Logger.Inform("[StudentPage] Unloading");
+            LogoutButton_Click( sender , e );
+        }
+
         private void LogoutButton_Click( object sender , RoutedEventArgs e )
         {
             // If a valid NavigationService exists, navigate to the "Login.xaml" page.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.DisconnectInstructor();
-            NavigationService?.Navigate( new Uri( "AuthenticationPage.xaml" , UriKind.Relative ) );
 
+            viewModel?.DisconnectFromInstructor();
+            Application.Current.Shutdown();
+            //AuthenticationPage authenticationPage = new();
+            //NavigationService?.Navigate( authenticationPage );
         }
 
         /// <summary>
         /// Event handler for the "IstructorIpTextBox" text changed event.
         /// </summary>
+        /**
         private void InstructorIpTextBox_TextChanged( object sender , TextChangedEventArgs e )
         {
             StudentViewModel? viewModel = DataContext as StudentViewModel;
@@ -78,7 +122,7 @@ namespace Dashboard
             // Show a message box indicating an attempt to connect to the specified IP address and port.
             StudentViewModel? viewModel = DataContext as StudentViewModel;
 
-            bool? isConnected = viewModel?.ConnectInstructor();
+            bool? isConnected = viewModel?.ConnectToInstructor();
             if(isConnected != null && viewModel != null)
             {
                 if ( isConnected.Value )
@@ -88,14 +132,14 @@ namespace Dashboard
                 }
             }
         }
-
+        **/
         private void DisconnectButton_Click( object sender , RoutedEventArgs e )
         {
             //Attempting to disconnect from the instructor
             StudentViewModel? viewModel = DataContext as StudentViewModel;
-            viewModel?.DisconnectInstructor();
+            viewModel?.DisconnectFromInstructor();
+            Login loginPage = new(_name,_id,_userImage);
+            NavigationService?.Navigate( loginPage );
         }
-
-
     }
 }
