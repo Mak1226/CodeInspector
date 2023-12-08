@@ -70,6 +70,7 @@ namespace Dashboard
                     {
                         _clientPage = new( viewModel.Communicator , viewModel.StudentRoll );
                         ContentFrame.Content = _clientPage;
+                        _clientPage.SetDarkMode( isDarkMode );
                     }
                     else
                     {
