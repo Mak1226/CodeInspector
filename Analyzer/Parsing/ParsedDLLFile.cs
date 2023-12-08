@@ -77,8 +77,8 @@ namespace Analyzer.Parsing
                             continue;
                         }
                     }
-                    
-                    if(type.IsClass && type.FullName != "<Module>")
+
+                    if (type.IsClass && type.FullName != "<Module>")
                     {
                         // To avoid structures and delegates
                         if (!type.IsValueType && !typeof(Delegate).IsAssignableFrom(type))

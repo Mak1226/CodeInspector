@@ -50,11 +50,14 @@ namespace Analyzer.UMLDiagram
         }
 
 
+
         /// <summary>
         /// Provides image bytes of class diagram
         /// </summary>
+        /// <param name="removableNamespaces">List of namespaces not to be shown.</param>
+        /// <param name="outputBytesFormat">True if output is SVG bytes, false if PNG.</param>
         /// <returns>Byte array that forms the image.</returns>
-        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces)
+        public async Task<byte[]> RenderImageBytes(List<string> removableNamespaces, bool outputBytesFormat)
         {
             Logger.Inform( "[Analyzer][ClassDiagram.cs] RenderImageBytes: Started creating bytes for image" );
             CreateStringForRendering(removableNamespaces);
@@ -66,11 +69,18 @@ namespace Analyzer.UMLDiagram
                 System.Diagnostics.Debug.WriteLine(_plantUMLCode.ToString());
 
                 string emptyDiagramUMLString = "@startuml\r\nhide empty members\r\nskinparam groupInheritance 2\r\nskinparam groupAggregation 2\r\nskinparam groupComposition 2\r\n\r\n@enduml";
-
                 if(_plantUMLCode.ToString() != emptyDiagramUMLString)
                 {
                     // Render the PlantUML diagram asynchronously
-                    _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Svg );
+                    if (outputBytesFormat == true)
+                    {
+                        _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Svg );
+                    }
+                    else
+                    {
+                        _plantUMLImage = await renderer.RenderAsync( _plantUMLCode.ToString() , OutputFormat.Png );
+
+                    }
                     System.Diagnostics.Debug.WriteLine( _plantUMLImage );
                     System.Diagnostics.Debug.Assert( _plantUMLImage != null );
 
