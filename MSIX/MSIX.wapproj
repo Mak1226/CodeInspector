@@ -60,7 +60,7 @@
     <PackageCertificateThumbprint>3EC0D67E9A8DD0FE107BA0B5894D24542006CF14</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
@@ -101,6 +101,16 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BadgeLogo.scale-100.png" />
+    <Content Include="BadgeLogo.scale-125.png" />
+    <Content Include="BadgeLogo.scale-150.png" />
+    <Content Include="BadgeLogo.scale-200.png" />
+    <Content Include="BadgeLogo.scale-400.png" />
+    <Content Include="Images\BadgeLogo.scale-100.png" />
+    <Content Include="Images\BadgeLogo.scale-125.png" />
+    <Content Include="Images\BadgeLogo.scale-150.png" />
+    <Content Include="Images\BadgeLogo.scale-200.png" />
+    <Content Include="Images\BadgeLogo.scale-400.png" />
     <Content Include="Images\LargeTile.scale-100.png" />
     <Content Include="Images\LargeTile.scale-125.png" />
     <Content Include="Images\LargeTile.scale-150.png" />
