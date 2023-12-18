@@ -5,6 +5,8 @@ Software Engineering Group Project
 
 [Software Demo](https://www.youtube.com/watch?v=SqOJHb5xdns)
 
+[Installation guide](https://github.com/Mak1226/CodeInspector/wiki/Installation-guide)
+
 ![CodeInspector](https://github.com/Mak1226/CodeInspector/assets/87255862/c4112141-e861-4794-8c51-d35172e01900)
 
 
